@@ -184,9 +184,9 @@
                 maxRelativeScrollDepth,
                 privateWindow: browser.extension.inIncognitoContext,
                 reason,
-                // title,
-                // ogType,
-                // ogDescription
+                title,
+                ogType,
+                ogDescription
             });
         }
 
