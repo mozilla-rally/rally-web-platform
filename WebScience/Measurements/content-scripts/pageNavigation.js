@@ -15,6 +15,23 @@
 
 // Outer function encapsulation to maintain unique variable scope for each content script
 (function () {
+    // HAMILTON: added these DOM extractors
+    function getContentsHavingSelector(str, documentElement) {
+        const e = documentElement.querySelector(str);
+        return e === null ? undefined : e.content || e.innerText;
+    }
+
+    function getTitle(documentElement) {
+        return getContentsHavingSelector('title', documentElement);
+    }
+    
+    function getOGType(documentElement) {
+        return getContentsHavingSelector('meta[property="og:type"]', documentElement);
+    }
+
+    function getOGDescription(documentElement) {
+        return getContentsHavingSelector('meta[property="og:description"]', documentElement);
+    }
 
     // Inner function encapsulation to wait for PageManager load
     const pageNavigation = function () {
@@ -107,6 +124,25 @@
          */
         let scrollDepthIntervalId = 0;
 
+        // HAMILTON: fields I have added are below
+        /**
+         * The title element contents of the page.
+         * @type {string}
+         */
+         let title = undefined;
+
+        /**
+         * The og:description element contents of the page.
+         * @type {string}
+         */
+        let ogDescription = undefined;
+
+        /**
+         * The og:type meta element.
+         * @type {string}
+         */
+        let ogType = undefined;
+
         const pageVisitStart = function ({ timeStamp }) {
             // Reset page attention and page audio tracking
             attentionDuration = 0;
@@ -115,6 +151,11 @@
             audioDuration = 0;
             lastAudioUpdateTime = timeStamp;
             attentionAndAudioDuration = 0;
+
+            // HAMILTON: fields I have added.
+            // title = undefined;
+            // ogDescription = undefined;
+            // ogType = undefined;
 
             // Reset scroll depth tracking and set an interval timer for checking scroll depth
             maxRelativeScrollDepth = 0;
@@ -142,7 +183,10 @@
                 attentionAndAudioDuration,
                 maxRelativeScrollDepth,
                 privateWindow: browser.extension.inIncognitoContext,
-                reason
+                reason,
+                // title,
+                // ogType,
+                // ogDescription
             });
         }
 
@@ -166,14 +210,13 @@
 
         PageManager.onPageAttentionUpdate.addListener((etc) => {
             const { timeStamp, reason } = etc;
-            //console.debug('REASON', reason);
+            // HAMILTON: added these.
+            if(PageManager.pageHasAttention) {
+                title = getTitle(document);
+                ogDescription = getOGDescription(document);
+                ogType = getOGType(document);
+            }
 
-            // HAMILTON: cut off here if reason === 'page-visit-start'
-            // if (reason === 'page-visit-start') {
-            //     // cut off the last event and send it out?
-            //     sendDataToPageManager(timeStamp, 'tab-updated')
-            // }
-            
             // If the page just gained attention for the first time, store the time stamp
             if(PageManager.pageHasAttention && (firstAttentionTime < PageManager.pageVisitStartTime))
                 firstAttentionTime = timeStamp;
