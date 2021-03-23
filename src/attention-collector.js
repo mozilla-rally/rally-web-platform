@@ -152,11 +152,6 @@
             lastAudioUpdateTime = timeStamp;
             attentionAndAudioDuration = 0;
 
-            // HAMILTON: fields I have added.
-            // title = undefined;
-            // ogDescription = undefined;
-            // ogType = undefined;
-
             // Reset scroll depth tracking and set an interval timer for checking scroll depth
             maxRelativeScrollDepth = 0;
             scrollDepthIntervalId = setInterval(function() {
@@ -169,9 +164,8 @@
             }, scrollDepthUpdateInterval);
         };
 
-        // HAMILTON: added this message-sending function.
         function sendDataToPageManager(timestamp, reason) {
-            PageManager.sendMessage({
+            PageManager.sendMessage({ 
                 type: "WebScience.Measurements.PageNavigation.PageData",
                 pageId: PageManager.pageId,
                 url: PageManager.url,
@@ -179,8 +173,6 @@
                 pageVisitStartTime: PageManager.pageVisitStartTime,
                 pageVisitStopTime: timestamp,
                 attentionDuration,
-                audioDuration,
-                attentionAndAudioDuration,
                 maxRelativeScrollDepth,
                 privateWindow: browser.extension.inIncognitoContext,
                 reason,
@@ -205,7 +197,9 @@
 
             // Clear the interval timer for checking scroll depth
             clearInterval(scrollDepthIntervalId);
-            sendDataToPageManager(timeStamp, 'page-load-over');
+            if (PageManager.pageHasAttention) {
+                sendDataToPageManager(timeStamp, 'page-load-over');
+            }
         });
 
         PageManager.onPageAttentionUpdate.addListener((etc) => {
@@ -238,6 +232,7 @@
         PageManager.onPageAudioUpdate.addListener(({ timeStamp }) => {
             // If the page just lost audio, add to the audio duration
             // and possibly the attention and audio duration
+            console.log(timeStamp);
             if(!PageManager.pageHasAudio) {
                 audioDuration += timeStamp - lastAudioUpdateTime;
                 if(PageManager.pageHasAttention)

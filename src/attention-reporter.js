@@ -1,15 +1,8 @@
-/**
- * This module measures properties of webpage navigation.
- *
- * @module WebScience.Measurements.PageNavigation
- */
-
 import browser from 'webextension-polyfill';
 
-import * as Events from "../Utilities/Events.js"
-//import * as Matching from "../Utilities/Matching.js"
-import * as Messaging from "../Utilities/Messaging.js"
-import * as PageManager from "../Utilities/PageManager.js"
+import * as Events from "../WebScience/Utilities/Events.js"
+import * as Messaging from "../WebScience/Utilities/Messaging.js"
+import * as PageManager from "../WebScience/Utilities/PageManager.js"
 
 /**
  * Additional information about the page data event.
@@ -109,35 +102,37 @@ export async function startMeasurement({
     matchPatterns = [ ],
     privateWindows = false
 }) {
-    console.log(matchPatterns, privateWindows)
     await PageManager.initialize();
 
-    //matchPatternsRegExp = Matching.matchPatternsToRegExp(matchPatterns);
 
     notifyAboutPrivateWindows = privateWindows;
 
     registeredContentScript = await browser.contentScripts.register({
         matches: matchPatterns,
         js: [{
-            file: "/WebScience/Measurements/content-scripts/pageNavigation.js"
+            file: "/src/attention-collector.js"
         }],
         runAt: "document_start"
     });
 
     Messaging.registerListener("WebScience.Measurements.PageNavigation.PageData", pageDataListener,
     {
-        pageId: "string",
-        url: "string",
-        referrer: "string",
-        pageVisitStartTime: "number",
-        pageVisitStopTime: "number",
-        attentionDuration: "number",
-        audioDuration: "number",
-        attentionAndAudioDuration: "number",
-        maxRelativeScrollDepth: "number",
-        privateWindow: "boolean",
-        reason: "string"
-    });
+        attentionEvents: "object"
+    }
+    // {
+    //     pageId: "string",
+    //     url: "string",
+    //     referrer: "string",
+    //     pageVisitStartTime: "number",
+    //     pageVisitStopTime: "number",
+    //     attentionDuration: "number",
+    //     audioDuration: "number",
+    //     attentionAndAudioDuration: "number",
+    //     maxRelativeScrollDepth: "number",
+    //     privateWindow: "boolean",
+    //     reason: "string"
+    // }
+    );
 }
 
 /**

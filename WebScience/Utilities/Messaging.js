@@ -56,6 +56,7 @@ let initialized = false;
  */
 export function validateMessageObject(message) {
     // If the message does not have the right type, fail validation.
+    console.debug("---- MESSAGE ---", message)
     if ((typeof message !== "object") || (message === null)) {
         debugLog(`Unable to validate message with type: ${typeof message}`);
         return false;
