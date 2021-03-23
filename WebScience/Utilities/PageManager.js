@@ -444,7 +444,6 @@ export async function initialize() {
         if(!initialized)
             return;
         const timeStamp = Date.now();
-
         Messaging.sendMessageToTab(tabId, {
             type: "WebScience.Utilities.PageManager.pageAudioUpdate",
             pageHasAudio: changeInfo.audible,

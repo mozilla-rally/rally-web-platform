@@ -15,6 +15,10 @@
 
 // Outer function encapsulation to maintain unique variable scope for each content script
 (function () {
+
+
+
+
     // HAMILTON: added these DOM extractors
     function getContentsHavingSelector(str, documentElement) {
         const e = documentElement.querySelector(str);
@@ -129,19 +133,22 @@
          * The title element contents of the page.
          * @type {string}
          */
-         let title = undefined;
+         let title = '';
 
         /**
          * The og:description element contents of the page.
          * @type {string}
          */
-        let ogDescription = undefined;
+        let ogDescription = '';
 
         /**
          * The og:type meta element.
          * @type {string}
          */
-        let ogType = undefined;
+        let ogType = '';
+
+        let audioStartTime;
+        let audioEndTime;
 
         const pageVisitStart = function ({ timeStamp }) {
             // Reset page attention and page audio tracking
@@ -151,11 +158,6 @@
             audioDuration = 0;
             lastAudioUpdateTime = timeStamp;
             attentionAndAudioDuration = 0;
-
-            // HAMILTON: fields I have added.
-            // title = undefined;
-            // ogDescription = undefined;
-            // ogType = undefined;
 
             // Reset scroll depth tracking and set an interval timer for checking scroll depth
             maxRelativeScrollDepth = 0;
@@ -169,20 +171,36 @@
             }, scrollDepthUpdateInterval);
         };
 
-        // HAMILTON: added this message-sending function.
-        function sendDataToPageManager(timestamp, reason) {
-            PageManager.sendMessage({
-                type: "WebScience.Measurements.PageNavigation.PageData",
+        function sendAttentionData(timestamp, reason) {
+            PageManager.sendMessage({ 
+                type: "RS01.attentionEvent",
                 pageId: PageManager.pageId,
                 url: PageManager.url,
                 referrer: PageManager.referrer,
                 pageVisitStartTime: PageManager.pageVisitStartTime,
                 pageVisitStopTime: timestamp,
-                attentionDuration,
-                audioDuration,
-                attentionAndAudioDuration,
+                duration: attentionDuration,
                 maxRelativeScrollDepth,
                 privateWindow: browser.extension.inIncognitoContext,
+                reason,
+                title,
+                ogType,
+                ogDescription
+            });
+        }
+
+        function sendAudioData(timestamp, reason) {
+            PageManager.sendMessage({ 
+                type: "RS01.audioEvent",
+                pageId: PageManager.pageId,
+                url: PageManager.url,
+                referrer: PageManager.referrer,
+                pageVisitStartTime: PageManager.pageVisitStartTime,
+                pageVisitStopTime: timestamp,
+                duration: audioDuration,
+                privateWindow: browser.extension.inIncognitoContext,
+                audioStartTime,
+                audioEndTime,
                 reason,
                 title,
                 ogType,
@@ -205,16 +223,18 @@
 
             // Clear the interval timer for checking scroll depth
             clearInterval(scrollDepthIntervalId);
-            sendDataToPageManager(timeStamp, 'page-load-over');
+            if (PageManager.pageHasAttention) {
+                sendAttentionData(timeStamp, 'page-load-over');
+            }
         });
 
         PageManager.onPageAttentionUpdate.addListener((etc) => {
             const { timeStamp, reason } = etc;
-            // HAMILTON: added these.
+            // onAttentionStart
             if(PageManager.pageHasAttention) {
-                title = getTitle(document);
-                ogDescription = getOGDescription(document);
-                ogType = getOGType(document);
+                title = getTitle(document) || '';
+                ogDescription = getOGDescription(document) || '';
+                ogType = getOGType(document) || '';
             }
 
             // If the page just gained attention for the first time, store the time stamp
@@ -231,17 +251,19 @@
             lastAttentionUpdateTime = timeStamp;
             // HAMILTON: send the event.
             if(!PageManager.pageHasAttention) {
-                sendDataToPageManager(timeStamp, reason);
+                sendAttentionData(timeStamp, reason);
             }
         });
 
-        PageManager.onPageAudioUpdate.addListener(({ timeStamp }) => {
-            // If the page just lost audio, add to the audio duration
-            // and possibly the attention and audio duration
+        PageManager.onPageAudioUpdate.addListener(({ timeStamp, pageHasAudio }) => {
+            if (PageManager.pageHasAudio) {
+                lastAudioUpdateTime = timeStamp;
+                audioStartTime = timeStamp;
+            }
             if(!PageManager.pageHasAudio) {
-                audioDuration += timeStamp - lastAudioUpdateTime;
-                if(PageManager.pageHasAttention)
-                    attentionAndAudioDuration += timeStamp - Math.max(lastAttentionUpdateTime, lastAudioUpdateTime);
+                audioDuration = timeStamp - lastAudioUpdateTime;
+                audioEndTime = timeStamp;
+                sendAudioData(timeStamp, "audio-event-finished");
             }
             lastAudioUpdateTime = timeStamp;
         });

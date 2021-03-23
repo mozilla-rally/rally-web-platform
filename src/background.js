@@ -1,5 +1,5 @@
 import EventStreamStorage from "./EventStreamStorage";
-import * as PageNavigation from "../WebScience/Measurements/PageNavigation";
+import { onPageData } from "./attention-reporter";
 
 class AttentionStream {
     constructor() {
@@ -57,7 +57,7 @@ class AttentionStream {
     }
 
     onAttentionEnd(callback) {
-        PageNavigation.onPageData.addListener(callback, {
+        onPageData.addListener(callback, {
             matchPatterns: ["<all_urls>"],
             privateWindows: false
         });

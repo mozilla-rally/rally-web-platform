@@ -95,7 +95,13 @@ export function validateMessageAgainstSchema(message, messageSchema)
     // Check the message against the schema.
     for(const field in messageSchema) {
         if (!(field in message) || (typeof message[field] !== messageSchema[field])) {
-            debugLog(`Mismatch between message and schema: ${JSON.stringify(message)}`);
+            console.group("WebScience.Utilities.Messaging");
+            console.debug(`mismatch between message and schema`);
+            console.debug(`field: ${field}`);
+            console.debug(`message type: ${typeof message[field]}`);
+            console.debug(`schema type: ${messageSchema[field]}`);
+            console.groupEnd();
+            //debugLog(`Mismatch between message and schema: ${JSON.stringify(message)}`);
             return false;
         }
     }
@@ -214,7 +220,6 @@ export function sendMessageToTab(tabId, message) {
         return new Promise((resolve) => { resolve(false); });
     }
     return browser.tabs.sendMessage(tabId, message).catch((reason) => {
-        console.log(reason);
         debugLog(`Unable to send message to tab: ${JSON.stringify(message)}`);
         return false;
     });
