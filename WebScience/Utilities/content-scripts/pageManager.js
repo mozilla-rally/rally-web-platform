@@ -480,7 +480,7 @@
 
             // Notify the page audio update event listeners in the content script environment
             PageManager.onPageAudioUpdate.notifyListeners([{
-                timeStamp
+                timeStamp, pageHasAudio
             }]);
 
             debugLog(`Page audio update: ${JSON.stringify(PageManager)}`);

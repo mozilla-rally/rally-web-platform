@@ -115,24 +115,36 @@ export async function startMeasurement({
         runAt: "document_start"
     });
 
-    Messaging.registerListener("WebScience.Measurements.PageNavigation.PageData", pageDataListener,
-    {
-        attentionEvents: "object"
-    }
-    // {
-    //     pageId: "string",
-    //     url: "string",
-    //     referrer: "string",
-    //     pageVisitStartTime: "number",
-    //     pageVisitStopTime: "number",
-    //     attentionDuration: "number",
-    //     audioDuration: "number",
-    //     attentionAndAudioDuration: "number",
-    //     maxRelativeScrollDepth: "number",
-    //     privateWindow: "boolean",
-    //     reason: "string"
-    // }
-    );
+    Messaging.registerListener("RS01.attentionEvent", pageDataListener, {
+        pageId: "string",
+        url: "string",
+        referrer: "string",
+        pageVisitStartTime: "number",
+        pageVisitStopTime: "number",
+        duration: "number",
+        maxRelativeScrollDepth: "number",
+        privateWindow: "boolean",
+        reason: "string",
+        title: "string",
+        ogType: "string",
+        ogDescription: "string"
+    });
+
+    Messaging.registerListener("RS01.audioEvent", pageDataListener, {
+        pageId: "string",
+        url: "string",
+        referrer: "string",
+        pageVisitStartTime: "number",
+        pageVisitStopTime: "number",
+        duration: "number",
+        audioStartTime: "number",
+        audioEndTime: "number",
+        privateWindow: "boolean",
+        reason: "string",
+        title: "string",
+        ogType: "string",
+        ogDescription: "string"
+    });
 }
 
 /**
