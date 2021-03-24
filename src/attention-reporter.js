@@ -123,6 +123,7 @@ export async function startMeasurement({
         pageVisitStopTime: "number",
         duration: "number",
         maxRelativeScrollDepth: "number",
+        maxPixelScrollDepth: "number",
         privateWindow: "boolean",
         reason: "string",
         title: "string",

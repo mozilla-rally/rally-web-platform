@@ -16,9 +16,6 @@
 // Outer function encapsulation to maintain unique variable scope for each content script
 (function () {
 
-
-
-
     // HAMILTON: added these DOM extractors
     function getContentsHavingSelector(str, documentElement) {
         const e = documentElement.querySelector(str);
@@ -149,6 +146,7 @@
 
         let audioStartTime;
         let audioEndTime;
+        let maxPixelScrollDepth = 0;
 
         const pageVisitStart = function ({ timeStamp }) {
             // Reset page attention and page audio tracking
@@ -164,10 +162,17 @@
             scrollDepthIntervalId = setInterval(function() {
                 if((scrollDepthWaitForAttention || ((Date.now() - PageManager.pageVisitStartTime) >= scrollDepthUpdateDelay)) &&
                    (!scrollDepthWaitForAttention || ((firstAttentionTime > 0) && ((Date.now() - firstAttentionTime) >= scrollDepthUpdateDelay))) &&
-                   (document.documentElement.offsetHeight >= scrollDepthMinimumHeight))
+                   (document.documentElement.offsetHeight >= scrollDepthMinimumHeight)) {
+                    // set the total scroll pixels?
+                    // something here needs to be full pixel depth.
+                    maxPixelScrollDepth =
+                        Math.min(document.documentElement.scrollHeight,
+                            Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
+                        );
                     maxRelativeScrollDepth = Math.min(
                         Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / document.documentElement.scrollHeight),
                         1);
+                   }    
             }, scrollDepthUpdateInterval);
         };
 
@@ -181,6 +186,7 @@
                 pageVisitStopTime: timestamp,
                 duration: attentionDuration,
                 maxRelativeScrollDepth,
+                maxPixelScrollDepth,
                 privateWindow: browser.extension.inIncognitoContext,
                 reason,
                 title,
