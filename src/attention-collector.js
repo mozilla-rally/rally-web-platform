@@ -1,5 +1,5 @@
 /**
- * Content script for the PageNavigation module.
+ * Content script attention-collector for RS01.
  *
  * # Known Issues
  *   * When sending page data during a page visit stop event, sometimes
@@ -8,7 +8,7 @@
  *     message sending Promise remains open. This error does not affect functionality,
  *     because we do not depend on resolving the Promise (i.e., a response to the
  *     page visit stop message).
- * @module WebScience.Measurements.content-scripts.pageNavigation
+ * @module RS01.attention-collector
  */
 // Tell eslint that PageManager isn't actually undefined
 /* global PageManager */
@@ -16,7 +16,6 @@
 // Outer function encapsulation to maintain unique variable scope for each content script
 (function () {
 
-    // HAMILTON: added these DOM extractors
     function getContentsHavingSelector(str, documentElement) {
         const e = documentElement.querySelector(str);
         return e === null ? undefined : e.content || e.innerText;
@@ -35,7 +34,7 @@
     }
 
     // Inner function encapsulation to wait for PageManager load
-    const pageNavigation = function () {
+    const attentionCollector = function () {
         /**
          * How long the page has had the user's attention.
          * @type {number}
@@ -277,11 +276,11 @@
 
     // Wait for PageManager load
     if ("PageManager" in window)
-        pageNavigation();
+        attentionCollector();
     else {
         if(!("pageManagerHasLoaded" in window))
             window.pageManagerHasLoaded = [];
-        window.pageManagerHasLoaded.push(pageNavigation);
+        window.pageManagerHasLoaded.push(attentionCollector);
     }
 
 })();
