@@ -66,7 +66,7 @@ class AttentionStream {
 
 const stream = new AttentionStream();
 stream.onAttentionEnd(async (data) => {
-    console.debug('OUTPUT', `
+    console.debug('output', `
 ${data.url}
 ${data.reason}
 ${data.referrer}
@@ -81,10 +81,5 @@ function openPage() {
       console.error(`Study Add-On - Unable to open the control panel`, e);
     });
   }
-  
-  // browse(
-  //   ["https://news.ycombinator.com", 500],
-  //   ["https://newyorker.com", 100,]
-  // )
   
   browser.browserAction.onClicked.addListener(openPage);

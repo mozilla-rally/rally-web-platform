@@ -35,19 +35,7 @@
        }),
        commonjs(),
      ],
-   },
-   {
-     input: "src/content-script.js",
-     output: {
-       file: "dist/content-script.js",
-       sourcemap: isDevMode(cliArgs) ? "inline" : false,
-     },
-     plugins: [
-       resolve({
-         browser: true,
-       }),
-       commonjs(),
-     ],
-   },
+   }
+   // NOTE: a content script rollup is not needed for this study.
  ];
  
