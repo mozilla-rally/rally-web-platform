@@ -1,6 +1,12 @@
-# First Rally Study
+# Rally Study 01 (RS01)
 
-## to use this repository to collect your own data and play with it:
+_status: in development_
+
+This repository contains the code needed to build the Rally Study 01 Web Extension. 
+The study works with [Mozilla Rally's Web Extension](https://github.com/mozilla-rally/rally-core-addon)
+or can be run locally without Mozilla Rally installed on your computer.
+
+To use this repository to collect your own data and play with it:
 
 1. fork or clone this repository
 2. run `npm install`
