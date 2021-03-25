@@ -1,4 +1,4 @@
-import EventStreamStorage from "./EventStreamStorage";
+import EventStreamStorage from "./event-stream-storage";
 import { onPageData } from "./attention-reporter";
 
 class AttentionStream {
@@ -41,8 +41,6 @@ class AttentionStream {
     }
 
     async _handleMessage(message) {
-        // We only expect messages coming from the embedded options page
-        // at this time. We check for the sender in `_onPortConnected`.
         switch (message.type) {
             case "get-data":
             this._sendDataToUI();
@@ -56,7 +54,7 @@ class AttentionStream {
         }
     }
 
-    onAttentionEnd(callback) {
+    onPageData(callback) {
         onPageData.addListener(callback, {
             matchPatterns: ["<all_urls>"],
             privateWindows: false
@@ -65,7 +63,7 @@ class AttentionStream {
 }
 
 const stream = new AttentionStream();
-stream.onAttentionEnd(async (data) => {
+stream.onPageData(async (data) => {
     console.debug('output', `
 ${data.url}
 ${data.reason}
