@@ -4,7 +4,7 @@ import * as Events from "../WebScience/Utilities/Events.js"
 import * as Messaging from "../WebScience/Utilities/Messaging.js"
 import * as PageManager from "../WebScience/Utilities/PageManager.js"
 
-/**
+/** 
  * Additional information about the page data event.
  * @typedef {Object} PageDataDetails
  * @property {number} pageId - The ID for the page, unique across browsing sessions.
@@ -51,13 +51,6 @@ function removeListener(listener) {
         stopMeasurement();
     }
 }
-
-/**
- * @type {Events.Event<pageDataCallback, PageDataOptions>}
- */
-export const onPageData = new Events.Event({
-    addListenerCallback: addListener,
-    removeListenerCallback: removeListener});
 
 /**
  * A RegExp for the page match patterns.
@@ -152,10 +145,17 @@ export async function startMeasurement({
  * Stop a navigation measurement.
  */
 function stopMeasurement() {
-    Messaging.unregisterListener("WebScience.Measurements.PageNavigation.PageData", pageDataListener)
+    Messaging.unregisterListener("RS01.attentionEvent", pageDataListener);
+    Messaging.unregisterListener("RS01.audioEvent", pageDataListener);
     registeredContentScript.unregister();
     registeredContentScript = null;
     notifyAboutPrivateWindows = false;
     //matchPatternsRegExp = null;
 }
 
+/**
+ * @type {Events.Event<pageDataCallback, PageDataOptions>}
+ */
+ export const onPageData = new Events.Event({
+    addListenerCallback: addListener,
+    removeListenerCallback: removeListener});
