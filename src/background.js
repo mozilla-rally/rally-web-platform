@@ -1,80 +1,5 @@
-import EventStreamStorage from "./EventStreamStorage";
-import { onPageData } from "./attention-reporter";
-
-class AttentionStream {
-    constructor() {
-        this._connectionPort = {};
-        this.storage = new EventStreamStorage();
-        this.initialize();
-    }
-
-    initialize() {
-        // connect here for messages to the options page
-        browser.runtime.onConnect.addListener(
-            p => {
-                this._onPortConnected(p);
-            });
-    }
-
-    _onPortConnected(port) {
-        const sender = port.sender;
-        if ((sender.id != browser.runtime.id)) {
-            console.error("Rally Study - received message from unexpected sender");
-            port.disconnect();
-            return;
-        }
-
-        this._connectionPort = port;
-        this._connectionPort.onMessage.addListener(
-            m => this._handleMessage(m, sender));
-        this._connectionPort.onDisconnect.addListener(e => {
-            console.log("Rally Study - disconnect or error", e);
-            this._connectionPort = null;
-        });
-    }
-
-    async _sendDataToUI() {
-        // Send a message to the UI to update the list of studies.
-        const events = await this.storage.get();
-        this._connectionPort.postMessage(
-            {type: "receive-data", data: events });
-    }
-
-    async _handleMessage(message) {
-        // We only expect messages coming from the embedded options page
-        // at this time. We check for the sender in `_onPortConnected`.
-        switch (message.type) {
-            case "get-data":
-            this._sendDataToUI();
-            break;
-            case "reset":
-            this._reset();
-            break;
-            default:
-            return Promise.reject(
-                new Error(`Rally Study - unexpected message type ${message.type}`));
-        }
-    }
-
-    onAttentionEnd(callback) {
-        onPageData.addListener(callback, {
-            matchPatterns: ["<all_urls>"],
-            privateWindows: false
-        });
-    }
-}
-
-const stream = new AttentionStream();
-stream.onAttentionEnd(async (data) => {
-    console.debug('output', `
-${data.url}
-${data.reason}
-${data.referrer}
-`, 
-    data,
-    "-------------------------");
-    await stream.storage.push(data);
-});
+import { Rally, runStates } from "@mozilla/rally";
+import EventStreamManager from "./event-stream-manager";
 
 function openPage() {
     browser.runtime.openOptionsPage().catch(e => {
@@ -82,4 +7,41 @@ function openPage() {
     });
   }
   
-  browser.browserAction.onClicked.addListener(openPage);
+const rally = new Rally();
+
+rally.initialize(
+  // A sample key id used for encrypting data.
+  "sample-invalid-key-id",
+  // A sample *valid* JWK object for the encryption.
+  {
+    "kty":"EC",
+    "crv":"P-256",
+    "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+    "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
+    "kid":"Public key used in JWS spec Appendix A.3 example"
+  },
+  // The following constant is automatically provided by
+  // the build system.
+  __ENABLE_DEVELOPER_MODE__,
+  (newState) => {
+    if (newState === runStates.RUNNING) {
+      console.debug("~~~ RS01 running ~~~");
+    } else {
+      console.error("~~~ RS01 not running ~~~");
+    }
+  }
+).then(() => {
+    const stream = new EventStreamManager();
+
+    stream.onPageData(async (data) => {
+        console.debug('output',
+        data,
+        "-------------------------");
+        await stream.storage.push(data);
+    });
+    browser.browserAction.onClicked.addListener(openPage);
+
+}, reject => {
+  // Do not start the study in this case. Something
+  // went wrong.
+});

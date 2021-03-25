@@ -147,34 +147,6 @@
         let audioEndTime;
         let maxPixelScrollDepth = 0;
 
-        const pageVisitStart = function ({ timeStamp }) {
-            // Reset page attention and page audio tracking
-            attentionDuration = 0;
-            lastAttentionUpdateTime = timeStamp;
-            firstAttentionTime = PageManager.pageHasAttention ? timeStamp : 0;
-            audioDuration = 0;
-            lastAudioUpdateTime = timeStamp;
-            attentionAndAudioDuration = 0;
-
-            // Reset scroll depth tracking and set an interval timer for checking scroll depth
-            maxRelativeScrollDepth = 0;
-            scrollDepthIntervalId = setInterval(function() {
-                if((scrollDepthWaitForAttention || ((Date.now() - PageManager.pageVisitStartTime) >= scrollDepthUpdateDelay)) &&
-                   (!scrollDepthWaitForAttention || ((firstAttentionTime > 0) && ((Date.now() - firstAttentionTime) >= scrollDepthUpdateDelay))) &&
-                   (document.documentElement.offsetHeight >= scrollDepthMinimumHeight)) {
-                    // set the total scroll pixels?
-                    // something here needs to be full pixel depth.
-                    maxPixelScrollDepth =
-                        Math.min(document.documentElement.scrollHeight,
-                            Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
-                        );
-                    maxRelativeScrollDepth = Math.min(
-                        Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / document.documentElement.scrollHeight),
-                        1);
-                   }    
-            }, scrollDepthUpdateInterval);
-        };
-
         function sendAttentionData(timestamp, reason) {
             PageManager.sendMessage({ 
                 type: "RS01.attentionEvent",
@@ -213,6 +185,34 @@
             });
         }
 
+        const pageVisitStart = function ({ timeStamp }) {
+            // Reset page attention and page audio tracking
+            attentionDuration = 0;
+            lastAttentionUpdateTime = timeStamp;
+            firstAttentionTime = PageManager.pageHasAttention ? timeStamp : 0;
+            audioDuration = 0;
+            lastAudioUpdateTime = timeStamp;
+            attentionAndAudioDuration = 0;
+
+            // Reset scroll depth tracking and set an interval timer for checking scroll depth
+            maxRelativeScrollDepth = 0;
+            scrollDepthIntervalId = setInterval(function() {
+                if((scrollDepthWaitForAttention || ((Date.now() - PageManager.pageVisitStartTime) >= scrollDepthUpdateDelay)) &&
+                   (!scrollDepthWaitForAttention || ((firstAttentionTime > 0) && ((Date.now() - firstAttentionTime) >= scrollDepthUpdateDelay))) &&
+                   (document.documentElement.offsetHeight >= scrollDepthMinimumHeight)) {
+                    // set the total scroll pixels?
+                    // something here needs to be full pixel depth.
+                    maxPixelScrollDepth =
+                        Math.min(document.documentElement.scrollHeight,
+                            Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
+                        );
+                    maxRelativeScrollDepth = Math.min(
+                        Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / document.documentElement.scrollHeight),
+                        1);
+                   }    
+            }, scrollDepthUpdateInterval);
+        };
+
         if(PageManager.pageVisitStarted)
             pageVisitStart({ timeStamp: PageManager.pageVisitStartTime });
         PageManager.onPageVisitStart.addListener(pageVisitStart);
@@ -229,7 +229,7 @@
             // Clear the interval timer for checking scroll depth
             clearInterval(scrollDepthIntervalId);
             if (PageManager.pageHasAttention) {
-                sendAttentionData(timeStamp, 'page-load-over');
+                sendAttentionData(timeStamp, 'page-visit-stop');
             }
         });
 
@@ -260,7 +260,7 @@
             }
         });
 
-        PageManager.onPageAudioUpdate.addListener(({ timeStamp, pageHasAudio }) => {
+        PageManager.onPageAudioUpdate.addListener(({ timeStamp }) => {
             if (PageManager.pageHasAudio) {
                 lastAudioUpdateTime = timeStamp;
                 audioStartTime = timeStamp;

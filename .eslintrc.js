@@ -19,6 +19,7 @@
       files: "tests/**",
       env: {
         mocha: true,
+        jest: true
       },
       extends: [
         "plugin:mocha/recommended",
