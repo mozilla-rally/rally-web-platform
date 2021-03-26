@@ -36,7 +36,10 @@ rally.initialize(
     stream.onPageData(async (data) => {
         console.debug('output',
         data);
-        await stream.storage.push(data);
+        if (__ENABLE_DEVELOPER_MODE__) {
+          await stream.storage.push(data); 
+        } 
+        rally.sendPing("FIXME_ADD_PING_NAME_HERE", data);
     });
     browser.browserAction.onClicked.addListener(openPage);
 
