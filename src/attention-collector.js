@@ -60,13 +60,6 @@
         let lastAudioUpdateTime = 0;
 
         /**
-         * How long the page has simultaneously had attention and played audio. This value is
-         * a useful approximation of video viewing time.
-         * @type {number}
-         */
-        let attentionAndAudioDuration = 0;
-
-        /**
          * How often (in milliseconds) to check maximum page scroll depth.
          * @constant
          * @type {number}
@@ -192,7 +185,6 @@
             firstAttentionTime = PageManager.pageHasAttention ? timeStamp : 0;
             audioDuration = 0;
             lastAudioUpdateTime = timeStamp;
-            attentionAndAudioDuration = 0;
 
             // Reset scroll depth tracking and set an interval timer for checking scroll depth
             maxRelativeScrollDepth = 0;
@@ -220,11 +212,9 @@
         PageManager.onPageVisitStop.addListener(({ timeStamp }) => {
             // Update the attention and audio durations
             if(PageManager.pageHasAttention)
-                attentionDuration += timeStamp - lastAttentionUpdateTime;
+                attentionDuration = timeStamp - lastAttentionUpdateTime;
             if(PageManager.pageHasAudio)
-                audioDuration += timeStamp - lastAudioUpdateTime;
-            if(PageManager.pageHasAttention && PageManager.pageHasAudio)
-                attentionAndAudioDuration += timeStamp - Math.max(lastAttentionUpdateTime, lastAudioUpdateTime);
+                audioDuration = timeStamp - lastAudioUpdateTime;
 
             // Clear the interval timer for checking scroll depth
             clearInterval(scrollDepthIntervalId);
@@ -249,9 +239,7 @@
             // If the page just lost attention, add to the attention duration
             // and possibly the attention and audio duration
             if(!PageManager.pageHasAttention) {
-                attentionDuration += timeStamp - lastAttentionUpdateTime;
-                if(PageManager.pageHasAudio)
-                    attentionAndAudioDuration += timeStamp - Math.max(lastAttentionUpdateTime, lastAudioUpdateTime);
+                attentionDuration = timeStamp - lastAttentionUpdateTime;
             }
             lastAttentionUpdateTime = timeStamp;
             // HAMILTON: send the event.
