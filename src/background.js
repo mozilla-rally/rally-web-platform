@@ -35,8 +35,7 @@ rally.initialize(
 
     stream.onPageData(async (data) => {
         console.debug('output',
-        data,
-        "-------------------------");
+        data);
         await stream.storage.push(data);
     });
     browser.browserAction.onClicked.addListener(openPage);
