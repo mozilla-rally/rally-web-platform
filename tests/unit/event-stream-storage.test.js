@@ -1,34 +1,28 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-const EventStreamStorage = require('../../src/event-stream-storage');
+import browser from 'webextension-polyfill';
+ import EventStreamStorage from '../../src/event-stream-storage';
 
 describe('EventStreamStorage', function () {
   let storage;
   let webExtensionStorage = {};
   beforeEach(function () {
     webExtensionStorage = {};
-    global.browser = {
-      storage: {}
+    browser.storage.local.get = async function get(key) {
+      if (key === null) {
+        return webExtensionStorage;
+      }
+      const value = webExtensionStorage[key];
+      return { [key]: value };
     }
-    // just mock local storage API here.
-    global.browser.storage.local = {
-      async get(key) {
-        if (key === null) {
-          return webExtensionStorage;
-        }
-        const value = webExtensionStorage[key];
-        return { [key]: value };
-      },
-      async set(obj) {
-        const [key, value] = Object.entries(obj)[0];
-        webExtensionStorage[key] = value;
-      },
-      async clear() {
-        webExtensionStorage = {};
-      },
+    browser.storage.local.set = async function set(obj) {
+      const [key, value] = Object.entries(obj)[0];
+      webExtensionStorage[key] = value;
     };
+    browser.storage.local.clear = async function clear() {
+      webExtensionStorage = {};
+    }
     storage = new EventStreamStorage();
   });
 
@@ -72,14 +66,13 @@ describe('EventStreamStorage', function () {
       await storage.push(links[0]);
       await storage.push(links[1]);
       await storage.push(links[2]);
-      
       const output = await storage.get();
       expect(output).toEqual(links);
     })
   });
 
   describe('reset()', function() {
-    it('clears data with .clresetear()', async function() {
+    it('clears data with .clear()', async function() {
       const links = [
         {url: "link1", elapsed: 1000},
         {url: "link2", elapsed: 2000},

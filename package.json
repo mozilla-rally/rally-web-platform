@@ -7,6 +7,7 @@
     "lint": "eslint . && web-ext lint",
     "package": "npm run build && web-ext build --overwrite-dest --ignore-files \"./tests/**/*\" --ignore-files \"./src/**/*\" --ignore-files \"./rollup.config.js\"",
     "start": "npm run build && web-ext run",
+    "test-addon": "jest",
     "test-integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
     "watch": "npm-run-all --parallel watch-raw watch-bundled",
     "watch-raw": "npm run dev -- -w",
@@ -31,6 +32,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.13.10",
     "@mozilla/rally": "0.5.0",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
