@@ -122,7 +122,6 @@ export async function startMeasurement({
 }) {
     await PageManager.initialize();
 
-
     notifyAboutPrivateWindows = privateWindows;
 
     registeredContentScript = await browser.contentScripts.register({

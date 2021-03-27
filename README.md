@@ -18,4 +18,3 @@ To use this repository to collect your own data and play with it:
       3. Then you can load the add-on from `about:addons`.
 4. browse for a few days to generate data.
 5. Go the the extension page and click the `download JSON` on the top right.
-
