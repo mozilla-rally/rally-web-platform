@@ -5,24 +5,49 @@ import * as Messaging from "../WebScience/Utilities/Messaging.js"
 import * as PageManager from "../WebScience/Utilities/PageManager.js"
 
 /** 
- * Additional information about the page data event.
- * @typedef {Object} PageDataDetails
+ * An interface for the 
+ * @typedef {Object} UserEvent
+ * 
  * @property {number} pageId - The ID for the page, unique across browsing sessions.
  * @property {number} tabId - The ID for the tab containing the page, unique to the browsing session.
  * @property {number} windowId - The ID for the window containing the page, unique to the browsing session.
  * Note that tabs can subsequently move between windows.
+ * @property {boolean} privateWindow - Whether the page is in a private window.
  * @property {string} url - The URL of the page loading in the tab, without any hash.
  * @property {string} referrer - The referrer URL for the page loading in the tab, or `""` if
  * there is no referrer.
- * @property {number} pageVisitStartTime - The time when the underlying event fired.
- * @property {boolean} privateWindow - Whether the page is in a private window.
+ * @property {number} pageVisitStartTime - A unix timestamp (in miliseconds) when the page visit start event fired.
+ * @property {number} pageVisitStopTime - A unix timestamp (in miliseconds) when the page visit stop event fired.
+ * @property {number} duration - Time in miliseconds that the event lasted.
+ * @property {string} reason - the reason the attention event was activated.
+ * @property {string} title - the page's <title> contents, taken from the <head> tag.
+ * @property {string} ogDescription - the page's og:description <meta> tag, taken from the <head> tag.
+ * @property {string} ogType - the page's og:type <meta> tag, taken from the <head> tag.
  * @interface
+ */
+
+/** 
+ * This web extension reports an attention event after the PageManager FIXME event is fired
+ * @typedef {Object} AttentionEvent
+ * 
+ * @implements {UserEvent}
+ * @property {number} MaxPixelScrollDepth - The largest reported pixel value on the active page the user has scrolled.
+ * @property {number} maxRelativeScrollDepth - The largest reported proportion of the active page that has been scrolled already.
+ */
+
+/** 
+ * This web extension reports an audio event after the Pagemanager FIXME event is fired.
+ * @typedef {Object} AudioEvent
+ * 
+ * @implements {UserEvent}
+ * @property {number} audioStartTime - A unix timestamp (in miliseconds) when the audio start event fired.
+ * @property {number} audioEndTime - A unix timestamp (in miliseconds) when the audio start event fired.
  */
 
 /**
  * A callback function for the page data event.
  * @callback pageDataCallback
- * @param {PageDataDetails} details - Additional information about the page data event.
+ * @param {(AttentionEvent|AudioEvent)} details - FIXME.
  */
 
 /**
@@ -154,7 +179,7 @@ function stopMeasurement() {
 }
 
 /**
- * @type {Events.Event<pageDataCallback, PageDataOptions>}
+ * @type {Events.Event<(pageDataCallback, PageDataOptions>}
  */
  export const onPageData = new Events.Event({
     addListenerCallback: addListener,

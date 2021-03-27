@@ -32,11 +32,9 @@ rally.initialize(
   }
 ).then(() => {
     const stream = new EventStreamManager();
-
     stream.onPageData(async (data) => {
-        console.debug('output',
-        data);
         if (__ENABLE_DEVELOPER_MODE__) {
+          console.debug('output', data);
           await stream.storage.push(data); 
         } 
         rally.sendPing("FIXME_ADD_PING_NAME_HERE", data);
