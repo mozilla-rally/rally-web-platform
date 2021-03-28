@@ -18,7 +18,7 @@
  
  export default (cliArgs) => [
    {
-     input: "src/background.js",
+     input: "src/main.js",
      output: {
        file: "dist/background.js",
        sourcemap: isDevMode(cliArgs) ? "inline" : false,

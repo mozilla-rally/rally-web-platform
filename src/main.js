@@ -1,5 +1,6 @@
 import { Rally, runStates } from "@mozilla/rally";
-import EventStreamManager from "./event-stream-manager";
+import { onPageData } from "./attention-reporter";
+import EventStreamInspector from "./event-stream-inspector";
 
 function openPage() {
     browser.runtime.openOptionsPage().catch(e => {
@@ -8,6 +9,11 @@ function openPage() {
   }
   
 const rally = new Rally();
+
+let inspector;
+if (__ENABLE_DEVELOPER_MODE__) {
+  inspector = new EventStreamInspector();
+}
 
 rally.initialize(
   // A sample key id used for encrypting data.
@@ -31,16 +37,16 @@ rally.initialize(
     }
   }
 ).then(() => {
-    const stream = new EventStreamManager();
-
-    stream.onPageData(async (data) => {
-        console.debug('output',
-        data);
-        if (__ENABLE_DEVELOPER_MODE__) {
-          await stream.storage.push(data); 
-        } 
-        rally.sendPing("FIXME_ADD_PING_NAME_HERE", data);
-    });
+    onPageData.addListener(async (data) => {
+      if (__ENABLE_DEVELOPER_MODE__) {
+        console.debug('output', data);
+        await inspector.storage.push(data); 
+      } 
+      rally.sendPing("FIXME_ADD_PING_NAME_HERE", data);
+  }, {
+      matchPatterns: ["<all_urls>"],
+      privateWindows: false
+  });
     browser.browserAction.onClicked.addListener(openPage);
 
 }, reject => {

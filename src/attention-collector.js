@@ -1,7 +1,7 @@
 /**
  * Content script attention-collector for RS01.
  *
- * # Known Issues
+ * ## Known Issues
  *   * When sending page data during a page visit stop event, sometimes
  *     Firefox generates an error ("Promise resolved while context is inactive")
  *     because the content script execution environment is terminating while the
