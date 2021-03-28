@@ -10,9 +10,6 @@ function openPage() {
   
 const rally = new Rally();
 
-/**
- * The inspector is only available in dev mode.
- */
 let inspector;
 if (__ENABLE_DEVELOPER_MODE__) {
   inspector = new EventStreamInspector();

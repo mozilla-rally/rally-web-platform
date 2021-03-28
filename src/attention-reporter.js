@@ -204,7 +204,8 @@ export async function startMeasurement({
 }
 
 /**
- * This function will stop the attention measurement.
+ * This function will stop the attention measurement. It unregisters the 
+ * content script and all associated listeners.
  * 
  */
 export async function stopMeasurement() {
@@ -219,7 +220,7 @@ export async function stopMeasurement() {
  * An event that is fired when an attention event is emitted.
  * This is the main function to be consumed. `pageDataCallback` is a function
  * that has an `AudioEvent` or `AttentionEvent` as the first argument.
- * @type {Events.Event<pageDataCallback, PageVisitStartListenerOptions>}
+ * @type {Events.Event<pageDataCallback, pageDataListenerOptions>}
  */
  export const onPageData = new Events.Event({
     addListenerCallback: addListener,

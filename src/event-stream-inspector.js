@@ -3,7 +3,7 @@
  * - provides a storage endpoint for saving `AttentionEvent` and `AudioEvent` instances
  * - handles communication with the extension page that enables the user to inspect the events already collected and
  * download them
- * This functionality is hhandled through the {@link EventStreamInspector} class.
+ * This functionality is handled through the {@link EventStreamInspector} class.
  * @example
  * // basic usage with the `onPageData` listener from {@link attention-reporter}
  * const inspector = new EventStreamInspector();
