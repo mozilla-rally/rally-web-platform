@@ -1,9 +1,9 @@
 /** 
- * In dev mode, manages the following:
+ * This module manages the following:
  * - provides a storage endpoint for saving `AttentionEvent` and `AudioEvent` instances
  * - handles communication with the extension page that enables the user to inspect the events already collected and
  * download them
- * This functionality is hhandled through the {@link EventStreamManager} class.
+ * This functionality is hhandled through the {@link EventStreamIInspector} class.
  * @example
  * // basic usage with the `onPageData` listener from {@link attention-reporter}
  * onPageData.addListener(async (data) => {
@@ -13,20 +13,20 @@
  *     matchPatterns: ["<all_urls>"],
  *     privateWindows: false
  * });
- * @module EventStreamManager
+ * @module EventStreamInspector
  */
 import browser from "webextension-polyfill";
 import EventStreamStorage from "./event-stream-storage";
 
 /**
- * @class EventStreamManager
+ * @class EventStreamInspector
  * @classdesc In dev mode, manages the following:
  * - instead of sending the data to an endpoint, it stores it locally
  * - handles communication with the extension page that enables the user to inspect the events already collected and
  * download them
  * @property {EventStreamStorage} storage - The {@link EventStreamStorage} instance.
  */
-export default class EventStreamManager {
+export default class EventStreamInspector {
     constructor() {
         this._connectionPort = {};
         this.storage = new EventStreamStorage();

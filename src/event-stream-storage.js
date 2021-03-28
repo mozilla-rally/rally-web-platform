@@ -1,5 +1,19 @@
 /** 
+ * This module wraps `browser.storage.local` to provide an asynchronous array-like API.
+ * @example
+ * const storage = new EventStreamStorage();
+ * async function demo() {
+ *  // push an event onto the array.
+ *  const length = await storage.push({"url": "https://example.biz"});
+ *  // get the current length. It should be the same as length above.
+ *  const sameLength = await storage.length();
  * 
+ *  // data should be [{"url": "https://example.biz"}]
+ *  const data = await storage.get();
+ * 
+ *  // resetting will set length back to 0.
+ *  await storage.reset();
+ * }
  * @module EventStreamStorage
  */
 
@@ -16,7 +30,7 @@
     }
 
   /** 
-   * get all data in storage and return as array
+   * get all data in storage and return an array
    * 
    * @async
    * @example
@@ -46,7 +60,6 @@
    * @async
    * @example
    * event.on('newEvent', async (event) => {
-   *  // save to storage here
    *  const newLength = await storage.set(event);
    *  console.log({ newLength });
    * });
@@ -64,7 +77,6 @@
    * clears the storage instance
    * @example
    * event.on('deletion', async () => {
-   *  // reset storage here
    *  await storage.reset();
    * });
    * @async
