@@ -1,16 +1,45 @@
+/** 
+ * In dev mode, manages the following:
+ * - provides a storage endpoint for saving `AttentionEvent` and `AudioEvent` instances
+ * - handles communication with the extension page that enables the user to inspect the events already collected and
+ * download them
+ * This functionality is hhandled through the {@link EventStreamManager} class.
+ * @example
+ * // basic usage with the `onPageData` listener from {@link attention-reporter}
+ * onPageData.addListener(async (data) => {
+ *  // this datapoint will be viewable on the extension page
+ *  await stream.storage.push(data); 
+ * }, {
+ *     matchPatterns: ["<all_urls>"],
+ *     privateWindows: false
+ * });
+ * @module EventStreamManager
+ */
 import browser from "webextension-polyfill";
-import { onPageData } from "./attention-reporter";
 import EventStreamStorage from "./event-stream-storage";
 
-export default class AttentionStream {
+/**
+ * @class EventStreamManager
+ * @classdesc In dev mode, manages the following:
+ * - instead of sending the data to an endpoint, it stores it locally
+ * - handles communication with the extension page that enables the user to inspect the events already collected and
+ * download them
+ * @property {EventStreamStorage} storage - The {@link EventStreamStorage} instance.
+ */
+export default class EventStreamManager {
     constructor() {
         this._connectionPort = {};
         this.storage = new EventStreamStorage();
         this.initialize();
     }
 
+	/**
+	 * Initializes the listener used to communicate with this web extension's optional
+     * extension page.
+	 *
+	 * @private
+	 */
     initialize() {
-        // connect here for messages to the options page
         browser.runtime.onConnect.addListener(
             p => {
                 this._onPortConnected(p);
@@ -35,6 +64,9 @@ export default class AttentionStream {
         });
     }
 
+    /**
+     * @private
+     */
     async _sendDataToUI() {
         // Send a message to the UI to update the list of studies.
         const events = await this.storage.get();
@@ -54,12 +86,5 @@ export default class AttentionStream {
             return Promise.reject(
                 new Error(`Rally Study - unexpected message type ${message.type}`));
         }
-    }
-
-    onPageData(callback) {
-        onPageData.addListener(callback, {
-            matchPatterns: ["<all_urls>"],
-            privateWindows: false
-        });
     }
 }
