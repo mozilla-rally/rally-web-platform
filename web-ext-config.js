@@ -27,9 +27,9 @@
     "LICENSE",
     "package-lock.json",
     "package.json",
+    "public",
     "README.md",
     "rollup.config.*",
     "web-ext-config.js",
-    "public/**/*.map",
   ],
 };
