@@ -21,7 +21,7 @@ As of this writing, this repository uses a vendored version of `web-science`. We
 
 Look in `src/background.js` to see how we use the `attention-reporter.js` and `attention-collector.js` modules.
 
-## running this study
+## running this study to collect your own data
 
 1. fork or clone this repository
 2. run `npm install`

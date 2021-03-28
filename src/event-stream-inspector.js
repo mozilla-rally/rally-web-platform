@@ -22,10 +22,11 @@ import EventStreamStorage from "./event-stream-storage";
 
 /**
  * @class EventStreamInspector
- * @classdesc In dev mode, manages the following:
- * - instead of sending the data to an endpoint, it stores it locally
+ * @classdesc This class manages the following:
+ * - provides a storage endpoint for saving `AttentionEvent` and `AudioEvent` instances
  * - handles communication with the extension page that enables the user to inspect the events already collected and
  * download them
+ * This functionality is handled through the {@link EventStreamInspector} class.
  * @property {EventStreamStorage} storage - The {@link EventStreamStorage} instance.
  */
 export default class EventStreamInspector {
