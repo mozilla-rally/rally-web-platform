@@ -9,8 +9,8 @@
  const EventStreamInspector = require('../../src/event-stream-inspector').default;
 
  describe('EventStreamInspector', function () {
-   let webExtensionStorage = {};
-    let inspector;
+  let webExtensionStorage = {};
+  let inspector;
   beforeAll(function() {
     global.browser = browser;
     global.browser.storage = {};
