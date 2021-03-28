@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "scripts": {
     "build": "rollup -c",
+    "build:addon": "rollup -c && web-ext build --overwrite-dest && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi",
     "dev": "rollup -c --config-enable-developer-mode",
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
-    "lint": "eslint . && web-ext lint",
+    "lint": "npm-run-all lint:web-ext lint:eslint",
+    "lint:eslint": "eslint .",
+    "lint:web-ext": "web-ext lint",
     "package": "npm run build && web-ext build --overwrite-dest --ignore-files \"./tests/**/*\" --ignore-files \"./src/**/*\" --ignore-files \"./rollup.config.js\"",
     "start": "npm run build && web-ext run",
-    "test-addon": "jest",
-    "test-integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
-    "watch": "npm-run-all --parallel watch-raw watch-bundled",
-    "watch-raw": "npm run dev -- -w",
-    "watch-bundled": "web-ext run --watch-file dist/background.js --watch-file src/attention-collector.js"
+    "test:unit": "jest",
+    "test:integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
+    "watch": "npm-run-all --parallel watch:raw watch:bundled",
+    "watch:raw": "npm run dev -- -w",
+    "watch:bundled": "web-ext run --watch-file dist/background.js --watch-file src/attention-collector.js"
   },
   "jest": {
     "verbose": true,
@@ -74,13 +77,13 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "description": "This a basic template for a Rally study.",
+  "description": "An exploratory study on what sites people use and how long they use them.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mozilla-rally/rally-study-01.git"
   },
   "keywords": [],
-  "author": "Mozilla",
+  "author": "Hamilton Ulmer",
   "license": "MPL-2.0",
   "private": true,
   "bugs": {

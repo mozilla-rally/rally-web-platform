@@ -12,24 +12,53 @@ This repository contains the code needed to build the Rally Study 01 Web Extensi
 The study submits data through [Mozilla Rally's Web Extension](https://github.com/mozilla-rally/rally-core-addon),
 or can be run locally without Mozilla Rally installed on your computer.
 
+## Quickstart
+
+```bash
+# install all dependencies
+npm install
+
+# run developer mode.
+# this will run web-ext and listen for all input files, 
+# and will rebuild and auto-reload for you.
+npm run watch
+
+# build the addon and output the xpi so that it can be side-loaded in Firefox Nightly.
+# See the "running thiis study to collect your own data" 
+# section below for further instructions.
+npm run build:addon
+
+# --- Other commands you might be interested in ---
+# generate documentation for all modules in the doc/ directory.
+npm run doc
+
+# run unit tests
+npm run test:unit
+```
+
 ## Understanding this repository
 
 This repository contains everything need to generate documentation and build the study web extension itself.
 
-As of this writing, this repository uses a vendored version of `web-science`. We will remove this vendored version once
+As of this writing, this repository uses a vendored version of `web-science`, contained in `/WebScience`. We will remove this vendored version once
 [we have published `0.1.0` of the library](https://github.com/mozilla-rally/web-science/issues/3).
 
-Look in `src/background.js` to see how we use the `attention-reporter.js` and `attention-collector.js` modules.
+Below is a curated description of the important modules:
 
-## running this study to collect your own data
+- `src/main.js` - the main entrypoint for the study. Configures the Rally API, establishes the callback for page data, etc.
+- `src/attention-reporter.js` - the reporting module for the data collection. Registers the `src/attention-collector.js` content script and handles the starting and stopping of measurement.
+- `src/event-stream-inspector.js` & `serc/event-stream-storage.js` – these modules are used in developer mode only. They enable the developer to examine which events are being collected and to export the collected data as a JSON file.
+- `src/app/` – the code for the frontend component of the options page that is made available in developer mode.
+
+## running this study locally to collect your own data and play with it
 
 1. fork or clone this repository
 2. run `npm install`
 3. if you are:
-   1. a chrome user: run `npm run build-addon`, then [follow the instructions to load an unpacked web extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/). That's it!
+   1. a chrome user: run `npm run build`, then [follow the instructions to load an unpacked web extension](https://developer.chrome.com/docs/extensions/mv2/getstarted/). That's it!
    2. a firefox user: 
       1. you'll have to use Nightly & set `xpinstall.signatures.required` to `false` in `about:config`. 
-      2. then run `npm run build-addon` in this directory.
+      2. then run `npm run build:addon` in this directory.
       3. Then you can load the add-on from `about:addons`.
 4. browse for a few days to generate data.
 5. Go the the extension page and click the `download JSON` button on the top right.
