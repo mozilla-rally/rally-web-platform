@@ -41,8 +41,12 @@ rally.initialize(
       if (__ENABLE_DEVELOPER_MODE__) {
         console.debug('output', data);
         await inspector.storage.push(data); 
-      } 
-      rally.sendPing("FIXME_ADD_PING_NAME_HERE", data);
+      }
+      // though we collect the data as two different event types using Web Science,
+      // we send the payload using one schema, "RS01.event".
+      // Once https://github.com/mozilla-rally/web-science/issues/33 is resolved,
+      // we will change the collection schema (but keep this pipeline schema the same).
+      rally.sendPing("RS01.event", data);
   }, {
       matchPatterns: ["<all_urls>"],
       privateWindows: false

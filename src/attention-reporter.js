@@ -26,7 +26,6 @@
  */
 
 import browser from 'webextension-polyfill';
-
 import * as Events from "../WebScience/Utilities/Events.js"
 import * as Messaging from "../WebScience/Utilities/Messaging.js"
 import * as PageManager from "../WebScience/Utilities/PageManager.js"
@@ -35,43 +34,40 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js"
  * The generic interface that defines the shared properties for `AttentionEvent` and `AudioEvent`.
  * @typedef {Object} UserEvent
  * 
- * @property {number} pageId - The ID for the page, unique across browsing sessions.
- * @property {number} tabId - The ID for the tab containing the page, unique to the browsing session.
- * @property {number} windowId - The ID for the window containing the page, unique to the browsing session.
- * Note that tabs can subsequently move between windows.
- * @property {boolean} privateWindow - Whether the page is in a private window.
+ * @property {string} pageId - The ID for the page, unique across browsing sessions.
  * @property {string} url - The URL of the page loading in the tab, without any hash.
  * @property {string} referrer - The referrer URL for the page loading in the tab, or `""` if
  * there is no referrer.
  * @property {number} pageVisitStartTime - A unix timestamp (in miliseconds) when the page visit start event fired.
  * @property {number} pageVisitStopTime - A unix timestamp (in miliseconds) when the page visit stop event fired.
  * @property {number} duration - Time in miliseconds that the event lasted.
- * @property {string} reason - the reason the attention event was activated.
+ * @property {string} reason - the reason the attention event ended.
  * @property {string} title - the page's <title> contents, taken from the <head> tag.
  * @property {string} ogDescription - the page's og:description <meta> tag, taken from the <head> tag.
  * @property {string} ogType - the page's og:type <meta> tag, taken from the <head> tag.
+ * @property {number} eventStartTime - a unix timestamp in miliseconds specifying the start time of the event
+ * @property {number} eventStopTime - a unix timestamp in miliseconds specifying the stop time of the event
  * @interface
  */
 
 /** 
  * This web extension reports an attention event after the PageManager FIXME event is fired.
- * See [`UserEvent`](/RS01.module_attention-reporter-UserEvent.html) for additional properties.
+ * See {@link UserEvent} for additional properties.
  * @typedef {Object} AttentionEvent
  * 
  * @implements {UserEvent}
  * @property {number} MaxPixelScrollDepth - The largest reported pixel value on the active page the user has scrolled.
  * @property {number} maxRelativeScrollDepth - The largest reported proportion of the active page that has been scrolled already.
+ * @property {number} scrollHeight - The total scroll height of the page, taken from document.documentElement.scrollHeight.
  * @interface
  */
 
 /** 
  * This web extension reports an audio event after the Pagemanager FIXME event is fired.
- * See [`UserEvent`](/RS01.module_attention-reporter-UserEvent.html) for additional properties.
+ * See {@link UserEvent} for additional properties.
  * @typedef {Object} AudioEvent
  * 
  * @implements {UserEvent}
- * @property {number} audioStartTime - A unix timestamp (in miliseconds) when the audio start event fired.
- * @property {number} audioEndTime - A unix timestamp (in miliseconds) when the audio start event fired.
  * @interface
  */
 
@@ -154,8 +150,10 @@ function pageDataListener(pageData) {
  */
 export async function startMeasurement({
     matchPatterns = [ ],
-    privateWindows = false
+    privateWindows = false,
+    schema
 }) {
+
     await PageManager.initialize();
 
     notifyAboutPrivateWindows = privateWindows;
@@ -167,39 +165,42 @@ export async function startMeasurement({
         }],
         runAt: "document_start"
     });
+
+    // Event properties that both of these event types consume.
+    const sharedEventProperties = {
+        pageId: "string",
+        url: "string",
+        referrer: "string",
+        eventType: "string",
+        pageVisitStartTime: "number",
+        pageVisitStopTime: "number",
+        eventStartTime: "number",
+        eventStopTime: "number",
+        duration: "number",
+        eventTerminationReason: "string",
+        title: "string",
+        ogType: "string",
+        description: "string",
+    }
+
     /**
+     * Add listeners for each schema defined in the measurements schema.
+     * Because WebScience's messaging module does not support optional fields
+     * nor multiple field types, we will break out the attention collection from the audio collection.
+     * When we submit the event to the endpoint, however, we make no distinction between the two, utilizing
+     * the eventType property to distinguish the two cases.
+     * See https://github.com/mozilla-rally/web-science/issues/33 for more information.
      * @event
      */
-    Messaging.registerListener("RS01.attentionEvent", pageDataListener, {
-        pageId: "string",
-        url: "string",
-        referrer: "string",
-        pageVisitStartTime: "number",
-        pageVisitStopTime: "number",
-        duration: "number",
+     Messaging.registerListener("RS01.attentionCollection", pageDataListener, {
+        ...sharedEventProperties,
         maxRelativeScrollDepth: "number",
         maxPixelScrollDepth: "number",
-        privateWindow: "boolean",
-        reason: "string",
-        title: "string",
-        ogType: "string",
-        ogDescription: "string"
+        scrollHeight: "number",
     });
 
-    Messaging.registerListener("RS01.audioEvent", pageDataListener, {
-        pageId: "string",
-        url: "string",
-        referrer: "string",
-        pageVisitStartTime: "number",
-        pageVisitStopTime: "number",
-        duration: "number",
-        audioStartTime: "number",
-        audioEndTime: "number",
-        privateWindow: "boolean",
-        reason: "string",
-        title: "string",
-        ogType: "string",
-        ogDescription: "string"
+    Messaging.registerListener("RS01.audioCollection", pageDataListener, {
+        ...sharedEventProperties
     });
 }
 
@@ -209,8 +210,8 @@ export async function startMeasurement({
  * 
  */
 export async function stopMeasurement() {
-    Messaging.unregisterListener("RS01.attentionEvent", pageDataListener);
-    Messaging.unregisterListener("RS01.audioEvent", pageDataListener);
+    Messaging.unregisterListener("RS01.attentionCollection", pageDataListener);    
+    Messaging.unregisterListener("RS01.audioCollection", pageDataListener);    
     registeredContentScript.unregister();
     registeredContentScript = null;
     notifyAboutPrivateWindows = false;

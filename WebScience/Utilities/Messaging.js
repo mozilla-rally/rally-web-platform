@@ -94,7 +94,10 @@ export function validateMessageAgainstSchema(message, messageSchema)
 
     // Check the message against the schema.
     for(const field in messageSchema) {
-        if (!(field in message) || (typeof message[field] !== messageSchema[field])) {
+        if (
+            !(field in message) || 
+            (typeof message[field] !== messageSchema[field])
+        ) {
             console.group("WebScience.Utilities.Messaging");
             console.debug(`mismatch between message and schema`);
             console.debug(`field: ${field}`);

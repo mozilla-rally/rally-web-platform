@@ -50,6 +50,16 @@ Below is a curated description of the important modules:
 - `src/event-stream-inspector.js` & `serc/event-stream-storage.js` – these modules are used in developer mode only. They enable the developer to examine which events are being collected and to export the collected data as a JSON file.
 - `src/app/` – the code for the frontend component of the options page that is made available in developer mode.
 
+## the event data collected by this study
+
+This study *collects* two types of events:
+1. *attention events* (`RS01.attentionCollection`), defined by `web-science` as an active tab in an active window
+2. *audio events* (`RS01.audioCollection`), defined by `web-science` as an audio event playing on an active tab in an active window
+
+And it *submits* one kind of event, `RS01.event`. We collect as two events because of current limitations in WebScience's messaging schema validation. We don't have this limitation when submitting the final payload to the endpoint.
+
+The events submitted in this study are defined by the measurements schema, kept in `schema/`. All of the building & watching NPM commands in this repository will first generate this schema. To do it yourself and see all the fields collected by this study, run `npm run build:schema` and observe the results in `schema/measurements.1.schema.json`.
+
 ## running this study locally to collect your own data and play with it
 
 1. fork or clone this repository

@@ -33,6 +33,10 @@
         return getContentsHavingSelector('meta[property="og:description"]', documentElement);
     }
 
+    function getMetaDescription(documentElement) {
+        return getContentsHavingSelector('meta[name="description"]', documentElement);
+    }
+
     // Inner function encapsulation to wait for PageManager load
     const attentionCollector = function () {
         /**
@@ -136,13 +140,22 @@
          */
         let ogType = '';
 
+        let attentionStartTime;
+        let attentionStopTime;
         let audioStartTime;
-        let audioEndTime;
+        let audioStopTime;
+        let scrollHeight = 0;
         let maxPixelScrollDepth = 0;
 
-        function sendAttentionData(timestamp, reason) {
+        function getDOMElements() {
+            title = getTitle(document) || '';
+            ogDescription = getOGDescription(document) || getMetaDescription(document) || '';
+            ogType = getOGType(document) || '';
+        }
+
+        function sendAttentionData(timestamp, eventTerminationReason) {
             PageManager.sendMessage({ 
-                type: "RS01.attentionEvent",
+                type: "RS01.attentionCollection",
                 pageId: PageManager.pageId,
                 url: PageManager.url,
                 referrer: PageManager.referrer,
@@ -151,30 +164,33 @@
                 duration: attentionDuration,
                 maxRelativeScrollDepth,
                 maxPixelScrollDepth,
-                privateWindow: browser.extension.inIncognitoContext,
-                reason,
+                scrollHeight,
+                eventTerminationReason,
                 title,
                 ogType,
-                ogDescription
+                description: ogDescription,
+                eventStartTime: attentionStartTime,
+                eventStopTime: attentionStopTime,
+                eventType: "attention"
             });
         }
 
-        function sendAudioData(timestamp, reason) {
+        function sendAudioData(timestamp, eventTerminationReason) {
             PageManager.sendMessage({ 
-                type: "RS01.audioEvent",
+                type: "RS01.audioCollection",
                 pageId: PageManager.pageId,
                 url: PageManager.url,
                 referrer: PageManager.referrer,
                 pageVisitStartTime: PageManager.pageVisitStartTime,
                 pageVisitStopTime: timestamp,
                 duration: audioDuration,
-                privateWindow: browser.extension.inIncognitoContext,
-                audioStartTime,
-                audioEndTime,
-                reason,
+                eventTerminationReason,
                 title,
                 ogType,
-                ogDescription
+                description: ogDescription,
+                eventStartTime: audioStartTime,
+                eventStopTime: audioStopTime,
+                eventType: "audio"
             });
         }
 
@@ -192,14 +208,15 @@
                 if((scrollDepthWaitForAttention || ((Date.now() - PageManager.pageVisitStartTime) >= scrollDepthUpdateDelay)) &&
                    (!scrollDepthWaitForAttention || ((firstAttentionTime > 0) && ((Date.now() - firstAttentionTime) >= scrollDepthUpdateDelay))) &&
                    (document.documentElement.offsetHeight >= scrollDepthMinimumHeight)) {
-                    // set the total scroll pixels?
-                    // something here needs to be full pixel depth.
+                    
+                    scrollHeight = document.documentElement.scrollHeight
+
                     maxPixelScrollDepth =
-                        Math.min(document.documentElement.scrollHeight,
+                        Math.min(scrollHeight,
                             Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
                         );
                     maxRelativeScrollDepth = Math.min(
-                        Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / document.documentElement.scrollHeight),
+                        Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / scrollHeight),
                         1);
                    }    
             }, scrollDepthUpdateInterval);
@@ -219,6 +236,13 @@
             // Clear the interval timer for checking scroll depth
             clearInterval(scrollDepthIntervalId);
             if (PageManager.pageHasAttention) {
+                attentionStopTime = timeStamp;
+                audioStopTime = timeStamp;
+                // if the page had audio, it's time to send the audio data event.
+                if (PageManager.pageHasAudio) {
+                    sendAudioData(timeStamp, 'page-visit-stop');
+                } 
+                // always send an attention event.
                 sendAttentionData(timeStamp, 'page-visit-stop');
             }
         });
@@ -227,9 +251,8 @@
             const { timeStamp, reason } = etc;
             // onAttentionStart
             if(PageManager.pageHasAttention) {
-                title = getTitle(document) || '';
-                ogDescription = getOGDescription(document) || '';
-                ogType = getOGType(document) || '';
+                attentionStartTime = timeStamp;
+                getDOMElements();
             }
 
             // If the page just gained attention for the first time, store the time stamp
@@ -244,6 +267,7 @@
             lastAttentionUpdateTime = timeStamp;
             // HAMILTON: send the event.
             if(!PageManager.pageHasAttention) {
+                attentionStopTime = timeStamp;
                 sendAttentionData(timeStamp, reason);
             }
         });
@@ -255,7 +279,8 @@
             }
             if(!PageManager.pageHasAudio) {
                 audioDuration = timeStamp - lastAudioUpdateTime;
-                audioEndTime = timeStamp;
+                audioStopTime = timeStamp;
+                getDOMElements();
                 sendAudioData(timeStamp, "audio-event-finished");
             }
             lastAudioUpdateTime = timeStamp;
