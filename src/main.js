@@ -27,7 +27,7 @@ rally.initialize(
 ).then(() => {
     onPageData.addListener(async (data) => {
       if (__ENABLE_DEVELOPER_MODE__) {
-        console.debug('output', data);
+        console.debug('RS01.event', data);
       }
       // though we collect the data as two different event types using Web Science,
       // we send the payload using one schema, "RS01.event".
