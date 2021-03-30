@@ -1,10 +1,15 @@
 {
-  "description": "The first Rally study",
+  "description": "FIXME: copy must be added here https://github.com/mozilla-rally/rally-study-01/issues/62",
   "author": "Mozilla",
   "manifest_version": 2,
   "name": "Rally Study 01",
   "version": "0.3.0",
   "homepage_url": "https://github.com/mozilla-rally/rally-study-01",
+
+  "icons": {
+    "16": "icons/icon.svg",
+    "32": "icons/icon.svg"
+  },
 
   "applications": {
     "gecko": {
@@ -13,36 +18,9 @@
     }
   },
 
-  "permissions": [
-    "tabs",
-    "storage",
-    "unlimitedStorage",
-    "idle",
-    "webRequest",
-    "<all_urls>",
-    "webNavigation"
-  ],
-
-  "options_ui": {
-    "page": "public/index.html",
-    "open_in_tab": true
-  },
-
-  "browser_action": {
-    "default_icon": {
-      "16": "icons/icon.svg",
-      "32": "icons/icon.svg"
-    }
-  },
+  "permissions": ["tabs", "idle", "webRequest", "<all_urls>", "webNavigation"],
 
   "background": {
     "scripts": ["dist/background.js"]
-  },
-
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["dist/content-script.js"]
-    }
-  ]
+  }
 }

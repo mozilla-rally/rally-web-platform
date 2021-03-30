@@ -1,19 +1,7 @@
 import { Rally, runStates } from "@mozilla/rally";
 import { onPageData } from "./attention-reporter";
-import EventStreamInspector from "./event-stream-inspector";
-
-function openPage() {
-    browser.runtime.openOptionsPage().catch(e => {
-      console.error(`Study Add-On - Unable to open the control panel`, e);
-    });
-  }
   
 const rally = new Rally();
-
-let inspector;
-if (__ENABLE_DEVELOPER_MODE__) {
-  inspector = new EventStreamInspector();
-}
 
 rally.initialize(
   // A sample key id used for encrypting data.
@@ -40,7 +28,6 @@ rally.initialize(
     onPageData.addListener(async (data) => {
       if (__ENABLE_DEVELOPER_MODE__) {
         console.debug('output', data);
-        await inspector.storage.push(data); 
       }
       // though we collect the data as two different event types using Web Science,
       // we send the payload using one schema, "RS01.event".
@@ -51,8 +38,6 @@ rally.initialize(
       matchPatterns: ["<all_urls>"],
       privateWindows: false
   });
-    browser.browserAction.onClicked.addListener(openPage);
-
 }, reject => {
   // Do not start the study in this case. Something
   // went wrong.
