@@ -1,0 +1,42 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+---
+version: 2.1
+
+jobs:
+  Build:
+    docker:
+      - image: cimg/node:14.13.1
+    steps:
+      - checkout
+      - run:
+          name: Install the dependencies
+          command: npm install
+      - run:
+          name: Build the study
+          command: npm run build
+
+  Addon code linting:
+    docker:
+      - image: cimg/node:14.13.1
+    steps:
+      - checkout
+      - run:
+          name: Install the dependencies
+          command: npm install
+      - run:
+          name: Build the study
+          command: npm run build
+      - run:
+          name: Run linting
+          command: npm run lint
+
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - Build
+      - Addon code linting
