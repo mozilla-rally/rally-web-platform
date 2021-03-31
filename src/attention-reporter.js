@@ -112,7 +112,6 @@ function removeListener(listener) {
  * @type {RegisteredContentScript|null}
  */
 let registeredContentScript = null;
-
 /**
  * Whether to notify the page data listener about private windows.
  * @private
@@ -151,7 +150,6 @@ function pageDataListener(pageData) {
 export async function startMeasurement({
     matchPatterns = [ ],
     privateWindows = false,
-    schema
 }) {
 
     await PageManager.initialize();
