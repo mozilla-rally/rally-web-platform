@@ -35,6 +35,9 @@
     },
     "setupFiles": [
       "jest-webextension-mock"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/@mozilla/rally.js"
     ]
   },
   "devDependencies": {
