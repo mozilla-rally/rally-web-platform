@@ -149,8 +149,7 @@
          * @param {string} message - The debugging message.
          */
         function debugLog(message) {
-            // HAMILTON: commented this out.
-            //console.debug(`WebScience.Utilities.PageManager (Content Script): ${message}`);
+            console.debug(`WebScience.Utilities.PageManager (Content Script): ${message}`);
         }
 
         // Event management types and classes
@@ -412,7 +411,6 @@
 
             PageManager.pageVisitStarted = true;
 
-            debugLog(`Page visit start: ${JSON.stringify(PageManager)}`);
         }
 
         /**
@@ -439,7 +437,6 @@
                 timeStamp
             }]);
 
-            debugLog(`Page visit stop: ${JSON.stringify(PageManager)}`);
         }
 
         /**

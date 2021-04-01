@@ -121,7 +121,6 @@
          */
         let scrollDepthIntervalId = 0;
 
-        // HAMILTON: fields I have added are below
         /**
          * The title element contents of the page.
          * @type {string}
@@ -222,8 +221,9 @@
             }, scrollDepthUpdateInterval);
         };
 
-        if(PageManager.pageVisitStarted)
+        if(PageManager.pageVisitStarted) {
             pageVisitStart({ timeStamp: PageManager.pageVisitStartTime });
+        }
         PageManager.onPageVisitStart.addListener(pageVisitStart);
 
         PageManager.onPageVisitStop.addListener(({ timeStamp }) => {
@@ -265,7 +265,6 @@
                 attentionDuration = timeStamp - lastAttentionUpdateTime;
             }
             lastAttentionUpdateTime = timeStamp;
-            // HAMILTON: send the event.
             if(!PageManager.pageHasAttention) {
                 attentionStopTime = timeStamp;
                 sendAttentionData(timeStamp, reason);
@@ -276,8 +275,7 @@
             if (PageManager.pageHasAudio) {
                 lastAudioUpdateTime = timeStamp;
                 audioStartTime = timeStamp;
-            }
-            if(!PageManager.pageHasAudio) {
+            } else {
                 audioDuration = timeStamp - lastAudioUpdateTime;
                 audioStopTime = timeStamp;
                 getDOMElements();

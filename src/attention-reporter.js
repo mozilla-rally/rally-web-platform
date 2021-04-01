@@ -51,7 +51,7 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js"
  */
 
 /** 
- * This web extension reports an attention event after the PageManager FIXME event is fired.
+ * This web extension reports an attention event after the PageManager pageVisitStop and pageAttentionUpdate (when attention ends) events is fired.
  * See {@link UserEvent} for additional properties.
  * @typedef {Object} AttentionEvent
  * 
@@ -63,7 +63,7 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js"
  */
 
 /** 
- * This web extension reports an audio event after the Pagemanager FIXME event is fired.
+ * This web extension reports an audio event after the PageManager pageAudioUpdate event (when page ceases to have audio) is fired.
  * See {@link UserEvent} for additional properties.
  * @typedef {Object} AudioEvent
  * 
@@ -74,7 +74,7 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js"
 /**
  * A callback function for the page data event.
  * @callback pageDataCallback
- * @param {(AttentionEvent|AudioEvent)} details - FIXME.
+ * @param {(AttentionEvent|AudioEvent)} details
  */
 
 /**
@@ -86,7 +86,6 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js"
 
 /**
  * Function to start measurement when a listener is added
- * TODO: deal with multiple listeners with different match patterns
  * @private
  * @param {EventCallbackFunction} listener - new listener being added
  * @param {PageDataOptions} options - configuration for the events to be sent to this listener
@@ -126,12 +125,10 @@ let notifyAboutPrivateWindows = false;
 function pageDataListener(pageData) {
     // If the page is in a private window and the module should not measure private windows,
     // ignore the page
-    if(!notifyAboutPrivateWindows && pageData.privateWindow)
+    if(!(notifyAboutPrivateWindows) && pageData.privateWindow)
         return;
 
     // Delete the type string from the content script message
-    // There isn't (yet) a good way to document this in JSDoc, because there isn't support
-    // for object inheritance
     delete pageData.type;
 
     onPageData.notifyListeners([ pageData ]);
@@ -159,7 +156,7 @@ export async function startMeasurement({
     registeredContentScript = await browser.contentScripts.register({
         matches: matchPatterns,
         js: [{
-            file: "/src/attention-collector.js"
+            file: "/src/content-scripts/attention-collector.js"
         }],
         runAt: "document_start"
     });

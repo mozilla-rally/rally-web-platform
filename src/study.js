@@ -20,38 +20,37 @@ function collectEventDataAndSubmit(rally, devMode) {
 
 export default async function runStudy(devMode) {
     const rally = new Rally();
-
-    await rally.initialize(
-        // A sample key id used for encrypting data.
-        "sample-invalid-key-id",
-        // A sample *valid* JWK object for the encryption.
-    {
-        "kty":"EC",
-        "crv":"P-256",
-        "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
-        "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
-        "kid":"Public key used in JWS spec Appendix A.3 example"
-    },
-    // The following constant is automatically provided by
-    // the build system.
-    devMode,
-    (newState) => {
-        if (newState === runStates.RUNNING) {
-        // if the study is running but wasn't previously, let's re-initiate the onPageData listener.
-        console.debug("~~~ RS01 running ~~~");
-        collectEventDataAndSubmit(rally, devMode);
-        } else {
-        console.debug("~~~ RS01 not running ~~~");
-        // stop the measurement here.
-        stopMeasurement();
-        }
-    }).then(() => {
-    // Initialize the event data collection and submission.
+    try {
+      await rally.initialize(
+          // A sample key id used for encrypting data.
+          "sample-invalid-key-id",
+          // A sample *valid* JWK object for the encryption.
+      {
+          "kty":"EC",
+          "crv":"P-256",
+          "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
+          "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
+          "kid":"Public key used in JWS spec Appendix A.3 example"
+      },
+      // The following constant is automatically provided by
+      // the build system.
+      devMode,
+      (newState) => {
+          if (newState === runStates.RUNNING) {
+          // if the study is running but wasn't previously, let's re-initiate the onPageData listener.
+          console.debug("~~~ RS01 running ~~~");
+          collectEventDataAndSubmit(rally, devMode);
+          } else {
+          console.debug("~~~ RS01 not running ~~~");
+          // stop the measurement here.
+          stopMeasurement();
+          }
+      })
+    } catch (err) {
+      throw new Error(err);
+    }
+    // if initialization worked, commence data collection.
     console.debug("~~~ RS01 running ~~~");
     collectEventDataAndSubmit(rally, devMode);
-    }, reject => {
-    // Do not start the study in this case. Something
-    // went wrong.
-    });
     return rally;
 }

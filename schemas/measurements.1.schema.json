@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$comment": "Please do not edit this schema by hand. Generate it instead by running npm run build:schema. This one was last generated on Wed Mar 31 2021 08:21:28 GMT-0700 (Pacific Daylight Time)",
+  "$comment": "Please do not edit this schema by hand. Generate it instead by running npm run build:schema. This one was last generated on Thu Apr 01 2021 08:41:23 GMT-0700 (Pacific Daylight Time)",
   "mozPipelineMetadata": {
     "bq_dataset_family": "rally_study_01",
     "bq_metadata_format": "pioneer",
