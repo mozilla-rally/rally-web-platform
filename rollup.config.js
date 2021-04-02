@@ -36,5 +36,24 @@ export default (cliArgs) => [
       commonjs(),
     ],
   },
+  {
+    input: "src/content-scripts/attention-collector.js",
+    output: {
+      file: "dist/content-scripts/attention-collector.js",
+      sourcemap: isDevMode(cliArgs) ? "inline" : false,
+    },
+    plugins: [
+      replace({
+        // In Developer Mode, the study does not submit data and
+        // gracefully handles communication errors with the Core
+        // Add-on.
+        __ENABLE_DEVELOPER_MODE__: isDevMode(cliArgs),
+      }),
+      resolve({
+        browser: true,
+      }),
+      commonjs(),
+    ],
+  }
   // NOTE: a content script rollup is not needed for this study.
 ];

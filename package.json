@@ -17,7 +17,7 @@
     "test:integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
     "watch": "npm-run-all --parallel watch:raw watch:bundled",
     "watch:raw": "npm run build:schema && npm run dev -- -w",
-    "watch:bundled": "npm run build:schema && web-ext run --watch-file dist/background.js --watch-file src/attention-collector.js --watch-file schemas/measurements.1.schema.json"
+    "watch:bundled": "npm run build:schema && web-ext run --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json"
   },
   "jest": {
     "verbose": true,
