@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const boilerplate = {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    '$comment': `Please do not edit this schema by hand. Generate it instead by running npm run build:schema. This one was last generated on ${new Date()}`,
+    '$comment': `Please do not edit this schema by hand. Generate it instead by running npm run build:schema.`,
     "mozPipelineMetadata": {
       "bq_dataset_family": "rally_study_01",
       "bq_metadata_format": "pioneer",
