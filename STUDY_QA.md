@@ -32,21 +32,22 @@ We will use only the `debug` and `error` views here. These appear below the tras
 
 ```javascript
 {
-  "pageId": "072f4a1edaf083911a04e5551ce14199",
-  "url": "https://www.wikipedia.org/",
-  "referrer": "",
-  "pageVisitStartTime": 1617135085021,
-  "pageVisitStopTime": 1617135086898,
-  "duration": 1609, // this value should be comparable to the time you spent on the page
-  "maxRelativeScrollDepth": 0,
-  "maxPixelScrollDepth": 0,
-  "scrollHeight": 0,
-  "eventTerminationReason": "page-visit-stop", // check that your value matches this
+  "pageId": "59aad732a2bb6b3b9efbe80813711475",
+  "canonicalOrOGURL": "",
+  "origin": "https://www.wikipedia.org",
+  "referrerOrigin": "",
+  "pageVisitStartTime": 1617401158259,
+  "pageVisitStopTime": 1617401161786,
+  "duration": 3295, // this value should be comparable to the time you spent on the page before switching
+  "maxRelativeScrollDepth": 0.8798882681564246,
+  "maxPixelScrollDepth": 945,
+  "scrollHeight": 1074,
+  "eventTerminationReason": "page-visit-stop",  // check that your value matches this
   "title": "Wikipedia",
   "ogType": "",
   "description": "Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation.",
-  "eventStartTime": 1617135085289,
-  "eventStopTime": 1617135086898,
+  "eventStartTime": 1617401158491,
+  "eventStopTime": 1617401161786,
   "eventType": "attention" // check that your value matches this
 }
 ```
@@ -59,8 +60,9 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "9341e4dc5d35d6ac26687193be2c6535",
-  "url": "https://www.youtube.com/",
-  "referrer": "",
+  "canonicalOrOGURL": "https://www.youtube.com/",
+  "origin": "https://www.youtube.com",
+  "referrerOrigin": "",
   "pageVisitStartTime": 1617135199869,
   "pageVisitStopTime": 1617135206895,
   "duration": 985, // this value should be comparable to the time you spent on the page before switching
@@ -80,8 +82,9 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "2e9109c1a64eb6615fa434f418ce6c77",
-  "url": "https://www.wiktionary.org/",
-  "referrer": "https://www.wikipedia.org/",
+  "canonicalOrOGURL": "",
+  "origin": "https://www.wiktionary.org",
+  "referrerOrigin": "https://www.wikipedia.org",
   "pageVisitStartTime": 1617135086813,
   "pageVisitStopTime": 1617135352548, 
   "duration": 2569, // this value should be comparable to the time you spent on the page before closing
@@ -107,8 +110,9 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "f3d3f2d6f5a6f767ab0081d2d1f6dbcc",
-  "url": "https://www.youtube.com/",
-  "referrer": "",
+  "canonicalOrOGURL": "https://www.youtube.com/",
+  "origin": "https://www.youtube.com",
+  "referrerOrigin": "",
   "pageVisitStartTime": 1617135289520,
   "pageVisitStopTime": 1617135296631,
   "duration": 2523,  // this value should be comparable to the time you spent on the page before switching
@@ -132,8 +136,9 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "e196594a6aa7edb7843ae1561945e899",
-  "url": "https://www.wikipedia.org/",
-  "referrer": "",
+  "canonicalOrOGURL": "",
+  "origin": "https://www.wikipedia.org",
+  "referrerOrigin": "",
   "pageVisitStartTime": 1617135507676,
   "pageVisitStopTime": 1617136469767,
   "duration": 14938, // check that your value is close to 15000 or so
@@ -165,18 +170,19 @@ Audio events behave somewhat like attention events, with a few special distincti
 - in the **Browser Console** you should see a debug log that starts with `RS01.event`, along with a data payload that looks like this:
 ```javascript
 {
-  "pageId": "ef1884579be120fde262ec381fa8f78c",
-  "url": "https://www.youtube.com/watch?v=bQBDjEWyxis",
-  "referrer": "",
-  "pageVisitStartTime": 1617135411060,
-  "pageVisitStopTime": 1617135416384,
-  "duration": 4191, // check that this is comparable to about how long, plus a few seconds
+  "pageId": "1c46f00f3b759b610eed697b2ed5ab7c",
+  "canonicalOrOGURL": "https://www.youtube.com/",
+  "origin": "https://www.youtube.com",
+  "referrerOrigin": "",
+  "pageVisitStartTime": 1617401335251,
+  "pageVisitStopTime": 1617401341532,
+  "duration": 4396,// check that this is comparable to about how long, plus a few seconds
   "eventTerminationReason": "audio-event-finished", // check that your value matches this
-  "title": "【Demon Slayer | 귀멸의칼날】 Gurenge [LiSA] Cover by A-YEON - YouTube",
+  "title": "lofi hip hop radio - beats to relax/study to - YouTube",
   "ogType": "",
   "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
-  "eventStartTime": 1617135412193,
-  "eventStopTime": 1617135416384,
+  "eventStartTime": 1617401337136,
+  "eventStopTime": 1617401341532,
   "eventType": "audio" // check that your value matches this
 }
 ```
@@ -187,18 +193,20 @@ Audio events behave somewhat like attention events, with a few special distincti
 - here is the *audio event*:
 ```javascript
 {
-  "pageId": "a19d10c5183f302f7579041384db1010",
-  "url": "https://www.youtube.com/watch?v=bQBDjEWyxis",
-  "referrer": "",
-  "pageVisitStartTime": 1617135504425,
-  "pageVisitStopTime": 1617135514919,
-  "duration": 3962, // check that this value is comparable to about how long the audio played, plus a few seconds
+  "pageId": "1c46f00f3b759b610eed697b2ed5ab7c",
+  "canonicalOrOGURL": "https://www.youtube.com/",
+  "origin": "https://www.youtube.com",
+  "referrerOrigin": "",
+  "pageVisitStartTime": 1617401335251,
+  "pageVisitStopTime": 1617401451852,
+  "duration": 4550, // check that this value is comparable to about how long the audio played, plus a few seconds
   "eventTerminationReason": "page-visit-stop", // check that your value matches this
-  "title": "【Demon Slayer | 귀멸의칼날】 Gurenge [LiSA] Cover by A-YEON - YouTube",
-  "ogType": "video.other",
-  "description": "#DemonSlayer #鬼滅の刃 #귀멸의칼날Don't forget to click that red subscribe button and give me a thumbs up!!!!!!🥰🥰🥰구독과 좋아요 눌러주기!!💗💗💗😘😘😘● Instagram: https://in...",
-  "eventStartTime": 1617135510957,
-  "eventStopTime": 1617135514919,
+  "title": "lofi hip hop radio - beats to relax/study to - YouTube",
+  "ogType": "",
+  "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
+  "eventStartTime": 1617401447302,
+  "eventStopTime": 1617401451852,
   "eventType": "audio" // check that your value matches this
 }
 ```
+- there will be an *atttention event* that is almost identical as well.

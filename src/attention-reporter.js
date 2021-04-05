@@ -25,18 +25,22 @@
  * @module RS01.attention-reporter
  */
 
-import browser from 'webextension-polyfill';
-import * as Events from "../WebScience/Utilities/Events.js"
-import * as Messaging from "../WebScience/Utilities/Messaging.js"
-import * as PageManager from "../WebScience/Utilities/PageManager.js"
+import browser from "webextension-polyfill";
+import * as Events from "../WebScience/Utilities/Events.js";
+import * as Messaging from "../WebScience/Utilities/Messaging.js";
+import * as PageManager from "../WebScience/Utilities/PageManager.js";
 
 /** 
  * The generic interface that defines the shared properties for `AttentionEvent` and `AudioEvent`.
  * @typedef {Object} UserEvent
  * 
  * @property {string} pageId - The ID for the page, unique across browsing sessions.
- * @property {string} url - The URL of the page loading in the tab, without any hash.
- * @property {string} referrer - The referrer URL for the page loading in the tab, or `""` if
+ * @property {string} canonicalOrOGURL - The canonical URL as found in the the page's head element
+ * (e.g. <link rel="canonical" href="..." />). If the canonical URL isn't present,
+ * looks for and uses the og:url tag contents. if neither are present, will be an empty string.
+ * @property {string} origin – the origin of the URL associated with the page visit. Calculated by applying new URL(url).origin.
+ * See https://developer.mozilla.org/en-US/docs/Web/API/URL/origin
+ * @property {string} referrerOrigin - The origin of the referrer URL for the page loading in the tab, or `""` if
  * there is no referrer.
  * @property {number} pageVisitStartTime - A unix timestamp (in miliseconds) when the page visit start event fired.
  * @property {number} pageVisitStopTime - A unix timestamp (in miliseconds) when the page visit stop event fired.
@@ -164,8 +168,9 @@ export async function startMeasurement({
     // Event properties that both of these event types consume.
     const sharedEventProperties = {
         pageId: "string",
-        url: "string",
-        referrer: "string",
+        canonicalOrOGURL: "string",
+        origin: "string",
+        referrerOrigin: "string",
         eventType: "string",
         pageVisitStartTime: "number",
         pageVisitStopTime: "number",
@@ -179,7 +184,7 @@ export async function startMeasurement({
     }
 
     /**
-     * Add listeners for each schema defined in the measurements schema.
+     * Add listeners for each schema defined below.
      * Because WebScience's messaging module does not support optional fields
      * nor multiple field types, we will break out the attention collection from the audio collection.
      * When we submit the event to the endpoint, however, we make no distinction between the two, utilizing
@@ -202,7 +207,6 @@ export async function startMeasurement({
 /**
  * This function will stop the attention measurement. It unregisters the 
  * content script and all associated listeners.
- * 
  */
 export async function stopMeasurement() {
     Messaging.unregisterListener("RS01.attentionCollection", pageDataListener);    

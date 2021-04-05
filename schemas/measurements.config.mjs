@@ -8,13 +8,17 @@ export const sharedEventProperties = {
         "type": "string",
         "description": "each page ID is 128-bit value, randomly generated with the Web Crypto API and stored as a hexadecimal `String`. While this representation is less efficient than a `Uint8Array` or similar, it is more convenient for development and debugging. The page ID is available in the content script environment."
       },
-      "url": {
+      "canonicalOrOGURL": {
         "type": "string",
-        "description": "the URL associated with the page visit"
+        "description": "The canonical URL as found in the the page's head element (e.g. <link rel='canonical' href='...' />). If the canonical URL isn't present, looks for and uses the og:url tag contents. if neither are present, will be an empty string."
       },
-      "referrer": {
+      "origin": {
         "type": "string",
-        "description": "the referrer URL for the page loading in the tab"
+        "description": "the origin of the URL associated with the page visit. Calculated by applying new URL(url).origin. See https://developer.mozilla.org/en-US/docs/Web/API/URL/origin"
+      },
+      "referrerOrigin": {
+        "type": "string",
+        "description":'The origin of the referrer URL for the page loading in the tab, or `""` if there is no referrer.'
       },
       "pageVisitStartTime": {
         "type": "integer",
