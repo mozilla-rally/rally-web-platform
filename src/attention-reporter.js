@@ -35,9 +35,6 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js";
  * @typedef {Object} UserEvent
  * 
  * @property {string} pageId - The ID for the page, unique across browsing sessions.
- * @property {string} canonicalOrOGURL - The canonical URL as found in the the page's head element
- * (e.g. <link rel="canonical" href="..." />). If the canonical URL isn't present,
- * looks for and uses the og:url tag contents. if neither are present, will be an empty string.
  * @property {string} origin – the origin of the URL associated with the page visit. Calculated by applying new URL(url).origin.
  * See https://developer.mozilla.org/en-US/docs/Web/API/URL/origin
  * @property {string} referrerOrigin - The origin of the referrer URL for the page loading in the tab, or `""` if
@@ -47,7 +44,7 @@ import * as PageManager from "../WebScience/Utilities/PageManager.js";
  * @property {number} duration - Time in miliseconds that the event lasted.
  * @property {string} reason - the reason the attention event ended.
  * @property {string} title - the page's <title> contents, taken from the <head> tag.
- * @property {string} ogDescription - the page's og:description <meta> tag, taken from the <head> tag.
+ * @property {string} description - the page's og:description <meta> tag, taken from the <head> tag.
  * @property {string} ogType - the page's og:type <meta> tag, taken from the <head> tag.
  * @property {number} eventStartTime - a unix timestamp in miliseconds specifying the start time of the event
  * @property {number} eventStopTime - a unix timestamp in miliseconds specifying the stop time of the event
@@ -169,7 +166,6 @@ export async function startMeasurement({
     // Event properties that both of these event types consume.
     const sharedEventProperties = {
         pageId: "string",
-        canonicalOrOGURL: "string",
         origin: "string",
         referrerOrigin: "string",
         eventType: "string",

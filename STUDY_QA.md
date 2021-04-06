@@ -33,7 +33,6 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "59aad732a2bb6b3b9efbe80813711475",
-  "canonicalOrOGURL": "",
   "origin": "https://www.wikipedia.org",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617401158259,
@@ -60,7 +59,6 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "9341e4dc5d35d6ac26687193be2c6535",
-  "canonicalOrOGURL": "https://www.youtube.com/",
   "origin": "https://www.youtube.com",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617135199869,
@@ -82,7 +80,6 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "2e9109c1a64eb6615fa434f418ce6c77",
-  "canonicalOrOGURL": "",
   "origin": "https://www.wiktionary.org",
   "referrerOrigin": "https://www.wikipedia.org",
   "pageVisitStartTime": 1617135086813,
@@ -110,7 +107,6 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "f3d3f2d6f5a6f767ab0081d2d1f6dbcc",
-  "canonicalOrOGURL": "https://www.youtube.com/",
   "origin": "https://www.youtube.com",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617135289520,
@@ -136,7 +132,6 @@ We will use only the `debug` and `error` views here. These appear below the tras
 ```javascript
 {
   "pageId": "e196594a6aa7edb7843ae1561945e899",
-  "canonicalOrOGURL": "",
   "origin": "https://www.wikipedia.org",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617135507676,
@@ -171,7 +166,6 @@ Audio events behave somewhat like attention events, with a few special distincti
 ```javascript
 {
   "pageId": "1c46f00f3b759b610eed697b2ed5ab7c",
-  "canonicalOrOGURL": "https://www.youtube.com/",
   "origin": "https://www.youtube.com",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617401335251,
@@ -194,7 +188,6 @@ Audio events behave somewhat like attention events, with a few special distincti
 ```javascript
 {
   "pageId": "1c46f00f3b759b610eed697b2ed5ab7c",
-  "canonicalOrOGURL": "https://www.youtube.com/",
   "origin": "https://www.youtube.com",
   "referrerOrigin": "",
   "pageVisitStartTime": 1617401335251,
