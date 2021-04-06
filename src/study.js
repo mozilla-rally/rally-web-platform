@@ -5,7 +5,7 @@ function collectEventDataAndSubmit(rally, devMode) {
   // note: onPageData calls startMeasurement.
   onPageData.addListener(async (data) => {
     if (devMode) {
-      console.debug('RS01.event', data);
+      console.debug("RS01.event", data);
     }
     // though we collect the data as two different event types using Web Science,
     // we send the payload using one schema, "RS01.event".

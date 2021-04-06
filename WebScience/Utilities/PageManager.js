@@ -122,7 +122,7 @@
  * @module WebScience.Utilities.PageManager
  */
 
-import browser from 'webextension-polyfill';
+import browser from "webextension-polyfill";
 
 import * as Events from "./Events.js"
 import * as Idle from "./Idle.js"
@@ -181,7 +181,7 @@ export const onPageVisitStart = new Events.Event({
     // Filter notifications for events in private windows
     notifyListenersCallback: (listener, [ details ], options) => {
         if(!details.privateWindow || (("privateWindows" in options) && options.privateWindows))
-            return true;
+            {return true;}
         return false;
     }
 });
@@ -228,7 +228,7 @@ export const onPageVisitStop = new Events.Event({
     // Filter notifications for events in private windows
     notifyListenersCallback: (listener, [ details ], options) => {
         if(!details.privateWindow || (("privateWindows" in options) && options.privateWindows))
-            return true;
+            {return true;}
         return false;
     }
 });
@@ -322,7 +322,7 @@ function updateWindowState(windowId, { activeTab }) {
     }
 
     if(activeTab !== undefined)
-        windowDetails.activeTab = activeTab;
+        {windowDetails.activeTab = activeTab;}
 }
 
 /**
@@ -357,7 +357,7 @@ let initialized = false;
  */
 export async function initialize() {
     if(initialized || initializing)
-        return;
+        {return;}
     initializing = true;
 
     // Register message listeners and schemas for communicating with the content script
@@ -369,7 +369,7 @@ export async function initialize() {
         // We can't send this message earlier (e.g., when the tab URL changes) because we need to know the content
         // script is ready to receive the message
         if(checkForAttention(sender.tab.id, sender.tab.windowId))
-            sendPageAttentionUpdate(sender.tab.id, true, Date.now(), "page-visit-start");
+            {sendPageAttentionUpdate(sender.tab.id, true, Date.now(), "page-visit-start");}
 
         pageVisitStart({
             pageId: pageVisitStartInfo.pageId,
@@ -439,7 +439,7 @@ export async function initialize() {
     // If a tab's audible state changed, send WebScience.Utilities.PageManager.pageAudioUpdate
     browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
         if(!initialized)
-            return;
+            {return;}
         const timeStamp = Date.now();
         Messaging.sendMessageToTab(tabId, {
             type: "WebScience.Utilities.PageManager.pageAudioUpdate",
@@ -454,7 +454,7 @@ export async function initialize() {
     // If a tab's URL changed because of the History API, send WebScience.Utilities.PageManager.urlChanged
     browser.webNavigation.onHistoryStateUpdated.addListener((details) => {
         if(!initialized)
-            return;
+            {return;}
         const timeStamp = Date.now();
 
         Messaging.sendMessageToTab(details.tabId, {
@@ -467,7 +467,7 @@ export async function initialize() {
 
     browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
         if(!initialized)
-            return;
+            {return;}
 
         // We don't have to update the window state here, because either there is
         // another tab in the window that will become active (and tabs.onActivated
@@ -476,19 +476,19 @@ export async function initialize() {
 
         // If this is the active tab, forget it
         if(currentActiveTab === tabId)
-            currentActiveTab = -1;
+            {currentActiveTab = -1;}
     });
 
     // Handle when the active tab in a window changes
     browser.tabs.onActivated.addListener(activeInfo => {
         if(!initialized)
-            return;
+            {return;}
         const timeStamp = Date.now();
 
         // If this is a non-browser tab, ignore it
         if((activeInfo.tabId === browser.tabs.TAB_ID_NONE) || (activeInfo.tabId < 0) ||
             (activeInfo.windowId < 0))
-            return;
+            {return;}
 
         // Update the window state cache with the new
         // active tab ID
@@ -498,15 +498,15 @@ export async function initialize() {
 
         // If there isn't a focused window, or the tab update is not in the focused window, ignore it
         if((currentFocusedWindow < 0) || (activeInfo.windowId != currentFocusedWindow))
-            return;
+            {return;}
 
         // If the browser is active or (optionally) we are not considering user input,
         // notify the current page with attention that it no longer has attention, and notify
         // the new page with attention that is has attention
         if((browserIsActive || !considerUserInputForAttention)) {
             if((currentActiveTab >= 0) && (currentFocusedWindow >= 0))
-                sendPageAttentionUpdate(currentActiveTab, false, timeStamp, "tab-switched-away");
-            sendPageAttentionUpdate(activeInfo.tabId, true, timeStamp, 'tab-switched-toward');
+                {sendPageAttentionUpdate(currentActiveTab, false, timeStamp, "tab-switched-away");}
+            sendPageAttentionUpdate(activeInfo.tabId, true, timeStamp, "tab-switched-toward");
         }
 
         // Remember the new active tab
@@ -515,7 +515,7 @@ export async function initialize() {
 
     browser.windows.onRemoved.addListener(windowId => {
         if(!initialized)
-            return;
+            {return;}
 
         // If we have cached state for this window, drop it
         windowState.delete(windowId);
@@ -523,14 +523,14 @@ export async function initialize() {
 
     browser.windows.onFocusChanged.addListener(windowId => {
         if(!initialized)
-            return;
+            {return;}
         const timeStamp = Date.now();
 
         // If the browser is active or (optionally) we are not considering user input, and if
         // if there is an active tab in a focused window, notify the current page with attention
         // that it no longer has attention
         if((browserIsActive || !considerUserInputForAttention) && ((currentActiveTab >= 0) && (currentFocusedWindow >= 0)))
-            sendPageAttentionUpdate(currentActiveTab, false, timeStamp, 'window-focus-lost');
+            {sendPageAttentionUpdate(currentActiveTab, false, timeStamp, "window-focus-lost");}
 
         // If the browser has lost focus in the operating system, remember
         // tab ID = -1 and window ID = -1, and do not notify any page that it has attention
@@ -561,7 +561,7 @@ export async function initialize() {
         currentActiveTab = focusedWindowDetails.activeTab;
         currentFocusedWindow = windowId;
         if(browserIsActive || !considerUserInputForAttention)
-            sendPageAttentionUpdate(currentActiveTab, true, timeStamp, "window-focus-acquired");
+            {sendPageAttentionUpdate(currentActiveTab, true, timeStamp, "window-focus-acquired");}
     });
 
     // Handle when the browser activity state changes
@@ -574,19 +574,19 @@ export async function initialize() {
     if(considerUserInputForAttention) {
         await Idle.registerIdleStateListener(newState => {
             if(!initialized)
-                return;
+                {return;}
             const timeStamp = Date.now();
 
             // If the browser is not transitioning between active and inactive states, ignore the event
             if((browserIsActive) === (newState === "active"))
-                return;
+                {return;}
 
             // Remember the flipped browser activity state
             browserIsActive = !browserIsActive;
 
             // If there isn't an active tab in a focused window, we don't need to send attention events
             if((currentActiveTab < 0) || (currentFocusedWindow < 0))
-                return;
+                {return;}
 
             // Send an attention state change event to the current active tab, reflecting the browser activity state
             sendPageAttentionUpdate(currentActiveTab, browserIsActive, timeStamp, "browser-idle");
@@ -596,7 +596,7 @@ export async function initialize() {
     // Cache the initial idle, window, and tab state
 
     if(considerUserInputForAttention)
-        browserIsActive = (Idle.queryState(idleThreshold) === "active");
+        {browserIsActive = (Idle.queryState(idleThreshold) === "active");}
 
     const openWindows = await browser.windows.getAll({
         populate: true
@@ -607,15 +607,15 @@ export async function initialize() {
         // the id property is optional in the windows.Window
         // type
         if(!("id" in openWindow))
-            continue;
+            {continue;}
         // Iterate the tabs in the window to cache tab state
         // and find the active tab in the window
         let activeTabInOpenWindow = -1;
         if("tabs" in openWindow)
-            for(const tab of openWindow.tabs) {
+            {for(const tab of openWindow.tabs) {
                 if(tab.active)
-                    activeTabInOpenWindow = tab.id;
-            }
+                    {activeTabInOpenWindow = tab.id;}
+            }}
         updateWindowState(openWindow.id, {
             activeTab: activeTabInOpenWindow
         });

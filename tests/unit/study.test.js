@@ -7,8 +7,8 @@ jest.mock("../../src/attention-reporter", () => {
 
 import runStudy from "../../src/study";
 import * as AttentionReporter from "../../src/attention-reporter";
-jest.mock('webextension-polyfill', () => require('sinon-chrome/webextensions'));
-import browser from 'webextension-polyfill';
+jest.mock("webextension-polyfill", () => require("sinon-chrome/webextensions"));
+import browser from "webextension-polyfill";
 
 describe("study.js", function() {
     beforeEach(function() {
@@ -28,15 +28,15 @@ describe("study.js", function() {
         global.console.debug = () => {};
         global.console.warn = () => {};
     })
-    it('successfully initializes a Rally instance', async function() {
+    it("successfully initializes a Rally instance", async function() {
         const study = await runStudy(true);
         expect(study._initialized).toBe(true);
     })
-    it('successfully calls AttentionReporter.onPageData on initialization', async function() {
+    it("successfully calls AttentionReporter.onPageData on initialization", async function() {
         await runStudy(true);
         expect(AttentionReporter.onPageData.addListener.mock.calls.length).toBe(1);
     })
-    it('calls stopMeasurement if the rally instance receives a "pause" message', async function() {
+    it("calls stopMeasurement if the rally instance receives a \"pause\" message", async function() {
         const study = await runStudy(true)
         study._pause();
         expect(AttentionReporter.stopMeasurement.mock.calls.length).toBe(1);

@@ -120,7 +120,7 @@ export class Event {
         this.listeners.forEach((options, listener) => {
             try {
                 if((this.notifyListenersCallback === null) || this.notifyListenersCallback(listener, listenerArguments, options))
-                    listener.apply(null, listenerArguments);
+                    {listener.apply(null, listenerArguments);}
             }
             catch(error) {
                 debugLog(`Error in listener notification: ${error}`);
@@ -190,7 +190,7 @@ export class EventSingleton extends Event {
      */
     addListener(listener, options) {
         if(this.listeners.size > 0)
-            throw new Error("Error: cannot add more than one listener to EventSingleton event.");
+            {throw new Error("Error: cannot add more than one listener to EventSingleton event.");}
         super.addListener(listener, options);
     }
 }

@@ -129,8 +129,9 @@ let notifyAboutPrivateWindows = false;
 function pageDataListener(pageData) {
     // If the page is in a private window and the module should not measure private windows,
     // ignore the page
-    if(!(notifyAboutPrivateWindows) && pageData.privateWindow)
+    if(!(notifyAboutPrivateWindows) && pageData.privateWindow) {
         return;
+    }
 
     // Delete the type string from the content script message
     delete pageData.type;

@@ -112,7 +112,7 @@
         // Check if the PageManager content script has already run on this page
         // If it has, bail out
         if("PageManager" in window)
-            return;
+            {return;}
 
         // Construct a PageManager object on the `window` global
         // All the public PageManager functionality that is available in the content
@@ -128,7 +128,7 @@
             const pageIdBytes = window.crypto.getRandomValues(new Uint8Array(16));
             return Array.from(pageIdBytes, (byte) => {
                 if(byte < 16)
-                    return "0" + byte.toString(16);
+                    {return "0" + byte.toString(16);}
                 return byte.toString(16);
             }).join("");
         }
@@ -203,7 +203,7 @@
              */
             addListener(listener, options) {
                 if(this.addListenerCallback !== null)
-                    this.addListenerCallback(listener, options);
+                    {this.addListenerCallback(listener, options);}
                 this.listeners.set(listener, options);
             }
 
@@ -219,7 +219,7 @@
              */
             removeListener(listener) {
                 if(this.removeListenerCallback !== null)
-                    this.removeListenerCallback(listener);
+                    {this.removeListenerCallback(listener);}
                 this.listeners.delete(listener);
             }
 
@@ -251,7 +251,7 @@
                 this.listeners.forEach((options, listener) => {
                     try {
                         if((this.notifyListenersCallback === null) || this.notifyListenersCallback(listener, listenerArguments, options))
-                            listener.apply(null, listenerArguments);
+                            {listener.apply(null, listenerArguments);}
                     }
                     catch(error) {
                         debugLog(`Error in content script listener notification: ${error}`);
@@ -449,7 +449,7 @@
          */
         function pageAttentionUpdate(timeStamp, pageHasAttention, reason) {
             if(PageManager.pageHasAttention === pageHasAttention)
-                return;
+                {return;}
 
             PageManager.pageHasAttention = pageHasAttention;
 
@@ -471,7 +471,7 @@
          */
         function pageAudioUpdate(timeStamp, pageHasAudio) {
             if(PageManager.pageHasAudio === pageHasAudio)
-                return;
+                {return;}
 
             PageManager.pageHasAudio = pageHasAudio;
 
@@ -513,15 +513,15 @@
         // execute the callbacks for those content scripts
         if("pageManagerHasLoaded" in window) {
             if(Array.isArray(window.pageManagerHasLoaded))
-                for(const callback of window.pageManagerHasLoaded)
-                    if(typeof callback === "function") {
+                {for(const callback of window.pageManagerHasLoaded)
+                    {if(typeof callback === "function") {
                         try {
                             callback();
                         }
                         catch(error) {
                             debugLog(`Error in callback for PageManager load: ${error}`);
                         }
-                    }
+                    }}}
             delete window.pageManagerHasLoaded;
         }
 

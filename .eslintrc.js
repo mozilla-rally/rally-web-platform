@@ -42,6 +42,8 @@
   ],
   root: true,
   rules: {
+    "curly": "error",
+    "quotes": ["error", "double"],
     "node/no-deprecated-api": "error",
     "node/no-extraneous-require": "off",
     "node/no-missing-import": "off",

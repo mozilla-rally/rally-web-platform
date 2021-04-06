@@ -20,7 +20,7 @@
  * @module WebScience.Utilities.Messaging
  */
 
-import browser from 'webextension-polyfill';
+import browser from "webextension-polyfill";
 import * as Debugging from "./Debugging.js"
 
 const debugLog = Debugging.getDebuggingLog("Utilities.Messaging");
@@ -99,7 +99,7 @@ export function validateMessageAgainstSchema(message, messageSchema)
             (typeof message[field] !== messageSchema[field])
         ) {
             console.group("WebScience.Utilities.Messaging");
-            console.debug(`mismatch between message and schema`);
+            console.debug("mismatch between message and schema");
             console.debug(`field: ${field}`);
             console.debug(`message type: ${typeof message[field]}`);
             console.debug(`schema type: ${messageSchema[field]}`);
@@ -143,7 +143,7 @@ function browserRuntimeListener(message, sender, sendResponse) {
     for (const messageListener of messageListeners) {
         const messageListenerReturnValue = messageListener(message, sender, sendResponse);
         if ((messageListenerReturnValue !== undefined) && (browserRuntimeReturnValue !== undefined))
-            debugLog(`Multiple listener return values for message type: ${message.type}`);
+            {debugLog(`Multiple listener return values for message type: ${message.type}`);}
         browserRuntimeReturnValue = messageListenerReturnValue;
     }
     
@@ -172,7 +172,7 @@ export function registerListener(messageType, messageListener, messageSchema) {
     messageListeners.add(messageListener);
 
     if(messageSchema !== undefined)
-        registerSchema(messageType, messageSchema);
+        {registerSchema(messageType, messageSchema);}
 }
 
 /**
@@ -186,10 +186,10 @@ export function unregisterListener(messageType, messageListener, unregisterSchem
     if(messageListeners !== undefined) {
         messageListeners.delete(messageListener);
         if(messageListeners.size === 0)
-            messageRouter.delete(messageType);
+            {messageRouter.delete(messageType);}
     }
     if(unregisterSchema)
-        messageSchemas.delete(messageType);
+        {messageSchemas.delete(messageType);}
 }
 
 /**

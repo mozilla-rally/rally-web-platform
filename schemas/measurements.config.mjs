@@ -18,7 +18,7 @@ export const sharedEventProperties = {
       },
       "referrerOrigin": {
         "type": "string",
-        "description":'The origin of the referrer URL for the page loading in the tab, or `""` if there is no referrer.'
+        "description":"The origin of the referrer URL for the page loading in the tab, or `\"\"` if there is no referrer."
       },
       "pageVisitStartTime": {
         "type": "integer",

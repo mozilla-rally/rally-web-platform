@@ -9,13 +9,13 @@ jest.mock("../../WebScience/Utilities/Messaging.js", () => {
         unregisterListener: jest.fn()
     }
 });
-jest.mock('webextension-polyfill', () => require('sinon-chrome/webextensions'));
+jest.mock("webextension-polyfill", () => require("sinon-chrome/webextensions"));
 
-import * as AttentionReporter from '../../src/attention-reporter';
+import * as AttentionReporter from "../../src/attention-reporter";
 
 import PageManager from "../../WebScience/Utilities/PageManager.js";
 import Messaging from "../../WebScience/Utilities/Messaging.js";
-import browser from 'webextension-polyfill';
+import browser from "webextension-polyfill";
 
 describe("attention-reporter", function() {
     let unregisterFn;
@@ -28,7 +28,7 @@ describe("attention-reporter", function() {
         }
     })
     describe("startMeasurement", function() {
-        it('initializes the PageManager module', async function(){
+        it("initializes the PageManager module", async function(){
             const pm = PageManager;
             await AttentionReporter.startMeasurement({matchPatterns: [], privateWindows: false});
             expect(pm.initialize.mock.calls.length).toBe(1);
@@ -37,7 +37,7 @@ describe("attention-reporter", function() {
             await AttentionReporter.startMeasurement({matchPatterns: [], privateWindows: false});
             expect(browser.contentScripts.register.mock.calls.length).toBe(1);
         })
-        it('registers the RS01.attentionCollection and RS01.audioCollection events', async function() {
+        it("registers the RS01.attentionCollection and RS01.audioCollection events", async function() {
             const m = Messaging;
             await AttentionReporter.startMeasurement({matchPatterns: [], privateWindows: false});
             const [attentionCollection, audioCollection] = m.registerListener.mock.calls.slice(-2)
@@ -46,13 +46,13 @@ describe("attention-reporter", function() {
         })
     })
     describe("stopMeasurement", function() {
-        it('unregisters the RS01.attentionCollection and RS01.audioCollection events', async function() {
+        it("unregisters the RS01.attentionCollection and RS01.audioCollection events", async function() {
             const m = Messaging;
             await AttentionReporter.startMeasurement({matchPatterns: [], privateWindows: false});
             await AttentionReporter.stopMeasurement();
             expect(m.unregisterListener.mock.calls.length).toBe(2);
         })
-        it('unregisters the content script', async function() {
+        it("unregisters the content script", async function() {
             await AttentionReporter.startMeasurement({matchPatterns: [], privateWindows: false});
             await AttentionReporter.stopMeasurement();
             expect(unregisterFn.mock.calls.length).toBe(1);
