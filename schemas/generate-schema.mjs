@@ -16,7 +16,7 @@ const boilerplate = {
       "bq_metadata_format": "pioneer",
       "bq_table": "measurements_v1",
       "expiration_policy": {
-        "delete_after_days": 180
+        "delete_after_days": 90
       }
     },
     "type": "object",
