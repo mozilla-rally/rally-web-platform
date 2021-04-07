@@ -1,14 +1,15 @@
 {
-  "description": "FIXME: copy must be added here https://github.com/mozilla-rally/rally-study-01/issues/62",
-  "author": "Mozilla",
+  "description": "A Mozilla Rally study that explores how people spend time with their browser.",
+  "author": "Mozilla Rally",
   "manifest_version": 2,
-  "name": "Rally Study 01",
+  "name": "Your Time Online and \"Doomscrolling\"",
   "version": "0.1.0",
   "homepage_url": "https://github.com/mozilla-rally/rally-study-01",
 
   "icons": {
-    "16": "icons/icon.svg",
-    "32": "icons/icon.svg"
+    "16": "images/study-icon.png",
+    "32": "images/study-icon.png",
+    "64": "images/study-icon.png"
   },
 
   "applications": {
