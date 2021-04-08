@@ -22,18 +22,14 @@ export default async function runStudy(devMode) {
     const rally = new Rally();
     try {
       await rally.initialize(
-          // A sample key id used for encrypting data.
-          "sample-invalid-key-id",
-          // A sample *valid* JWK object for the encryption.
-      {
-          "kty":"EC",
-          "crv":"P-256",
-          "x":"f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU",
-          "y":"x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0",
-          "kid":"Public key used in JWS spec Appendix A.3 example"
-      },
-      // The following constant is automatically provided by
-      // the build system.
+        "zero-one",
+        {
+          "crv": "P-256",
+          "kid": "zero-one",
+          "kty": "EC",
+          "x": "edhPpqhgK9dD7NaqhQ7Ckw9sU6b39X7XB8HnA366Rjs",
+          "y": "GzsfM19n-iH-DVR0iKEoA8BE2CFF46wR__siJ3SdiNs"
+        },          
       devMode,
       (newState) => {
           if (newState === runStates.RUNNING) {
