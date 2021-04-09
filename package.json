@@ -1,9 +1,9 @@
 {
   "name": "rally-study-01",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "npm run build:schema && rollup -c",
-    "build:addon": "rollup -c && web-ext build --overwrite-dest && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi",
+    "build:addon": "rollup -c && web-ext build --overwrite-dest",
     "build:schema": "node schemas/generate-schema.mjs",
     "build:storybook": "build-storybook -s ./",
     "dev": "rollup -c --config-enable-developer-mode",
