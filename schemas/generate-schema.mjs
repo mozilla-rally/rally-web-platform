@@ -12,9 +12,6 @@ const boilerplate = {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$comment": "Please do not edit this schema by hand. Generate it instead by running npm run build:schema.",
   "mozPipelineMetadata": {
-    "bq_dataset_family": "rally_study_01",
-    "bq_metadata_format": "pioneer",
-    "bq_table": "measurements_v1",
     "expiration_policy": {
       "delete_after_days": 90
     }

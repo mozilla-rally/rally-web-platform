@@ -2,9 +2,6 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$comment": "Please do not edit this schema by hand. Generate it instead by running npm run build:schema.",
   "mozPipelineMetadata": {
-    "bq_dataset_family": "rally_study_01",
-    "bq_metadata_format": "pioneer",
-    "bq_table": "measurements_v1",
     "expiration_policy": {
       "delete_after_days": 90
     }
@@ -14,7 +11,10 @@
     "eventType": {
       "type": "string",
       "description": "the type of event recorded. Either \"attention\" or \"audio\". An attention event is an instance where the user was actively using the browser in an active tab in an active window. An audio event tells us when an active browser tab has audio playing. We use this as a proxy for a user passively consuming audio and video. These two event types have near identical payloads, with a few exceptions noted below.",
-      "enum": ["attention", "audio"]
+      "enum": [
+        "attention",
+        "audio"
+      ]
     },
     "pageId": {
       "type": "string",
