@@ -56,7 +56,7 @@ export const sharedEventProperties = {
 
 export const requiredEvents = [
   // note that pageVisitStopTime is not a required field.
-  "eventType", "pageId", "url", "referrer", "pageVisitStartTime",
+  "eventType", "pageId", "origin", "referrerOrigin", "pageVisitStartTime",
   "duration", "eventStartTime", "eventStopTime", "eventTerminationReason",
   "description", "title", "ogType"
 ]

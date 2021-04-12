@@ -88,8 +88,8 @@
       "required": [
         "eventType",
         "pageId",
-        "url",
-        "referrer",
+        "origin",
+        "referrerOrigin",
         "pageVisitStartTime",
         "duration",
         "eventStartTime",
