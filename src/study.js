@@ -11,7 +11,7 @@ function collectEventDataAndSubmit(rally, devMode) {
     // we send the payload using one schema, "RS01.event".
     // Once https://github.com/mozilla-rally/web-science/issues/33 is resolved,
     // we will change the collection schema (but keep this pipeline schema the same).
-    rally.sendPing("measurement", data);
+    rally.sendPing("measurements", data);
   }, {
       matchPatterns: ["<all_urls>"],
       privateWindows: false
@@ -22,7 +22,9 @@ export default async function runStudy(devMode) {
     const rally = new Rally();
     try {
       await rally.initialize(
-        "zero-one",
+        // the schema namespace provided by Mozilla
+        "rally-zero-one",
+        // the public jwk token provided by Mozilla
         {
           "crv": "P-256",
           "kid": "zero-one",
