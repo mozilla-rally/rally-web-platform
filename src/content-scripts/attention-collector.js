@@ -301,10 +301,15 @@
                     
                     scrollHeight = document.documentElement.scrollHeight;
 
+                    // We accidentally let the schema type for this be `integer` so 
+                    // we will have to truncate, since on occasion this reports a float.
                     maxPixelScrollDepth =
-                        Math.min(scrollHeight,
-                            Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
-                        );
+                        Math.trunc(
+                            Math.min(scrollHeight,
+                                Math.max(maxPixelScrollDepth, window.scrollY + document.documentElement.clientHeight)
+                        )
+                    );
+                        
                     maxRelativeScrollDepth = Math.min(
                         Math.max(maxRelativeScrollDepth, (window.scrollY + document.documentElement.clientHeight) / scrollHeight),
                         1);
