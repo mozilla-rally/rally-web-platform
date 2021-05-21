@@ -32,6 +32,10 @@ export default (cliArgs) => [
       }),
       resolve({
         browser: true,
+        // These are required in order for rollup to pick up
+        // the correct dependencies for ping encryption.
+        exportConditions: ["browser"],
+        preferBuiltins: false,
       }),
       commonjs(),
     ],

@@ -19,7 +19,7 @@
     }
   },
 
-  "permissions": ["tabs", "idle", "<all_urls>", "webNavigation"],
+  "permissions": ["tabs", "idle", "<all_urls>", "webNavigation", "storage"],
 
   "background": {
     "scripts": ["dist/background.js"]
