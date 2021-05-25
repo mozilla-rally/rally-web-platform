@@ -9,9 +9,12 @@ import runStudy from "../../src/study";
 import * as AttentionReporter from "../../src/attention-reporter";
 jest.mock("webextension-polyfill", () => require("sinon-chrome/webextensions"));
 import browser from "webextension-polyfill";
+import Glean from "@mozilla/glean/webext";
 
-describe("study.js", function() {
-    beforeEach(function() {
+const suiteName = "study.js";
+
+describe(suiteName, function() {
+    beforeEach(async function() {
         browser.runtime = {
             sendMessage() { return Promise.resolve({
                 type: "core-check-response",
@@ -27,6 +30,9 @@ describe("study.js", function() {
         // suppress the console.debug and console.warn calls for the test.
         global.console.debug = () => {};
         global.console.warn = () => {};
+
+        // Initialize Glean in test mode.
+        await Glean.testResetGlean(`rs01.${suiteName}`);
     })
     it("successfully initializes a Rally instance", async function() {
         const study = await runStudy(true);

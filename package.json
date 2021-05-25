@@ -2,7 +2,7 @@
   "name": "rally-study-01",
   "version": "0.1.5",
   "scripts": {
-    "build": "npm run build:schema && rollup -c",
+    "build": "npm run build:schema && npm run build:addon",
     "build:addon": "npm run build:glean && rollup -c && web-ext build --overwrite-dest",
     "build:glean": "npm run build:glean:metrics && npm run build:glean:docs",
     "build:glean:metrics": "glean translate ./metrics.yaml ./pings.yaml -f javascript -o src/generated",
@@ -33,6 +33,16 @@
       "tsx",
       "node"
     ],
+    "moduleNameMapper": {
+      "^@mozilla/glean/webext$": "<rootDir>/node_modules/@mozilla/glean/dist/webext/index/webext.js",
+      "^@mozilla/glean/webext/plugins/encryption$": "<rootDir>/node_modules/@mozilla/glean/dist/webext/plugins/encryption.js",
+      "^@mozilla/glean/webext/private/metrics/(.*)$": "<rootDir>/node_modules/@mozilla/glean/dist/webext/core/metrics/types/$1.js",
+      "^@mozilla/glean/webext/private/ping$": "<rootDir>/node_modules/@mozilla/glean/dist/webext/core/pings/ping_type.js",
+      "^jose/jwe/compact/encrypt$": "<rootDir>/node_modules/jose/dist/node/cjs/jwe/compact/encrypt.js",
+      "^jose/jwk/parse": "<rootDir>/node_modules/jose/dist/node/cjs/jwk/parse.js",
+      "^jose/jwk/thumbprint": "<rootDir>/node_modules/jose/dist/node/cjs/jwk/thumbprint.js"
+    },
+    "testEnvironment": "./tests/jest-custom-environment.js",
     "transform": {
       ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
       "^.+\\.js$": "babel-jest"
@@ -47,7 +57,7 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
-    "@mozilla/glean": "^0.12.0",
+    "@mozilla/glean": "^0.14.1",
     "@mozilla/rally": "0.6.0",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
