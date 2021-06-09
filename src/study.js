@@ -69,29 +69,29 @@ export default async function runStudy(devMode) {
       devMode,
       (newState) => {
           if (newState === runStates.RUNNING) {
-          // if the study is running but wasn't previously, let's re-initiate the onPageData listener.
-          console.debug("~~~ RS01 running ~~~");
-          Glean.setUploadEnabled(true);
-          collectEventDataAndSubmit(rally, devMode);
+            // if the study is running but wasn't previously, let's re-initiate the onPageData listener.
+            console.debug("~~~ RS01 running ~~~");
+            Glean.setUploadEnabled(true);
+            collectEventDataAndSubmit(rally, devMode);
           } else {
-          console.debug("~~~ RS01 not running ~~~");
-          // stop the measurement here.
-          stopMeasurement();
-          Glean.setUploadEnabled(false);
+            console.debug("~~~ RS01 not running ~~~");
+            // stop the measurement here.
+            stopMeasurement();
+            Glean.setUploadEnabled(false);
           }
       });
 
       // If we got to this poin, then Rally is properly
       // initialized and we can flip collection on.
-      Glean.initialize("rally-zero-one", true, {
+      Glean.initialize("rally-study-zero-one", true, {
         debug: { logPings: true },
         plugins: [
           new PingEncryptionPlugin({
             "crv": "P-256",
-            "kid": "zero-one",
+            "kid": "rally-study-zero-one",
             "kty": "EC",
-            "x": "edhPpqhgK9dD7NaqhQ7Ckw9sU6b39X7XB8HnA366Rjs",
-            "y": "GzsfM19n-iH-DVR0iKEoA8BE2CFF46wR__siJ3SdiNs"
+            "x": "-a1Ths2-TNF5jon3MlfQXov5lGA4YX98aYsQLc3Rskg",
+            "y": "Cf8PIvq_CV46r_DBdvAc0d6aN1WeWAWKfiMtwkpNGqw"
           })
         ]
       });
