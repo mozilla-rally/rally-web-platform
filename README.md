@@ -1,8 +1,8 @@
-# Rally Study 01 (RS01)
+# Rally Web Platform Spike
 
 _status: in development_
 
-An exploratory study on what sites people use and how long they use them.
+A demo supporting a Rally Web Platform spike, investigating whether we can move to a web-centric model and away from the rally-core-addon.
 
 ## Requirements
 * [Node.js](https://nodejs.org/en/)
@@ -34,26 +34,21 @@ npm run doc
 
 # run unit tests
 npm run test:unit
+
+# build and run website
+npm run build:web
+npm run start:web
 ```
 
-## Understanding this repository
+## Understanding this spike
 
-This repository contains everything need to generate documentation and build the study web extension itself.
+This repository contains both the RS01 Mozilla Rally study, as well as the Svelte web UI from the Rally Core Add-on.
+The intent is for a user to be able to install and manage studies from a static site, which uses authentication both on the
+website and inside the study extension.
 
-As of this writing, this repository uses a vendored version of `web-science`, contained in `/WebScience`. We will remove this vendored version once
-[we have published `0.1.0` of the library](https://github.com/mozilla-rally/web-science/issues/34).
+Users should be able to:
 
-Below is a curated description of the important modules:
-
-- `src/main.js` - the main entrypoint for the study. Configures the Rally API, establishes the callback for page data, etc.
-- `src/attention-reporter.js` - the reporting module for the data collection. Registers the `src/content-scripts/attention-collector.js` content script and handles the starting and stopping of measurement.
-
-## the event data collected by this study
-
-This study *collects* two types of events:
-1. *attention events* (`RS01.attentionCollection`), defined by `web-science` as an active tab in an active window
-2. *audio events* (`RS01.audioCollection`), defined by `web-science` as an audio event playing on an active tab in an active window
-
-And it *submits* one kind of event, `RS01.event`. We collect as two events because of current limitations in WebScience's messaging schema validation. We don't have this limitation when submitting the final payload to the endpoint.
-
-The events submitted in this study are defined by the measurements schema, kept in `schema/`. All of the building & watching NPM commands in this repository will first generate this schema. To do it yourself and see all the fields collected by this study, run `npm run build:schema` and observe the results in `schema/measurements.1.schema.json`.
+1. log into the website
+2. consent to joining Rally, and also a study
+3. install a study, and authenticate (to obtain the consent from step 2)
+4. the study should be able to deliver a "giveback" to the user, which is unique to that user, and only available after authentication.
