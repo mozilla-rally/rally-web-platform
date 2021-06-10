@@ -1,10 +1,10 @@
 {
-  "description": "A Mozilla Rally study that explores how people spend time with their browser.",
+  "description": "A Mozilla Rally study that supports the Rally Web Platform spike.",
   "author": "Mozilla Rally",
   "manifest_version": 2,
-  "name": "Your Time Online and \"Doomscrolling\"",
+  "name": "Rally Web Platform Demo",
   "version": "0.2.0",
-  "homepage_url": "https://github.com/mozilla-rally/rally-study-01",
+  "homepage_url": "https://github.com/mozilla-rally/rally-web-platform-spike",
   "icons": {
     "16": "images/study-icon.png",
     "32": "images/study-icon.png",
