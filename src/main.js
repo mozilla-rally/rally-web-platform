@@ -17,3 +17,5 @@ chrome.runtime.onConnect.addListener(port => {
 
 // FIXME - our webextension polyfill doesn't seem to be working, getting errors about `browser.*` missing in Chrome?!
 // runStudy(__ENABLE_DEVELOPER_MODE__);
+
+chrome.runtime.openOptionsPage();
