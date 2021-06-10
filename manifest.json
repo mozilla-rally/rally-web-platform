@@ -12,7 +12,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "rally-study-01@mozilla.org",
+      "id": "rally-web-platform-spike@mozilla.org",
       "strict_min_version": "77.0a1"
     }
   },
