@@ -39,7 +39,7 @@ export async function emailSignIn({ email, password }) {
     const user = result.user;
     console.debug("logged in as:", user);
 
-    const giveback = await fetchGiveback();
+    const giveback = await fetchGiveback(user);
     return { giveback };
 }
 
