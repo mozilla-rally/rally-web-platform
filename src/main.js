@@ -5,12 +5,16 @@ setupAuth();
 
 // Listen for login messages from the options UI.
 chrome.runtime.onConnect.addListener(port => {
-    // NOTE - `port` is bi-directional, if we want to use it to communicate back to the options page we can.
-    port.onMessage.addListener(message => {
-        if ("email" in message && "password" in message) {
-            emailSignIn(message);
-        } else if ("provider" in message && message.provider === "google") {
-            googleSignIn();
+    port.onMessage.addListener(async message => {
+        try {
+            if ("email" in message && "password" in message) {
+                await emailSignIn(message);
+            } else if ("provider" in message && message.provider === "google") {
+                const token = await googleSignIn();
+                console.debug("Token:", token);
+            }
+        } catch (ex) {
+            port.postMessage({ result: ex.message });
         }
     });
 });

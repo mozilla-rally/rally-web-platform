@@ -21,50 +21,41 @@ export function setupAuth() {
     console.debug("firebase init:", firebase);
 }
 
-export function googleSignIn() {
+export async function googleSignIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth()
-        .signInWithPopup(provider)
-        .then(result => {
-            const credential = result.credential;
-            const token = credential.accessToken;
-            const user = result.user;
-            console.debug("auth result:", result, token);
+    const result = await firebase.auth().signInWithPopup(provider);
+    const credential = result.credential;
+    const token = credential.accessToken;
+    const user = result.user;
+    console.debug("auth result:", result, token);
 
-            const storageRef = firebase.storage().ref();
-            console.debug("storageRef:", storageRef);
-            storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
-                .then(async (url) => {
-                    console.debug("got download URL:", url);
-                    const result = await fetch(url);
-                    const text = await result.text();
-                    console.debug("result:", text);
-                });
-        }).catch(error => {
-            console.debug("auth error:", error);
+    const storageRef = firebase.storage().ref();
+    console.debug("storageRef:", storageRef);
+    storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
+        .then(async (url) => {
+            console.debug("got download URL:", url);
+            const result = await fetch(url);
+            const text = await result.text();
+            console.debug("result:", text);
         });
+
+    return token;
 }
 
-export function emailSignIn({ email, password }) {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.debug("logged in as:", user.uid);
+export async function emailSignIn({ email, password }) {
+    const result = await firebase.auth().signInWithEmailAndPassword(email, password)
+    // Signed in
+    const user = result.user;
+    console.debug("logged in as:", user.uid);
 
-            const storageRef = firebase.storage().ref();
-            console.debug("storageRef:", storageRef);
-            storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
-                .then(async (url) => {
-                    console.debug("got download URL:", url);
-                    const result = await fetch(url);
-                    const text = await result.text();
-                    console.debug("result:", text);
-                });
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.debug("something went wrong:", errorCode, errorMessage);
+    const storageRef = firebase.storage().ref();
+    console.debug("storageRef:", storageRef);
+    storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
+        .then(async (url) => {
+            console.debug("got download URL:", url);
+            const result = await fetch(url);
+            const text = await result.text();
+            console.debug("result:", text);
         });
+
 }
