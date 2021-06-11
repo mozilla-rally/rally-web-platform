@@ -27,35 +27,27 @@ export async function googleSignIn() {
     const credential = result.credential;
     const token = credential.accessToken;
     const user = result.user;
-    console.debug("auth result:", result, token);
+    console.debug("logged in as:", user);
+    console.debug("access token:", token);
 
-    const storageRef = firebase.storage().ref();
-    console.debug("storageRef:", storageRef);
-    storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
-        .then(async (url) => {
-            console.debug("got download URL:", url);
-            const result = await fetch(url);
-            const text = await result.text();
-            console.debug("result:", text);
-        });
-
-    return token;
+    const giveback = await fetchGiveback(user);
+    return { token, giveback };
 }
 
 export async function emailSignIn({ email, password }) {
     const result = await firebase.auth().signInWithEmailAndPassword(email, password)
-    // Signed in
     const user = result.user;
-    console.debug("logged in as:", user.uid);
+    console.debug("logged in as:", user);
 
+    const giveback = await fetchGiveback();
+    return { giveback };
+}
+
+async function fetchGiveback(user) {
     const storageRef = firebase.storage().ref();
-    console.debug("storageRef:", storageRef);
-    storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL()
-        .then(async (url) => {
-            console.debug("got download URL:", url);
-            const result = await fetch(url);
-            const text = await result.text();
-            console.debug("result:", text);
-        });
+    const url = await storageRef.child(`/users/${user.uid}/test.txt`).getDownloadURL();
+    const giveback = await fetch(url);
+    const text = await giveback.text();
 
+    return text;
 }

@@ -8,10 +8,12 @@ chrome.runtime.onConnect.addListener(port => {
     port.onMessage.addListener(async message => {
         try {
             if ("email" in message && "password" in message) {
-                await emailSignIn(message);
+                const result = await emailSignIn(message);
+                port.postMessage({ result });
             } else if ("provider" in message && message.provider === "google") {
-                const token = await googleSignIn();
-                console.debug("Token:", token);
+                const result = await googleSignIn();
+                console.debug("logged in via google:", result);
+                port.postMessage({ result });
             }
         } catch (ex) {
             port.postMessage({ result: ex.message });
