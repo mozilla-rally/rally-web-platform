@@ -10,12 +10,6 @@
     "32": "images/study-icon.png",
     "64": "images/study-icon.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "rally-web-platform-spike@mozilla.org",
-      "strict_min_version": "77.0a1"
-    }
-  },
   "permissions": [
     "tabs",
     "idle",
