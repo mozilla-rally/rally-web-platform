@@ -8,7 +8,7 @@ port.onMessage.addListener(message => {
     if ("error" in message) {
         document.getElementById("error").textContent = message.error;
     } else if ("result" in message) {
-        document.getElementById("result").textContent = message.result;
+        document.getElementById("result").textContent = message.result.giveback;
     }
 });
 
