@@ -16,7 +16,7 @@ chrome.runtime.onConnect.addListener(port => {
                 port.postMessage({ result });
             }
         } catch (ex) {
-            port.postMessage({ result: ex.message });
+            port.postMessage({ error: ex.message });
         }
     });
 });
