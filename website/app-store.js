@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { writable } from "svelte/store";
-import api from "./web-extension-api";
+import api from "./web-site-api";
 
 export function createAppStore() {
   // initialize the writable store.
@@ -11,7 +11,7 @@ export function createAppStore() {
 
   // initialize from the API.
   api.initialize().then(async (newState) => {
-    console.log(`initialize: updated state -`, newState);
+    console.log("initialize: updated state -", newState);
     set(newState);
   });
 
@@ -21,10 +21,21 @@ export function createAppStore() {
   return {
     subscribe,
     set,
+    // login and signup functions
+    async loginWithGoogle() {
+      console.log("login with google");
+      return api.loginWithGoogle();
+    },
+    async loginWithEmailAndPassword() {
+      return api.loginWithEmailAndPassword();
+    },
+    async signupWithEmailAndPassword() {
+      return api.signupWithEmailAndPassword();
+    },
     async updateStudyEnrollment(studyID, enroll) {
       // Enforce the truthyness of `enroll`, to make sure
       // it's always a boolean.
-      let coercedEnroll = !!enroll;
+      const coercedEnroll = !!enroll;
       console.debug(
         `Rally - changing study ${studyID} enrollment to ${coercedEnroll}`);
 
@@ -38,7 +49,7 @@ export function createAppStore() {
     async updatePlatformEnrollment(enroll) {
       // Enforce the truthyness of `enroll`, to make sure
       // it's always a boolean.
-      let coercedEnroll = !!enroll;
+      const coercedEnroll = !!enroll;
       console.debug(`Rally - changing enrollment to ${coercedEnroll}`);
 
       // send the ion enrollment message
@@ -52,14 +63,14 @@ export function createAppStore() {
       try {
         await api.updateDemographicSurvey(data);
       } catch (err) {
-        console.error(`Rally - failed to update the demographic survey`, err);
+        console.error("Rally - failed to update the demographic survey", err);
       }
     },
     async setFirstRunCompletion(firstRun) {
       try {
         await api.setFirstRunCompletion(firstRun);
       } catch (err) {
-        console.error(`Rally - failed to set first run flag`, err);
+        console.error("Rally - failed to set first run flag", err);
       }
     }
   };

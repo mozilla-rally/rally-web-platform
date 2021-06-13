@@ -2,9 +2,8 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
+  import { createEventDispatcher, getContext } from "svelte";
   import { fly } from "svelte/transition";
-  import { createEventDispatcher } from "svelte";
   import Button from "../../components/Button.svelte";
   import ExternalLink from "../../components/icons/ExternalLink.svelte";
   import FirstRunArrow from "./FirstRunArrow.svelte";
@@ -12,9 +11,12 @@
 
   export let firstRunCompleted = false;
 
+  const store = getContext('rally:store');
+
   // capture only the first value of firstRunCompleted.
   const showArrow = !firstRunCompleted;
-
+  let email;
+  let password;
 </script>
 
 <style>
@@ -65,6 +67,14 @@
     padding-bottom: 0;
     align-self: start;
   }
+
+  .mzp-c-field-label {
+    text-align: left;
+  }
+  .mzp-c-field-set {
+    width: max-content;
+    margin: auto;
+  }
 </style>
 
 <section class="mzp-c-call-out">
@@ -79,38 +89,62 @@
       class="mzp-c-call-out-desc"
       style="color: var(--color-marketing-gray-70);
 ">
-      Put your data to work and start building a better internet. But first:
+      This is a feasibility spike centered around bringing Rally into the web.
     </p>
-
-    <div in:fly={{ duration: 400, y: 10 }} class="ion-three-cards">
-      <div class="ion-card-container">
-        <img src="img/welcome-01.png" alt='review our privacy policy' />
-        <div class="ion-card-description">Review and agree to our Privacy Notice</div>
-      </div>
-      <div class="ion-card-container">
-        <img src="img/welcome-02.png" alt='tell us about yourself' />
-        <div class="ion-card-description">Tell us about yourself, if you want to</div>
-      </div>
-      <div class="ion-card-container">
-        <img src="img/welcome-03.png" alt='join studies' />
-        <div class="ion-card-description">Join the study that's right for you</div>
-      </div>
+    <div style="padding: 2rem;">
+      <button 
+        on:click={async () => {
+          await store.loginWithGoogle();
+          dispatch('google-signup');
+        }}
+        style="display: grid; place-items: center; padding: .5rem 1rem; background-color: white;
+        color: hsl(217, 10%, 20%);
+        text-decoration: none;
+        width: max-content;
+        border: 2px solid #5e5e72;
+        margin: auto;
+        border-radius: 4px;
+        font-weight: 600;
+      ">
+        Sign up with Google (FIXME IMG)
+    </button>
     </div>
-
-    <div
-      in:fly={{ duration: 800, y: 5 }}
-      class="mzp-c-button-download-container"
-      style="width: 185px; display: grid; margin: auto;">
-      <Button size="xl" product on:click={() => dispatch('get-started')}>
-        Get Started
-      </Button>
-    </div>
+    <form class="mzp-c-form">
+      <div class="mzp-c-form-header" style="font-weight: bold; font-size: 1.25rem;">
+        or
+      </div>
+      <fieldset class="mzp-c-field-set">
+        <div class="mzp-c-field ">
+          <label class="mzp-c-field-label"
+           for="id_name" >Email</label>
+          <input class="mzp-c-field-control " bind:value={email}
+           id="id_name" type="email">
+    
+        </div>
+        <div class="mzp-c-field ">
+          <label class="mzp-c-field-label"
+           for="id_user_email">Password</label>
+          <input class="mzp-c-field-control" bind:value={password}
+           id="id_user_email" type="password">
+        </div>
+      </fieldset>
+      <div class="mzp-c-form-footer">
+        <button 
+        on:click={() => {
+          dispatch('login-with-email-and-password', { email, password });
+        }}
+      class="mzp-c-button">Log In</button>
+        <button
+          on:click={() => {
+            dispatch('signup-with-email-and-password', { email, password });
+          }}
+        class="mzp-c-button mzp-t-secondary">Sign Up</button>
+        <p class="mzp-c-form-info mzp-t-xs">This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply.</p>
+      </div>
+    </form>
     <div class="how-it-works">
       <a class="external-link" target="_blank" rel="noopener noreferrer" href="__BASE_SITE__/how-rally-works/">Wait – how does it work again?
         <ExternalLink /></a>
     </div>
   </div>
 </section>
-{#if showArrow}
-  <FirstRunArrow />
-{/if}

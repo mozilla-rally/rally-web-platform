@@ -1,132 +1,137 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+// COMPONENTS TO ADD
+// auth change will need to change something, perhaps just file the _onStateChange callbacks or whatever.
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirestore, doc, setDoc, collection, addDoc } from "firebase/firestore"; 
+import { produce } from "immer/dist/immer.cjs.production.min";
 
-/**
- * Utility function to build a message to the web-site.
- *
- * @param {runtime.Port} port
- *        The connection port to communicate with the background
- *        script.
- * @param {String} type
- *        The type of the message being sent. Unknown types
- *        will be rejected by the Core Add-on. See the
- *        `VALID_TYPES` in the implementation for a list of
- *        valid values.
- * @param {Object} payload
- *        A JSON-serializable object representing the payload
- *        of the message to be passed to the Core addon.
- */
-async function sendToCore(port, type, payload) {
-  const VALID_TYPES = [
-    "enrollment",
-    "first-run-completion",
-    "get-studies",
-    "pending-consent",
-    "study-enrollment",
-    "study-unenrollment",
-    "unenrollment",
-    "update-demographics",
-  ];
 
-  // Make sure `type` is one of the expected values.
-  if (!VALID_TYPES.includes(type)) {
-    return Promise.reject(
-      new Error(`Rally: sendToCore - unexpected message to core "${type}"`));
-  }
 
-  const msg = {
-    type,
-    data: payload
-  };
+let state = {
+  user: undefined,
 
-  port.postMessage(msg);
+};
+
+const app = initializeApp({
+  apiKey: "AIzaSyCazJhY4l84PBetkKlBT2KNlxChF0cdE-A",
+  authDomain: "ham-rally-spike.firebaseapp.com",
+  projectId: "ham-rally-spike",
+  storageBucket: "ham-rally-spike.appspot.com",
+  messagingSenderId: "924108559325",
+  appId: "1:924108559325:web:1ef147cfb7c0e54ce71c34"
+})
+
+const auth = getAuth();
+const db = getFirestore(app);
+
+const authentication = new Promise((resolve, reject) => {
+  auth.onAuthStateChanged(user => {
+    console.log("authentication check", user);
+    update((draft) => {
+      draft.user = user;
+    });
+    resolve(user);
+  })
+});
+
+async function updateUserInformation(user) {
+  //_db.settings({ experimentalForceLongPolling: true });
+  const data = { user: {
+    uid: user.uid,
+    lastUpdated: new Date()
+  } };
+  console.log("attempting to create/update firestore", data);
+  const userRef = doc(db, "users", user.uid);
+  console.log("??", userRef);
+  await setDoc(userRef, data);
+  console.log("user updated");
+  // await addDoc(collection(_db, "users"), {
+  //   name: "Tokyo",
+  //   country: "Japan"
+  // });  
 }
 
-/**
- * Wait for a message coming on a port.
- *
- * @param {runtime.Port} port
- *        The communication port to expect the message on.
- * @param {String} type
- *        The name of the message to wait for.
- * @returns {Promise} resolved with the content of the response
- *          when the message arrives.
- */
-async function waitForCoreResponse(port, type) {
-  return await new Promise(resolve => {
-    let handler = msg => {
-      if (msg.type === type) {
-        port.onMessage.removeListener(handler);
-        resolve(msg.data);
-      }
-    };
-    port.onMessage.addListener(handler);
+updateUserInformation({ uid: "TEST"});
+
+// Let's wait for 
+auth.onAuthStateChanged(async user => {
+  console.log("authentication check", user);
+  update((draft) => {
+    draft.user = user;
   });
+  if (user !== null) {
+    try {
+      await updateUserInformation(user);
+    } catch (err) {
+      console.error("!!!ONODNF", err);
+    }
+  }
+})
+
+const _stateChangeCallbacks = [];
+
+async function _nextState(nextState) {
+  _stateChangeCallbacks.forEach(callback => callback(nextState));
 }
 
-/**
- * This API implementation depends on sending messages back to
- * a web extension to store the overall app state whenever it
- * changes.
- */
+function update(callback) {
+  state = produce(state, callback);
+  _nextState(state);
+}
+
 export default {
-  // The connection end used to communicate with the background script
-  // of this addon. See the MDN documentation for more info:
-  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/Port
-  _connectionPort: null,
+
+  async loginWithGoogle() {
+    console.log("here we go, logging in with google.")
+    const googleAuthProvider = new GoogleAuthProvider();
+    let userCredential = undefined;
+    try {
+      userCredential = await signInWithPopup(auth, googleAuthProvider);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    update((draft) => {
+      draft.user = userCredential;
+    })
+    console.log("we made it passed the userCredential side."), userCredential;
+    
+  },
+  async loginWithEmailAndPassword() {
+    
+  },
+  async signupWithEmailAndPassword() {
+    
+  },  
+
+  // login
 
   // initialize the frontend's store from the add-on local storage.
   async initialize() {
     // _stateChangeCallbacks holds all the callbacks we want to execute
     // once the background sends a message with a new state.
-    this._stateChangeCallbacks = [];
-
-    // initialize the connection port.
-    this._connectionPort =
-      browser.runtime.connect({name: "ion-options-page"});
-
-    this._connectionPort.onMessage.addListener(
-      m => this._handleMessage(m));
-
-    // The onDisconnect event is fired if there's no receiving
-    // end or in case of any other error. Log an error and clear
-    // the port in that case.
-    this._connectionPort.onDisconnect.addListener(e => {
-      console.error("Rally - there was an error connecting to the background script", e);
-      this._connectionPort = null;
-    });
+    
+    const user = await authentication;
+    // figure out if the user is authenticated.
 
     // Ask explicitly for the current state.
-    return this.getAvailableStudies();
+
+    update(draft => {
+      draft.user = user;
+    });
+
+    return state;
   },
 
   // fetch available studies from remote location.
   // use in store instantiation. This assumes that the studies are
   // stored somewhere (i.e. remote settings)
   async getAvailableStudies() {
-    let response =
-      waitForCoreResponse(this._connectionPort, "update-state");
+    return [];
+    // const response =
+    //   waitForCoreResponse(this._connectionPort, "update-state");
 
-    await sendToCore(this._connectionPort, "get-studies", {});
-    return await response;
-  },
-
-  // return the app state from the add-on.
-  // this is called on store instantiation.
-  async getItem() {
-    try {
-      // TODO can this be removed?
-      return await browser.storage.local.get();
-    } catch (err) {
-      console.error(err);
-    }
-  },
-
-  // save the app state in the add-on.
-  // this fires every time store.produce is called.
-  async setItem(key, value) {
-    return browser.storage.local.set({ [key]: value });
+    // await sendToCore(this._connectionPort, "get-studies", {});
+    // return await response;
   },
 
   /**
@@ -140,31 +145,7 @@ export default {
    */
 
   async updateStudyEnrollment(studyID, enroll) {
-    if (!enroll) {
-      // Trigger addon uninstallation.
-      return await sendToCore(
-        this._connectionPort, "study-unenrollment", { studyID }
-      ).then(r => true);
-    }
-
-    // Fetch the study add-on and attempt to install it.
-    const state = await this.getAvailableStudies();
-    const studies = state.availableStudies;
-    const studyMetadata = studies.find(s => s.addonId === studyID);
-
-    // Make sure to record that consent was given. We call this
-    // "pending consent" because we can't directly install the
-    // study add-on. We can exclusively say that user consented,
-    // trigger installation (that can still be cancelled), and
-    // finalize the consent once the study is installed.
-    await sendToCore(
-      this._connectionPort, "pending-consent", { studyID }
-    );
-
-    // This triggers the install by directing the page toward the downloadLink,
-    // which is the study add-on's xpi.
-    window.location.href = studyMetadata.downloadLink;
-
+    // do the thing here
     return true;
   },
 
@@ -178,10 +159,10 @@ export default {
    *          updated, `false` otherwise.
    */
   async updatePlatformEnrollment(enroll) {
-    await sendToCore(
-      this._connectionPort, enroll ? "enrollment" : "unenrollment", {});
-
-    return true;
+    // do the thing here
+    update((draft) => {
+      draft.enrolled = enroll;
+    });
   },
 
   /**
@@ -192,7 +173,8 @@ export default {
    *        information submitted by the user.
    */
   async updateDemographicSurvey(data) {
-    await sendToCore(this._connectionPort, "update-demographics", data);
+    // do the thing here
+    return true;
   },
 
   /**
@@ -204,7 +186,7 @@ export default {
    * @param {Boolean} firstRunCompleted
    */
   async setFirstRunCompletion(firstRunCompleted) {
-    await sendToCore(this._connectionPort, "first-run-completion", { firstRunCompleted });
+    return true;
   },
 
   /**
@@ -219,17 +201,6 @@ export default {
    * }
    * ```
    */
-  async _handleMessage(message) {
-    switch (message.type) {
-      case "update-state": {
-        // update the UI.
-        this._stateChangeCallbacks.forEach(callback => callback(message.data));
-      } break;
-      default:
-        return Promise.reject(
-          new Error(`Rally - unexpected message type ${message.type}`));
-    }
-  },
 
   /**
    * Handle state updates from the background script.
@@ -238,6 +209,6 @@ export default {
    *        A function that has the new state as an argument.
    */
   onNextState(callback) {
-    this._stateChangeCallbacks.push(callback);
+    _stateChangeCallbacks.push(callback);
   }
 };
