@@ -1,18 +1,12 @@
-// COMPONENTS TO ADD
-// auth change will need to change something, perhaps just file the _onStateChange callbacks or whatever.
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getFirestore, doc, setDoc, collection, addDoc } from "firebase/firestore"; 
+/* global firebase */
+
 import { produce } from "immer/dist/immer.cjs.production.min";
-
-
 
 let state = {
   user: undefined,
-
 };
 
-const app = initializeApp({
+const app = firebase.initializeApp({
   apiKey: "AIzaSyCazJhY4l84PBetkKlBT2KNlxChF0cdE-A",
   authDomain: "ham-rally-spike.firebaseapp.com",
   projectId: "ham-rally-spike",
@@ -21,52 +15,15 @@ const app = initializeApp({
   appId: "1:924108559325:web:1ef147cfb7c0e54ce71c34"
 })
 
-const auth = getAuth();
-const db = getFirestore(app);
+const auth = firebase.auth();
+const db = firebase.firestore(app);
 
 const authentication = new Promise((resolve, reject) => {
   auth.onAuthStateChanged(user => {
-    console.log("authentication check", user);
-    update((draft) => {
-      draft.user = user;
-    });
+    console.log("authentication in progress");
     resolve(user);
   })
 });
-
-async function updateUserInformation(user) {
-  //_db.settings({ experimentalForceLongPolling: true });
-  const data = { user: {
-    uid: user.uid,
-    lastUpdated: new Date()
-  } };
-  console.log("attempting to create/update firestore", data);
-  const userRef = doc(db, "users", user.uid);
-  console.log("??", userRef);
-  await setDoc(userRef, data);
-  console.log("user updated");
-  // await addDoc(collection(_db, "users"), {
-  //   name: "Tokyo",
-  //   country: "Japan"
-  // });  
-}
-
-updateUserInformation({ uid: "TEST"});
-
-// Let's wait for 
-auth.onAuthStateChanged(async user => {
-  console.log("authentication check", user);
-  update((draft) => {
-    draft.user = user;
-  });
-  if (user !== null) {
-    try {
-      await updateUserInformation(user);
-    } catch (err) {
-      console.error("!!!ONODNF", err);
-    }
-  }
-})
 
 const _stateChangeCallbacks = [];
 
@@ -74,27 +31,81 @@ async function _nextState(nextState) {
   _stateChangeCallbacks.forEach(callback => callback(nextState));
 }
 
-function update(callback) {
+// userRef must update once we have a stable userID.
+let userRef;
+
+function setUserRef(userID) {
+  userRef = db.collection("users").doc(userID);
+}
+
+async function getUser(userID) {
+  return db.collection("users").doc(userID).get();
+}
+
+async function getStudies() {
+  return db.collection("studies").get();
+}
+
+function update(updates, merge = true) {
+  userRef.set(updates, {merge });
+}
+
+function updateUser(updates, merge = true) {
+  update(updates, merge);
+}
+
+function _updateLocalState(callback) {
   state = produce(state, callback);
   _nextState(state);
 }
 
+function createUser(uid) {
+  updateUser({ uid, createdOn: new Date() });
+}
+
+function listenForUserChanges(user) {
+  db.collection("users").doc(user.uid)
+    .onSnapshot(doc => {
+      const nextState = doc.data();
+      console.log("USER UPDATE", nextState);
+      _updateLocalState((draft) => {
+        draft.user = nextState;
+      });
+    })
+}
+
+function listenForStudyChanges() {
+  // get initial study payload.
+  db.collection("studies").onSnapshot((querySnapshot) => {
+    console.log("STUDY UPDATE")
+    const studies = [];
+    querySnapshot.forEach(function(doc) {
+        studies.push(doc.data());
+    });
+    _updateLocalState((draft) => {
+      draft.studies = studies;
+    });
+  });
+}
+
+let USER_ID;
+
+
 export default {
 
   async loginWithGoogle() {
-    console.log("here we go, logging in with google.")
-    const googleAuthProvider = new GoogleAuthProvider();
+    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
     let userCredential = undefined;
     try {
-      userCredential = await signInWithPopup(auth, googleAuthProvider);
+      userCredential = await firebase.auth().signInWithPopup(googleAuthProvider);
     } catch(err) {
       console.error("there was an error", err);
     }
-    update((draft) => {
-      draft.user = userCredential;
-    })
-    console.log("we made it passed the userCredential side."), userCredential;
-    
+
+    // create a new user.
+    setUserRef(userCredential.user.uid);
+    createUser(userCredential.user.uid);
+    listenForUserChanges();    
   },
   async loginWithEmailAndPassword() {
     
@@ -107,19 +118,46 @@ export default {
 
   // initialize the frontend's store from the add-on local storage.
   async initialize() {
-    // _stateChangeCallbacks holds all the callbacks we want to execute
-    // once the background sends a message with a new state.
     
-    const user = await authentication;
-    // figure out if the user is authenticated.
+    // check for an authenticated user.
+    const authenticatedUser = await authentication;
+    const initialState = {};
+    let user;
 
-    // Ask explicitly for the current state.
+    // if the user is authenticated, then they must have a 
+    // document in firestore. Retrieve it and listen for any changes
+    // to the firestore doc.
+    if (user !== null) {
+      USER_ID = authenticatedUser.uid;
+      setUserRef(USER_ID);
+      initialState._isLoggedIn = true;
+      user = await getUser(authenticatedUser.uid);
+      user = user.data();
+      listenForUserChanges(authenticatedUser);
+    } else {
+      initialState._isLoggedIn = false;
+    }
+    
+    let studies = await getStudies();
+    studies = studies.docs.map(doc => doc.data());
+    
+    listenForStudyChanges();
+    initialState._initialized = true;
 
-    update(draft => {
-      draft.user = user;
-    });
+    if (user) {
+      initialState.user = user;
+    }
 
-    return state;
+    if (studies) {
+      initialState.studies = studies;
+    }
+
+    return initialState;
+
+  },
+
+  async markOnboardingComplete() {
+    updateUser({ onboardingComplete: true });
   },
 
   // fetch available studies from remote location.
@@ -159,10 +197,7 @@ export default {
    *          updated, `false` otherwise.
    */
   async updatePlatformEnrollment(enroll) {
-    // do the thing here
-    update((draft) => {
-      draft.enrolled = enroll;
-    });
+    updateUser({ enrolled: enroll });
   },
 
   /**
@@ -174,7 +209,8 @@ export default {
    */
   async updateDemographicSurvey(data) {
     // do the thing here
-    return true;
+    userRef.update({ demographicsData: data });
+    //updateUser({ demographicsData: data });
   },
 
   /**
@@ -212,3 +248,66 @@ export default {
     _stateChangeCallbacks.push(callback);
   }
 };
+
+
+// one-time make this go into firebase
+
+// const studies = [
+//   {
+//     "name": "Your Time Online and \"Doomscrolling\"",
+//     "icons": {
+//       "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
+//       "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-64.png",
+//       "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-128.png"
+//     },
+//     "authors": {
+//       "name": "Mozilla Rally Team"
+//     },
+//     "version": "0.1.3",
+//     "addonId": "rally-study-01@mozilla.org",
+//     "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
+//     "endDate": "2021-10-13",
+//     "studyEnded": false,
+//     "studyPaused": false,
+//     "description": "When you participate in this study you are helping Rally discover how our community browses the internet. We will explore interesting online patterns like \"doomscrolling\" – the popular term for browsing outrageous or sad online news for a long period of time. Our findings will lead to new Rally features or blog posts about aggregate online behavior.",
+//     "studyDetailsLink": "https://rally.mozilla.org/current-studies/your-time-online-and-doomscrolling/",
+//     "dataCollectionDetails": [
+//       "Specific actions you take while browsing the web: loading a new URL, changing a tab, watching a video, or listening to audio (we do not collect the audio you are listening to, just that you have performed that action)",
+//       "The domains you visit as you browse the web (e.g., wikipedia.org) and the title, description, and type of page that you're on (e.g., article, video, website)",
+//       "The time spent on each page and how far you scroll down a page"
+//     ],
+//     "tags": ["community insights", "product discovery"],
+//     "schemaNamespace": "rally-zero-one"
+//   },
+//   {
+//     "name": "Political and COVID-19 News",
+//     "icons": {
+//       "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-32.png",
+//       "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-64.png",
+//       "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-128.png"
+//     },
+//     "authors": {
+//       "name": "Researchers at Princeton"
+//     },
+//     "version": "2.0.0",
+//     "addonId": "princeton-news-study@rally.mozilla.org",
+//     "downloadLink": "https://github.com/citp/news-disinformation-study/releases/download/v2.0.1/princeton_university_news_study-2.0.1.xpi",
+//     "endDate": "2021-10-27",
+//     "studyEnded": false,
+//     "studyPaused": false,
+//     "description": "In a collaboration between researchers at Princeton University's Center for Information Technology Policy and Mozilla, this study seeks to examine the flow of both political and COVID-19 related news information across the internet. During the enrollment process, you'll receive more information about the study and you'll be asked by researchers at Princeton to consent to participation.",
+//     "studyDetailsLink": "https://rally.mozilla.org/current-studies/political-and-covid-19-news/",
+//     "dataCollectionDetails": [
+//       "Visits, shares, and exposures to specific websites from an established list to spread authoritative information and disinformation",
+//       "Whether you post links to these websites on social media",
+//       "Your Rally demographics and a short Qualtrics survey"
+//     ],
+//     "tags": ["misinformation", "social media"],
+//     "schemaNamespace": "pioneer-citp-news-disinfo-two"
+//   }
+// ]
+
+// studies.forEach(study => {
+//   db.collection("studies").doc(study.addonId).set(study, {merge: true });
+
+// })

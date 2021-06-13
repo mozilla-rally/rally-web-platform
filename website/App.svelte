@@ -17,8 +17,10 @@
   // As soon as the store has its initial value, let's
   // set firstRun = !enrolled.
   let firstRun;
+
+  $: showStore = ($store._initialized === true);
   $: if ($store && firstRun === undefined) {
-    firstRun = !$store.enrolled;
+    firstRun = !($store.user?.enrolled);  //!$store.user || ($store.user && !$store.user.enrolled); //!$store.user.enrolled;
   }
 
   // We currently exclusively support Rally on en-US locales,
@@ -30,8 +32,22 @@
   
 </script>
 
+<div style="
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 1rem;
+  border-radius: .5rem;
+  background-color: black;
+  color: white;
+  font-weight: 600;
+">
+  {$store.user?.testValue}
+</div>
+
+
 {#if isRallySupported}
-  {#if $store}
+  {#if showStore}
     {#if firstRun}
       <!-- onboarding flow -->
       <!-- the onboarding-complete event occurs once the user has
@@ -45,6 +61,7 @@
         }}
         on:onboarding-complete={() => {
           firstRun = false;
+          store.markOnboardingComplete();
         }} />
     {:else}
       <!-- main application flow -->

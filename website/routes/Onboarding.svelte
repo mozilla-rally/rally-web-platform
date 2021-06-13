@@ -34,11 +34,16 @@
 
     dispatch("first-run-initiated");
   });
-  
-  $: if (view === 'welcome' && $store.user && $store.enrolled) {
+
+  $: if (view === 'welcome' && $store.user && $store.user.uid && $store.user.enrolled) {
+    console.log('send them out of onboarding!');
     finishOnboarding();
-  } else if (view === 'welcome' && $store.user) {
+  }
+  $: if (view === 'welcome' && $store.user && $store.user.uid && !$store.user.enrolled) {
+    console.log('maybe it is terms time?')
     send('terms');
+  } else {
+    console.log(view === 'welcome', $store.user, $store.user?.uid, !$store.user?.enrolled);
   }
 
   function send(next) {
