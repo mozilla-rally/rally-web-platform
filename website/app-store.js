@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { writable, get } from "svelte/store";
+import { writable } from "svelte/store";
 import api from "./web-site-api";
 
 export function createAppStore() {
@@ -13,7 +13,6 @@ export function createAppStore() {
   });
   api.onNextState((state) => {
     const nextState = {...state, _initialized: true };
-    console.log("next state called", nextState);
     set(nextState);
   });
 
@@ -30,9 +29,6 @@ export function createAppStore() {
     },
     async signupWithEmailAndPassword() {
       return api.signupWithEmailAndPassword();
-    },
-    async markOnboardingComplete() {
-      return api.markOnboardingComplete();
     },
     async updateStudyEnrollment(studyID, enroll) {
       // Enforce the truthyness of `enroll`, to make sure

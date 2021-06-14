@@ -62,7 +62,6 @@
         }}
         on:onboarding-complete={() => {
           firstRun = false;
-          store.markOnboardingComplete();
         }} />
     {:else}
       <!-- main application flow -->
