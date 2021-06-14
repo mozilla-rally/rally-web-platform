@@ -80,10 +80,10 @@ export default {
     listenForUserChanges(userCredential.user);    
   },
   async loginWithEmailAndPassword() {
-    console.log("loginWithEmailAndPassword() needs to be integrated");
+    console.warn("loginWithEmailAndPassword() needs to be integrated");
   },
   async signupWithEmailAndPassword() {
-    console.log("signupWithEmailAndPassword() needs to be integrated");
+    console.warn("signupWithEmailAndPassword() needs to be integrated");
   },
 
   async initialize() {

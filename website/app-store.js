@@ -21,7 +21,6 @@ export function createAppStore() {
     set,
     // login and signup functions
     async loginWithGoogle() {
-      console.log("login with google");
       return api.loginWithGoogle();
     },
     async loginWithEmailAndPassword() {
