@@ -112,7 +112,7 @@ export default {
   },
   async signupWithEmailAndPassword() {
     
-  },  
+  },
 
   // login
 
@@ -184,6 +184,15 @@ export default {
 
   async updateStudyEnrollment(studyID, enroll) {
     // do the thing here
+    // get currently-enrolled studies here.
+    const enrolledStudies = {...(state.user.enrolledStudies || {})};
+    if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
+    enrolledStudies[studyID] = {...enrolledStudies[studyID]};
+    enrolledStudies[studyID].enrolled = enroll;
+    if (enroll) {
+      enrolledStudies[studyID].joinedOn = new Date();
+    }
+    userRef.update({ enrolledStudies });
     return true;
   },
 

@@ -68,6 +68,7 @@ onMount(() => { mounted = true; })
                     <CurrentStudies
                         sidebarOffset
                         studies={$store.studies}
+                        userEnrollment={$store.user?.enrolledStudies || {}}
                         on:cta-clicked={() => {
                             notification.clear();
                         }}

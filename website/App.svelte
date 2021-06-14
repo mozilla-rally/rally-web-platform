@@ -11,6 +11,7 @@
   import Main from './routes/Main.svelte';
   import NotificationCenter from "./routes/NotificationCenter.svelte";
   import NonUSSplashPage from './routes/non-eligible-splashes/NonUSUser.svelte';
+ 
   setContext("rally:store", store);
   setContext("rally:notification", notification);
 
@@ -19,10 +20,9 @@
   let firstRun;
 
   $: showStore = ($store._initialized === true);
-  $: if ($store && firstRun === undefined) {
-    firstRun = !($store.user?.enrolled);  //!$store.user || ($store.user && !$store.user.enrolled); //!$store.user.enrolled;
+  $: if ($store._initialized && firstRun === undefined) {
+    firstRun = !($store.user?.enrolled);
   }
-
   // We currently exclusively support Rally on en-US locales,
   // but still support enabling/disabling the locale check
   // to enable the development workflows on other locales.
@@ -32,6 +32,7 @@
   
 </script>
 
+{#if $store.user?.testValue}
 <div style="
   position: absolute;
   right: 1rem;
@@ -44,7 +45,7 @@
 ">
   {$store.user?.testValue}
 </div>
-
+{/if}
 
 {#if isRallySupported}
   {#if showStore}

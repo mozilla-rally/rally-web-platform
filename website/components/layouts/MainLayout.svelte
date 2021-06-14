@@ -4,7 +4,6 @@
 <style>
   div {
     min-height: 100vh;
-    background-color: green;
     display: grid;
     grid-template-columns: max-content auto;
     justify-content: stretch;
