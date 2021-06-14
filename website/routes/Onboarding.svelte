@@ -68,12 +68,10 @@
         {#if view === 'welcome'}
           <Welcome
             firstRunCompleted={firstRunCompleted}
-            on:google-signup={async (event) => {
+            on:google-signup={async () => {
               if ($store.user) {
                 send("terms");
               }
-              // do something here.
-              // then eventually call, once we are redirected, to
             }}
             on:signup-with-email-and-password
             />
