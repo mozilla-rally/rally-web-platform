@@ -23,9 +23,8 @@
     "start:web": "sirv public",
     "watch": "npm-run-all --parallel watch:raw watch:bundled",
     "watch:raw": "npm run build:schema && npm run dev -- -w",
-    "autobuild": "rollup -c rollup.config.web.js -w --environment NODE_ENV:dev",
-    "start:dev": "sirv public --single --dev",
-    "site-dev": "run-p start:dev autobuild",
+    "watch:site": "rollup -c rollup.config.web.js -w",
+    "serve:dev": "sirv public --no-clear",
     "watch:bundled": "npm run build:schema && web-ext run --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json"
   },
   "jest": {

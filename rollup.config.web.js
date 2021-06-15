@@ -5,6 +5,7 @@
 import svelte from "rollup-plugin-svelte";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import replace from "@rollup/plugin-replace";
 import copy from "rollup-plugin-copy";
@@ -25,7 +26,7 @@ function serve() {
       if (server) {return;}
       server = exec.spawn(
         "npm",
-        ["run", "start", "--", "--dev"],
+        ["run", "serve:dev", "--", "--dev"],
         {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,
@@ -90,6 +91,10 @@ export default (cliArgs) => [{
     // In dev mode, call `npm run start` once
     // the bundle has been generated
     !production && serve(),
+
+    // Watch the `public` directory and refresh the
+		// browser on changes when not in production
+		!production && livereload("public"),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

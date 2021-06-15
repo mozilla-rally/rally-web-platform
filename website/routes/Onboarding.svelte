@@ -68,7 +68,7 @@
         {#if view === 'welcome'}
           <Welcome
             firstRunCompleted={firstRunCompleted}
-            on:user-signup-login-complete={async () => {
+            on:user-signup-login-complete={() => {
               if ($store.user) {
                 send("terms");
               }
