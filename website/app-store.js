@@ -23,11 +23,11 @@ export function createAppStore() {
     async loginWithGoogle() {
       return api.loginWithGoogle();
     },
-    async loginWithEmailAndPassword() {
-      return api.loginWithEmailAndPassword();
+    async loginWithEmailAndPassword(email, password) {
+      return api.loginWithEmailAndPassword(email, password);
     },
-    async signupWithEmailAndPassword() {
-      return api.signupWithEmailAndPassword();
+    async signupWithEmailAndPassword(email, password) {
+      return api.signupWithEmailAndPassword(email, password);
     },
     async updateStudyEnrollment(studyID, enroll) {
       // Enforce the truthyness of `enroll`, to make sure

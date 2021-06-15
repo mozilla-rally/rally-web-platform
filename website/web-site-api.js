@@ -15,10 +15,10 @@ const db = firebase.firestore(app);
 const user = {
   userRef: undefined,
   initialize(uid, { createUser = false } = {}) {
+    this.userRef = db.collection("users").doc(uid);
     if (createUser) {
       this.update({ uid, createdOn: new Date() });
     }
-    this.userRef = db.collection("users").doc(uid);
   },
   get() {
     return this.userRef.get();
@@ -64,7 +64,6 @@ function listenForStudyChanges() {
 
 let USER_ID;
 
-
 export default {
 
   async loginWithGoogle() {
@@ -79,11 +78,32 @@ export default {
     user.initialize(userCredential.user.uid, { createUser: true });
     listenForUserChanges(userCredential.user);    
   },
-  async loginWithEmailAndPassword() {
-    console.warn("loginWithEmailAndPassword() needs to be integrated");
+  async loginWithEmailAndPassword(email, password) {
+    let userCredential;
+    try {
+      userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    user.initialize(userCredential.user.uid, { createUser: true });
+    listenForUserChanges(userCredential.user);
   },
-  async signupWithEmailAndPassword() {
-    console.warn("signupWithEmailAndPassword() needs to be integrated");
+  async signupWithEmailAndPassword(email, password) {
+    let userCredential;
+    console.log("signing up!!!")
+    try {
+      userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    console.log("amazing", userCredential);
+    if (userCredential) {
+      user.initialize(userCredential.user.uid, { createUser: true });
+      listenForUserChanges(userCredential.user);
+    } else {
+      console.error("Unable to sign up with email and password.", email, password)
+    }
+    
   },
 
   async initialize() {
@@ -94,11 +114,10 @@ export default {
     const authenticatedUser = await new Promise((resolve) => {
       auth.onAuthStateChanged(resolve);
     });
-
     // if the user is authenticated, then they must have a 
     // document in firestore. Retrieve it and listen for any changes
     // to the firestore doc.
-    if (user !== null) {
+    if (authenticatedUser !== null) {
       USER_ID = authenticatedUser.uid;
       user.initialize(USER_ID);
       initialState._isLoggedIn = true;

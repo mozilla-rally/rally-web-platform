@@ -68,12 +68,11 @@
         {#if view === 'welcome'}
           <Welcome
             firstRunCompleted={firstRunCompleted}
-            on:google-signup={async () => {
+            on:user-signup-login-complete={async () => {
               if ($store.user) {
                 send("terms");
               }
             }}
-            on:signup-with-email-and-password
             />
         {:else if view === 'terms'}
           <TermsOfService />

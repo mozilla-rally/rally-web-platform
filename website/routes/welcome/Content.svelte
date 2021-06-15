@@ -95,7 +95,7 @@
       <button 
         on:click={async () => {
           await store.loginWithGoogle();
-          dispatch('google-signup');
+          dispatch('user-signup-login-complete');
         }}
         style="display: grid; place-items: center; padding: .5rem 1rem; background-color: white;
         color: hsl(217, 10%, 20%);
@@ -130,13 +130,15 @@
       </fieldset>
       <div class="mzp-c-form-footer">
         <button 
-        on:click={() => {
-          dispatch('login-with-email-and-password', { email, password });
+        on:click={async () => {
+          await store.loginWithEmailAndPassword(email, password);
+          dispatch('user-signup-login-complete');
         }}
       class="mzp-c-button">Log In</button>
         <button
-          on:click={() => {
-            dispatch('signup-with-email-and-password', { email, password });
+          on:click={async () => {
+            await store.signupWithEmailAndPassword(email, password);
+            dispatch('user-signup-login-complete');
           }}
         class="mzp-c-button mzp-t-secondary">Sign Up</button>
         <p class="mzp-c-form-info mzp-t-xs">This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply.</p>
