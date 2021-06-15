@@ -90,18 +90,16 @@ export default {
   },
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
-    console.log("signing up!!!")
     try {
       userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
     } catch(err) {
       console.error("there was an error", err);
     }
-    console.log("amazing", userCredential);
     if (userCredential) {
       user.initialize(userCredential.user.uid, { createUser: true });
       listenForUserChanges(userCredential.user);
     } else {
-      console.error("Unable to sign up with email and password.", email, password)
+      console.error("Unable to sign up with email and password")
     }
     
   },
