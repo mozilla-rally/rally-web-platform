@@ -109,7 +109,6 @@
         Sign up with Google (FIXME IMG)
     </button>
     </div>
-    <form class="mzp-c-form">
       <div class="mzp-c-form-header" style="font-weight: bold; font-size: 1.25rem;">
         or
       </div>
@@ -143,7 +142,6 @@
         class="mzp-c-button mzp-t-secondary">Sign Up</button>
         <p class="mzp-c-form-info mzp-t-xs">This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply.</p>
       </div>
-    </form>
     <div class="how-it-works">
       <a class="external-link" target="_blank" rel="noopener noreferrer" href="__BASE_SITE__/how-rally-works/">Wait – how does it work again?
         <ExternalLink /></a>

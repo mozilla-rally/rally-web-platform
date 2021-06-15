@@ -85,8 +85,13 @@ export default {
     } catch(err) {
       console.error("there was an error", err);
     }
-    user.initialize(userCredential.user.uid, { createUser: true });
-    listenForUserChanges(userCredential.user);
+    if (userCredential) {
+      user.initialize(userCredential.user.uid);
+      listenForUserChanges(userCredential.user)
+    } else {
+      console.error("Unable to log in with email and password");
+    }
+    
   },
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
@@ -99,9 +104,8 @@ export default {
       user.initialize(userCredential.user.uid, { createUser: true });
       listenForUserChanges(userCredential.user);
     } else {
-      console.error("Unable to sign up with email and password")
+      console.error("Unable to sign up with email and password");
     }
-    
   },
 
   async initialize() {
