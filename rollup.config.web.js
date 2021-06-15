@@ -26,7 +26,7 @@ function serve() {
       if (server) {return;}
       server = exec.spawn(
         "npm",
-        ["run", "serve:dev", "--", "--dev"],
+        ["run", "start:web", "--", "--dev"],
         {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,

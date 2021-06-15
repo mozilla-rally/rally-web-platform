@@ -9,6 +9,7 @@
     "build:glean:docs": "glean translate ./metrics.yaml ./pings.yaml -f markdown -o docs",
     "build:schema": "node schemas/generate-schema.mjs",
     "build:storybook": "build-storybook -s ./",
+    "build:web": "rollup -c rollup.config.web.js",
     "dev": "rollup -c --config-enable-developer-mode",
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "lint": "npm-run-all lint:web-ext lint:eslint",
@@ -19,12 +20,10 @@
     "start": "npm run build && web-ext run",
     "test:unit": "jest",
     "test:integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
-    "build:web": "rollup -c rollup.config.web.js",
-    "start:web": "sirv public",
     "watch": "npm-run-all --parallel watch:raw watch:bundled",
     "watch:raw": "npm run build:schema && npm run dev -- -w",
-    "watch:site": "rollup -c rollup.config.web.js -w",
-    "serve:dev": "sirv public --no-clear",
+    "watch:web": "rollup -c rollup.config.web.js -w",
+    "start:web": "sirv public --no-clear",
     "watch:bundled": "npm run build:schema && web-ext run --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json"
   },
   "jest": {
