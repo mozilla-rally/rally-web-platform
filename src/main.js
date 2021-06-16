@@ -1,22 +1,28 @@
 import runStudy from "./study.js";
-import { setupAuth, googleSignIn, emailSignIn } from "./auth.js";
-
-setupAuth();
+import auth from "./auth.js";
 
 // Listen for login messages from the options UI.
 chrome.runtime.onConnect.addListener(port => {
     port.onMessage.addListener(async message => {
-        try {
-            if ("email" in message && "password" in message) {
-                const result = await emailSignIn(message);
-                port.postMessage({ result });
-            } else if ("provider" in message && message.provider === "google") {
-                const result = await googleSignIn();
-                console.debug("logged in via google:", result);
-                port.postMessage({ result });
+        const initialState = await auth.initialize();
+        if (initialState._isLoggedIn) {
+            console.debug("already logged in:", initialState);
+            const result = "already logged in";
+            port.postMessage({ result });
+        } else {
+            try {
+                if ("email" in message && "password" in message) {
+                    const result = await auth.loginWithEmailAndPassword(message);
+                    port.postMessage({ result });
+                } else if ("provider" in message && message.provider === "google") {
+                    const result = await auth.loginWithGoogle();
+                    console.debug("logged in via google:", result);
+                    port.postMessage({ result });
+                }
+            } catch (ex) {
+                console.error(ex);
+                port.postMessage({ error: ex.message });
             }
-        } catch (ex) {
-            port.postMessage({ error: ex.message });
         }
     });
 });
