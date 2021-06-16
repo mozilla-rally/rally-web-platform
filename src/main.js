@@ -7,7 +7,7 @@ chrome.runtime.onConnect.addListener(port => {
         const initialState = await auth.initialize();
         if (initialState._isLoggedIn) {
             console.debug("already logged in:", initialState);
-            const result = "already logged in";
+            const result = JSON.stringify(initialState);
             port.postMessage({ result });
         } else {
             try {

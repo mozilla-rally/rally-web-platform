@@ -8,7 +8,13 @@ port.onMessage.addListener(message => {
     if ("error" in message) {
         document.getElementById("error").textContent = message.error;
     } else if ("result" in message) {
-        document.getElementById("result").textContent = message.result;
+        const result = JSON.parse(message.result);
+
+        let output = "Enrolled studies: ";
+        for (const studyName in result.user.enrolledStudies) {
+            output += studyName + "\n";
+        }
+        document.getElementById("result").textContent = output;
     }
 });
 
