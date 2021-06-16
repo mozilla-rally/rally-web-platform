@@ -76,6 +76,11 @@ let USER_ID;
 
 export default {
 
+
+    async loginWithCredential(idToken) {
+        const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
+        return firebase.auth().signInWithCredential(credential);
+    },
     async loginWithGoogle() {
         const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
         let userCredential = undefined;

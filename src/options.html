@@ -1,27 +1,16 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sign in</title>
+    <title>Study Options</title>
 </head>
 
 <body>
     <div id="main" class="main">
-        <div id="logins">
-            <p id="google-sign-in" class="sign"><a href="#"><img src="google-signin.png"></a>
-            </p>
-            <p class="sign">Or, log in with your Rally account:</p>
-            <form id="test-form" class="form1">
-                <input id="email" class="un" type="text" placeholder="Username">
-                <input id="password" class="pass" type="password" placeholder="Password">
-                <input type="submit" class="submit" value="Submit">
-                <p class="forgot"><a href="#">Forgot Password?</a></p>
-            </form>
-        </div>
-
         <div id="dialog">
-            <p><span id="result"></span></p>
+            <p>Enrolled:<span id="enrolled"></span></p>
+            <p>Firebase User ID:<span id="uid"></span></p>
+            <p>Studies:<span id="enrolledStudies"></span></p>
             <p><span id="error"></span></p>
         </div>
     </div>

@@ -53,8 +53,8 @@ function listenForStudyChanges() {
   // get initial study payload.
   db.collection("studies").onSnapshot((querySnapshot) => {
     const studies = [];
-    querySnapshot.forEach(function(doc) {
-        studies.push(doc.data());
+    querySnapshot.forEach(function (doc) {
+      studies.push(doc.data());
     });
     _updateLocalState((draft) => {
       draft.studies = studies;
@@ -71,18 +71,25 @@ export default {
     let userCredential = undefined;
     try {
       userCredential = await firebase.auth().signInWithPopup(googleAuthProvider);
-    } catch(err) {
+    } catch (err) {
       console.error("there was an error", err);
     }
     // create a new user.
     user.initialize(userCredential.user.uid, { createUser: true });
-    listenForUserChanges(userCredential.user);    
+    listenForUserChanges(userCredential.user);
+
+    // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
+    // TODO only supports Chrome auth provider
+    // TODO pull study IDs from metadata
+    for (const studyId of ["maoohlacnogbjgacnnoajgljfcdbdocb"]) {
+      chrome.runtime.sendMessage(studyId, userCredential.credential.idToken);
+    }
   },
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
       userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-    } catch(err) {
+    } catch (err) {
       console.error("there was an error", err);
     }
     if (userCredential) {
@@ -91,13 +98,13 @@ export default {
     } else {
       console.error("Unable to log in with email and password");
     }
-    
+
   },
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
     try {
       userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    } catch(err) {
+    } catch (err) {
       console.error("there was an error", err);
     }
     if (userCredential) {
@@ -116,7 +123,8 @@ export default {
     const authenticatedUser = await new Promise((resolve) => {
       auth.onAuthStateChanged(resolve);
     });
-    // if the user is authenticated, then they must have a 
+
+    // if the user is authenticated, then they must have a
     // document in firestore. Retrieve it and listen for any changes
     // to the firestore doc.
     if (authenticatedUser !== null) {
@@ -126,10 +134,11 @@ export default {
       userState = await user.get(authenticatedUser.uid);
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
+
     } else {
       initialState._isLoggedIn = false;
     }
-    
+
     // fetch the initial studies.
     let initialStudyState = await getStudies();
     initialStudyState = initialStudyState.docs.map(doc => doc.data());
@@ -150,9 +159,9 @@ export default {
   },
 
   async updateStudyEnrollment(studyID, enroll) {
-    const enrolledStudies = {...(state.user.enrolledStudies || {})};
+    const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
     if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
-    enrolledStudies[studyID] = {...enrolledStudies[studyID]};
+    enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
     enrolledStudies[studyID].enrolled = enroll;
     if (enroll) {
       enrolledStudies[studyID].joinedOn = new Date();
@@ -238,7 +247,7 @@ function addStudiesToFirebase() {
   ]
 
   studies.forEach(study => {
-    db.collection("studies").doc(study.addonId).set(study, {merge: true });
+    db.collection("studies").doc(study.addonId).set(study, { merge: true });
   });
   return studies;
 }

@@ -24,5 +24,10 @@
     "page": "src/options.html",
     "open_in_tab": true
   },
+  "externally_connectable": {
+    "matches": [
+      "*://localhost/*"
+    ]
+  },
   "content_security_policy": "script-src 'self' https://www.gstatic.com https://cdn.firebase.com https://*.firebaseio.com https://auth.firebase.com https://apis.google.com; object-src 'self'"
 }
