@@ -9,7 +9,7 @@ port.onMessage.addListener(message => {
         console.log("result", result);
         document.getElementById("enrolled").textContent = result.user.enrolled;
         document.getElementById("uid").textContent = result.user.uid;
-        let output = "";
+        let output = "<br>";
         for (const studyName in result.user.enrolledStudies) {
             output += `${studyName}, enrolled: ${result.user.enrolledStudies[studyName].enrolled}<br>`;
         }
