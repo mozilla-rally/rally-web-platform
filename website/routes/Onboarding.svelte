@@ -2,7 +2,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, getContext, createEventDispatcher } from "svelte";
+  import { onMount, getContext, createEventDispatcher, tick } from "svelte";
   import Layout from "../components/layouts/OnboardingLayout.svelte";
   import Main from "../components/layouts/OnboardingBody.svelte";
   import Welcome from "../routes/welcome/Content.svelte";
@@ -29,8 +29,18 @@
     // that we don't need to show first-run graphics
     // such as the arrow pointing to the add-on
     // in the toolbar.
+
+    // if authenticated already, skip welcome page.
+
     dispatch("first-run-initiated");
   });
+
+  $: if (view === 'welcome' && $store.user && $store.user.uid && $store.user.enrolled) {
+    finishOnboarding();
+  }
+  $: if (view === 'welcome' && $store.user && $store.user.uid && !$store.user.enrolled) {
+    send('terms');
+  }
 
   function send(next) {
     view = next;
@@ -58,9 +68,12 @@
         {#if view === 'welcome'}
           <Welcome
             firstRunCompleted={firstRunCompleted}
-            on:get-started={() => {
-              send('terms');
-          }} />
+            on:user-signup-login-complete={() => {
+              if ($store.user) {
+                send("terms");
+              }
+            }}
+            />
         {:else if view === 'terms'}
           <TermsOfService />
         {:else if view === 'demographics'}

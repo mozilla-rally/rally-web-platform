@@ -34,7 +34,7 @@ function leaveStudy(studyID) { store.updateStudyEnrollment(studyID, false); noti
 // For now, we should expect that the profile questions are the same set as for the demographic survey.
 // Before we can count the answered questions, let's transform them back into their display version (the format we use
 // for the literal inputs) and then use the questionIsAnswered function to check how many have in fact been answered.
-$: formattedDemographicsData = $store.demographicsData ? formatAnswersForDisplay(demographicsSchema, { ...$store.demographicsData }, inputFormatters) : undefined;
+$: formattedDemographicsData = $store.user.demographicsData ? formatAnswersForDisplay(demographicsSchema, { ...$store.user.demographicsData }, inputFormatters) : undefined;
 $: profileQuestionsAnswered = formattedDemographicsData ? Object.keys(demographicsSchema)
     .filter(key => questionIsAnswered(formattedDemographicsData[key], demographicsSchema[key].type)).length : 0;
 // get the total number of available profile questions
@@ -67,7 +67,8 @@ onMount(() => { mounted = true; })
                 <MainContent  pad={false}>
                     <CurrentStudies
                         sidebarOffset
-                        studies={$store.availableStudies}
+                        studies={$store.studies}
+                        userEnrollment={$store.user?.enrolledStudies || {}}
                         on:cta-clicked={() => {
                             notification.clear();
                         }}

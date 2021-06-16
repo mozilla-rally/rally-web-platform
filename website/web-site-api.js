@@ -1,243 +1,246 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* global firebase */
 
-/**
- * Utility function to build a message to the web-site.
- *
- * @param {runtime.Port} port
- *        The connection port to communicate with the background
- *        script.
- * @param {String} type
- *        The type of the message being sent. Unknown types
- *        will be rejected by the Core Add-on. See the
- *        `VALID_TYPES` in the implementation for a list of
- *        valid values.
- * @param {Object} payload
- *        A JSON-serializable object representing the payload
- *        of the message to be passed to the Core addon.
- */
-async function sendToCore(port, type, payload) {
-  const VALID_TYPES = [
-    "enrollment",
-    "first-run-completion",
-    "get-studies",
-    "pending-consent",
-    "study-enrollment",
-    "study-unenrollment",
-    "unenrollment",
-    "update-demographics",
-  ];
+import CONFIG from "../firebase.config"
+import { produce } from "immer/dist/immer.cjs.production.min";
 
-  // Make sure `type` is one of the expected values.
-  if (!VALID_TYPES.includes(type)) {
-    return Promise.reject(
-      new Error(`Rally: sendToCore - unexpected message to core "${type}"`));
+let state = {
+  user: undefined,
+};
+
+const app = firebase.initializeApp(CONFIG)
+
+const auth = firebase.auth();
+const db = firebase.firestore(app);
+
+const user = {
+  userRef: undefined,
+  initialize(uid, { createUser = false } = {}) {
+    this.userRef = db.collection("users").doc(uid);
+    if (createUser) {
+      this.update({ uid, createdOn: new Date() });
+    }
+  },
+  get() {
+    return this.userRef.get();
+  },
+  update(updates, merge = true) {
+    return this.userRef.set(updates, { merge });
   }
-
-  const msg = {
-    type,
-    data: payload
-  };
-
-  port.postMessage(msg);
 }
 
-/**
- * Wait for a message coming on a port.
- *
- * @param {runtime.Port} port
- *        The communication port to expect the message on.
- * @param {String} type
- *        The name of the message to wait for.
- * @returns {Promise} resolved with the content of the response
- *          when the message arrives.
- */
-async function waitForCoreResponse(port, type) {
-  return await new Promise(resolve => {
-    let handler = msg => {
-      if (msg.type === type) {
-        port.onMessage.removeListener(handler);
-        resolve(msg.data);
-      }
-    };
-    port.onMessage.addListener(handler);
+async function getStudies() {
+  return db.collection("studies").get();
+}
+
+const _stateChangeCallbacks = [];
+
+function _updateLocalState(callback) {
+  state = produce(state, callback);
+  _stateChangeCallbacks.forEach(callback => callback(state));
+}
+
+function listenForUserChanges(user) {
+  db.collection("users").doc(user.uid)
+    .onSnapshot(doc => {
+      const nextState = doc.data();
+      _updateLocalState((draft) => {
+        draft.user = nextState;
+      });
+    })
+}
+
+function listenForStudyChanges() {
+  // get initial study payload.
+  db.collection("studies").onSnapshot((querySnapshot) => {
+    const studies = [];
+    querySnapshot.forEach(function(doc) {
+        studies.push(doc.data());
+    });
+    _updateLocalState((draft) => {
+      draft.studies = studies;
+    });
   });
 }
 
-/**
- * This API implementation depends on sending messages back to
- * a web extension to store the overall app state whenever it
- * changes.
- */
+let USER_ID;
+
 export default {
-  // The connection end used to communicate with the background script
-  // of this addon. See the MDN documentation for more info:
-  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/Port
-  _connectionPort: null,
 
-  // initialize the frontend's store from the add-on local storage.
-  async initialize() {
-    // _stateChangeCallbacks holds all the callbacks we want to execute
-    // once the background sends a message with a new state.
-    this._stateChangeCallbacks = [];
-
-    // initialize the connection port.
-    this._connectionPort =
-      browser.runtime.connect({name: "ion-options-page"});
-
-    this._connectionPort.onMessage.addListener(
-      m => this._handleMessage(m));
-
-    // The onDisconnect event is fired if there's no receiving
-    // end or in case of any other error. Log an error and clear
-    // the port in that case.
-    this._connectionPort.onDisconnect.addListener(e => {
-      console.error("Rally - there was an error connecting to the background script", e);
-      this._connectionPort = null;
-    });
-
-    // Ask explicitly for the current state.
-    return this.getAvailableStudies();
-  },
-
-  // fetch available studies from remote location.
-  // use in store instantiation. This assumes that the studies are
-  // stored somewhere (i.e. remote settings)
-  async getAvailableStudies() {
-    let response =
-      waitForCoreResponse(this._connectionPort, "update-state");
-
-    await sendToCore(this._connectionPort, "get-studies", {});
-    return await response;
-  },
-
-  // return the app state from the add-on.
-  // this is called on store instantiation.
-  async getItem() {
+  async loginWithGoogle() {
+    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+    let userCredential = undefined;
     try {
-      // TODO can this be removed?
-      return await browser.storage.local.get();
-    } catch (err) {
-      console.error(err);
+      userCredential = await firebase.auth().signInWithPopup(googleAuthProvider);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    // create a new user.
+    user.initialize(userCredential.user.uid, { createUser: true });
+    listenForUserChanges(userCredential.user);    
+  },
+  async loginWithEmailAndPassword(email, password) {
+    let userCredential;
+    try {
+      userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    if (userCredential) {
+      user.initialize(userCredential.user.uid);
+      listenForUserChanges(userCredential.user)
+    } else {
+      console.error("Unable to log in with email and password");
+    }
+    
+  },
+  async signupWithEmailAndPassword(email, password) {
+    let userCredential;
+    try {
+      userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    } catch(err) {
+      console.error("there was an error", err);
+    }
+    if (userCredential) {
+      user.initialize(userCredential.user.uid, { createUser: true });
+      listenForUserChanges(userCredential.user);
+    } else {
+      console.error("Unable to sign up with email and password");
     }
   },
 
-  // save the app state in the add-on.
-  // this fires every time store.produce is called.
-  async setItem(key, value) {
-    return browser.storage.local.set({ [key]: value });
-  },
+  async initialize() {
+    const initialState = {};
+    let userState;
 
-  /**
-   * Updates the study enrollment.
-   *
-   * @param {Boolean} enroll
-   *        `true` if user decided to enroll in a Study,
-   *        `false` if user opted out.
-   * @returns {Boolean} `true` if the enrollment status was successfully
-   *          updated, `false` otherwise.
-   */
+    // check for an authenticated user.
+    const authenticatedUser = await new Promise((resolve) => {
+      auth.onAuthStateChanged(resolve);
+    });
+    // if the user is authenticated, then they must have a 
+    // document in firestore. Retrieve it and listen for any changes
+    // to the firestore doc.
+    if (authenticatedUser !== null) {
+      USER_ID = authenticatedUser.uid;
+      user.initialize(USER_ID);
+      initialState._isLoggedIn = true;
+      userState = await user.get(authenticatedUser.uid);
+      userState = userState.data();
+      listenForUserChanges(authenticatedUser);
+    } else {
+      initialState._isLoggedIn = false;
+    }
+    
+    // fetch the initial studies.
+    let initialStudyState = await getStudies();
+    initialStudyState = initialStudyState.docs.map(doc => doc.data());
+    listenForStudyChanges();
+
+    initialState._initialized = true;
+
+    if (userState) {
+      initialState.user = userState;
+    }
+
+    if (initialStudyState) {
+      initialState.studies = initialStudyState;
+    }
+
+    return initialState;
+
+  },
 
   async updateStudyEnrollment(studyID, enroll) {
-    if (!enroll) {
-      // Trigger addon uninstallation.
-      return await sendToCore(
-        this._connectionPort, "study-unenrollment", { studyID }
-      ).then(r => true);
+    const enrolledStudies = {...(state.user.enrolledStudies || {})};
+    if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
+    enrolledStudies[studyID] = {...enrolledStudies[studyID]};
+    enrolledStudies[studyID].enrolled = enroll;
+    if (enroll) {
+      enrolledStudies[studyID].joinedOn = new Date();
     }
-
-    // Fetch the study add-on and attempt to install it.
-    const state = await this.getAvailableStudies();
-    const studies = state.availableStudies;
-    const studyMetadata = studies.find(s => s.addonId === studyID);
-
-    // Make sure to record that consent was given. We call this
-    // "pending consent" because we can't directly install the
-    // study add-on. We can exclusively say that user consented,
-    // trigger installation (that can still be cancelled), and
-    // finalize the consent once the study is installed.
-    await sendToCore(
-      this._connectionPort, "pending-consent", { studyID }
-    );
-
-    // This triggers the install by directing the page toward the downloadLink,
-    // which is the study add-on's xpi.
-    window.location.href = studyMetadata.downloadLink;
-
+    user.userRef.update({ enrolledStudies });
     return true;
   },
 
-  /**
-   * Updates the platform enrollment in the add-on.
-   *
-   * @param {Boolean} enroll
-   *        `true` if user decided to enroll in the platform,
-   *        `false` otherwise.
-   * @returns {Boolean} `true` if the enrollment status was successfully
-   *          updated, `false` otherwise.
-   */
-  async updatePlatformEnrollment(enroll) {
-    await sendToCore(
-      this._connectionPort, enroll ? "enrollment" : "unenrollment", {});
-
-    return true;
+  async updatePlatformEnrollment(enrolled) {
+    user.update({ enrolled });
   },
 
-  /**
-   * Updates the stored version of the demographics data.
-   *
-   * @param {Object} data
-   *        A JSON-serializable object containing the demographics
-   *        information submitted by the user.
-   */
   async updateDemographicSurvey(data) {
-    await sendToCore(this._connectionPort, "update-demographics", data);
+    user.userRef.update({ demographicsData: data });
   },
 
-  /**
-   * Updates the "first run" completion state. This is primarily fired
-   * after a user has viewed the Welcome page once. After this,
-   * we do not show any of the first run visual artifacts to the user, even
-   * if they close the Rally options page and revisit it later.
-   *
-   * @param {Boolean} firstRunCompleted
-   */
   async setFirstRunCompletion(firstRunCompleted) {
-    await sendToCore(this._connectionPort, "first-run-completion", { firstRunCompleted });
+    return true;
   },
 
-  /**
-   * Handle messages coming from the background script.
-   *
-   * @param {Object} message
-   *        The incoming message, with the following structure:
-   * ```js
-   * {
-   *  type: "message-type",
-   *  data: { ... },
-   * }
-   * ```
-   */
-  async _handleMessage(message) {
-    switch (message.type) {
-      case "update-state": {
-        // update the UI.
-        this._stateChangeCallbacks.forEach(callback => callback(message.data));
-      } break;
-      default:
-        return Promise.reject(
-          new Error(`Rally - unexpected message type ${message.type}`));
-    }
-  },
-
-  /**
-   * Handle state updates from the background script.
-   *
-   * @param {Function} callback
-   *        A function that has the new state as an argument.
-   */
   onNextState(callback) {
-    this._stateChangeCallbacks.push(callback);
+    _stateChangeCallbacks.push(callback);
   }
 };
+
+
+// one-time opp to put the studies into firebase
+
+function addStudiesToFirebase() {
+  const studies = [
+    {
+      "name": "Your Time Online and \"Doomscrolling\"",
+      "icons": {
+        "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
+        "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-64.png",
+        "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-128.png"
+      },
+      "authors": {
+        "name": "Mozilla Rally Team"
+      },
+      "version": "0.1.3",
+      "addonId": "rally-study-01@mozilla.org",
+      "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
+      "endDate": "2021-10-13",
+      "studyEnded": false,
+      "studyPaused": false,
+      "description": "When you participate in this study you are helping Rally discover how our community browses the internet. We will explore interesting online patterns like \"doomscrolling\" – the popular term for browsing outrageous or sad online news for a long period of time. Our findings will lead to new Rally features or blog posts about aggregate online behavior.",
+      "studyDetailsLink": "https://rally.mozilla.org/current-studies/your-time-online-and-doomscrolling/",
+      "dataCollectionDetails": [
+        "Specific actions you take while browsing the web: loading a new URL, changing a tab, watching a video, or listening to audio (we do not collect the audio you are listening to, just that you have performed that action)",
+        "The domains you visit as you browse the web (e.g., wikipedia.org) and the title, description, and type of page that you're on (e.g., article, video, website)",
+        "The time spent on each page and how far you scroll down a page"
+      ],
+      "tags": ["community insights", "product discovery"],
+      "schemaNamespace": "rally-zero-one"
+    },
+    {
+      "name": "Political and COVID-19 News",
+      "icons": {
+        "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-32.png",
+        "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-64.png",
+        "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2706/2706717-128.png"
+      },
+      "authors": {
+        "name": "Researchers at Princeton"
+      },
+      "version": "2.0.0",
+      "addonId": "princeton-news-study@rally.mozilla.org",
+      "downloadLink": "https://github.com/citp/news-disinformation-study/releases/download/v2.0.1/princeton_university_news_study-2.0.1.xpi",
+      "endDate": "2021-10-27",
+      "studyEnded": false,
+      "studyPaused": false,
+      "description": "In a collaboration between researchers at Princeton University's Center for Information Technology Policy and Mozilla, this study seeks to examine the flow of both political and COVID-19 related news information across the internet. During the enrollment process, you'll receive more information about the study and you'll be asked by researchers at Princeton to consent to participation.",
+      "studyDetailsLink": "https://rally.mozilla.org/current-studies/political-and-covid-19-news/",
+      "dataCollectionDetails": [
+        "Visits, shares, and exposures to specific websites from an established list to spread authoritative information and disinformation",
+        "Whether you post links to these websites on social media",
+        "Your Rally demographics and a short Qualtrics survey"
+      ],
+      "tags": ["misinformation", "social media"],
+      "schemaNamespace": "pioneer-citp-news-disinfo-two"
+    }
+  ]
+
+  studies.forEach(study => {
+    db.collection("studies").doc(study.addonId).set(study, {merge: true });
+  });
+  return studies;
+}
+
+// addStudiesToFirebase();

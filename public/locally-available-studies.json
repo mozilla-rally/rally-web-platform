@@ -22,10 +22,7 @@
       "The domains you visit as you browse the web (e.g., wikipedia.org) and the title, description, and type of page that you're on (e.g., article, video, website)",
       "The time spent on each page and how far you scroll down a page"
     ],
-    "tags": [
-      "community insights",
-      "product discovery"
-    ],
+    "tags": ["community insights", "product discovery"],
     "schemaNamespace": "rally-zero-one"
   },
   {
@@ -51,10 +48,7 @@
       "Whether you post links to these websites on social media",
       "Your Rally demographics and a short Qualtrics survey"
     ],
-    "tags": [
-      "misinformation",
-      "social media"
-    ],
+    "tags": ["misinformation", "social media"],
     "schemaNamespace": "pioneer-citp-news-disinfo-two"
   }
 ]

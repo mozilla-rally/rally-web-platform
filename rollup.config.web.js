@@ -5,6 +5,7 @@
 import svelte from "rollup-plugin-svelte";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import replace from "@rollup/plugin-replace";
 import copy from "rollup-plugin-copy";
@@ -17,15 +18,15 @@ function serve() {
   let server;
 
   function toExit() {
-    if (server) server.kill(0);
+    if (server) {server.kill(0);}
   }
 
   return {
     writeBundle() {
-      if (server) return;
+      if (server) {return;}
       server = exec.spawn(
         "npm",
-        ["run", "start", "--", "--dev"],
+        ["run", "start:web", "--", "--dev"],
         {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,
@@ -57,13 +58,13 @@ export default (cliArgs) => [{
     }),
     copy({
       targets: [
-        { src: 'node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Bold.woff2', dest: 'public/fonts/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Regular.woff2', dest: 'public/fonts/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Italic.woff2', dest: 'public/fonts/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff2', dest: 'public/fonts/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/fonts/Metropolis-*.woff2', dest: 'public/fonts/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/css/protocol.css', dest: 'public/build/'},
-        { src: 'node_modules/@mozilla-protocol/core/protocol/css/protocol-extra.css', dest: 'public/build/'}
+        { src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Bold.woff2", dest: "public/fonts/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Regular.woff2", dest: "public/fonts/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Italic.woff2", dest: "public/fonts/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff2", dest: "public/fonts/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/fonts/Metropolis-*.woff2", dest: "public/fonts/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/css/protocol.css", dest: "public/build/"},
+        { src: "node_modules/@mozilla-protocol/core/protocol/css/protocol-extra.css", dest: "public/build/"}
       ]
     }),
     svelte({
@@ -74,7 +75,7 @@ export default (cliArgs) => [{
     }),
     // we'll extract any component CSS out into
     // a separate file - better for performance
-    css({ output: 'bundle.css' }),
+    css({ output: "bundle.css" }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -90,6 +91,10 @@ export default (cliArgs) => [{
     // In dev mode, call `npm run start` once
     // the bundle has been generated
     !production && serve(),
+
+    // Watch the `public` directory and refresh the
+		// browser on changes when not in production
+		!production && livereload("public"),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

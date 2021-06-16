@@ -20,8 +20,8 @@ const dispatch = createEventDispatcher();
 // what we will send to the server - to the _display_ format -
 // what is displayed to the user in the input fields.
 let intermediateResults;
-$: if ($store && $store.demographicsData) {
-    intermediateResults = formatAnswersForDisplay(schema, { ...$store.demographicsData }, inputFormatters);
+$: if ($store.user && $store.user.demographicsData) {
+    intermediateResults = formatAnswersForDisplay(schema, { ...$store.user.demographicsData }, inputFormatters);
 }
 </script>
 
@@ -42,7 +42,7 @@ $: if ($store && $store.demographicsData) {
                 dispatch("redirect-to", {view: "current-studies", suppressNotifications: true});
             }}>Save Changes</Button>
             <Button size="lg" product disabled={!validated} secondary on:click={() => {
-                intermediateResults = formatAnswersForDisplay(schema, { ...$store.demographicsData }, inputFormatters);
+                intermediateResults = formatAnswersForDisplay(schema, { ...$store.user.demographicsData }, inputFormatters);
                 dispatch("redirect-to", {view: "current-studies"});
             }}>Cancel</Button>
         </div>

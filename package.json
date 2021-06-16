@@ -9,6 +9,7 @@
     "build:glean:docs": "glean translate ./metrics.yaml ./pings.yaml -f markdown -o docs",
     "build:schema": "node schemas/generate-schema.mjs",
     "build:storybook": "build-storybook -s ./",
+    "build:web": "rollup -c rollup.config.web.js",
     "dev": "rollup -c --config-enable-developer-mode",
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "lint": "npm-run-all lint:web-ext lint:eslint",
@@ -19,10 +20,10 @@
     "start": "npm run build && web-ext run",
     "test:unit": "jest",
     "test:integration": "npm run package && mv web-ext-artifacts/*.zip web-ext-artifacts/study.xpi && mocha --timeout 30000 \"./tests/integration/*.js\"",
-    "build:web": "rollup -c rollup.config.web.js",
-    "start:web": "sirv public",
     "watch": "npm-run-all --parallel watch:raw watch:bundled",
     "watch:raw": "npm run build:schema && npm run dev -- -w",
+    "watch:web": "rollup -c rollup.config.web.js -w",
+    "start:web": "sirv public --no-clear",
     "watch:bundled": "npm run build:schema && web-ext run --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json"
   },
   "jest": {
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
+    "@mozilla-protocol/core": "^12.1.0",
     "@mozilla/glean": "^0.15.0",
     "@mozilla/rally": "0.6.0",
     "@rollup/plugin-commonjs": "^18.0.0",
@@ -73,6 +75,7 @@
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
     "geckodriver": "^1.21.0",
+    "immer": "^9.0.3",
     "jest": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
     "jest-webextension-mock": "^3.7.6",
@@ -94,6 +97,7 @@
     "webextension-polyfill": "^0.7.0"
   },
   "dependencies": {
+    "firebase": "^9.0.0-beta.2",
     "sirv-cli": "^1.0.10"
   },
   "engines": {

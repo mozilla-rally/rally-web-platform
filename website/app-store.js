@@ -3,28 +3,36 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { writable } from "svelte/store";
-import api from "./web-extension-api";
+import api from "./web-site-api";
 
 export function createAppStore() {
   // initialize the writable store.
-  const { subscribe, set } = writable();
-
-  // initialize from the API.
-  api.initialize().then(async (newState) => {
-    console.log(`initialize: updated state -`, newState);
-    set(newState);
+  const { subscribe, set } = writable({ _initialized: false });
+  api.initialize().then(state => {
+    set(state);
   });
-
-  // set UI when the background script reports a new state.
-  api.onNextState(set);
+  api.onNextState((state) => {
+    const nextState = {...state, _initialized: true };
+    set(nextState);
+  });
 
   return {
     subscribe,
     set,
+    // login and signup functions
+    async loginWithGoogle() {
+      return api.loginWithGoogle();
+    },
+    async loginWithEmailAndPassword(email, password) {
+      return api.loginWithEmailAndPassword(email, password);
+    },
+    async signupWithEmailAndPassword(email, password) {
+      return api.signupWithEmailAndPassword(email, password);
+    },
     async updateStudyEnrollment(studyID, enroll) {
       // Enforce the truthyness of `enroll`, to make sure
       // it's always a boolean.
-      let coercedEnroll = !!enroll;
+      const coercedEnroll = !!enroll;
       console.debug(
         `Rally - changing study ${studyID} enrollment to ${coercedEnroll}`);
 
@@ -38,7 +46,7 @@ export function createAppStore() {
     async updatePlatformEnrollment(enroll) {
       // Enforce the truthyness of `enroll`, to make sure
       // it's always a boolean.
-      let coercedEnroll = !!enroll;
+      const coercedEnroll = !!enroll;
       console.debug(`Rally - changing enrollment to ${coercedEnroll}`);
 
       // send the ion enrollment message
@@ -52,14 +60,14 @@ export function createAppStore() {
       try {
         await api.updateDemographicSurvey(data);
       } catch (err) {
-        console.error(`Rally - failed to update the demographic survey`, err);
+        console.error("Rally - failed to update the demographic survey", err);
       }
     },
     async setFirstRunCompletion(firstRun) {
       try {
         await api.setFirstRunCompletion(firstRun);
       } catch (err) {
-        console.error(`Rally - failed to set first run flag`, err);
+        console.error("Rally - failed to set first run flag", err);
       }
     }
   };

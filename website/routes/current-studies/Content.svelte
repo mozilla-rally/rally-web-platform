@@ -8,6 +8,7 @@ import { fly } from 'svelte/transition';
 import StudyCard from './StudyCard.svelte';
 
 export let studies = [];
+export let userEnrollment = {};
 export let sidebarOffset = false;
 
 const dispatch = createEventDispatcher();
@@ -65,11 +66,11 @@ p {
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(!!study.studyJoined)}
+        joined={(study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled)}
         imageSrc={study.icons[64]}
         addonId={study.addonId}
         endDate={parseDateIfNeeded(study.endDate)}
-        joinedDate={parseDateIfNeeded(study.joinedOn)}
+        joinedDate={study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled && userEnrollment[study.addonId].joinedOn.toDate()}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
         studyDetailsLink={study.studyDetailsLink}
