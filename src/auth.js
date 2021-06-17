@@ -165,14 +165,21 @@ export default {
 
     },
 
-    async updateStudyEnrollment(studyID, enroll) {
+    async updateStudyEnrollment(studyID, enroll, attach) {
         const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
         if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
         enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
-        enrolledStudies[studyID].enrolled = enroll;
+        if (enroll !== undefined) {
+            enrolledStudies[studyID].enrolled = enroll;
+        }
         if (enroll) {
             enrolledStudies[studyID].joinedOn = new Date();
         }
+
+        if (attach) {
+            enrolledStudies[studyID].attached = attach;
+        }
+
         user.userRef.update({ enrolledStudies });
         return true;
     },

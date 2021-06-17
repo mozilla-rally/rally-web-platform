@@ -24,6 +24,8 @@ chrome.runtime.onConnect.addListener(port => {
         if (initialState._isLoggedIn) {
             console.debug("already logged in:", initialState);
             const result = initialState;
+            // FIXME need to map the Chrome extension IDs to something more humane, hardcode for now.
+            auth.updateStudyEnrollment("rally-study-01@mozilla.org", undefined, true);
             port.postMessage({ result });
         } else {
             try {
