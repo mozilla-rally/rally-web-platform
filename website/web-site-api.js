@@ -155,7 +155,7 @@ export default {
     // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
     // TODO only supports Chrome auth provider
     // TODO pull study IDs from metadata
-    for (const studyId of ["maoohlacnogbjgacnnoajgljfcdbdocb"]) {
+    for (const studyId of [demoConfig.id]) {
       chrome.runtime.sendMessage(studyId, idToken);
     }
   },

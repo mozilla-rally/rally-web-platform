@@ -10,13 +10,7 @@
     "32": "images/study-icon.png",
     "64": "images/study-icon.png"
   },
-  "permissions": [
-    "tabs",
-    "idle",
-    "<all_urls>",
-    "webNavigation",
-    "storage"
-  ],
+  "permissions": ["tabs", "idle", "<all_urls>", "webNavigation", "storage"],
   "background": {
     "page": "src/background.html"
   },
@@ -25,9 +19,7 @@
     "open_in_tab": true
   },
   "externally_connectable": {
-    "matches": [
-      "*://localhost/*"
-    ]
+    "matches": ["*://localhost/*"]
   },
   "content_security_policy": "script-src 'self' https://www.gstatic.com https://cdn.firebase.com https://*.firebaseio.com https://auth.firebase.com https://apis.google.com; object-src 'self'"
 }

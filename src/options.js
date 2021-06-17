@@ -13,6 +13,7 @@ port.onMessage.addListener(message => {
         for (const studyName in result.user.enrolledStudies) {
             output += `${studyName}, enrolled: ${!!result.user.enrolledStudies[studyName].enrolled}`;
             output += `, attached: ${!!result.user.enrolledStudies[studyName].attached}<br>`;
+            output += `, connected: ${!!result.user.enrolledStudies[studyName].connected}<br>`;
         }
         document.getElementById("enrolledStudies").innerHTML = output;
 
