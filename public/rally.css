@@ -332,3 +332,8 @@ src/components/icons/ExternalLink.svelte:
   grid-auto-flow: column;
   grid-column-gap: var(--gap, 12px);
 }
+
+/* hide the google sign-in widget */
+.social_signin {
+  display: none;
+}
