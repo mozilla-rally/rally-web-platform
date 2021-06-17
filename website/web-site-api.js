@@ -77,13 +77,7 @@ export default {
     // create a new user.
     user.initialize(userCredential.user.uid, { createUser: true });
     listenForUserChanges(userCredential.user);
-
-    // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
-    // TODO only supports Chrome auth provider
-    // TODO pull study IDs from metadata
-    for (const studyId of ["maoohlacnogbjgacnnoajgljfcdbdocb"]) {
-      chrome.runtime.sendMessage(studyId, userCredential.credential.idToken);
-    }
+    await this.notifyStudies(userCredential.credential.idToken);
   },
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
@@ -134,7 +128,6 @@ export default {
       userState = await user.get(authenticatedUser.uid);
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
-
     } else {
       initialState._isLoggedIn = false;
     }
@@ -156,6 +149,15 @@ export default {
 
     return initialState;
 
+  },
+
+  async notifyStudies(idToken) {
+    // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
+    // TODO only supports Chrome auth provider
+    // TODO pull study IDs from metadata
+    for (const studyId of ["maoohlacnogbjgacnnoajgljfcdbdocb"]) {
+      chrome.runtime.sendMessage(studyId, idToken);
+    }
   },
 
   async updateStudyEnrollment(studyID, enroll) {
