@@ -1,6 +1,6 @@
 /* global firebase */
 
-import CONFIG from "../firebase.config"
+import CONFIG, { demoConfig } from "../firebase.config"
 import { produce } from "immer/dist/immer.cjs.production.min";
 
 let state = {
@@ -195,6 +195,30 @@ export default {
 function addStudiesToFirebase() {
   const studies = [
     {
+      "name": "The Rally Web Spike",
+      "icons": {
+        "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
+        "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-64.png",
+        "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-128.png"
+      },
+      "authors": {
+        "name": "Mozilla Rally Team"
+      },
+      "version": "0.1.3",
+      "addonId": demoConfig.id,
+      "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
+      "endDate": "2021-10-13",
+      "studyEnded": false,
+      "studyPaused": false,
+      "description": "This is a really, really cool demo utilizing Firestore. I can't wait to show you how it works.",
+      "studyDetailsLink": "https://rally.mozilla.org/current-studies/your-time-online-and-doomscrolling/",
+      "dataCollectionDetails": [
+        "Pretty much nothing!",
+      ],
+      "tags": ["product discovery"],
+      "schemaNamespace": "rally-zero-one"
+    },
+    {
       "name": "Your Time Online and \"Doomscrolling\"",
       "icons": {
         "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
@@ -254,4 +278,4 @@ function addStudiesToFirebase() {
   return studies;
 }
 
-// addStudiesToFirebase();
+addStudiesToFirebase();

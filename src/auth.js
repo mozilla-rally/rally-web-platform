@@ -49,7 +49,7 @@ function _updateLocalState(callback) {
     _stateChangeCallbacks.forEach(callback => callback(state));
 }
 
-function listenForUserChanges(user) {
+export function listenForUserChanges(user) {
     db.collection("users").doc(user.uid)
         .onSnapshot(doc => {
             const nextState = doc.data();
@@ -179,6 +179,8 @@ export default {
         if (attach) {
             enrolledStudies[studyID].attached = attach;
         }
+
+        enrolledStudies[studyID].connected = true;
 
         user.userRef.update({ enrolledStudies });
         return true;

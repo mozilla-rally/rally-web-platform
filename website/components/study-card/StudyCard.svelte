@@ -7,6 +7,7 @@
   import Header from "./Header.svelte";
   import Button from "../Button.svelte";
   import CheckCircle from "../icons/CheckCircle.svelte";
+  import Alert from "../icons/Alert.svelte";
   import ExternalLink from '../icons/ExternalLink.svelte';
   import niceDate from "./nice-date";
   import studyCategories from "./study-categories";
@@ -17,6 +18,7 @@
 
   export let endDate;
   export let joined = false;
+  export let connected = false;
   export let joinedDate = undefined;
   export let studyDetailsLink = undefined;
   export let imageSrc;
@@ -188,14 +190,29 @@
       </AccordionButton>
       {#if joined}
           <div class="study-card-joined-date">
-            {#if joinedDate}
-              joined on
-              {niceDate(joinedDate)}
-            {:else}
-              joined
-            {/if}
+            <div style="text-align: right; align-items: baseline; grid-column-gap: 8px; color: var(--color-dark-gray-10);" class='gafc'>
+              {#if joined && connected}
+              <div>
+                {#if joinedDate}
+                  joined on
+                  {niceDate(joinedDate)}
+                {:else}
+                  joined
+                {/if}
+              </div>
+              {/if}
+              {#if !connected}
+                <div style='font-weight: normal;'>
+                  not connected
+                </div>
+              {/if}
+            </div>
             <span class='gafc' style="transform: translateY(-1px);">
-              <CheckCircle size="20px" color="var(--color-green-60)" />
+              {#if joined && !connected}
+                <Alert size="20px" color="#FFA537" />
+              {:else}
+                <CheckCircle size="20px" color="var(--color-green-60)" />
+              {/if}
             </span>
           </div>
         {/if}

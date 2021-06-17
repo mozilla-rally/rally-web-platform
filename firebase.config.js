@@ -1,3 +1,7 @@
+export const demoConfig = {
+  id: "kegbngglbemcfjignmcmffceiodmaecn"
+}
+
 export default {
     apiKey: "AIzaSyAJv0aTJMCbG_e6FJZzc6hSzri9qDCmvoo",
     authDomain: "rally-web-spike.firebaseapp.com",

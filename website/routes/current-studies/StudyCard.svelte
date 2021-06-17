@@ -3,7 +3,6 @@
   * License, v. 2.0. If a copy of the MPL was not distributed with this
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-
 /* 
     NOTE: this is a full pattern integration of the study card. It uses the StudyCard, StudyCardHeader,
     and dialog components. This is the component to use _in practice_.
@@ -21,6 +20,7 @@ import GenericConsent from "../irbs/GenericConsent.svelte";
 import irb from "../irbs";
 
 export let joined = false;
+export let connected = false;
 export let imageSrc;
 export let title = "Untitled Study";
 export let author = "Author Unknown";
@@ -46,6 +46,7 @@ function triggerJoinEvent() {
 
 <StudyCard
     {joined}
+    {connected}
     on:join={triggerJoinEvent}
     on:leave={triggerJoinEvent}
     {endDate}
