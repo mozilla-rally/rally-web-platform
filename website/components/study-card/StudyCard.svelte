@@ -191,17 +191,17 @@
       {#if joined}
           <div class="study-card-joined-date">
             <div style="text-align: right; align-items: baseline; grid-column-gap: 8px; color: var(--color-dark-gray-10);" class='gafc'>
-              {#if joined && connected}
+              {#if connected}
               <div>
-                {#if joinedDate}
+                connected
+                <!-- {#if joinedDate}
                   joined on
                   {niceDate(joinedDate)}
                 {:else}
                   joined
-                {/if}
+                {/if} -->
               </div>
-              {/if}
-              {#if !connected}
+              {:else}
                 <div style='font-weight: normal;'>
                   not connected
                 </div>

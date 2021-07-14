@@ -166,7 +166,12 @@ export default {
     },
 
     async updateStudyEnrollment(studyID, enroll, attach) {
-        const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
+        let enrolledStudies = {};
+        if ("user" in state) {
+            enrolledStudies = { ...(state.user.enrolledStudies || {}) };
+        }
+        console.log("here is a study id", studyID);
+        console.log("enrolledStudies before", enrolledStudies);
         if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
         enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
         if (enroll !== undefined) {
@@ -180,8 +185,7 @@ export default {
             enrolledStudies[studyID].attached = attach;
         }
 
-        enrolledStudies[studyID].connected = true;
-
+        console.log("enrolledStudies after", enrolledStudies);
         user.userRef.update({ enrolledStudies });
         return true;
     },

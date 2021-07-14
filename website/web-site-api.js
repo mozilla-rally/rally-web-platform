@@ -218,32 +218,32 @@ function addStudiesToFirebase() {
       "tags": ["product discovery"],
       "schemaNamespace": "rally-zero-one"
     },
-    {
-      "name": "Your Time Online and \"Doomscrolling\"",
-      "icons": {
-        "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
-        "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-64.png",
-        "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-128.png"
-      },
-      "authors": {
-        "name": "Mozilla Rally Team"
-      },
-      "version": "0.1.3",
-      "addonId": "rally-study-01@mozilla.org",
-      "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
-      "endDate": "2021-10-13",
-      "studyEnded": false,
-      "studyPaused": false,
-      "description": "When you participate in this study you are helping Rally discover how our community browses the internet. We will explore interesting online patterns like \"doomscrolling\" – the popular term for browsing outrageous or sad online news for a long period of time. Our findings will lead to new Rally features or blog posts about aggregate online behavior.",
-      "studyDetailsLink": "https://rally.mozilla.org/current-studies/your-time-online-and-doomscrolling/",
-      "dataCollectionDetails": [
-        "Specific actions you take while browsing the web: loading a new URL, changing a tab, watching a video, or listening to audio (we do not collect the audio you are listening to, just that you have performed that action)",
-        "The domains you visit as you browse the web (e.g., wikipedia.org) and the title, description, and type of page that you're on (e.g., article, video, website)",
-        "The time spent on each page and how far you scroll down a page"
-      ],
-      "tags": ["community insights", "product discovery"],
-      "schemaNamespace": "rally-zero-one"
-    },
+    // {
+    //   "name": "Your Time Online and \"Doomscrolling\"",
+    //   "icons": {
+    //     "32": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-32.png",
+    //     "64": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-64.png",
+    //     "128": "https://addons.cdn.mozilla.net/user-media/addon_icons/2695/2695892-128.png"
+    //   },
+    //   "authors": {
+    //     "name": "Mozilla Rally Team"
+    //   },
+    //   "version": "0.1.3",
+    //   "addonId": "rally-study-01@mozilla.org",
+    //   "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
+    //   "endDate": "2021-10-13",
+    //   "studyEnded": false,
+    //   "studyPaused": false,
+    //   "description": "When you participate in this study you are helping Rally discover how our community browses the internet. We will explore interesting online patterns like \"doomscrolling\" – the popular term for browsing outrageous or sad online news for a long period of time. Our findings will lead to new Rally features or blog posts about aggregate online behavior.",
+    //   "studyDetailsLink": "https://rally.mozilla.org/current-studies/your-time-online-and-doomscrolling/",
+    //   "dataCollectionDetails": [
+    //     "Specific actions you take while browsing the web: loading a new URL, changing a tab, watching a video, or listening to audio (we do not collect the audio you are listening to, just that you have performed that action)",
+    //     "The domains you visit as you browse the web (e.g., wikipedia.org) and the title, description, and type of page that you're on (e.g., article, video, website)",
+    //     "The time spent on each page and how far you scroll down a page"
+    //   ],
+    //   "tags": ["community insights", "product discovery"],
+    //   "schemaNamespace": "rally-zero-one"
+    // },
     {
       "name": "Political and COVID-19 News",
       "icons": {
