@@ -24,7 +24,8 @@
     "watch:raw": "npm run build:schema && npm run dev -- -w",
     "watch:web": "rollup -c rollup.config.web.js -w",
     "start:web": "sirv public --no-clear",
-    "watch:bundled": "npm run build:schema && web-ext run --target=chromium --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json"
+    "watch:bundled": "npm run build:schema && web-ext run --target=chromium --watch-file dist/background.js --watch-file dist/content-scripts/attention-collector.js --watch-file schemas/measurements.1.schema.json",
+    "gh-pages": "gh-pages --dist public"
   },
   "jest": {
     "verbose": true,
@@ -75,6 +76,7 @@
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
     "geckodriver": "^1.21.0",
+    "gh-pages": "^3.2.3",
     "immer": "^9.0.3",
     "jest": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
