@@ -40,7 +40,7 @@ function serve() {
 }
 
 export default (cliArgs) => [{
-  input: "website/main.js",
+  input: "src/main.js",
   output: {
     sourcemap: true,
     format: "iife",
