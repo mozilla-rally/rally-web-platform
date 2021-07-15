@@ -30,6 +30,10 @@ jobs:
       - run:
           name: Run build
           command: npm run build:web
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
       #- run:
       #    name: Run tests
       #    command: npm run test:unit
@@ -37,22 +41,11 @@ jobs:
     docker:
       - image: cimg/node:15.1
     steps:
-      - checkout
-      - node/install-packages
       - attach_workspace:
-          at: public
+          at: .
       - run:
-          name: Install and configure dependencies
-          command: |
-            git config user.email "ci-build@mozilla-rally"
-            git config user.name "ci-build"
-      - add_ssh_keys:
-          fingerprints:
-            - "11:04:64:b8:6e:5c:e4:9b:0c:6c:92:ad:7a:a6:41:3f"
-      - run:
-          name: Deploy site to gh-pages branch
-          command: npm run gh-pages
-
+          name: Firebase Deploy
+          command: ./node_modules/.bin/firebase deploy --only hosting --token "$FIREBASE_TOKEN"
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
