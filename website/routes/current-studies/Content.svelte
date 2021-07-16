@@ -67,6 +67,7 @@ p {
         title={study.name}
         author={study.authors.name}
         joined={(study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled)}
+        connected={(study.addonId in userEnrollment && userEnrollment[study.addonId].attached)}
         imageSrc={study.icons[64]}
         addonId={study.addonId}
         endDate={parseDateIfNeeded(study.endDate)}

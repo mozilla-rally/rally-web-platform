@@ -49,7 +49,7 @@ function _updateLocalState(callback) {
     _stateChangeCallbacks.forEach(callback => callback(state));
 }
 
-function listenForUserChanges(user) {
+export function listenForUserChanges(user) {
     db.collection("users").doc(user.uid)
         .onSnapshot(doc => {
             const nextState = doc.data();
@@ -166,7 +166,10 @@ export default {
     },
 
     async updateStudyEnrollment(studyID, enroll, attach) {
-        const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
+        let enrolledStudies = {};
+        if ("user" in state) {
+            enrolledStudies = { ...(state.user.enrolledStudies || {}) };
+        }
         if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
         enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
         if (enroll !== undefined) {

@@ -7,12 +7,14 @@ port.onMessage.addListener(message => {
     } else if ("result" in message) {
         const result = message.result;
         console.log("result", result);
-        document.getElementById("enrolled").textContent = result.user.enrolled;
+        document.getElementById("enrolled").textContent = result.user.enrolled ? "Yes!" : "No ...";
         document.getElementById("uid").textContent = result.user.uid;
         let output = "<br>";
         for (const studyName in result.user.enrolledStudies) {
-            output += `${studyName}, enrolled: ${!!result.user.enrolledStudies[studyName].enrolled}`;
-            output += `, attached: ${!!result.user.enrolledStudies[studyName].attached}<br>`;
+            const enrolled = result.user.enrolledStudies[studyName].enrolled;
+            const attached = result.user.enrolledStudies[studyName].attached;
+            output += `<div class="study">${studyName}<br>  <span class="enroll-status ${enrolled ? "enrolled" : "not-enrolled"}">${enrolled ? "✔️ enrolled" : "❌ not enrolled"}</span>`;
+            output += `<span class="attach-status ${attached ? "attached" : "not-attached"}">${attached ? "🔗 connected" : "😴 not connected"}</span></div>`;
         }
         document.getElementById("enrolledStudies").innerHTML = output;
 

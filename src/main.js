@@ -1,6 +1,6 @@
 // import runStudy from "./study.js";
-import auth from "./auth.js";
-
+import auth, { listenForUserChanges } from "./auth.js";
+import { demoConfig } from "../firebase.config"
 // Attempt auto-login, when receiving a message from the website.
 chrome.runtime.onMessageExternal.addListener(async (message, source) => {
     console.debug("message:", message, "source:", source);
@@ -15,7 +15,7 @@ chrome.runtime.onMessageExternal.addListener(async (message, source) => {
         console.debug(ex.message, ex);
     }
 });
-
+let listening = false;
 // Listen for login messages from the options UI.
 chrome.runtime.onConnect.addListener(port => {
     port.onMessage.addListener(async message => {
@@ -25,7 +25,7 @@ chrome.runtime.onConnect.addListener(port => {
             console.debug("already logged in:", initialState);
             const result = initialState;
             // FIXME need to map the Chrome extension IDs to something more humane, hardcode for now.
-            auth.updateStudyEnrollment("rally-study-01@mozilla.org", undefined, true);
+            auth.updateStudyEnrollment(demoConfig.id, undefined, true);
             port.postMessage({ result });
         } else {
             try {
@@ -42,6 +42,15 @@ chrome.runtime.onConnect.addListener(port => {
                 port.postMessage({ error: ex.message });
             }
         }
+        // this is the part where we update firebase to say it's connected.
+        if (!listening) {
+            listening = true;
+            listenForUserChanges((data => {
+                port.postMessage({ result: data });
+            }));
+        }
+        // run this once?
+        
     });
 });
 

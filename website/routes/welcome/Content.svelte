@@ -89,7 +89,7 @@
       class="mzp-c-call-out-desc"
       style="color: var(--color-marketing-gray-70);
 ">
-      This is a feasibility spike centered around bringing Rally into the web.
+      This is a feasibility spike exploring a web-based Rally user experience.
     </p>
     <div style="padding: 2rem;">
       <button 
@@ -100,17 +100,17 @@
         style="display: grid; place-items: center; padding: .5rem 1rem; background-color: white;
         color: hsl(217, 10%, 20%);
         text-decoration: none;
-        width: max-content;
-        border: 2px solid #5e5e72;
+        width: 240px;
+        border: none;
         margin: auto;
         border-radius: 4px;
         font-weight: 600;
       ">
-        Sign up with Google (FIXME IMG)
+        <img src="google-signin.png" alt='google signin' />
     </button>
     </div>
-      <div class="mzp-c-form-header" style="font-weight: bold; font-size: 1.25rem;">
-        or
+      <div class="mzp-c-form-header" style="font-weight: bold; font-size: 1.125rem;">
+        or the classic way
       </div>
       <fieldset class="mzp-c-field-set">
         <div class="mzp-c-field ">
