@@ -5,6 +5,8 @@
  import svelte from "rollup-plugin-svelte";
  import resolve from "@rollup/plugin-node-resolve";
  import commonjs from "@rollup/plugin-commonjs";
+ import typescript from "@rollup/plugin-typescript";
+ import sveltePreprocess from "svelte-preprocess";
  import livereload from "rollup-plugin-livereload";
  import { terser } from "rollup-plugin-terser";
  import replace from "@rollup/plugin-replace";
@@ -40,7 +42,7 @@
  }
  
  export default (cliArgs) => [{
-   input: "src/main.js",
+   input: "src/main.ts",
    output: {
      sourcemap: true,
      format: "iife",
@@ -68,11 +70,13 @@
        ]
      }),
      svelte({
-       compilerOptions: {
+       preprocess: sveltePreprocess({ sourceMap: !production }),
+			compilerOptions: {
          // enable run-time checks when not in production
          dev: !production
        }
      }),
+
      // we'll extract any component CSS out into
      // a separate file - better for performance
      css({ output: "bundle.css" }),
@@ -87,7 +91,11 @@
        dedupe: ["svelte"],
      }),
      commonjs(),
- 
+		typescript({
+			sourceMap: !production,
+			inlineSources: !production
+		}),
+     
      // In dev mode, call `npm run start` once
      // the bundle has been generated
      !production && serve(),
