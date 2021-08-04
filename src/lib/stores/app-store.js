@@ -73,4 +73,3 @@ export function createAppStore() {
   };
 }
 
-export const store = createAppStore();

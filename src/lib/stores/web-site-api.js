@@ -1,14 +1,19 @@
-/* global firebase */
-
-import CONFIG, { demoConfig } from "../firebase.config"
-import { produce } from "immer/dist/immer.cjs.production.min";
+import CONFIG, { demoConfig } from "../../../firebase.config"
+//import { produce } from "immer/dist/immer.cjs.production.min";
+import { produce } from "immer/dist/immer.esm";
+import firebase from "firebase/app";
+// eslint-disable-next-line node/no-extraneous-import
+import "@firebase/firestore";
+// eslint-disable-next-line node/no-extraneous-import
+import "@firebase/auth";
 
 let state = {
   user: undefined,
 };
-
-const app = firebase.initializeApp(CONFIG)
-
+let app;
+if( firebase.apps.length === 0 ){
+  app = firebase.initializeApp(CONFIG);
+}
 const auth = firebase.auth();
 const db = firebase.firestore(app);
 
@@ -155,9 +160,11 @@ export default {
     // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
     // TODO only supports Chrome auth provider
     // TODO pull study IDs from metadata
-    for (const studyId of [demoConfig.id]) {
-      chrome.runtime.sendMessage(studyId, idToken);
-    }
+    // if (window.chrome || window.browser) {
+    //   for (const studyId of [demoConfig.id]) {
+    //     (chrome || browser).runtime.sendMessage(studyId, idToken);
+    //   }
+    // }
   },
 
   async updateStudyEnrollment(studyID, enroll) {

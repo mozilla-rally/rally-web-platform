@@ -42,9 +42,9 @@
         var id_token = googleUser.getAuthResponse().id_token;
         console.log("ID Token: " + id_token);
 
-        for (const studyId of ["kegbngglbemcfjignmcmffceiodmaecn"]) {
-          chrome.runtime.sendMessage(studyId, id_token);
-        }
+        // for (const studyId of ["kegbngglbemcfjignmcmffceiodmaecn"]) {
+        //   chrome.runtime.sendMessage(studyId, id_token);
+        // }
       }
     </script>
   </head>
