@@ -10,14 +10,14 @@
     It relies on props instead of slots to reduce the cost of use.
 */
 
-import { createEventDispatcher } from 'svelte';
-import StudyCard from '../../components/study-card/StudyCard.svelte';
-import StudyCardHeader from '../../components/study-card/Header.svelte';
-import Button from '../../components/Button.svelte';
-import Dialog from '../../components/Dialog.svelte';
-import IRBWindow from '../irbs/IRBWindow.svelte';
-import GenericConsent from "../irbs/GenericConsent.svelte";
-import irb from "../irbs";
+import { createEventDispatcher, onMount } from 'svelte';
+import StudyCard from '../../study-card/StudyCard.svelte';
+import StudyCardHeader from '../../study-card/Header.svelte';
+import Button from '../../Button.svelte';
+import Dialog from '../../Dialog.svelte';
+import IRBWindow from '../irb/IRBWindow.svelte';
+import GenericConsent from "../irb/GenericConsent.svelte";
+import irb from "../irb";
 
 export let joined = false;
 export let connected = false;
@@ -42,6 +42,11 @@ function triggerJoinEvent() {
     joinModal = true;
 }
 
+let mounted = false;
+onMount(() => {
+    mounted = true;
+})
+
 </script>
 
 <StudyCard
@@ -62,7 +67,7 @@ function triggerJoinEvent() {
         </p>
 </StudyCard>
 
-{#if joinModal}
+{#if joinModal && mounted}
     <Dialog
     height={joined ? undefined : "80vh"}
     topPadding={joined ? undefined : "calc(10vh - 20px)"}

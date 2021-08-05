@@ -5,8 +5,10 @@
   
     import { createEventDispatcher } from "svelte";
     import { fade, fly } from "svelte/transition";
-    import Arrow01 from "../../Arrow01.svelte";
-    import Button from "../../Button.svelte";
+    import Arrow01 from "$lib/Arrow01.svelte";
+    import Button from "$lib/Button.svelte";
+    import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
+
   
     const dispatch = createEventDispatcher();
   
@@ -37,6 +39,7 @@
   
   <svelte:window bind:scrollY />
   
+  <CallToActionContainer>
   <div
     class="call-flow"
     in:fly={{ duration: 200, y: 5 }}
@@ -62,4 +65,4 @@
       </div>
     {/if}
   </div>
-  
+</CallToActionContainer>

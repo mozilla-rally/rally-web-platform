@@ -1,15 +1,21 @@
+<script context="module">
+    export const ssr = false;
+</script>
 <script>
 /* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+    * License, v. 2.0. If a copy of the MPL was not distributed with this
+    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // This component is used in the "Main View" of the Rally Add-On.
 import { getContext, createEventDispatcher } from "svelte";
-import Demographics from "./Content.svelte";
-import Button from "../../components/Button.svelte";
-import { notification } from "../../notification-store";
-import { schema, inputFormatters } from "./survey-schema";
-import { formatAnswersForDisplay } from "./formatters";
+import { goto } from "$app/navigation";
+
+import ProfileContent from "$lib/views/Profile.svelte";
+
+import Button from "$lib/Button.svelte";
+//import { notification } from "../../notification-store";
+import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
+import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 
 const store = getContext('rally:store');
 const dispatch = createEventDispatcher();
@@ -25,7 +31,7 @@ $: if ($store.user && $store.user.demographicsData) {
 }
 </script>
 
-<Demographics results={intermediateResults}>
+<ProfileContent results={intermediateResults}>
     <span slot="title">Manage Profile</span>
     <p slot="description">
         Here's what you've shared with us so far. You can update, add, or rescind your answers as 
@@ -38,13 +44,15 @@ $: if ($store.user && $store.user.demographicsData) {
         <div style="display: grid; grid-auto-flow: column; grid-column-gap: 12px; width: max-content;">
             <Button size="lg" product leave={!validated} disabled={!validated} on:click={() => {
                 store.updateDemographicSurvey(formattedResults);
-                notification.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
-                dispatch("redirect-to", {view: "current-studies", suppressNotifications: true});
+                goto("/studies");
+                //notification.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
+                //dispatch("redirect-to", {view: "current-studies", suppressNotifications: true});
             }}>Save Changes</Button>
             <Button size="lg" product disabled={!validated} secondary on:click={() => {
                 intermediateResults = formatAnswersForDisplay(schema, { ...$store.user.demographicsData }, inputFormatters);
-                dispatch("redirect-to", {view: "current-studies"});
+                goto("/studies");
+                //dispatch("redirect-to", {view: "current-studies"});
             }}>Cancel</Button>
         </div>
     </div>
-</Demographics>
+</ProfileContent>

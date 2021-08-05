@@ -2,17 +2,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 import api from "./web-site-api";
 
 export function createAppStore() {
   // initialize the writable store.
   const { subscribe, set } = writable({ _initialized: false });
   api.initialize().then(state => {
+    console.debug('initialized state', state);
     set(state);
   });
   api.onNextState((state) => {
+    // get onboarding information and share it here.
     const nextState = {...state, _initialized: true };
+    console.log('next state', nextState);
     set(nextState);
   });
 
@@ -28,6 +31,9 @@ export function createAppStore() {
     },
     async signupWithEmailAndPassword(email, password) {
       return api.signupWithEmailAndPassword(email, password);
+    },
+    async updateOnboardedStatus(onboardingOrNot) {
+      return api.updateOnboardedStatus(onboardingOrNot);
     },
     async updateStudyEnrollment(studyID, enroll) {
       // Enforce the truthyness of `enroll`, to make sure
@@ -73,3 +79,4 @@ export function createAppStore() {
   };
 }
 
+export const store = createAppStore();

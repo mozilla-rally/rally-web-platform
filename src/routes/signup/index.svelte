@@ -10,13 +10,9 @@
     import { fly } from "svelte/transition";
     import { goto } from "$app/navigation";
     import ExternalLink from "$lib/icons/ExternalLink.svelte";
-  
-    export let firstRunCompleted = false;
-  
+    
     const store = getContext('rally:store');
   
-    // capture only the first value of firstRunCompleted.
-    const showArrow = !firstRunCompleted;
     let email;
     let password;
 
@@ -26,7 +22,6 @@
       } else {
         goto("/studies");
       }
-      
     }
 
   </script>

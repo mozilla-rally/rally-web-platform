@@ -9,7 +9,9 @@ import "@firebase/auth";
 
 let state = {
   user: undefined,
+  onboarded: false
 };
+
 let app;
 if( firebase.apps.length === 0 ){
   app = firebase.initializeApp(CONFIG);
@@ -38,6 +40,11 @@ async function getStudies() {
 }
 
 const _stateChangeCallbacks = [];
+const _authChangeCallbacks = [];
+
+auth.onAuthStateChanged(change => {
+  _authChangeCallbacks.forEach(callback => callback(change));
+})
 
 function _updateLocalState(callback) {
   state = produce(state, callback);
@@ -167,6 +174,10 @@ export default {
     // }
   },
 
+  async updateOnboardedStatus(onboarded) {
+    user.update({ onboarded });
+  },
+
   async updateStudyEnrollment(studyID, enroll) {
     const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
     if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
@@ -189,6 +200,10 @@ export default {
 
   async setFirstRunCompletion(firstRunCompleted) {
     return true;
+  },
+
+  onAuthChange(callback) {
+    _authChangeCallbacks.push(callback);
   },
 
   onNextState(callback) {

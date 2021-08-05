@@ -15,7 +15,8 @@ div {
     box-sizing: border-box;
 }
 </style>
-
-<div style={`--pad: ${pad ? "2rem 2.5rem" : "0"};`}>
-    <slot />
-</div>
+<main class="mzp-t-mozilla">
+    <div style={`--pad: ${pad ? "2rem 2.5rem" : "0"};`}>
+        <slot />
+    </div>
+</main>
