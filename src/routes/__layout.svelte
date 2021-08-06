@@ -4,12 +4,15 @@ import Layout from "$lib/layouts/main/Layout.svelte";
 import Button from '$lib/Button.svelte';
 import Sidebar from "./_Sidebar.svelte";
 import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
+import NotificationCenter from "$lib/notification/NotificationCenter.svelte";
 import { store } from "../lib/stores/app-store";
 import profileCompletionStatus from "../lib/stores/profile-completion-status";
+import notifications from "../lib/notification";
 
 // Here is where we set all the stores needed
 setContext("rally:store", store);
-setContext("rally:profileCompletionStatus", profileCompletionStatus)
+setContext("rally:profileCompletionStatus", profileCompletionStatus);
+setContext("rally:notifications", notifications);
 
 let mounted = false;
 let leaveModal = false;
@@ -73,3 +76,5 @@ onMount(async () => {
     </div>
     </Dialog>
 {/if}
+
+<NotificationCenter sidebarOffset />

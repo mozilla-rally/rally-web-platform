@@ -18,6 +18,7 @@ import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 
 const store = getContext('rally:store');
+const notifications = getContext('rally:notifications');
 const dispatch = createEventDispatcher();
 // Create a deep copy of $store.demographicsData for the "manage profile" view.
 // Only update the store when the submit button is explicitly clicked;
@@ -45,13 +46,11 @@ $: if ($store.user && $store.user.demographicsData) {
             <Button size="lg" product leave={!validated} disabled={!validated} on:click={() => {
                 store.updateDemographicSurvey(formattedResults);
                 goto("/studies");
-                //notification.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
-                //dispatch("redirect-to", {view: "current-studies", suppressNotifications: true});
+                notifications.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
             }}>Save Changes</Button>
             <Button size="lg" product disabled={!validated} secondary on:click={() => {
                 intermediateResults = formatAnswersForDisplay(schema, { ...$store.user.demographicsData }, inputFormatters);
                 goto("/studies");
-                //dispatch("redirect-to", {view: "current-studies"});
             }}>Cancel</Button>
         </div>
     </div>

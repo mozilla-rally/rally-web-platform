@@ -7,11 +7,11 @@
 import { getContext, createEventDispatcher } from "svelte";
 import Demographics from "./Content.svelte";
 import Button from "../../components/Button.svelte";
-import { notification } from "../../notification-store";
 import { schema, inputFormatters } from "./survey-schema";
 import { formatAnswersForDisplay } from "./formatters";
 
 const store = getContext('rally:store');
+const notifications = getContext('rally:notifications');
 const dispatch = createEventDispatcher();
 // Create a deep copy of $store.demographicsData for the "manage profile" view.
 // Only update the store when the submit button is explicitly clicked;
@@ -38,7 +38,7 @@ $: if ($store.user && $store.user.demographicsData) {
         <div style="display: grid; grid-auto-flow: column; grid-column-gap: 12px; width: max-content;">
             <Button size="lg" product leave={!validated} disabled={!validated} on:click={() => {
                 store.updateDemographicSurvey(formattedResults);
-                notification.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
+                notifications.send({code: "SUCCESSFULLY_UPDATED_PROFILE"});
                 dispatch("redirect-to", {view: "current-studies", suppressNotifications: true});
             }}>Save Changes</Button>
             <Button size="lg" product disabled={!validated} secondary on:click={() => {
