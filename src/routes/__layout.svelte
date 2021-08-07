@@ -4,11 +4,11 @@ import Layout from "$lib/layouts/main/Layout.svelte";
 import Button from '$lib/Button.svelte';
 import Sidebar from "./_Sidebar.svelte";
 import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
-import NotificationCenter from "$lib/notification/NotificationCenter.svelte";
+import NotificationCenter from "$lib/notifications/NotificationCenter.svelte";
 import { store, isAuthenticated } from "../lib/stores/app-store";
 import isMounted from "$lib/is-mounted";
 import profileCompletionStatus from "../lib/stores/profile-completion-status";
-import notifications from "../lib/notification";
+import notifications from "../lib/notifications";
 
 // Here is where we set all the stores needed
 setContext("rally:store", store);

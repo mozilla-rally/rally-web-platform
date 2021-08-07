@@ -5,7 +5,7 @@
 <script lang="ts">
 import { getContext }  from "svelte";
 import { goto } from "$app/navigation";
-import TermsContent from "$lib/views/Terms.svelte";
+import TermsContent from "$lib/views/terms/Content.svelte";
 import TermsCallToAction from "./_TermsCallToAction.svelte";
 
 const store = getContext("rally:store");

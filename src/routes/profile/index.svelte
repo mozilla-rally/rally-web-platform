@@ -10,7 +10,7 @@
 import { getContext, createEventDispatcher } from "svelte";
 import { goto } from "$app/navigation";
 
-import ProfileContent from "$lib/views/Profile.svelte";
+import ProfileContent from "$lib/views/profile/Content.svelte";
 
 import Button from "$lib/Button.svelte";
 //import { notification } from "../../notification-store";

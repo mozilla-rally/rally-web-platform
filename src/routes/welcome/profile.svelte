@@ -5,7 +5,7 @@
 <script lang="ts">
 import { getContext }  from "svelte";
 import { goto } from "$app/navigation";
-import ProfileContent from "$lib/views/Profile.svelte";
+import ProfileContent from "$lib/views/profile/Content.svelte";
 import ProfileCallToAction from "./_ProfileCallToAction.svelte";
 const store = getContext("rally:store");
 
