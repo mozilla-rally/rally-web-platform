@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { writable } from "svelte/store";
+import api from "./api";
 import firestoreAPI from "./api";
 
 export function createAppStore(api = firestoreAPI) {
@@ -78,4 +79,18 @@ export function createAppStore(api = firestoreAPI) {
   };
 }
 
+/**
+ * Creates a store whose value is a boolean that logs whether the current user is
+ * authenticated into Rally or not.
+ * @returns WritableStore<boolean>["subscribe"]
+ */
+function isAuthenticatedStore() {
+  const { subscribe, set } = writable(false);
+  api.onAuthStateChanged((authState) => {
+    set(authState !== null);
+  });
+  return { subscribe };
+}
+
+export const isAuthenticated = isAuthenticatedStore();
 export const store = createAppStore();

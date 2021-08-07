@@ -5,7 +5,8 @@ import Button from '$lib/Button.svelte';
 import Sidebar from "./_Sidebar.svelte";
 import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
 import NotificationCenter from "$lib/notification/NotificationCenter.svelte";
-import { store } from "../lib/stores/app-store";
+import { store, isAuthenticated } from "../lib/stores/app-store";
+import isMounted from "$lib/is-mounted";
 import profileCompletionStatus from "../lib/stores/profile-completion-status";
 import notifications from "../lib/notification";
 
@@ -13,29 +14,36 @@ import notifications from "../lib/notification";
 setContext("rally:store", store);
 setContext("rally:profileCompletionStatus", profileCompletionStatus);
 setContext("rally:notifications", notifications);
+setContext("rally:isAuthenticated", isAuthenticated);
 
-let mounted = false;
 let leaveModal = false;
 let Dialog;
 
 onMount(async () => {
-    mounted = true;
-    // get component client-side
     Dialog = (await import("../lib/Dialog.svelte")).default;
 });
 
+const mounted = isMounted();
 </script>
 
+{#if $isAuthenticated}
 <Layout>
-    <Sidebar on:change-view on:leave-rally={() => {
+    <Sidebar 
+        on:change-view 
+        on:leave-rally={() => {
         leaveModal = true;
     }} />
     <ContentContainer>
-        <slot />
+        {#if $store._initialized}
+            <slot />
+        {/if}
     </ContentContainer>
 </Layout>
+{:else}
+    <slot />
+{/if}
 
-{#if leaveModal && mounted && Dialog}
+{#if leaveModal && $mounted && Dialog}
     <Dialog width="var(--content-width)" on:dismiss={() => { leaveModal = false; }}>
     <div slot="title">Before You Go…</div>
     <div class='split-content-modal' slot="body" style="margin-bottom: 24px; box-sizing: content-box;">

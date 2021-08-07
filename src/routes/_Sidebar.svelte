@@ -1,28 +1,19 @@
 <script>
 /* This Source Code Form is subject to the terms of the Mozilla Public
-    * License, v. 2.0. If a copy of the MPL was not distributed with this
-    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-    import { createEventDispatcher, getContext } from 'svelte';
-    import { fly } from 'svelte/transition';
-    import { page } from '$app/stores';
-    import MainSidebar from "$lib/layouts/main/Sidebar.svelte";
-    import ExternalLink from "$lib/icons/ExternalLink.svelte";
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+import { createEventDispatcher, getContext } from 'svelte';
+import { fly } from 'svelte/transition';
+import { page } from '$app/stores';
+import SidebarContainer from "$lib/layouts/main/Sidebar.svelte";
+import ExternalLink from "$lib/icons/ExternalLink.svelte";
+import isMounted from "$lib/is-mounted";
 
-    const profileCompletionStatus = getContext("rally:profileCompletionStatus");
-    
-    export let view = "current-studies";
+const store = getContext("rally:store");
+const profileCompletionStatus = getContext("rally:profileCompletionStatus");
 
-    const dispatch = createEventDispatcher();
-    function send(nextView) {
-    return () => {
-        if (nextView === 'leave-rally') {
-        dispatch("leave-rally");
-        } else {
-        view = nextView;
-        dispatch("change-view", { view });
-        }
-    }
-    }
+const dispatch = createEventDispatcher();
+const mounted = isMounted();
 
 </script>
 
@@ -30,7 +21,7 @@
 
 h1 {
     align-self: start;
-    }
+}
 a, button {
     background-color: none;
     padding: 0;
@@ -47,10 +38,6 @@ a, button {
 }
 
 a:hover, ul button:hover {
-    color: var(--color-dark-gray-90);
-}
-
-ul button.active {
     color: var(--color-dark-gray-90);
 }
 
@@ -73,16 +60,9 @@ a:hover::before, ul button:hover::before {
     opacity: .4;
     transform: scaleX(1);
 }
-
-ul button.active::before, ul button.active:hover::before,
 ul a.active::before, ul a.active:hover::before {
     visibility: visible;
     transform: scaleX(1);
-    background-color: var(--color-dark-gray-90);
-}
-
-ul button.active:hover::before {
-    opacity: 1;
     background-color: var(--color-dark-gray-90);
 }
 
@@ -103,54 +83,78 @@ li a {
 .app-controls button {
     font-size: 14px;
 }
+
+/* reset the header link anchor tag to have no mouseover effect */
+.header-link::before, .header-link:hover::before {
+    background-color: transparent;
+}
+
+.profile-completed-container {
+    color: var(--color-light-gray-90); 
+    font-size: 10px; 
+    font-weight: 400; 
+    padding-top: 4px;
+}
+
+.profile-completed {
+    position: relative;
+    display: inline-block;
+    transform: translateY(-11.5px);
+    font-variant-numeric: tabular-nums;
+    min-width: 6.5px;
+}
+
+.profile-completed-numbers {
+    display: inline-block; 
+    position: absolute;
+}
+
 </style>
 
-<MainSidebar>
-    <button slot='header'in:fly={{duration:800, delay: 600, x: -15}} on:click={send('current-studies')}>
-    <h1>
-        <img src="img/logo-tall.svg" alt="Mozilla Rally Logo" />
-        
-    </h1>
-    </button>
-    <ul slot="navigation" in:fly={{duration: 800, delay: 300, x: -10}}>
-    <li>
-        <a class:active={$page.path === '/studies'} href="/studies">
-            Current Studies
-        </a>
-    </li>
-    <li>
-        <a class="external" target="_blank" rel="noopener noreferrer" href="https://support.mozilla.org/en-US/kb/about-mozilla-rally">Support
-        <ExternalLink /></a>
-    </li>
-    <li>
-        <a class="external" target="_blank" rel="noopener noreferrer" href="__BASE_SITE__/how-rally-works/faqs/">FAQ
-        <ExternalLink /></a>
-    </li>
+<SidebarContainer> 
+    <a class="header-link" slot='header' href="/studies">
+        {#if $mounted}
+            <h1 in:fly={{duration:800, x: -15}}>
+                <img src="img/logo-tall.svg" alt="Mozilla Rally Logo" />
+            </h1>
+        {/if}
+</a>
+    <ul slot="navigation" >
+        {#if $store._initialized}
+            <li in:fly={{duration:800, delay: 200, x: -15}}>
+                <a class:active={$page.path === '/studies'} href="/studies">
+                    Current Studies
+                </a>
+            </li>
+            <li in:fly={{duration:800, delay: 200, x: -15}}>
+                <a class="external" target="_blank" rel="noopener noreferrer" href="https://support.mozilla.org/en-US/kb/about-mozilla-rally">Support
+                <ExternalLink /></a>
+            </li>
+            <li in:fly={{duration:800, delay: 200, x: -15}}>
+                <a class="external" target="_blank" rel="noopener noreferrer" href="__BASE_SITE__/how-rally-works/faqs/">FAQ
+                <ExternalLink /></a>
+            </li>
+        {/if}
     </ul>
-    <ul slot="settings" class="app-controls"  in:fly={{duration: 800, delay: 600, x: -10}}>
-    <ul class="app-controls">
-        <li>
-            <a class:active={$page.path === '/profile'} href="/profile">
-                Manage Profile
-            </a>
-        <div style="color: var(--color-light-gray-90); font-size: 10px; font-weight: 400; padding-top: 4px;">
-        <!-- FIXME: why are these styles inline? Let's move them into the component's css. -->
-        <span style="position: relative;
-        display: inline-block;
-        transform: translateY(-11.5px);
-        font-variant-numeric: tabular-nums;
-        min-width: 6.5px;">
-            {#key $profileCompletionStatus.profileQuestionsAnswered}
-                <span style="display: inline-block; position: absolute;" in:fly={{duration: 500, y: -24}} out:fly={{duration: 500, y: 24}}>{$profileCompletionStatus.profileQuestionsAnswered}</span>
-            {/key}
-        </span>
-            / {$profileCompletionStatus.totalProfileQuestions} Questions Answered
-        </div>
+    <ul slot="settings" class="app-controls">
+        {#if $store._initialized}
+                <li in:fly={{duration:800, delay: 400, x: -15}}>
+                    <a class:active={$page.path === '/profile'} href="/profile">
+                        Manage Profile
+                    </a>
+                <div class="profile-completed-container">
+                <!-- FIXME: why are these styles inline? Let's move them into the component's css. -->
+                <span class="profile-completed">
+                    {#key $profileCompletionStatus.profileQuestionsAnswered}
+                        <span class="profile-completed-numbers" in:fly={{duration: 500, y: -24}} out:fly={{duration: 500, y: 24}}>{$profileCompletionStatus.profileQuestionsAnswered}</span>
+                    {/key}
+                </span>
+                    / {$profileCompletionStatus.totalProfileQuestions} Questions Answered
+                </div>
 
-    </li>
-        <li><a class:active={$page.path === '/terms'} href="/terms">Privacy Notice</a></li>
-        <!-- <li><button class:active={currentView === 'complete-profile'} on:click={send('complete-profile')}>Complete Profile</button></li> -->
-        <li><button class:active={view === 'leave-rally'} on:click={send('leave-rally')}>Leave Mozilla Rally</button></li>
+            </li>
+            <li in:fly={{duration:800, delay: 400, x: -15}}><a class:active={$page.path === '/terms'} href="/terms">Privacy Notice</a></li>
+            <li in:fly={{duration:800, delay: 400, x: -15}}><button on:click={() => dispatch('leave-rally')}>Leave Mozilla Rally</button></li>
+        {/if}
     </ul>
-    </ul>
-</MainSidebar>
+</SidebarContainer>

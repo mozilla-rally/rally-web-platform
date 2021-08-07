@@ -77,6 +77,9 @@ function listenForStudyChanges() {
 let USER_ID;
 
 export default {
+  async onAuthStateChanged(callback) {
+    auth.onAuthStateChanged(callback);
+  },
 
   async loginWithGoogle() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();

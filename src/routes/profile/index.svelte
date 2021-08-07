@@ -32,6 +32,7 @@ $: if ($store.user && $store.user.demographicsData) {
 }
 </script>
 
+{#if $store._initialized}
 <ProfileContent results={intermediateResults}>
     <span slot="title">Manage Profile</span>
     <p slot="description">
@@ -55,3 +56,4 @@ $: if ($store.user && $store.user.demographicsData) {
         </div>
     </div>
 </ProfileContent>
+{/if}
