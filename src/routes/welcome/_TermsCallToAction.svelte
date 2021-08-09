@@ -43,7 +43,7 @@
   <div
     class="call-flow"
     in:fly={{ duration: 200, y: 5 }}
-    out:fly={{ duration: 200, y: -5 }}
+    out:fly|local={{ duration: 200, y: -5 }}
     on:introend={() => {
       intro = true;
     }}>
@@ -55,7 +55,7 @@
     </Button>
     {#if showArrow && intro}
       <div
-        transition:fade={{ duration: 400 }}
+        transition:fade|local={{ duration: 400 }}
         class="shortcut-callout"
         style="text-align: right;">
         please read through before accepting

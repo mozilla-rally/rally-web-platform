@@ -28,8 +28,6 @@ $: if ($store._initialized) {
     }
 }
 
-$: console.log('hello!');
-
 </script>
 {#if $store._initialized}
     {#if $store.studies}

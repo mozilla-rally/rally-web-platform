@@ -130,12 +130,14 @@ export default {
 
     // check for an authenticated user.
     const authenticatedUser = await new Promise((resolve) => {
-      auth.onAuthStateChanged(resolve);
+      auth.onAuthStateChanged((v) => {
+        resolve(v);
+      });
     });
-
     // if the user is authenticated, then they must have a
     // document in firestore. Retrieve it and listen for any changes
     // to the firestore doc.
+    
     if (authenticatedUser !== null) {
       USER_ID = authenticatedUser.uid;
       user.initialize(USER_ID);
@@ -150,6 +152,7 @@ export default {
     // fetch the initial studies.
     let initialStudyState = await getStudies();
     initialStudyState = initialStudyState.docs.map(doc => doc.data());
+
     listenForStudyChanges();
 
     initialState._initialized = true;

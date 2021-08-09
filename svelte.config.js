@@ -14,6 +14,7 @@ const config = {
 		target: "#svelte",
 		adapter: adapter(),
 		ssr: false,
+		prerender: { enabled: false },
 		vite: {
 			plugins: [
 				replace({

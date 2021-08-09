@@ -24,7 +24,6 @@ $: if ($isAuthenticated === false) {
     <TermsCallToAction
         on:accept={async () => {
             await store.updatePlatformEnrollment(true);
-
             goto("/welcome/profile");
         }}
     />

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 import api from "./api";
 import firestoreAPI from "./api";
 
@@ -87,7 +87,6 @@ export function createAppStore(api = firestoreAPI) {
 function isAuthenticatedStore() {
   const { subscribe, set } = writable(undefined);
   api.onAuthStateChanged((authState) => {
-    console.log('authSTate', authState);
     set(authState !== null);
   });
   return { subscribe };
@@ -95,3 +94,7 @@ function isAuthenticatedStore() {
 
 export const isAuthenticated = isAuthenticatedStore();
 export const store = createAppStore();
+
+export const appIsReady = derived([isAuthenticated, store], ($isAuthenticated, $store) => {
+  return $isAuthenticated !== undefined && $store._initialized;
+}, false);

@@ -126,7 +126,7 @@
   }
 </style>
 
-<div in:fly={{ duration: 800, y: 5 }}>
+<div in:fly|local={{ duration: 800, y: 5 }}>
   <h2 class='section-header'>
     <slot name="title">
       <span>Tell Us About Yourself</span>
@@ -193,7 +193,7 @@
                 }
                 <span
                   class="mzp-c-fieldnote"
-                  transition:fly={{ duration: 300, y: 5 }}>
+                  transition:fly|local={{ duration: 300, y: 5 }}>
                   {inputFormatters[question].isInvalid(workingResults[question])}
                 </span>
               {/if}
