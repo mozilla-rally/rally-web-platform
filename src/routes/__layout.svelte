@@ -1,5 +1,6 @@
 <script lang="ts">
 import { setContext, onMount } from 'svelte';
+import { page } from "$app/stores";
 import Layout from "$lib/layouts/main/Layout.svelte";
 import Button from '$lib/Button.svelte';
 import Sidebar from "./_Sidebar.svelte";
@@ -9,6 +10,8 @@ import { store, isAuthenticated } from "../lib/stores/app-store";
 import isMounted from "$lib/is-mounted";
 import profileCompletionStatus from "../lib/stores/profile-completion-status";
 import notifications from "../lib/notifications";
+import StudyBackgroundElement from "$lib/layouts/StudyBackgroundElement.svelte";
+import EmptySlot from "./_EmptySlot.svelte";
 
 // Here is where we set all the stores needed
 setContext("rally:store", store);
@@ -33,11 +36,13 @@ const mounted = isMounted();
             on:leave-rally={() => {
             leaveModal = true;
         }} />
-        <ContentContainer>
-            {#if $store._initialized}
-                <slot />
-            {/if}
-        </ContentContainer>
+        <svelte:component this={$page.path === '/studies' ? StudyBackgroundElement : EmptySlot}>
+            <ContentContainer>
+                {#if $store._initialized}
+                    <slot />
+                {/if}
+            </ContentContainer>
+        </svelte:component>
     </Layout>
 {:else}
     <slot />

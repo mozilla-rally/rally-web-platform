@@ -2,7 +2,6 @@
 import { getContext } from "svelte";
 import { goto } from "$app/navigation";
 import StudiesContent  from "$lib/views/studies/Content.svelte";
-import StudyBackgroundElement from '$lib/layouts/StudyBackgroundElement.svelte';
 const notification = getContext("rally:notifications");
 
 const store = getContext("rally:store");
@@ -31,17 +30,15 @@ $: if ($store._initialized) {
 </script>
 {#if $store._initialized}
     {#if $store.studies}
-            <StudyBackgroundElement>
-                <StudiesContent
-                    sidebarOffset
-                    studies={$store.studies}
-                    userEnrollment={$store.user?.enrolledStudies || {}}
-                    on:cta-clicked={() => {
-                        notification.clear();
-                    }}
-                    on:join-study={(evt) => { joinStudy(evt.detail); }}
-                    on:leave-study={(evt) => { leaveStudy(evt.detail); }}
-                />
-            </StudyBackgroundElement>
+        <StudiesContent
+            sidebarOffset
+            studies={$store.studies}
+            userEnrollment={$store.user?.enrolledStudies || {}}
+            on:cta-clicked={() => {
+                notification.clear();
+            }}
+            on:join-study={(evt) => { joinStudy(evt.detail); }}
+            on:leave-study={(evt) => { leaveStudy(evt.detail); }}
+        />
     {/if}
 {/if}

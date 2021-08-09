@@ -17,7 +17,6 @@ import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 const store = getContext('rally:store');
 const isAuthenticated = getContext('rally:isAuthenticated');
 const notifications = getContext('rally:notifications');
-const dispatch = createEventDispatcher();
 
 $: if ($isAuthenticated === false) {
     goto("/signup");
