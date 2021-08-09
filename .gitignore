@@ -35,6 +35,10 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
+# dev directories
+.svelte-kit
+build
+
 # Compiled options page
 public/build
 
