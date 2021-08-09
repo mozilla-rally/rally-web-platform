@@ -1,7 +1,3 @@
-<script context="module">
-    export const ssr = false;
-</script>
-
 <script lang="ts">
 import { getContext } from "svelte";
 import { goto } from "$app/navigation";
@@ -10,6 +6,7 @@ import StudyBackgroundElement from '$lib/layouts/StudyBackgroundElement.svelte';
 const notification = getContext("rally:notifications");
 
 const store = getContext("rally:store");
+const isAuthenticated = getContext("rally:isAuthenticated");
 
 function joinStudy(studyID) { 
     store.updateStudyEnrollment(studyID, true); 
@@ -20,6 +17,9 @@ function leaveStudy(studyID) {
     notification.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
 }
 
+$: if ($isAuthenticated === false) {
+    goto("/signup");
+}
 $: if ($store._initialized) {
     if (!$store?.user?.uid) {
         goto("/signup");

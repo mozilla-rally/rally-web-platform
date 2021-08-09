@@ -81,7 +81,7 @@
     }
   </style>
   
-  <div in:fly={{ duration: 800, y: 5 }}>
+  <div>
     <h2 class='section-header'>Our Privacy Notice</h2>
   
     {#if onboarding}

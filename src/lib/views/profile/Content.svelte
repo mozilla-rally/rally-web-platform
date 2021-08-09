@@ -5,10 +5,10 @@
 
   import { fly } from "svelte/transition";
   // FIXME: move everything in profile/ into the place it belongs?
-  import ClearAnswerButton from './profile/ClearAnswerButton.svelte';
-  import { schema, inputFormatters } from './profile/survey-schema';
-  import { questionIsAnswered, clearAnswer,  createResultObject } from './profile/survey-tools';
-  import { formatInput, formatAnswersForResponse } from "./profile/formatters";
+  import ClearAnswerButton from './ClearAnswerButton.svelte';
+  import { schema, inputFormatters } from './survey-schema';
+  import { questionIsAnswered, clearAnswer,  createResultObject } from './survey-tools';
+  import { formatInput, formatAnswersForResponse } from "./formatters";
 
   export let results = createResultObject(schema);
   export let workingResults = createResultObject(schema, results);

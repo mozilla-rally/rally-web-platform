@@ -178,7 +178,7 @@ export default {
   },
 
   async updateOnboardedStatus(onboarded) {
-    user.update({ onboarded });
+    return user.update({ onboarded });
   },
 
   async updateStudyEnrollment(studyID, enroll) {
@@ -194,7 +194,7 @@ export default {
   },
 
   async updatePlatformEnrollment(enrolled) {
-    user.update({ enrolled });
+    return user.update({ enrolled });
   },
 
   async updateDemographicSurvey(data) {

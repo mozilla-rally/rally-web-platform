@@ -14,7 +14,6 @@ import { createEventDispatcher, onMount } from 'svelte';
 import StudyCard from '../../study-card/StudyCard.svelte';
 import StudyCardHeader from '../../study-card/Header.svelte';
 import Button from '../../Button.svelte';
-import Dialog from '../../Dialog.svelte';
 import IRBWindow from '../irb/IRBWindow.svelte';
 import GenericConsent from "../irb/GenericConsent.svelte";
 import irb from "../irb";
@@ -41,9 +40,10 @@ function triggerJoinEvent() {
     dispatch('cta-clicked');
     joinModal = true;
 }
-
+let Dialog;
 let mounted = false;
-onMount(() => {
+onMount(async () => {
+    Dialog = (await import('$lib/Dialog.svelte')).default;
     mounted = true;
 })
 
@@ -67,7 +67,7 @@ onMount(() => {
         </p>
 </StudyCard>
 
-{#if joinModal && mounted}
+{#if joinModal && mounted && Dialog}
     <Dialog
     height={joined ? undefined : "80vh"}
     topPadding={joined ? undefined : "calc(10vh - 20px)"}

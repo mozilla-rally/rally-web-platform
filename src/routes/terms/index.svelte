@@ -1,9 +1,12 @@
-<script context="module">
-  export const ssr = false;
+<script lang="ts">
+  import { getContext } from "svelte";
+  import TermsContent from "$lib/views/terms/Content.svelte";
+  const isAuthenticated = getContext("rally:isAuthenticated");
+  $: if ($isAuthenticated === false) {
+    goto("/signup");
+  }
 </script>
 
-<script lang="ts">
-  import TermsContent from "$lib/views/terms/Content.svelte";
-</script>
+
 
 <TermsContent />

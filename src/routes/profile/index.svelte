@@ -1,6 +1,3 @@
-<script context="module">
-    export const ssr = false;
-</script>
 <script>
 /* This Source Code Form is subject to the terms of the Mozilla Public
     * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,8 +15,14 @@ import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 
 const store = getContext('rally:store');
+const isAuthenticated = getContext('rally:isAuthenticated');
 const notifications = getContext('rally:notifications');
 const dispatch = createEventDispatcher();
+
+$: if ($isAuthenticated === false) {
+    goto("/signup");
+  }
+
 // Create a deep copy of $store.demographicsData for the "manage profile" view.
 // Only update the store when the submit button is explicitly clicked;
 // update the intermediate copy when $store.demographicsData changes.

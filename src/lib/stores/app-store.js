@@ -44,7 +44,7 @@ export function createAppStore(api = firestoreAPI) {
 
       // send study enrollment message
       try {
-        await api.updateStudyEnrollment(studyID, coercedEnroll);
+        return await api.updateStudyEnrollment(studyID, coercedEnroll);
       } catch (err) {
         console.error(err);
       }
@@ -57,7 +57,7 @@ export function createAppStore(api = firestoreAPI) {
 
       // send the ion enrollment message
       try {
-        await api.updatePlatformEnrollment(coercedEnroll);
+        return await api.updatePlatformEnrollment(coercedEnroll);
       } catch (err) {
         console.error(err);
       }
@@ -85,8 +85,9 @@ export function createAppStore(api = firestoreAPI) {
  * @returns WritableStore<boolean>["subscribe"]
  */
 function isAuthenticatedStore() {
-  const { subscribe, set } = writable(false);
+  const { subscribe, set } = writable(undefined);
   api.onAuthStateChanged((authState) => {
+    console.log('authSTate', authState);
     set(authState !== null);
   });
   return { subscribe };

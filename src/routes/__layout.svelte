@@ -26,19 +26,19 @@ onMount(async () => {
 const mounted = isMounted();
 </script>
 
-{#if $isAuthenticated}
-<Layout>
-    <Sidebar 
-        on:change-view 
-        on:leave-rally={() => {
-        leaveModal = true;
-    }} />
-    <ContentContainer>
-        {#if $store._initialized}
-            <slot />
-        {/if}
-    </ContentContainer>
-</Layout>
+{#if $isAuthenticated && $store?.user?.enrolled}
+    <Layout>
+        <Sidebar 
+            on:change-view 
+            on:leave-rally={() => {
+            leaveModal = true;
+        }} />
+        <ContentContainer>
+            {#if $store._initialized}
+                <slot />
+            {/if}
+        </ContentContainer>
+    </Layout>
 {:else}
     <slot />
 {/if}
