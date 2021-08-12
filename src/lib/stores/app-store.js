@@ -5,11 +5,8 @@
 import { writable, derived } from "svelte/store";
 import { browser } from "$app/env";
 import firestoreAPI from "./api";
-console.log()
-console.log('here we are!!!')
-console.log()
+
 export function createAppStore(api = firestoreAPI) {
-  console.log('is browser?', browser);
   const { subscribe, set } = writable({ _initialized: false });
   
   api.initialize().then(state => {
