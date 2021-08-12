@@ -38,12 +38,12 @@ bower_components
 # dev directories
 .svelte-kit
 build
+dev
+output
+static/fonts
 
 # Compiled options page
 public/build
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
 
 # Dependency directories
 node_modules/
