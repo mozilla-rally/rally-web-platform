@@ -9,7 +9,7 @@ import firestoreAPI from "./api";
 export function createAppStore(api = firestoreAPI) {
   const { subscribe, set } = writable({ _initialized: false });
   
-  api.initialize().then(state => {
+  api.initialize(browser).then(state => {
     set(state);
   });
 

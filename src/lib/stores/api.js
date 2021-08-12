@@ -2,73 +2,80 @@ import CONFIG, { demoConfig } from "../../../firebase.config"
 
 //import { produce } from "immer/dist/immer.cjs.production.min";
 import { produce } from "immer/dist/immer.esm";
-import FB from "@firebase/app";
-let firebase = FB.default;
-// eslint-disable-next-line node/no-extraneous-import
-import "@firebase/firestore";
-// eslint-disable-next-line node/no-extraneous-import
-import "@firebase/auth";
+
+import { initializeApp } from 'firebase/app';
+
+import { getAuth, 
+  onAuthStateChanged, GoogleAuthProvider, signInWithPopup, 
+  signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc, getDocs, collection, onSnapshot } from "firebase/firestore";
+
+let app;
+let auth;
+let db;
+
+let initialized = false;
+
+async function initializeFirestoreAPIs() {
+  if (!initialized) {
+    initialized = true;
+    app = initializeApp(CONFIG);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    onAuthStateChanged(auth, change => {
+      _authChangeCallbacks.forEach(callback => callback(change));
+    });
+    return true;
+  } 
+}
 
 let state = {
   user: undefined,
   onboarded: false
 };
 
-let app;
-let auth;
-let db;
-
-if( firebase.apps.length === 0 ){
-  app = firebase.initializeApp(CONFIG);
-}
-auth = firebase.auth();
-db = firebase.firestore(app);
-
 const user = {
   userRef: undefined,
   initialize(uid, { createUser = false } = {}) {
-    this.userRef = db.collection("users").doc(uid);
+
+    this.userRef = doc(db, "users", uid);
     if (createUser) {
       this.update({ uid, createdOn: new Date() });
     }
   },
   get() {
-    return this.userRef.get();
+    return getDoc(this.userRef);
   },
   update(updates, merge = true) {
-    return this.userRef.set(updates, { merge });
+    return setDoc(this.userRef, updates, { merge })
   }
 }
 
 async function getStudies() {
-  return db.collection("studies").get();
+  return getDocs(collection(db, "studies"));
 }
 
 const _stateChangeCallbacks = [];
 const _authChangeCallbacks = [];
-
-auth.onAuthStateChanged(change => {
-  _authChangeCallbacks.forEach(callback => callback(change));
-})
 
 function _updateLocalState(callback) {
   state = produce(state, callback);
   _stateChangeCallbacks.forEach(callback => callback(state));
 }
 
-function listenForUserChanges(user) {
-  db.collection("users").doc(user.uid)
-    .onSnapshot(doc => {
-      const nextState = doc.data();
-      _updateLocalState((draft) => {
-        draft.user = nextState;
-      });
-    })
+async function listenForUserChanges(user) {
+  // get user doc and then call onSnapshot.
+
+  onSnapshot(doc(db, "users", user.uid), (doc) => {
+    const nextState = doc.data();
+    _updateLocalState((draft) => {
+      draft.user = nextState;
+    });
+});
 }
 
 function listenForStudyChanges() {
-  // get initial study payload.
-  db.collection("studies").onSnapshot((querySnapshot) => {
+  onSnapshot(collection(db, "studies"), (querySnapshot) => {
     const studies = [];
     querySnapshot.forEach(function (doc) {
       studies.push(doc.data());
@@ -76,66 +83,25 @@ function listenForStudyChanges() {
     _updateLocalState((draft) => {
       draft.studies = studies;
     });
-  });
+  })
 }
 
 let USER_ID;
 
 export default {
-  async onAuthStateChanged(callback) {
-    auth.onAuthStateChanged(callback);
-  },
-
-  async loginWithGoogle() {
-    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    let userCredential = undefined;
-    try {
-      userCredential = await firebase.auth().signInWithPopup(googleAuthProvider);
-    } catch (err) {
-      console.error("there was an error", err);
-    }
-    // create a new user.
-    user.initialize(userCredential.user.uid, { createUser: true });
-    listenForUserChanges(userCredential.user);
-    await this.notifyStudies(userCredential.credential.idToken);
-  },
-  async loginWithEmailAndPassword(email, password) {
-    let userCredential;
-    try {
-      userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-    } catch (err) {
-      console.error("there was an error", err);
-    }
-    if (userCredential) {
-      user.initialize(userCredential.user.uid);
-      listenForUserChanges(userCredential.user)
+  async initialize(browser = true) {
+    if (browser) {
+        initializeFirestoreAPIs();
     } else {
-      console.error("Unable to log in with email and password");
+      return;
     }
-
-  },
-  async signupWithEmailAndPassword(email, password) {
-    let userCredential;
-    try {
-      userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    } catch (err) {
-      console.error("there was an error", err);
-    }
-    if (userCredential) {
-      user.initialize(userCredential.user.uid, { createUser: true });
-      listenForUserChanges(userCredential.user);
-    } else {
-      console.error("Unable to sign up with email and password");
-    }
-  },
-
-  async initialize() {
+    
     const initialState = {};
     let userState;
 
     // check for an authenticated user.
     const authenticatedUser = await new Promise((resolve) => {
-      auth.onAuthStateChanged((v) => {
+      onAuthStateChanged(auth, (v) => {
         resolve(v);
       });
     });
@@ -171,7 +137,55 @@ export default {
     }
 
     return initialState;
+  },
 
+  async onAuthStateChanged(callback) {
+    initializeFirestoreAPIs();
+    onAuthStateChanged(auth, callback);
+  },
+
+  async loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    let userCredential = undefined;
+    try {
+      userCredential = await signInWithPopup(auth, provider);
+    } catch (err) {
+      console.error("there was an error", err);
+    }
+    // create a new user.
+    user.initialize(userCredential.user.uid, { createUser: true });
+    listenForUserChanges(userCredential.user);
+    //await this.notifyStudies(userCredential.credential.idToken);
+    await this.notifyStudies(userCredential._tokenResponse.idToken);
+  },
+  async loginWithEmailAndPassword(email, password) {
+    let userCredential;
+    try {
+      userCredential = await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error("there was an error", err);
+    }
+    if (userCredential) {
+      user.initialize(userCredential.user.uid);
+      listenForUserChanges(userCredential.user)
+    } else {
+      console.error("Unable to log in with email and password");
+    }
+
+  },
+  async signupWithEmailAndPassword(email, password) {
+    let userCredential;
+    try {
+      userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      console.error("there was an error", err);
+    }
+    if (userCredential) {
+      user.initialize(userCredential.user.uid, { createUser: true });
+      listenForUserChanges(userCredential.user);
+    } else {
+      console.error("Unable to sign up with email and password");
+    }
   },
 
   async notifyStudies(idToken) {
@@ -197,7 +211,7 @@ export default {
     if (enroll) {
       enrolledStudies[studyID].joinedOn = new Date();
     }
-    user.userRef.update({ enrolledStudies });
+    user.update({ enrolledStudies });
     return true;
   },
 
@@ -206,7 +220,7 @@ export default {
   },
 
   async updateDemographicSurvey(data) {
-    user.userRef.update({ demographicsData: data });
+    user.update({ demographicsData: data });
   },
 
   async setFirstRunCompletion(firstRunCompleted) {
@@ -311,4 +325,4 @@ function addStudiesToFirebase() {
   return studies;
 }
 
-addStudiesToFirebase();
+//addStudiesToFirebase();
