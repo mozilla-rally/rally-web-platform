@@ -1,6 +1,7 @@
 <script context=module>
-import MicroModal from "micromodal";
-MicroModal.init({ disableScroll: true, disableFocus: true });
+// import MicroModal from "micromodal";
+// MicroModal.init({ disableScroll: true, disableFocus: true });
+let MicroModal;
 </script>
 
 <script>
@@ -58,7 +59,15 @@ MicroModal.init({ disableScroll: true, disableFocus: true });
     if (e.key === "Escape") onDismiss();
   }
 
-  onMount( () => {
+  //let MicroModal;
+  onMount(async () => {
+    //import MicroModal from "micromodal";
+    if (!MicroModal) {
+      MicroModal = (await import("micromodal")).default;
+      MicroModal.init({ disableScroll: true, disableFocus: true });
+    }
+    
+    MicroModal.init({ disableScroll: true, disableFocus: true });
     MicroModal.show(key, { disableScroll: true, disableFocus: true });
   });
 

@@ -3,11 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { writable, derived } from "svelte/store";
-import api from "./api";
+import { browser } from "$app/env";
 import firestoreAPI from "./api";
-
+console.log()
+console.log('here we are!!!')
+console.log()
 export function createAppStore(api = firestoreAPI) {
-
+  console.log('is browser?', browser);
   const { subscribe, set } = writable({ _initialized: false });
   
   api.initialize().then(state => {
@@ -86,14 +88,14 @@ export function createAppStore(api = firestoreAPI) {
  */
 function isAuthenticatedStore() {
   const { subscribe, set } = writable(undefined);
-  api.onAuthStateChanged((authState) => {
+  firestoreAPI.onAuthStateChanged((authState) => {
     set(authState !== null);
   });
   return { subscribe };
 }
 
-export const isAuthenticated = isAuthenticatedStore();
-export const store = createAppStore();
+export const isAuthenticated = browser ? isAuthenticatedStore() : writable(undefined);
+export const store = browser ? createAppStore() : writable(undefined);
 
 export const appIsReady = derived([isAuthenticated, store], ($isAuthenticated, $store) => {
   return $isAuthenticated !== undefined && $store._initialized;

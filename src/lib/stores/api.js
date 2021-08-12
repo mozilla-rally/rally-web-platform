@@ -1,7 +1,9 @@
 import CONFIG, { demoConfig } from "../../../firebase.config"
+
 //import { produce } from "immer/dist/immer.cjs.production.min";
 import { produce } from "immer/dist/immer.esm";
-import firebase from "firebase/app";
+import FB from "@firebase/app";
+let firebase = FB.default;
 // eslint-disable-next-line node/no-extraneous-import
 import "@firebase/firestore";
 // eslint-disable-next-line node/no-extraneous-import
@@ -13,11 +15,14 @@ let state = {
 };
 
 let app;
+let auth;
+let db;
+
 if( firebase.apps.length === 0 ){
   app = firebase.initializeApp(CONFIG);
 }
-const auth = firebase.auth();
-const db = firebase.firestore(app);
+auth = firebase.auth();
+db = firebase.firestore(app);
 
 const user = {
   userRef: undefined,
