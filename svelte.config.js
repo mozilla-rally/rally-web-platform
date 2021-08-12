@@ -24,17 +24,17 @@ const config = {
 					// Support enabling/disabling the locale check to enable
 					// the development workflows on other locales.
 				}),
-				copy({
-					targets: [
-						{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Bold.woff2", dest: "static/fonts/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Regular.woff2", dest: "static/fonts/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Italic.woff2", dest: "static/fonts/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff2", dest: "static/fonts/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Metropolis-*.woff2", dest: "static/fonts/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/css/protocol.css", dest: "static/build/"},
-						{ src: "node_modules/@mozilla-protocol/core/protocol/css/protocol-extra.css", dest: "static/build/"}
-					]
-				}),
+				// copy({
+				// 	targets: [
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Bold.woff2", dest: "static/fonts/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Regular.woff2", dest: "static/fonts/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Inter-Italic.woff2", dest: "static/fonts/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/ZillaSlab-Bold.woff2", dest: "static/fonts/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/fonts/Metropolis-*.woff2", dest: "static/fonts/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/css/protocol.css", dest: "static/build/"},
+				// 		{ src: "node_modules/@mozilla-protocol/core/protocol/css/protocol-extra.css", dest: "static/build/"}
+				// 	]
+				// }),
 			]
 		}
 	}

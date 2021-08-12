@@ -2,8 +2,9 @@
   "name": "rally-web-platform",
   "version": "0.1.0",
   "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
+    "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh",
+    "dev": "npm run pre-build && svelte-kit dev",
+    "build": "npm run pre-build && svelte-kit build",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
