@@ -9,7 +9,6 @@
   import CheckCircle from "../icons/CheckCircle.svelte";
   import Alert from "../icons/Alert.svelte";
   import ExternalLink from '../icons/ExternalLink.svelte';
-  import niceDate from "./nice-date";
   import studyCategories from "./study-categories";
 
   import AccordionButton from "../accordion/AccordionButton.svelte";
@@ -19,7 +18,6 @@
   export let endDate;
   export let joined = false;
   export let connected = false;
-  export let joinedDate = undefined;
   export let studyDetailsLink = undefined;
   export let imageSrc;
   export let dataCollectionDetails = [];
@@ -194,12 +192,6 @@
               {#if connected}
               <div>
                 connected
-                <!-- {#if joinedDate}
-                  joined on
-                  {niceDate(joinedDate)}
-                {:else}
-                  joined
-                {/if} -->
               </div>
               {:else}
                 <div style='font-weight: normal;'>

@@ -6,6 +6,7 @@
     import SuccessfullyJoinedStudyNotification from "./SuccessfullyJoinedStudyNotification.svelte";
     import SuccessfullyLeftStudyNotification from "./SuccessfullyLeftStudyNotification.svelte";
     import SuccessfullyUpdatedProfileNotification from "./SuccessfullyUpdatedProfileNotification.svelte";
+    
     export let sidebarOffset = false;
     const messages = {
         SUCCESSFULLY_JOINED_STUDY: SuccessfullyJoinedStudyNotification,

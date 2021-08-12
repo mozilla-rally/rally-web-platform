@@ -112,7 +112,7 @@ li a {
 </style>
 
 <SidebarContainer> 
-    <a class="header-link" slot='header' href="/studies">
+    <a class="header-link" slot='header' href="/studies" sveltekit:prefetch>
         {#if $mounted}
             <h1 in:fly={{duration:800, x: -15}}>
                 <img src="img/logo-tall.svg" alt="Mozilla Rally Logo" />
@@ -122,7 +122,7 @@ li a {
     <ul slot="navigation" >
         {#if $store._initialized}
             <li in:fly={{duration:800, delay: 200, x: -15}}>
-                <a class:active={$page.path === '/studies'} href="/studies">
+                <a class:active={$page.path === '/studies'} href="/studies"  sveltekit:prefetch>
                     Current Studies
                 </a>
             </li>
@@ -139,7 +139,7 @@ li a {
     <ul slot="settings" class="app-controls">
         {#if $store._initialized}
                 <li in:fly={{duration:800, delay: 400, x: -15}}>
-                    <a class:active={$page.path === '/profile'} href="/profile">
+                    <a class:active={$page.path === '/profile'} href="/profile"  sveltekit:prefetch>
                         Manage Profile
                     </a>
                 <div class="profile-completed-container">
@@ -153,7 +153,7 @@ li a {
                 </div>
 
             </li>
-            <li in:fly={{duration:800, delay: 400, x: -15}}><a class:active={$page.path === '/terms'} href="/terms">Privacy Notice</a></li>
+            <li in:fly={{duration:800, delay: 400, x: -15}}><a class:active={$page.path === '/terms'} href="/terms"  sveltekit:prefetch>Privacy Notice</a></li>
             <li in:fly={{duration:800, delay: 400, x: -15}}><button on:click={() => dispatch('leave-rally')}>Leave Mozilla Rally</button></li>
         {/if}
     </ul>
