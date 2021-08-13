@@ -73,7 +73,6 @@ async function listenForUserChanges(user) {
   // get user doc and then call onSnapshot.
   onSnapshot(doc(db, "users", user.uid), (doc) => {
     const nextState = doc.data();
-    console.log('hmm ok here we go')
     _updateLocalState((draft) => {
       draft.user = nextState;
     });

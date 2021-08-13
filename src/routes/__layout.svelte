@@ -26,8 +26,6 @@ onMount(async () => {
     Dialog = (await import("../lib/Dialog.svelte")).default;
 });
 
-$: console.log($store);
-
 const mounted = isMounted();
 </script>
 

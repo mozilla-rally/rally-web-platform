@@ -33,7 +33,7 @@ function onAction(saveData = false) {
     <title>Tell Us About Yourself | Mozilla Rally</title>
 </svelte:head>
 
-{#if $isAuthenticated === true && $store._initialized && (!$store?.user?.onboarded)}
+{#if $store._initialized && (!$store?.user?.onboarded)}
     <ProfileContent bind:formattedResults />
     <ProfileCallToAction
         on:save={onAction(true)}

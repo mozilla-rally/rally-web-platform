@@ -7,8 +7,10 @@
     setContext('rally:isAuthenticated', isAuthenticated);
 </script>
 
-<Layout>
-    <ContentContainer padForOnboarding>
-        <slot />
-    </ContentContainer>
-</Layout>
+{#if $isAuthenticated === true && $store._initialized}
+    <Layout>
+        <ContentContainer padForOnboarding>
+            <slot />
+        </ContentContainer>
+    </Layout>
+{/if}

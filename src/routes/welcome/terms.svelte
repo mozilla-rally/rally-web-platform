@@ -19,12 +19,10 @@ $: if ($isAuthenticated === false) {
     <title>Privacy Policy | Mozilla Rally</title>
 </svelte:head>
 
-{#if $isAuthenticated === true}
-    <TermsContent />
-    <TermsCallToAction
-        on:accept={async () => {
-            await store.updatePlatformEnrollment(true);
-            goto("/welcome/profile");
-        }}
-    />
-{/if}
+<TermsContent />
+<TermsCallToAction
+    on:accept={async () => {
+        await store.updatePlatformEnrollment(true);
+        goto("/welcome/profile");
+    }}
+/>
