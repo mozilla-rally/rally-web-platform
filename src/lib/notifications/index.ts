@@ -2,13 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 import type { SvelteComponent } from "svelte";
-import { writable, derived, Subscriber } from "svelte/store";
+import { writable, derived, Readable } from "svelte/store";
 
 const NOTIFICATION_TIMEOUT = 2000;
 
-interface NotificationStore {
+export interface NotificationStore extends Readable<object> {
   timeoutID: ReturnType<typeof setTimeout>,
-  subscribe: Subscriber<object>,
   send: Function,
   clear: Function
 }
@@ -33,7 +32,7 @@ export function createNotificationStore(): NotificationStore {
     _notification.set({ id: undefined });
   }
 
-  const notifications = derived(_notification, ($notification, set) => {
+  const notifications: Readable<object> = derived(_notification, ($notification, set) => {
     // if there already was a notification, let's clear the timer
     // and reset it here.
     clearTimeout(timeout);

@@ -5,6 +5,10 @@
     setContext("rally:store", store);
 </script>
 
+<svelte:head>
+    <title>Sign Up | Mozilla Rally</title>
+</svelte:head>
+
 <Layout>
     <slot />
 </Layout>

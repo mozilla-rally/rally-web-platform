@@ -3,8 +3,11 @@ import { getContext }  from "svelte";
 import { goto } from "$app/navigation";
 import ProfileContent from "$lib/views/profile/Content.svelte";
 import ProfileCallToAction from "./_ProfileCallToAction.svelte";
-const store = getContext("rally:store");
-const isAuthenticated = getContext("rally:isAuthenticated");
+
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/app-store";
+const store: AppStore = getContext("rally:store");
+const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 
 $: if ($isAuthenticated === false) {
     goto("/signup");
@@ -25,6 +28,10 @@ function onAction(saveData = false) {
 }
 
 </script>
+
+<svelte:head>
+    <title>Tell Us About Yourself | Mozilla Rally</title>
+</svelte:head>
 
 {#if $isAuthenticated === true && $store._initialized && (!$store?.user?.onboarded)}
     <ProfileContent bind:formattedResults />

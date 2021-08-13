@@ -4,15 +4,20 @@ import { goto } from "$app/navigation";
 import TermsContent from "$lib/views/terms/Content.svelte";
 import TermsCallToAction from "./_TermsCallToAction.svelte";
 
-const store = getContext("rally:store");
-
-const isAuthenticated = getContext("rally:isAuthenticated");
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/app-store";
+const store: AppStore = getContext("rally:store");
+const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 
 $: if ($isAuthenticated === false) {
     goto("/signup");
 }
 
 </script>
+
+<svelte:head>
+    <title>Privacy Policy | Mozilla Rally</title>
+</svelte:head>
 
 {#if $isAuthenticated === true}
     <TermsContent />

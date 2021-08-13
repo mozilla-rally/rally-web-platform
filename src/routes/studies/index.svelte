@@ -2,18 +2,22 @@
 import { getContext } from "svelte";
 import { goto } from "$app/navigation";
 import StudiesContent  from "$lib/views/studies/Content.svelte";
-const notification = getContext("rally:notifications");
 
-const store = getContext("rally:store");
-const isAuthenticated = getContext("rally:isAuthenticated");
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/app-store";
+import type { NotificationStore } from "$lib/notifications/"
+
+const store: AppStore = getContext("rally:store");
+const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
+const notifications: NotificationStore = getContext("rally:notifications");
 
 function joinStudy(studyID) { 
     store.updateStudyEnrollment(studyID, true); 
-    notification.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
+    notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
 }
 function leaveStudy(studyID) { 
     store.updateStudyEnrollment(studyID, false); 
-    notification.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
+    notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
 }
 
 $: if ($isAuthenticated === false) {
@@ -28,6 +32,11 @@ $: if ($store._initialized) {
 }
 
 </script>
+
+<svelte:head>
+    <title>Studies | Mozilla Rally</title>
+</svelte:head>
+
 {#if $store._initialized}
     {#if $store.studies}
         <StudiesContent
@@ -35,7 +44,7 @@ $: if ($store._initialized) {
             studies={$store.studies}
             userEnrollment={$store.user?.enrolledStudies || {}}
             on:cta-clicked={() => {
-                notification.clear();
+                notifications.clear();
             }}
             on:join-study={(evt) => { joinStudy(evt.detail); }}
             on:leave-study={(evt) => { leaveStudy(evt.detail); }}

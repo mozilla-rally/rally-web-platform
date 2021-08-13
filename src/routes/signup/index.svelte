@@ -1,24 +1,25 @@
-<script>
-    /* This Source Code Form is subject to the terms of the Mozilla Public
-     * License, v. 2.0. If a copy of the MPL was not distributed with this
-     * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-    import { getContext } from "svelte";
-    import { fly } from "svelte/transition";
-    import { goto } from "$app/navigation";
-    import ExternalLink from "$lib/icons/ExternalLink.svelte";
-    
-    const store = getContext('rally:store');
+<script lang="ts">
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+    * License, v. 2.0. If a copy of the MPL was not distributed with this
+    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { getContext } from "svelte";
+  import { fly } from "svelte/transition";
+  import { goto } from "$app/navigation";
+  import ExternalLink from "$lib/icons/ExternalLink.svelte";
   
-    let email;
-    let password;
+  import type { AppStore } from "$lib/stores/app-store";
+  const store: AppStore = getContext("rally:store");
 
-    $: if ($store._initialized && $store?.user?.uid) {
-      if (!$store?.user?.enrolled) {
-        goto("/welcome/terms");
-      } else {
-        goto("/studies");
-      }
+  let email;
+  let password;
+
+  $: if ($store._initialized && $store?.user?.uid) {
+    if (!$store?.user?.enrolled) {
+      goto("/welcome/terms");
+    } else {
+      goto("/studies");
     }
+  }
 
   </script>
   

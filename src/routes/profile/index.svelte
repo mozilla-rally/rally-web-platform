@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 /* This Source Code Form is subject to the terms of the Mozilla Public
     * License, v. 2.0. If a copy of the MPL was not distributed with this
     * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 // This component is used in the "Main View" of the Rally Add-On.
-import { getContext, createEventDispatcher } from "svelte";
+import { getContext } from "svelte";
 import { goto } from "$app/navigation";
 
 import ProfileContent from "$lib/views/profile/Content.svelte";
@@ -14,9 +14,13 @@ import Button from "$lib/Button.svelte";
 import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 
-const store = getContext('rally:store');
-const isAuthenticated = getContext('rally:isAuthenticated');
-const notifications = getContext('rally:notifications');
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/app-store";
+import type { NotificationStore } from "$lib/notifications/"
+
+const store: AppStore = getContext("rally:store");
+const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
+const notifications: NotificationStore = getContext('rally:notifications');
 
 $: if ($isAuthenticated === false) {
     goto("/signup");
@@ -33,6 +37,10 @@ $: if ($store.user && $store.user.demographicsData) {
     intermediateResults = formatAnswersForDisplay(schema, { ...$store.user.demographicsData }, inputFormatters);
 }
 </script>
+
+<svelte:head>
+    <title>Manage Your Profile | Mozilla Rally</title>
+</svelte:head>
 
 {#if $store._initialized}
 <ProfileContent results={intermediateResults}>
