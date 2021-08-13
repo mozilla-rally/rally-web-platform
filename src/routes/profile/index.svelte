@@ -15,7 +15,7 @@ import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
 
 import type { Readable } from "svelte/store";
-import type { AppStore } from "$lib/stores/app-store";
+import type { AppStore } from "$lib/stores/types";
 import type { NotificationStore } from "$lib/notifications/"
 
 const store: AppStore = getContext("rally:store");

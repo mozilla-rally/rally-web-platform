@@ -5,7 +5,7 @@ import TermsContent from "$lib/views/terms/Content.svelte";
 import TermsCallToAction from "./_TermsCallToAction.svelte";
 
 import type { Readable } from "svelte/store";
-import type { AppStore } from "$lib/stores/app-store";
+import type { AppStore } from "$lib/stores/types";
 const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 

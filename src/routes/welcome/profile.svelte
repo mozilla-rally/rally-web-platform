@@ -5,7 +5,7 @@ import ProfileContent from "$lib/views/profile/Content.svelte";
 import ProfileCallToAction from "./_ProfileCallToAction.svelte";
 
 import type { Readable } from "svelte/store";
-import type { AppStore } from "$lib/stores/app-store";
+import type { AppStore } from "$lib/stores/types";
 const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 

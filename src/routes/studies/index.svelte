@@ -4,7 +4,7 @@ import { goto } from "$app/navigation";
 import StudiesContent  from "$lib/views/studies/Content.svelte";
 
 import type { Readable } from "svelte/store";
-import type { AppStore } from "$lib/stores/app-store";
+import type { AppStore } from "$lib/stores/types";
 import type { NotificationStore } from "$lib/notifications/"
 
 const store: AppStore = getContext("rally:store");

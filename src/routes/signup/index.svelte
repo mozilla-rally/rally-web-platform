@@ -7,7 +7,7 @@
   import { goto } from "$app/navigation";
   import ExternalLink from "$lib/icons/ExternalLink.svelte";
   
-  import type { AppStore } from "$lib/stores/app-store";
+  import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");
 
   let email;

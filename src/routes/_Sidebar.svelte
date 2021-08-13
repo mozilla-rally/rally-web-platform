@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 /* This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -9,8 +9,12 @@ import SidebarContainer from "$lib/layouts/main/Sidebar.svelte";
 import ExternalLink from "$lib/icons/ExternalLink.svelte";
 import isMounted from "$lib/is-mounted";
 
-const store = getContext("rally:store");
-const profileCompletionStatus = getContext("rally:profileCompletionStatus");
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/types";
+import type { ProfileCompletionStatus } from "$lib/stores/profile-completion-status";
+
+const store: AppStore = getContext("rally:store");
+const profileCompletionStatus: Readable<ProfileCompletionStatus> = getContext("rally:profileCompletionStatus");
 
 const dispatch = createEventDispatcher();
 const mounted = isMounted();

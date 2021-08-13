@@ -10,7 +10,12 @@ import { schema as demographicsSchema, inputFormatters } from '../views/profile/
 import { formatAnswersForDisplay } from '../views/profile/formatters'
 import { questionIsAnswered } from '../views/profile/survey-tools';
 
-export function profileCompletionStatusCallback(state) : { profileQuestionsAnswered: number, totalProfileQuestions: number } {
+export interface ProfileCompletionStatus {
+  profileQuestionsAnswered: number, 
+  totalProfileQuestions: number 
+}
+
+export function profileCompletionStatusCallback(state) : ProfileCompletionStatus {
     const formattedDemographicsData = state?.user?.demographicsData 
       ? formatAnswersForDisplay(demographicsSchema, { ...state.user.demographicsData }, inputFormatters) 
       : undefined;

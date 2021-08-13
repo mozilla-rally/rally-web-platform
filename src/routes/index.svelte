@@ -1,8 +1,12 @@
-<script>
+<script lang="ts">
 import { getContext } from "svelte";
 import { goto } from "$app/navigation";
-const store = getContext("rally:store");
-const isAuthenticated = getContext("rally:isAuthenticated")
+
+import type { Readable } from "svelte/store";
+import type { AppStore } from "$lib/stores/types";
+
+const store: AppStore= getContext("rally:store");
+const isAuthenticated: Readable<boolean> = getContext("rally:isAuthenticated")
 
 $: if ($isAuthenticated !== undefined && $store._initialized) {
     if ($isAuthenticated === false) {
