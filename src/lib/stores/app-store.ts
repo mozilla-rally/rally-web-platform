@@ -21,7 +21,6 @@ export function createAppStore(api = firestoreAPI) {
   return {
     subscribe,
     set,
-    // login and signup functions
     async loginWithGoogle() {
       return api.loginWithGoogle();
     },

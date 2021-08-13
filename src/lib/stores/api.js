@@ -6,8 +6,12 @@ import { produce } from "immer/dist/immer.esm";
 import { initializeApp } from 'firebase/app';
 
 import { getAuth, 
-  onAuthStateChanged, GoogleAuthProvider, signInWithPopup, 
-  signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+  onAuthStateChanged, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword 
+} from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, getDocs, collection, onSnapshot } from "firebase/firestore";
 
 let app;
@@ -52,7 +56,8 @@ const user = {
 }
 
 async function getStudies() {
-  return getDocs(collection(db, "studies"));
+  const snapshot = await getDocs(collection(db, "studies"));
+  return snapshot.docs.map(doc => doc.data());
 }
 
 const _stateChangeCallbacks = [];
@@ -113,7 +118,7 @@ export default {
       USER_ID = authenticatedUser.uid;
       user.initialize(USER_ID);
       initialState._isLoggedIn = true;
-      userState = await user.get(authenticatedUser.uid);
+      userState = await user.get();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
     } else {
@@ -122,7 +127,7 @@ export default {
 
     // fetch the initial studies.
     let initialStudyState = await getStudies();
-    initialStudyState = initialStudyState.docs.map(doc => doc.data());
+    //initialStudyState = initialStudyState);
 
     listenForStudyChanges();
 
