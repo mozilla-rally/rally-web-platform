@@ -19,10 +19,8 @@ import {
 
 import initializeFirebase from "./initialize-firebase";
 
-let app;
 let auth;
 let db;
-
 
 async function initializeFirestoreAPIs() {
   const fb = initializeFirebase(CONFIG, (({ auth }) => {
@@ -30,7 +28,6 @@ async function initializeFirestoreAPIs() {
       _authChangeCallbacks.forEach(callback => callback(change));
     });
   }));
-  app = fb.app;
   auth = fb.auth;
   db = fb.db;
 }

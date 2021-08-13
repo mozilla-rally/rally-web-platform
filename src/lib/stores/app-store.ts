@@ -2,22 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { writable, Readable, Writable } from "svelte/store";
+import { writable, Readable, Writable, Subscriber } from "svelte/store";
 import { browser } from "$app/env";
 import firestoreAPI from "./api";
-
-export interface AppStore extends Omit<Writable<object>, "update"> {
-  loginWithGoogle: Function,
-  signupWithEmailAndPassword: Function,
-  loginWithEmailAndPassword: Function,
-  updateOnboardedStatus: Function,
-  updateStudyEnrollment: Function,
-  updatePlatformEnrollment: Function,
-  updateDemographicSurvey: Function
-}
+import type { AppStore, State } from "./types"
 
 export function createAppStore(api = firestoreAPI): AppStore {
-  const { subscribe, set } = writable({ _initialized: false });
+  const _store: Writable<State> = writable({ _initialized: false });
+  const { subscribe, set } = _store;
   
   api.initialize(browser).then(state => {
     set(state);
