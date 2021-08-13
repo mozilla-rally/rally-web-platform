@@ -15,6 +15,7 @@ export function createAppStore(api = firestoreAPI) {
 
   api.onNextState((state) => {
     const nextState = {...state, _initialized: true };
+    console.log('nextstate', nextState);
     set(nextState);
   });
 
@@ -67,13 +68,6 @@ export function createAppStore(api = firestoreAPI) {
         console.error("Rally - failed to update the demographic survey", err);
       }
     },
-    async setFirstRunCompletion(firstRun) {
-      try {
-        await api.setFirstRunCompletion(firstRun);
-      } catch (err) {
-        console.error("Rally - failed to set first run flag", err);
-      }
-    }
   };
 }
 

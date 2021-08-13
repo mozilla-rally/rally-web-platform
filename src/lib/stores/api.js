@@ -1,58 +1,62 @@
 import CONFIG, { demoConfig } from "../../../firebase.config"
-
-//import { produce } from "immer/dist/immer.cjs.production.min";
 import { produce } from "immer/dist/immer.esm";
 
-import { initializeApp } from 'firebase/app';
-
-import { getAuth, 
+import { 
   onAuthStateChanged, 
   GoogleAuthProvider, 
   signInWithPopup, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword 
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, getDocs, collection, onSnapshot } from "firebase/firestore";
+import {
+  doc, 
+  getDoc, 
+  setDoc, 
+  getDocs, 
+  updateDoc,
+  collection, 
+  onSnapshot } from "firebase/firestore";
+
+import initializeFirebase from "./initialize-firebase";
 
 let app;
 let auth;
 let db;
 
-let initialized = false;
 
 async function initializeFirestoreAPIs() {
-  if (!initialized) {
-    initialized = true;
-    app = initializeApp(CONFIG);
-    auth = getAuth(app);
-    db = getFirestore(app);
+  const fb = initializeFirebase(CONFIG, (({ auth }) => {
     onAuthStateChanged(auth, change => {
       _authChangeCallbacks.forEach(callback => callback(change));
     });
-    return true;
-  } 
+  }));
+  app = fb.app;
+  auth = fb.auth;
+  db = fb.db;
 }
 
-let state = {
+// NOTE: this object is not to be touched.
+let __STATE__ = {
   user: undefined,
   onboarded: false
 };
 
-const user = {
-  userRef: undefined,
-  initialize(uid, { createUser = false } = {}) {
+let userRef;
 
-    this.userRef = doc(db, "users", uid);
-    if (createUser) {
-      this.update({ uid, createdOn: new Date() });
-    }
-  },
-  get() {
-    return getDoc(this.userRef);
-  },
-  update(updates, merge = true) {
-    return setDoc(this.userRef, updates, { merge })
+function initializeUserDocument(uid, { createUser = false } = {}) {
+  userRef = doc(db, "users", uid);
+  // create the user document.
+  if (createUser) {
+    setDoc(userRef, { uid, createdOn: new Date() }, { merge: true });
   }
+}
+
+function getUserDocument() {
+  return getDoc(userRef);
+}
+
+function updateUserDocument(updates, merge = true) {
+  return updateDoc(userRef, updates, { merge });
 }
 
 async function getStudies() {
@@ -64,15 +68,15 @@ const _stateChangeCallbacks = [];
 const _authChangeCallbacks = [];
 
 function _updateLocalState(callback) {
-  state = produce(state, callback);
-  _stateChangeCallbacks.forEach(callback => callback(state));
+  __STATE__ = produce(__STATE__, callback);
+  _stateChangeCallbacks.forEach(callback => callback(__STATE__));
 }
 
 async function listenForUserChanges(user) {
   // get user doc and then call onSnapshot.
-
   onSnapshot(doc(db, "users", user.uid), (doc) => {
     const nextState = doc.data();
+    console.log('hmm ok here we go')
     _updateLocalState((draft) => {
       draft.user = nextState;
     });
@@ -90,8 +94,6 @@ function listenForStudyChanges() {
     });
   })
 }
-
-let USER_ID;
 
 export default {
   async initialize(browser = true) {
@@ -115,19 +117,14 @@ export default {
     // to the firestore doc.
     
     if (authenticatedUser !== null) {
-      USER_ID = authenticatedUser.uid;
-      user.initialize(USER_ID);
-      initialState._isLoggedIn = true;
-      userState = await user.get();
+      initializeUserDocument(authenticatedUser.uid);
+      userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
-    } else {
-      initialState._isLoggedIn = false;
     }
 
     // fetch the initial studies.
     let initialStudyState = await getStudies();
-    //initialStudyState = initialStudyState);
 
     listenForStudyChanges();
 
@@ -158,11 +155,14 @@ export default {
       console.error("there was an error", err);
     }
     // create a new user.
-    user.initialize(userCredential.user.uid, { createUser: true });
+    initializeUserDocument(userCredential.user.uid, { createUser: true });
     listenForUserChanges(userCredential.user);
-    //await this.notifyStudies(userCredential.credential.idToken);
+
+    // The userCredential._tokenResponse is private but we need it.
+    // @ts-ignore
     await this.notifyStudies(userCredential._tokenResponse.idToken);
   },
+
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
@@ -171,7 +171,7 @@ export default {
       console.error("there was an error", err);
     }
     if (userCredential) {
-      user.initialize(userCredential.user.uid);
+      initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user)
     } else {
       console.error("Unable to log in with email and password");
@@ -186,7 +186,7 @@ export default {
       console.error("there was an error", err);
     }
     if (userCredential) {
-      user.initialize(userCredential.user.uid, { createUser: true });
+      initializeUserDocument(userCredential.user.uid, { createUser: true });
       listenForUserChanges(userCredential.user);
     } else {
       console.error("Unable to sign up with email and password");
@@ -194,6 +194,7 @@ export default {
   },
 
   async notifyStudies(idToken) {
+    // FIXME: bring this back
     // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
     // TODO only supports Chrome auth provider
     // TODO pull study IDs from metadata
@@ -205,30 +206,28 @@ export default {
   },
 
   async updateOnboardedStatus(onboarded) {
-    return user.update({ onboarded });
+    return updateUserDocument({ onboarded });
   },
 
   async updateStudyEnrollment(studyID, enroll) {
-    const enrolledStudies = { ...(state.user.enrolledStudies || {}) };
+    const enrolledStudies = { ...(__STATE__.user.enrolledStudies || {}) };
     if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
     enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
     enrolledStudies[studyID].enrolled = enroll;
     if (enroll) {
       enrolledStudies[studyID].joinedOn = new Date();
     }
-    user.update({ enrolledStudies });
+    updateUserDocument({ enrolledStudies });
     return true;
   },
 
   async updatePlatformEnrollment(enrolled) {
-    return user.update({ enrolled });
+    return updateUserDocument({ enrolled });
   },
 
   async updateDemographicSurvey(data) {
-    user.update({ demographicsData: data });
-  },
-
-  async setFirstRunCompletion(firstRunCompleted) {
+    updateDoc(userRef, { demographicsData: data });
+    //updateUserDocument({ demographicsData: data });
     return true;
   },
 
@@ -240,7 +239,6 @@ export default {
     _stateChangeCallbacks.push(callback);
   }
 };
-
 
 // one-time opp to put the studies into firebase
 
