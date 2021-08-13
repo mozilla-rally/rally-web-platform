@@ -1,13 +1,6 @@
 import initializeFirebase from "../src/lib/stores/initialize-firebase";
 import config from "../firebase.config";
-import {
-    doc, 
-    getDoc, 
-    setDoc, 
-    getDocs, 
-    updateDoc,
-    collection, 
-    onSnapshot } from "firebase/firestore";
+import { setDoc, collection } from "firebase/firestore";
 
 const { db } = initializeFirebase(config);
 
@@ -68,7 +61,7 @@ function addStudiesToFirebase() {
     ]
   
     studies.forEach(study => {
-        setDoc(collection("studies", study.addonId), { merge: true });
+        setDoc(collection(db, "studies", study.addonId), { merge: true });
     });
     return studies;
   }
