@@ -9,7 +9,6 @@ import StudyCard from './StudyCard.svelte';
 
 export let studies = [];
 export let userEnrollment = {};
-export let sidebarOffset = false;
 
 const dispatch = createEventDispatcher();
 
@@ -71,12 +70,10 @@ p {
         imageSrc={study.icons[64]}
         addonId={study.addonId}
         endDate={parseDateIfNeeded(study.endDate)}
-        joinedDate={study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled && userEnrollment[study.addonId].joinedOn.toDate()}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
         studyDetailsLink={study.studyDetailsLink}
         tags={study.tags}
-        {sidebarOffset}
         on:cta-clicked
         on:join={() => {
             joinStudy(study.addonId);

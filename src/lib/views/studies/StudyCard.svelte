@@ -26,7 +26,6 @@ export let author = "Author Unknown";
 export let description = "no description.";
 export let addonId;
 export let endDate;
-export let joinedDate;
 export let dataCollectionDetails;
 export let studyDetailsLink;
 export let tags;
@@ -55,7 +54,6 @@ onMount(async () => {
     on:join={triggerJoinEvent}
     on:leave={triggerJoinEvent}
     {endDate}
-    {joinedDate}
     {dataCollectionDetails}
     {tags}
     {imageSrc}

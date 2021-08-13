@@ -1,18 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, 
-    onAuthStateChanged, 
-    GoogleAuthProvider, 
-    signInWithPopup, 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword 
-  } from "firebase/auth";
-  import { getFirestore, 
-    doc, 
-    getDoc, 
-    setDoc, 
-    getDocs, 
-    collection, 
-    onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 let initialized = false;
 

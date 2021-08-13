@@ -2,11 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { writable, derived } from "svelte/store";
+import { writable, Readable, Writable } from "svelte/store";
 import { browser } from "$app/env";
 import firestoreAPI from "./api";
 
-export function createAppStore(api = firestoreAPI) {
+export interface AppStore extends Omit<Writable<object>, "update"> {
+  loginWithGoogle: Function,
+  signupWithEmailAndPassword: Function,
+  loginWithEmailAndPassword: Function,
+  updateOnboardedStatus: Function,
+  updateStudyEnrollment: Function,
+  updatePlatformEnrollment: Function,
+  updateDemographicSurvey: Function
+}
+
+export function createAppStore(api = firestoreAPI): AppStore {
   const { subscribe, set } = writable({ _initialized: false });
   
   api.initialize(browser).then(state => {
@@ -15,7 +25,6 @@ export function createAppStore(api = firestoreAPI) {
 
   api.onNextState((state) => {
     const nextState = {...state, _initialized: true };
-    console.log('nextstate', nextState);
     set(nextState);
   });
 
@@ -76,7 +85,7 @@ export function createAppStore(api = firestoreAPI) {
  * authenticated into Rally or not.
  * @returns WritableStore<boolean>["subscribe"]
  */
-function isAuthenticatedStore() {
+function isAuthenticatedStore(): Readable<boolean> {
   const { subscribe, set } = writable(undefined);
   firestoreAPI.onAuthStateChanged((authState) => {
     set(authState !== null);
@@ -86,7 +95,3 @@ function isAuthenticatedStore() {
 
 export const isAuthenticated = browser ? isAuthenticatedStore() : writable(undefined);
 export const store = browser ? createAppStore() : writable(undefined);
-
-export const appIsReady = derived([isAuthenticated, store], ($isAuthenticated, $store) => {
-  return $isAuthenticated !== undefined && $store._initialized;
-}, false);

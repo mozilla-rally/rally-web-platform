@@ -3,11 +3,11 @@
   * License, v. 2.0. If a copy of the MPL was not distributed with this
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { scale } from 'svelte/transition'
-  export let width;
+  export let width = undefined;
   export let level = "info"; // info, error.
 
-  export let xOffset;
-  export let yOffset;
+  export let xOffset = undefined;
+  export let yOffset = undefined;
 
   // positioning elements.
   export let location;
