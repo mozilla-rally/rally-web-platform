@@ -55,7 +55,7 @@ export function createAppStore(api = firestoreAPI): AppStore {
       const coercedEnroll = !!enroll;
       console.debug(`Rally - changing enrollment to ${coercedEnroll}`);
 
-      // send the ion enrollment message
+      // send the Rally enrollment message
       try {
         return await api.updatePlatformEnrollment(coercedEnroll);
       } catch (err) {

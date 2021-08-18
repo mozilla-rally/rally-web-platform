@@ -153,10 +153,6 @@ export default {
     // create a new user.
     initializeUserDocument(userCredential.user.uid, { createUser: true });
     listenForUserChanges(userCredential.user);
-
-    // The userCredential._tokenResponse is private but we need it.
-    // @ts-ignore
-    await this.notifyStudies(userCredential._tokenResponse.idToken);
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -189,16 +185,8 @@ export default {
     }
   },
 
-  async notifyStudies(idToken) {
-    // FIXME: bring this back
-    // Attempt to automatically log-in any valid study extensions, by passing them the ID token.
-    // TODO only supports Chrome auth provider
-    // TODO pull study IDs from metadata
-    // if (window.chrome || window.browser) {
-    //   for (const studyId of [demoConfig.id]) {
-    //     (chrome || browser).runtime.sendMessage(studyId, idToken);
-    //   }
-    // }
+  async notifyStudies() {
+    // FIXME: re-implement this function.
   },
 
   async updateOnboardedStatus(onboarded) {
