@@ -1,8 +1,6 @@
 # Rally Web Platform Spike
 
-_status: in development_
-
-A demo supporting a Rally Web Platform spike, investigating whether we can move to a web-centric model and away from the rally-core-addon.
+This repository contains the code for the user management experience. It is implemented in [Sveltekit](https://kit.svelte.dev/), a next.js-like framework for [Svelte](https://svelte.dev/).
 
 ## Requirements
 * [Node.js](https://nodejs.org/en/)
@@ -14,41 +12,30 @@ or can be run locally without Mozilla Rally installed on your computer.
 
 ## Quickstart
 
-```bash
-# install all dependencies
-npm install
+1. Clone this repository.
+2. Run `npm run install`
+3. Run `npm run dev` to spin up the dev environment at `localhost:3000`
+4. Run `npm run build` to build the app; the results will be in `/build`
 
-# run developer mode.
-# this will run web-ext and listen for all input files, 
-# and will rebuild and auto-reload for you.
-npm run watch
+## Tests
 
-# build the addon and output the xpi so that it can be side-loaded in Firefox Nightly.
-# See the "running thiis study to collect your own data" 
-# section below for further instructions.
-npm run build:addon
+This repository comes (aspirationally) with 
+- unit tests: run `npm run test:unit`
+- integration tests: run `npm run test:integration`
 
-# --- Other commands you might be interested in ---
-# generate documentation for all modules in the doc/ directory.
-npm run doc
+These are currently severely underdeveloped right now.
+Once we feel a bit more comfortable with the state of this branch,
+we will prioritize integration testing.
 
-# run unit tests
-npm run test:unit
+## Organization
 
-# build and run website
-npm run build:web
-npm run start:web
-```
+There are two primary source file directories: `src/lib` and `src/routes`:
+- `src/lib` – the components and utility functions utilized in the frontend.
+  - `src/lib/stores` – contains the overarching application store & any derived stores. These set in the context of the layouts in `src/routes`, which gives access to the global store to all children components (including pages).
+  - `src/lib/views` – the standalone views that get utilized for individual pages. We are breaking these out separately because we utilize the same content & functionality blocks on multiple routes (e.g. for onboarding, `/welcome/terms` and for the main view, `/terms`).
+  - The rest of the components and functions in `/src/lib/` are used throughout the page components and the views.
+- `src/routes` – the page components utilized in the routes. Sveltekit's routing is directory-based; so `src/routes/terms/index.svelte` maps to `/terms`, and `src/routes/welcome/profile/index.svelte` maps to `/welcome/profile`.
 
-## Understanding this spike
+`svelte.config.js` – contains the configuration of the Sveltekit app. Sveltekit utilizes Vite under the hood, and has support for both Vite and Rollup plugins.
 
-This repository contains both the RS01 Mozilla Rally study, as well as the Svelte web UI from the Rally Core Add-on.
-The intent is for a user to be able to install and manage studies from a static site, which uses authentication both on the
-website and inside the study extension.
-
-Users should be able to:
-
-1. log into the website
-2. consent to joining Rally, and also a study
-3. install a study, and authenticate (to obtain the consent from step 2)
-4. the study should be able to deliver a "giveback" to the user, which is unique to that user, and only available after authentication.
+`firebase.config.js` – contains our public firebase configuration for this application.
