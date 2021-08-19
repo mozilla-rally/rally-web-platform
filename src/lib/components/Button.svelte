@@ -4,7 +4,7 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
   import { get_current_component as getComponent } from "svelte/internal";
-  import { forwardEvents } from "./forwardEvents";
+  import { forwardEvents } from "../forwardEvents";
   // TODO: once this PR lands, let's refactor this
   // to have (1) a size prop and (2) a variant prop.
   // variant can be a string or array of strings.

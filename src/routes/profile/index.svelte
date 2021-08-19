@@ -9,7 +9,7 @@ import { goto } from "$app/navigation";
 
 import ProfileContent from "$lib/views/profile/Content.svelte";
 
-import Button from "$lib/Button.svelte";
+import Button from "$lib/components/Button.svelte";
 //import { notification } from "../../notification-store";
 import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";

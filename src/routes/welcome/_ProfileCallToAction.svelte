@@ -3,8 +3,8 @@ import OnboardingCallToActionContainer from "$lib/layouts/onboarding/CallToActio
 
 import { createEventDispatcher } from "svelte";
 import { fade, fly } from "svelte/transition";
-import Arrow02 from "$lib/Arrow02.svelte";
-import Button from "$lib/Button.svelte";
+import Arrow02 from "$lib/components/Arrow02.svelte";
+import Button from "$lib/components/Button.svelte";
 
 const dispatch = createEventDispatcher();
 

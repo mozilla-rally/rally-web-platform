@@ -5,8 +5,8 @@
   
     import { createEventDispatcher } from "svelte";
     import { fade, fly } from "svelte/transition";
-    import Arrow01 from "$lib/Arrow01.svelte";
-    import Button from "$lib/Button.svelte";
+    import Arrow01 from "$lib/components/Arrow01.svelte";
+    import Button from "$lib/components/Button.svelte";
     import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
 
   

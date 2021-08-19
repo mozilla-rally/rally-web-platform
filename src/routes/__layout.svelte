@@ -2,7 +2,7 @@
 import { setContext, onMount } from 'svelte';
 import { page } from "$app/stores";
 import Layout from "$lib/layouts/main/Layout.svelte";
-import Button from '$lib/Button.svelte';
+import Button from '$lib/components/Button.svelte';
 import Sidebar from "./_Sidebar.svelte";
 import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
 import NotificationCenter from "$lib/notifications/NotificationCenter.svelte";
@@ -23,7 +23,7 @@ let leaveModal = false;
 let Dialog;
 
 onMount(async () => {
-    Dialog = (await import("../lib/Dialog.svelte")).default;
+    Dialog = (await import("../lib/components/Dialog.svelte")).default;
 });
 
 const mounted = isMounted();

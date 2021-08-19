@@ -13,7 +13,7 @@
 import { createEventDispatcher, onMount } from 'svelte';
 import StudyCard from '../../study-card/StudyCard.svelte';
 import StudyCardHeader from '../../study-card/Header.svelte';
-import Button from '../../Button.svelte';
+import Button from '../../components/Button.svelte';
 import IRBWindow from '../irb/IRBWindow.svelte';
 import GenericConsent from "../irb/GenericConsent.svelte";
 import irb from "../irb";
@@ -42,7 +42,7 @@ function triggerJoinEvent() {
 let Dialog;
 let mounted = false;
 onMount(async () => {
-    Dialog = (await import('$lib/Dialog.svelte')).default;
+    Dialog = (await import('$lib/components/Dialog.svelte')).default;
     mounted = true;
 })
 

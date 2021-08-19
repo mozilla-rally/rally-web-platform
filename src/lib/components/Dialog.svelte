@@ -11,7 +11,7 @@ let MicroModal;
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { fly, fade } from "svelte/transition";
   import Portal from './Portal.svelte';
-  import Close from "./icons/Close.svelte";
+  import Close from "../icons/Close.svelte";
 
   export let width;
   export let height;
