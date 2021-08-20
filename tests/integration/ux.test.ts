@@ -2,9 +2,9 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const utils = require("./utils.js");
-const { By, until } = require("selenium-webdriver");
-const firefox = require("selenium-webdriver/firefox");
+import { getFirefoxDriver } from "./utils";
+import { By, until } from "selenium-webdriver";
+import firefox from "selenium-webdriver/firefox";
 
 // The number of milliseconds to wait for some
 // property to change in tests. This should be
@@ -30,7 +30,7 @@ async function findAndAct(driver, element, action) {
 describe("Study Template integration test example", function () {
   // eslint-disable-next-line mocha/no-hooks-for-single-case
   beforeEach(async function () {
-    this.driver = await utils.getFirefoxDriver(true);
+    this.driver = await getFirefoxDriver(true);
   });
 
   // eslint-disable-next-line mocha/no-hooks-for-single-case
@@ -56,15 +56,15 @@ describe("Study Template integration test example", function () {
       return (await this.driver.getAllWindowHandles()).length === 3;
     }, WAIT_FOR_PROPERTY);
 
-  // Selenium is still focused on the latest tab (which is the Rally Core Add-On installation page).
-  // Switch to the options page to ensure it exists.
+    // Selenium is still focused on the latest tab (which is the Rally Core Add-On installation page).
+    // Switch to the options page to ensure it exists.
     const tabs = (await this.driver.getAllWindowHandles());
     // this should be the options page.
     const newTab = tabs[1];
-    
+
     await this.driver.switchTo().window(newTab);
-   
-   // Let's wait until the page is fully loaded and the title matches. 
+
+    // Let's wait until the page is fully loaded and the title matches. 
     await this.driver.wait(
       until.titleIs("Rally Study Template"),
       WAIT_FOR_PROPERTY
