@@ -2,11 +2,11 @@ import CONFIG, { demoConfig } from "../../../firebase.config"
 import { produce } from "immer/dist/immer.esm";
 
 import { 
-  onAuthStateChanged, 
+  onAuthStateChanged,
   GoogleAuthProvider, 
   signInWithPopup, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword 
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 import {
   doc, 
@@ -14,7 +14,7 @@ import {
   setDoc, 
   getDocs, 
   updateDoc,
-  collection, 
+  collection,
   onSnapshot } from "firebase/firestore";
 
 import initializeFirebase from "./initialize-firebase";
@@ -117,6 +117,7 @@ export default {
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
+      console.log("idToken:", await authenticatedUser.getIdToken());
     }
 
     // fetch the initial studies.

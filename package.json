@@ -36,6 +36,8 @@
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
     "geckodriver": "^1.22.3",
+    "firebase-admin": "^9.11.0",
+    "firebase-tools": "^9.16.5",
     "immer": "^9.0.3",
     "jest": "^27.0.6",
     "jest-transform-stub": "^2.0.0",
