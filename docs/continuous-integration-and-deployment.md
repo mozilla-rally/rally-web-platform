@@ -13,7 +13,7 @@ Not yet but in the near future, the deployment model will change slightly:
 ## Circle CI deployment setup
 
 In order to do deployment, Circle CI needs access to deploy to Firebase. The recommended approach is to
-generate tokens explicitly for CI use, and to set these and environment variables.
+generate tokens explicitly for CI use, and to set these tokens as environment variables in Circle CI.
 
 Each github repository that has Circle set up has a settings page:
 https://app.circleci.com/pipelines/github/mozilla-rally/rally-web-platform
