@@ -118,3 +118,6 @@ web-ext-artifacts/
 # generated files.
 .venv
 generated/
+
+#miscell
+.vscode/

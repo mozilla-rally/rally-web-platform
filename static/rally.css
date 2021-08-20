@@ -291,7 +291,7 @@ See #141: https://github.com/mozilla-rally/core-addon/issues/141
 */
 
 /*  use this class when you are putting a link with the ExternalLink icon at
-src/components/icons/ExternalLink.svelte:
+src/libs/components/icons/ExternalLink.svelte:
 
 <a class="external-link" href="https://example.com">See More <ExternalLink /></a>
 */

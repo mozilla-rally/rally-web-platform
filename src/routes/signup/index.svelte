@@ -5,7 +5,7 @@
   import { getContext } from "svelte";
   import { fly } from "svelte/transition";
   import { goto } from "$app/navigation";
-  import ExternalLink from "$lib/icons/ExternalLink.svelte";
+  import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   
   import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");

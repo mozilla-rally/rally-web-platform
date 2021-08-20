@@ -6,7 +6,7 @@ import { createEventDispatcher, getContext } from 'svelte';
 import { fly } from 'svelte/transition';
 import { page } from '$app/stores';
 import SidebarContainer from "$lib/layouts/main/Sidebar.svelte";
-import ExternalLink from "$lib/icons/ExternalLink.svelte";
+import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
 import isMounted from "$lib/is-mounted";
 
 import type { Readable } from "svelte/store";
