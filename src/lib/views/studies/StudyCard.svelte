@@ -11,8 +11,8 @@
 */
 
 import { createEventDispatcher, onMount } from 'svelte';
-import StudyCard from '../../study-card/StudyCard.svelte';
-import StudyCardHeader from '../../study-card/Header.svelte';
+import StudyCard from '../../components/study-card/StudyCard.svelte';
+import StudyCardHeader from '../../components/study-card/Header.svelte';
 import Button from '../../components/Button.svelte';
 import IRBWindow from '../irb/IRBWindow.svelte';
 import GenericConsent from "../irb/GenericConsent.svelte";

@@ -5,7 +5,7 @@ import StudiesContent  from "$lib/views/studies/Content.svelte";
 
 import type { Readable } from "svelte/store";
 import type { AppStore } from "$lib/stores/types";
-import type { NotificationStore } from "$lib/notifications/"
+import type { NotificationStore } from "$lib/components/notifications"
 
 const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");

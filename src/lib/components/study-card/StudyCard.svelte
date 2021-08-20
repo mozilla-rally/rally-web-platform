@@ -5,7 +5,7 @@
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import Header from "./Header.svelte";
-  import Button from "../components/Button.svelte";
+  import Button from "../Button.svelte";
   import CheckCircle from "../icons/CheckCircle.svelte";
   import Alert from "../icons/Alert.svelte";
   import ExternalLink from '../icons/ExternalLink.svelte';
