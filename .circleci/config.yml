@@ -35,6 +35,9 @@ jobs:
           paths:
             - .
       - run:
+          name: Install the dependencies
+          command: npm install && sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa && sudo apt update && sudo apt install firefox-trunk
+      - run:
           name: Run tests
           command: npm run test:integration
   site-deploy:
