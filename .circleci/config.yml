@@ -34,9 +34,9 @@ jobs:
           root: .
           paths:
             - .
-      #- run:
-      #    name: Run tests
-      #    command: npm run test:unit
+      - run:
+          name: Run tests
+          command: npm run test:integration
   site-deploy:
     docker:
       - image: cimg/node:15.1
