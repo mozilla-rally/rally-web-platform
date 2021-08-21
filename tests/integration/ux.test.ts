@@ -28,19 +28,20 @@ async function findAndAct(driver, element, action) {
 }
 
 describe("Rally Web Platform extension interop", function () {
-  // eslint-disable-next-line mocha/no-hooks-for-single-case
-  beforeEach(async function () {
-    this.driver = await getFirefoxDriver(true);
-  });
-
-  // eslint-disable-next-line mocha/no-hooks-for-single-case
   afterEach(async function () {
     await this.driver.quit();
   });
   it("fails to sign into website with invalid credentials", async function () {
+    const headlessMode = false;
+    const installExtension = false;
+    this.driver = await getFirefoxDriver(headlessMode, installExtension);
 
   });
   it("signs into website and tries all UX flows without extension installed", async function () {
+    const headlessMode = false;
+    const installExtension = false;
+    this.driver = await getFirefoxDriver(headlessMode, installExtension);
+
     await this.driver.get("http://localhost:5000");
     await this.driver.wait(
       until.titleIs("Sign Up | Mozilla Rally"),
@@ -99,20 +100,99 @@ describe("Rally Web Platform extension interop", function () {
     await this.driver.get("http://localhost:5000/profile");
 
   });
-  /*
-    it("successfully opens the signup page on installation", async function () {
-      // We expect the extension to load the rally signup page in a new tab.
-      await this.driver.wait(async () => {
-        return (await this.driver.getAllWindowHandles()).length === 2;
-      }, WAIT_FOR_PROPERTY);
 
-      // Let's wait until the page is fully loaded and the title matches.
-      await this.driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-    });
+  it("opens the signup page on extension installation", async function () {
+    const headlessMode = false;
+    const installExtension = true;
+    this.driver = await getFirefoxDriver(headlessMode, installExtension);
 
-    it("signs into website and tries all UX flows with extension installed", async function () {});
-  */
+    // We expect the extension to load the rally signup page in a new tab.
+    // FIXME - rally-sdk has the dev site hardcoded, need to override this in our test version.
+    await this.driver.wait(async () => {
+      return (await this.driver.getAllWindowHandles()).length === 2;
+    }, WAIT_FOR_PROPERTY);
+
+    // Let's wait until the page is fully loaded and the title matches.
+    await this.driver.wait(
+      until.titleIs("Sign Up | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
+  });
+
+  it("signs into website and tries all UX flows with extension installed", async function () {
+    const headlessMode = false;
+    const installExtension = true;
+
+    this.driver = await getFirefoxDriver(headlessMode, installExtension);
+
+    // Extension should open website at sign-up link
+    // FIXME - rally-sdk has the dev site hardcoded, need to override this in our test version.
+    await this.driver.wait(async () => {
+      return (await this.driver.getAllWindowHandles()).length === 2;
+    }, WAIT_FOR_PROPERTY);
+
+    // Let's wait until the page is fully loaded and the title matches.
+    await this.driver.wait(
+      until.titleIs("Sign Up | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
+
+    await this.driver.get("http://localhost:5000");
+    await this.driver.wait(
+      until.titleIs("Sign Up | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
+    findAndAct(this.driver, By.css("button"), e => e.click());
+
+    // Google sign-in prompt should open
+    await this.driver.wait(async () => {
+      return (await this.driver.getAllWindowHandles()).length === 3;
+    }, WAIT_FOR_PROPERTY);
+
+    await this.driver.switchTo().window((await this.driver.getAllWindowHandles())[2]);
+
+    await this.driver.wait(
+      until.titleIs("Auth Emulator IDP Login Widget"),
+      WAIT_FOR_PROPERTY
+    );
+
+    // FIXME this emulator auth pop-up isn't ready on the default "loaded" event, the window will close anyway so retry until it responds.
+    await this.driver.executeScript(`window.setInterval(() => document.querySelector(".mdc-list-item__secondary-text").click(), 1000)`);
+
+    // Google sign-in prompt should close.
+    await this.driver.wait(async () => {
+      return (await this.driver.getAllWindowHandles()).length === 2;
+    }, WAIT_FOR_PROPERTY);
+
+    // Switch back to original window.
+    await this.driver.switchTo().window((await this.driver.getAllWindowHandles())[1]);
+
+    // TODO add Cancel button test, not implemented by site yet.
+    await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+
+    // Start to join study, but cancel.
+    await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
+    await findAndAct(this.driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
+
+    // Start to join study, and confirm.
+    await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
+    await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
+
+    // Start to leave study, but cancel.
+    await findAndAct(this.driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
+    await findAndAct(this.driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
+
+    // Start to leave study, and confirm.
+    await findAndAct(this.driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
+    await findAndAct(this.driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
+
+
+    // TODO make sure in-page link works
+    await this.driver.get("http://localhost:5000/profile");
+  });
+
 });
