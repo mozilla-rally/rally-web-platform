@@ -77,22 +77,23 @@ describe("Rally Web Platform extension interop", function () {
     // Start to join study, but cancel.
     await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(this.driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-    await this.driver.wait(until.elementLocated(By.xpath('//button[text()="Join Study"]')), WAIT_FOR_PROPERTY);
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
     // Start to join study, and confirm.
     await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
-    await this.driver.wait(until.elementLocated(By.xpath('//button[text()="Leave Study"]')), WAIT_FOR_PROPERTY);
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
     // Start to leave study, but cancel.
     await findAndAct(this.driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
     await findAndAct(this.driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-    await this.driver.wait(until.elementLocated(By.xpath('//button[text()="Leave Study"]')), WAIT_FOR_PROPERTY);
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
     // Start to leave study, and confirm.
     await findAndAct(this.driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
     await findAndAct(this.driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
-    await this.driver.wait(until.elementLocated(By.xpath('//button[text()="Join Study"]')), WAIT_FOR_PROPERTY);
+    await this.driver.wait(until.elementIsVisible(await this.driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
+
 
     // TODO make sure in-page link works
     await this.driver.get("http://localhost:5000/profile");
