@@ -40,6 +40,8 @@
        "/Applications/Firefox Nightly.app/Contents/MacOS/firefox"
      );
    }
+
+   firefoxOptions.addExtensions(`${__dirname}/extension.xpi`);
  
    return await new Builder()
      .forBrowser("firefox")

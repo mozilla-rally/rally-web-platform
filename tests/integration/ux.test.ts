@@ -38,35 +38,15 @@ describe("Study Template integration test example", function () {
     await this.driver.quit();
   });
 
-  it("successfully opens the study template options page on installation", async function () {
-    await this.driver.get(`file:///${__dirname}/index.html`);
-    await this.driver.wait(until.titleIs("Installation Test"), WAIT_FOR_PROPERTY);
-    await findAndAct(this.driver, By.id("install"), e => e.click());
-    // switch to browser UI context to interact with Firefox add-on install prompts.
-    await this.driver.setContext(firefox.Context.CHROME);
-    await findAndAct(this.driver, By.css("[label=\"Add\"]"), e => e.click());
-    await findAndAct(this.driver, By.css("[label=\"Okay, Got It\"]"), e => e.click());
-    // Switch back to web content context.
-    await this.driver.setContext(firefox.Context.CONTENT);
-
-    // We expect the extension to load its options page in a new tab.
-    // We also expect the study extension to show the Rally installation page
-    // since the Rally Core Add-On is not installed.
+  it("successfully opens the signup page on installation", async function () {
+    // We expect the extension to load the rally signup page in a new tab.
     await this.driver.wait(async () => {
-      return (await this.driver.getAllWindowHandles()).length === 3;
+      return (await this.driver.getAllWindowHandles()).length === 2;
     }, WAIT_FOR_PROPERTY);
 
-    // Selenium is still focused on the latest tab (which is the Rally Core Add-On installation page).
-    // Switch to the options page to ensure it exists.
-    const tabs = (await this.driver.getAllWindowHandles());
-    // this should be the options page.
-    const newTab = tabs[1];
-
-    await this.driver.switchTo().window(newTab);
-
-    // Let's wait until the page is fully loaded and the title matches. 
+    // Let's wait until the page is fully loaded and the title matches.
     await this.driver.wait(
-      until.titleIs("Rally Study Template"),
+      until.titleIs("Page Not Found"),
       WAIT_FOR_PROPERTY
     );
   });
