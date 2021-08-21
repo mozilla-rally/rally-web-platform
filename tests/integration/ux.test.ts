@@ -30,7 +30,7 @@ async function findAndAct(driver, element, action) {
 describe("Rally Web Platform extension interop", function () {
   // eslint-disable-next-line mocha/no-hooks-for-single-case
   beforeEach(async function () {
-    this.driver = await getFirefoxDriver(false);
+    this.driver = await getFirefoxDriver(true);
   });
 
   // eslint-disable-next-line mocha/no-hooks-for-single-case
