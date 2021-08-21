@@ -41,7 +41,7 @@
      );
    }
 
-   firefoxOptions.addExtensions(`${__dirname}/extension.xpi`);
+   // firefoxOptions.addExtensions(`${__dirname}/extension.xpi`);
  
    return await new Builder()
      .forBrowser("firefox")

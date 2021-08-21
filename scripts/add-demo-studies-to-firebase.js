@@ -1,5 +1,5 @@
-import initializeFirebase from "../src/lib/stores/initialize-firebase";
-import config from "../firebase.config";
+import initializeFirebase from "../src/lib/stores/initialize-firebase.js";
+import config from "../firebase.config.js";
 import { setDoc, collection } from "firebase/firestore";
 
 const { db } = initializeFirebase(config);
@@ -19,7 +19,7 @@ function addStudiesToFirebase() {
           "name": "Mozilla Rally Team"
         },
         "version": "0.1.3",
-        "addonId": demoConfig.id,
+        "addonId": "rally-web-platform-test@rally.mozilla.org",
         "downloadLink": "https://addons.mozilla.org/firefox/downloads/latest/time-online-and-doomscrolling",
         "endDate": "2021-10-13",
         "studyEnded": false,
