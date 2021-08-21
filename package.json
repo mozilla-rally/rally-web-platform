@@ -19,7 +19,7 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-typescript": "^7.15.0",
     "@mozilla-protocol/core": "^12.1.0",
-    "@mozilla/rally": "github:rhelmer/rally-sdk#98dde4a8e5d204721fb91ddc31729df154be2301",
+    "@mozilla/rally": "github:rhelmer/rally-sdk#b022a35efba4ceda70050c868ceab214b51979df",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^2.4.1",

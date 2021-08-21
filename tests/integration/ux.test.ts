@@ -27,7 +27,7 @@ async function findAndAct(driver, element, action) {
   await driver.findElement(element).then(e => action(e));
 }
 
-describe("Study Template integration test example", function () {
+describe("Rally Web Platform extension interop", function () {
   // eslint-disable-next-line mocha/no-hooks-for-single-case
   beforeEach(async function () {
     this.driver = await getFirefoxDriver(true);
@@ -46,7 +46,7 @@ describe("Study Template integration test example", function () {
 
     // Let's wait until the page is fully loaded and the title matches.
     await this.driver.wait(
-      until.titleIs("Page Not Found"),
+      until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
   });
