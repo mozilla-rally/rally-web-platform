@@ -11,7 +11,7 @@ import { By, until } from "selenium-webdriver";
 const WAIT_FOR_PROPERTY = 10000;
 jest.setTimeout(60 * 1000);
 
-const headlessMode = true;
+const headlessMode = false;
 
 /**
 * Find the element and perform an action on it.
@@ -167,7 +167,7 @@ describe("Rally Web Platform extension interop", function () {
 
     // TODO add Cancel button test, not implemented by site yet.
     // FIXME this user has already been created on the backend, should we flush this between tests?
-    // await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+    await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
 
     // Start to join study, but cancel.
     await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
