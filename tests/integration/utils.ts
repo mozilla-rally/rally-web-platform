@@ -15,8 +15,8 @@ import fs from "fs";
  */
 export async function getFirefoxDriver(headless, installExtension) {
   const firefoxOptions = new firefox.Options();
+  firefoxOptions.setPreference("devtools.console.stdout.content", true);
   firefoxOptions.setPreference("xpinstall.signatures.required", false);
-  firefoxOptions.setPreference("extensions.experiments.enabled", true);
 
   if (headless) {
     firefoxOptions.headless();
@@ -48,5 +48,6 @@ export async function getFirefoxDriver(headless, installExtension) {
   return await new Builder()
     .forBrowser("firefox")
     .setFirefoxOptions(firefoxOptions)
+    .setFirefoxService(new firefox.ServiceBuilder().setStdio("inherit"))
     .build();
 }
