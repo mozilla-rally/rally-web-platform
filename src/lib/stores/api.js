@@ -1,21 +1,22 @@
 import CONFIG, { demoConfig } from "../../../firebase.config"
 import { produce } from "immer/dist/immer.esm";
 
-import { 
+import {
   onAuthStateChanged,
-  GoogleAuthProvider, 
-  signInWithPopup, 
+  GoogleAuthProvider,
+  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword
 } from "firebase/auth";
 import {
-  doc, 
-  getDoc, 
-  setDoc, 
-  getDocs, 
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
   updateDoc,
   collection,
-  onSnapshot } from "firebase/firestore";
+  onSnapshot
+} from "firebase/firestore";
 
 import initializeFirebase from "./initialize-firebase";
 
@@ -76,7 +77,7 @@ async function listenForUserChanges(user) {
     _updateLocalState((draft) => {
       draft.user = nextState;
     });
-});
+  });
 }
 
 function listenForStudyChanges() {
@@ -94,11 +95,11 @@ function listenForStudyChanges() {
 export default {
   async initialize(browser = true) {
     if (browser) {
-        initializeFirestoreAPIs();
+      initializeFirestoreAPIs();
     } else {
       return;
     }
-    
+
     const initialState = {};
     let userState;
 
@@ -111,13 +112,12 @@ export default {
     // if the user is authenticated, then they must have a
     // document in firestore. Retrieve it and listen for any changes
     // to the firestore doc.
-    
+
     if (authenticatedUser !== null) {
       initializeUserDocument(authenticatedUser.uid);
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
-      console.log("idToken:", await authenticatedUser.getIdToken());
     }
 
     // fetch the initial studies.
@@ -135,6 +135,18 @@ export default {
       initialState.studies = initialStudyState;
     }
 
+    const idToken = await authenticatedUser.getIdToken();
+    console.log("idToken:", await authenticatedUser.getIdToken());
+    const result = await fetch("http://localhost:5001/rally-web-spike/us-central1/rallytoken",
+      {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idtoken: idToken })
+      });
+    const rallyToken = (await result.json()).rallyToken;
+    window.dispatchEvent(
+      new CustomEvent("complete-signup", { detail: { rallyToken } })
+    );
     return initialState;
   },
 

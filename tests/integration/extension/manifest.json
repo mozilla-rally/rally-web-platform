@@ -23,9 +23,14 @@
       "dist/background.js"
     ]
   },
-  "externally_connectable": {
-    "matches": [
-      "*://localhost/*"
-    ]
-  }
+  "content_scripts": [
+    {
+      "matches": [
+        "*://localhost/*"
+      ],
+      "js": [
+        "dist/rally-content.js"
+      ]
+    }
+  ]
 }
