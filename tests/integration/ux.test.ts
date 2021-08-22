@@ -166,7 +166,8 @@ describe("Rally Web Platform extension interop", function () {
     await this.driver.switchTo().window((await this.driver.getAllWindowHandles())[1]);
 
     // TODO add Cancel button test, not implemented by site yet.
-    await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+    // FIXME this user has already been created on the backend, should we flush this between tests?
+    // await findAndAct(this.driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
 
     // Start to join study, but cancel.
     await findAndAct(this.driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
