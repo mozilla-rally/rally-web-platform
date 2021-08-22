@@ -1,9 +1,18 @@
 import { Rally, runStates } from "@mozilla/rally";
-import { browser } from "webextension-polyfill-ts";
 
 const devMode = true;
 const stateChangeCallback = (state) => {
-    console.log("Rally state changed: ", state)
+    switch (state) {
+        case runStates.RUNNING:
+            console.log("Start data collection");
+            break;
+        case runStates.PAUSED:
+            console.log("Pause data collection");
+            break;
+        default:
+            console.log("Unknown run state", state);
+            break;
+    }
 };
 const rallySite = "http://localhost:5000";
 const rally = new Rally(devMode, stateChangeCallback, rallySite);
