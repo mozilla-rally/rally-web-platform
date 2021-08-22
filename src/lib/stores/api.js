@@ -118,6 +118,7 @@ export default {
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
+      await this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -135,18 +136,6 @@ export default {
       initialState.studies = initialStudyState;
     }
 
-    const idToken = await authenticatedUser.getIdToken();
-    console.log("idToken:", await authenticatedUser.getIdToken());
-    const result = await fetch("http://localhost:5001/rally-web-spike/us-central1/rallytoken",
-      {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idtoken: idToken })
-      });
-    const rallyToken = (await result.json()).rallyToken;
-    window.dispatchEvent(
-      new CustomEvent("complete-signup", { detail: { rallyToken } })
-    );
     return initialState;
   },
 
@@ -198,8 +187,19 @@ export default {
     }
   },
 
-  async notifyStudies() {
-    // FIXME: re-implement this function.
+  async notifyStudies(user) {
+    const idToken = await user.getIdToken();
+    console.log("idToken:", await user.getIdToken());
+    const result = await fetch("http://localhost:5001/rally-web-spike/us-central1/rallytoken",
+      {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idtoken: idToken })
+      });
+    const rallyToken = (await result.json()).rallyToken;
+    window.dispatchEvent(
+      new CustomEvent("complete-signup", { detail: { rallyToken } })
+    );
   },
 
   async updateOnboardedStatus(onboarded) {
