@@ -11,7 +11,7 @@ import { By, until } from "selenium-webdriver";
 const WAIT_FOR_PROPERTY = 10000;
 jest.setTimeout(60 * 1000);
 
-const headlessMode = false;
+const headlessMode = true;
 
 /**
 * Find the element and perform an action on it.
