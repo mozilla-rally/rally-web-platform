@@ -11,6 +11,8 @@ import { By, until } from "selenium-webdriver";
 const WAIT_FOR_PROPERTY = 10000;
 jest.setTimeout(60 * 1000);
 
+const headlessMode = true;
+
 /**
 * Find the element and perform an action on it.
 *
@@ -32,13 +34,11 @@ describe("Rally Web Platform extension interop", function () {
     await this.driver.quit();
   });
   it("fails to sign into website with invalid credentials", async function () {
-    const headlessMode = false;
     const installExtension = false;
     this.driver = await getFirefoxDriver(headlessMode, installExtension);
 
   });
   it("signs into website and tries all UX flows without extension installed", async function () {
-    const headlessMode = false;
     const installExtension = false;
     this.driver = await getFirefoxDriver(headlessMode, installExtension);
 
@@ -102,7 +102,6 @@ describe("Rally Web Platform extension interop", function () {
   });
 
   it("opens the signup page on extension installation", async function () {
-    const headlessMode = false;
     const installExtension = true;
     this.driver = await getFirefoxDriver(headlessMode, installExtension);
 
@@ -120,7 +119,6 @@ describe("Rally Web Platform extension interop", function () {
   });
 
   it("signs into website and tries all UX flows with extension installed", async function () {
-    const headlessMode = false;
     const installExtension = true;
 
     this.driver = await getFirefoxDriver(headlessMode, installExtension);
