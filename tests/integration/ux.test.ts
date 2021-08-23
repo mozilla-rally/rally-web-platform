@@ -12,7 +12,7 @@ import { promises as fs } from 'fs';
 const WAIT_FOR_PROPERTY = 10000;
 jest.setTimeout(60 * 1000);
 
-const headlessMode = true;
+const headlessMode = false;
 
 // Keep a list of WebDriver instances to shut down after screenshotting.
 // The tests are responsible for starting WebDrivers, because they need to control when the browser loads an extension at startup.
@@ -42,7 +42,12 @@ describe("Rally Web Platform extension interop", function () {
       screenshotCount++;
       const driver = drivers.pop();
       const image = await driver.takeScreenshot();
-      const screenshotFilename = `out-${screenshotCount}.png`;
+      const screenshotFilename = `screenshots/out-${screenshotCount}.png`;
+      try {
+        await fs.access("./screenshots")
+      } catch (ex) {
+        await fs.mkdir("./screenshots");
+      }
       await fs.writeFile(screenshotFilename, image, "base64");
       console.log(`recorded screenshot: ${screenshotFilename}`)
 
