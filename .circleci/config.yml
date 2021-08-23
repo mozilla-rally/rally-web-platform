@@ -35,8 +35,11 @@ jobs:
           paths:
             - .
       - run:
-          name: Install the dependencies
-          command: npm install && sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa && sudo apt update && sudo apt install firefox-trunk
+          name: Install Nightly Firefox and dependencies for official Google Chrome package
+          command: sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa && sudo apt update && sudo apt install firefox-trunk default-jre fonts-liberation libgbm1 xdg-util
+      - run:
+          name: Download and install official Google Chrome package
+          command: wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' && sudo dpkg -i google-chrome-stable_current_amd64.deb
       - run:
           name: Run tests
           command: npm run test:integration
