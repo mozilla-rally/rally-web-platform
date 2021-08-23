@@ -64,4 +64,4 @@ workflows:
             - build-and-test
           filters:
             branches:
-              only: fix-deploy
+              only: master
