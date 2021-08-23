@@ -10,7 +10,9 @@ import { promises as fs } from 'fs';
 // property to change in tests. This should be
 // a long time to account for slow CI.
 const WAIT_FOR_PROPERTY = 10000;
-jest.setTimeout(60 * 1000);
+
+// Wait ten minutes overall before Jest times the test out.
+jest.setTimeout(60 * 10000);
 
 const headlessMode = true;
 
@@ -30,10 +32,10 @@ let screenshotCount = 0;
 *        A function in the form `e => {}` that will be called
 *        and receive the element once ready.
 */
-async function findAndAct(driver, element, action) {
-  await driver.wait(until.elementLocated(element), WAIT_FOR_PROPERTY);
-  await driver.wait(until.elementIsVisible(await driver.findElement(element)), WAIT_FOR_PROPERTY);
-  await driver.findElement(element).then(e => action(e));
+async function findAndAct(driver, locator, action) {
+  await driver.wait(until.elementLocated(locator), WAIT_FOR_PROPERTY);
+  await driver.wait(until.elementIsVisible(await driver.findElement(locator)), WAIT_FOR_PROPERTY);
+  await driver.findElement(locator).then(e => action(e));
 }
 
 describe("Rally Web Platform extension interop", function () {
