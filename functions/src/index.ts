@@ -55,7 +55,7 @@ async function generateToken(idToken: string, studyName: string): Promise<string
   const decodedToken = await admin.auth().verifyIdToken(idToken);
 
   // Firebase will create this account if it does not exist,
-  // when the tokin is first used to sign-in.
+  // when the token is first used to sign-in.
   const uid = `${studyName}:${decodedToken.uid}`;
   const rallyToken = await admin.auth().createCustomToken(
     uid, { firebaseUid: decodedToken.uid }
