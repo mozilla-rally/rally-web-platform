@@ -77,7 +77,7 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 ```
 
 You may now browse to http://localhost:4000 to access the various emulator control panels,
-which allow you to add/remote users and documents from the Firestore database.
+which allow you to add/remove users and documents from the Firestore database.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
