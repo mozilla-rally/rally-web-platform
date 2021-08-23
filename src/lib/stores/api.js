@@ -188,13 +188,15 @@ export default {
   },
 
   async notifyStudies(user) {
+    // FIXME each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
+    const studyName = "exampleStudy1";
+
     const idToken = await user.getIdToken();
-    console.log("idToken:", await user.getIdToken());
     const result = await fetch("http://localhost:5001/rally-web-spike/us-central1/rallytoken",
       {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idtoken: idToken })
+        body: JSON.stringify({ idToken, studyName })
       });
     const rallyToken = (await result.json()).rallyToken;
     window.dispatchEvent(
