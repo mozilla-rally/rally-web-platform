@@ -203,7 +203,7 @@ describe("Rally Web Platform extension interop", function () {
 
       // TODO add Cancel button test, not implemented by site yet.
       // TODO should we flush Firestore between tests?
-      await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+      // await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
 
       // Start to join study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
