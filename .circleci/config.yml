@@ -44,8 +44,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Create Service Account key JSON
+          command: echo $GSA_KEY > "$HOME"/gcloud.json
+      - run:
           name: Firebase Deploy
-          command: ./node_modules/.bin/firebase deploy --only hosting --token "$FIREBASE_TOKEN"
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --only hosting
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -61,4 +64,4 @@ workflows:
             - build-and-test
           filters:
             branches:
-              only: master
+              only: fix-deploy
