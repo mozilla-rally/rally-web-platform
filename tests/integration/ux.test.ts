@@ -72,7 +72,7 @@ describe("Rally Web Platform extension interop", function () {
 
   it("signs into website and tries all UX flows without extension installed", async function () {
     const installExtension = false;
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+    for (const webDriver of [getFirefoxDriver]) {
       const driver = await webDriver(headlessMode, installExtension);
       drivers.push(driver);
 
@@ -152,7 +152,8 @@ describe("Rally Web Platform extension interop", function () {
   it("signs into website and tries all UX flows with extension installed", async function () {
     const installExtension = true;
 
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+    // FIXME
+    for (const webDriver of [getFirefoxDriver]) {
       const driver = await webDriver(headlessMode, installExtension);
       drivers.push(driver);
 
