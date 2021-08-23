@@ -4,6 +4,7 @@
 
 import { Builder } from "selenium-webdriver";
 import firefox from "selenium-webdriver/firefox";
+import chrome from "selenium-webdriver/chrome";
 import fs from "fs";
 
 /**
@@ -49,5 +50,29 @@ export async function getFirefoxDriver(headless, installExtension) {
     .forBrowser("firefox")
     .setFirefoxOptions(firefoxOptions)
     .setFirefoxService(new firefox.ServiceBuilder().setStdio("inherit"))
+    .build();
+}
+
+/**
+ * Get a Selenium driver for using the Chrome browser.
+ *
+ * @param {Boolean} headless
+ *        Whether or not to run Chrome in headless mode.
+ * @returns {WebDriver} a WebDriver instance to control Firefox.
+ */
+ export async function getChromeDriver(headless: boolean, installExtension: boolean) {
+  const chromeOptions = new chrome.Options();
+
+  if (headless) {
+    chromeOptions.headless();
+  }
+
+  if (installExtension) {
+    chromeOptions.addExtensions(`${__dirname}/extension.crx`);
+  }
+
+  return await new Builder()
+    .forBrowser("chrome")
+    .setChromeOptions(chromeOptions)
     .build();
 }
