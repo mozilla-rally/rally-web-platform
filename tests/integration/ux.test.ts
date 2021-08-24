@@ -74,7 +74,7 @@ describe("Rally Web Platform extension interop", function () {
 
   it("signs into website and tries all UX flows without extension installed", async function () {
     const installExtension = false;
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+    for (const webDriver of [getFirefoxDriver]) {
       const driver = await webDriver(headlessMode, installExtension);
       drivers.push(driver);
 
@@ -109,7 +109,7 @@ describe("Rally Web Platform extension interop", function () {
       await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
 
       // TODO add Cancel button test, not implemented by site yet.
-      // await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+      await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
       // await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
 
       // Start to join study, but cancel.
