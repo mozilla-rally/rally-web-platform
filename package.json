@@ -13,7 +13,7 @@
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "test:unit": "jest ./tests/unit/",
     "test:integration:jest": "jest ./tests/integration/",
-    "test:integration": "cd functions && npm install && npm run build && cd .. && firebase emulators:exec \"npm run test:integration:jest\" --import tests/integration/testdata"
+    "test:integration": "cd functions && npm install && npm run build && cd .. && firebase emulators:exec \"npm run test:integration:jest\" --import tests/integration/testdata 2>&1 | tee integration.log"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",

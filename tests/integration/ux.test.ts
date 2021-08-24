@@ -20,6 +20,7 @@ const headlessMode = true;
 // The tests are responsible for starting WebDrivers, because they need to control when the browser loads an extension at startup.
 const drivers = [];
 let screenshotCount = 0;
+let enrolled = false;
 
 /**
 * Find the element and perform an action on it.
@@ -56,6 +57,7 @@ describe("Rally Web Platform extension interop", function () {
       await driver.quit();
     }
   });
+
   it("fails to sign into website with invalid credentials", async function () {
     const installExtension = false;
     for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
@@ -108,6 +110,7 @@ describe("Rally Web Platform extension interop", function () {
 
       // TODO add Cancel button test, not implemented by site yet.
       await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+      // await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
 
       // Start to join study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
@@ -143,7 +146,7 @@ describe("Rally Web Platform extension interop", function () {
       await findAndAct(driver, By.xpath('//button[text()="Leave Rally"]'), e => e.click());
       // FIXME the website hasn't implemented this yet
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
-      s*/
+      */
       // TODO make sure in-page link works
       await driver.get("http://localhost:5000/profile");
     }
@@ -169,11 +172,6 @@ describe("Rally Web Platform extension interop", function () {
         WAIT_FOR_PROPERTY
       );
 
-      await driver.get("http://localhost:5000");
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
       findAndAct(driver, By.css("button"), e => e.click());
 
       // Google sign-in prompt should open
@@ -202,6 +200,10 @@ describe("Rally Web Platform extension interop", function () {
       // TODO add Cancel button test, not implemented by site yet.
       // TODO should we flush Firestore between tests?
       // await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+      // await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
+
+      // FIXME why aren't credentials firing immediately after enrollment?
+      await driver.get("http://localhost:5000");
 
       // Start to join study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
