@@ -5,6 +5,8 @@
     "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh",
     "dev": "npm run pre-build && svelte-kit dev",
     "build": "npm run pre-build && svelte-kit build",
+    "build:functions": "cd functions && npm install && npm run build && cd ..",
+    "build:test:integration": "npm run pre-build && svelte-kit build -- --config-integration-test-mode",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
@@ -13,7 +15,7 @@
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "test:unit": "jest ./tests/unit/",
     "test:integration:jest": "jest ./tests/integration/",
-    "test:integration": "cd functions && npm install && npm run build && cd .. && firebase emulators:exec \"npm run test:integration:jest\" --import tests/integration/testdata 2>&1 | tee integration.log"
+    "test:integration": "npm run build:test:integration && npm run build:functions && firebase emulators:exec \"npm run test:integration:jest\" --import tests/integration/testdata 2>&1 | tee integration.log"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",

@@ -81,8 +81,8 @@ which allow you to add/remove users and documents from the Firestore database.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
-When the website is re-built, it will automatically deploy to the emulated Firebase Hosting:
-`npm run build`
+When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting:
+`npm run build:test:integration`
 
 Clients wishing to connect to the Firebase emulators, including the website any WebExtensions, must set
 this explicitly in their code after initializing the services.

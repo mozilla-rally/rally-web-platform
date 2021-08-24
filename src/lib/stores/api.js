@@ -191,8 +191,14 @@ export default {
     // FIXME each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
     const studyName = "exampleStudy1";
 
+    let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
+    // @ts-ignore
+    if (__INTEGRATION_TEST_MODE__) {
+      functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+    }
+
     const idToken = await user.getIdToken();
-    const result = await fetch("http://localhost:5001/rally-web-spike/us-central1/rallytoken",
+    const result = await fetch(`${functionsHost}/rallytoken`,
       {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
