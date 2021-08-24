@@ -210,20 +210,33 @@ describe("Rally Web Platform extension interop", function () {
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
+      let fileBuffer = await fs.readFile("./integration.log");
+      expect(fileBuffer.toString().includes(`Current study installed but not enrolled`)).toBe(true);
+      console.log("debug123 installed-not-enrolled:", fileBuffer.toString().includes(`Current study installed but not enrolled`));
+
       // Start to join study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
+
+      fileBuffer = await fs.readFile("./integration.log");
+      expect(fileBuffer.toString().includes(`Start data collection`)).toBe(true);
 
       // Start to leave study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
+      fileBuffer = await fs.readFile("./integration.log");
+      expect(fileBuffer.toString().includes(`Pause data collection`)).toBe(false);
+
       // Start to leave study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
+
+      fileBuffer = await fs.readFile("./integration.log");
+      expect(fileBuffer.toString().includes(`Pause data collection`)).toBe(true);
 
       /*
       // Start to leave Rally, but cancel.
