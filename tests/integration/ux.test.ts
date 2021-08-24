@@ -109,7 +109,7 @@ describe("Rally Web Platform extension interop", function () {
       await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
 
       // TODO add Cancel button test, not implemented by site yet.
-      await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+      // await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
       // await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
 
       // Start to join study, but cancel.
