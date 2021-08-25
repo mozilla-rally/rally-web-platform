@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 let initialized = false;
 
@@ -14,6 +14,12 @@ export default function initializeFirebase(config, callback) {
         app = initializeApp(config);
         auth = getAuth(app);
         db = getFirestore(app);
+
+        // @ts-ignore
+        if (__INTEGRATION_TEST_MODE__) {
+            connectAuthEmulator(auth, 'http://localhost:9099');
+            connectFirestoreEmulator(db, 'localhost', 8080);
+        }
         if (callback) {
             callback({ app, auth, db });
         }

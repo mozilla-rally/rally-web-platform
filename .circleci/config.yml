@@ -6,7 +6,7 @@ orbs:
   # The Node.js orb contains a set of prepackaged CircleCI configuration you can utilize
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
-  node: circleci/node@4.1
+  node: circleci/node@4.7.0
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -15,7 +15,7 @@ jobs:
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
-      - image: cimg/node:15.1
+      - image: cimg/openjdk:16.0.2-node
     # Then run your tests!
     # CircleCI will report the results back to your VCS provider.
     steps:
@@ -34,9 +34,17 @@ jobs:
           root: .
           paths:
             - .
-      #- run:
-      #    name: Run tests
-      #    command: npm run test:unit
+      - run:
+          name: Install Nightly Firefox and dependencies for official Google Chrome package
+          command: sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa && sudo apt update && sudo apt install firefox-trunk default-jre fonts-liberation libgbm1 xdg-utils
+      - run:
+          name: Download and install official Google Chrome package
+          command: wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' && sudo dpkg -i google-chrome-stable_current_amd64.deb
+      - run:
+          name: Run tests
+          command: npm run test:integration
+      - store_artifacts:
+          path: ./screenshots
   site-deploy:
     docker:
       - image: cimg/node:15.1

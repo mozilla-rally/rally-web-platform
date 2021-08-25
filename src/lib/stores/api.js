@@ -1,21 +1,22 @@
 import CONFIG, { demoConfig } from "../../../firebase.config"
 import { produce } from "immer/dist/immer.esm";
 
-import { 
-  onAuthStateChanged, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword 
+import {
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 import {
-  doc, 
-  getDoc, 
-  setDoc, 
-  getDocs, 
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
   updateDoc,
-  collection, 
-  onSnapshot } from "firebase/firestore";
+  collection,
+  onSnapshot
+} from "firebase/firestore";
 
 import initializeFirebase from "./initialize-firebase";
 
@@ -76,7 +77,7 @@ async function listenForUserChanges(user) {
     _updateLocalState((draft) => {
       draft.user = nextState;
     });
-});
+  });
 }
 
 function listenForStudyChanges() {
@@ -94,11 +95,11 @@ function listenForStudyChanges() {
 export default {
   async initialize(browser = true) {
     if (browser) {
-        initializeFirestoreAPIs();
+      initializeFirestoreAPIs();
     } else {
       return;
     }
-    
+
     const initialState = {};
     let userState;
 
@@ -111,12 +112,13 @@ export default {
     // if the user is authenticated, then they must have a
     // document in firestore. Retrieve it and listen for any changes
     // to the firestore doc.
-    
+
     if (authenticatedUser !== null) {
       initializeUserDocument(authenticatedUser.uid);
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
+      await this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -185,8 +187,27 @@ export default {
     }
   },
 
-  async notifyStudies() {
-    // FIXME: re-implement this function.
+  async notifyStudies(user) {
+    // FIXME each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
+    const studyName = "exampleStudy1";
+
+    let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
+    // @ts-ignore
+    if (__INTEGRATION_TEST_MODE__) {
+      functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+    }
+
+    const idToken = await user.getIdToken();
+    const result = await fetch(`${functionsHost}/rallytoken`,
+      {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken, studyName })
+      });
+    const rallyToken = (await result.json()).rallyToken;
+    window.dispatchEvent(
+      new CustomEvent("complete-signup", { detail: { rallyToken } })
+    );
   },
 
   async updateOnboardedStatus(onboarded) {

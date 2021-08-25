@@ -19,6 +19,7 @@ const config = {
 					// the following replacements build the site URLs.
 					// In the templates, use (for example) __BASE_SITE_URL__/__FAQ_PATH__
 					__BASE_SITE__: "https://rally.mozilla.org",
+					__INTEGRATION_TEST_MODE__: (process.argv.includes("--config-integration-test-mode")),
 				}),
 			]
 		}
