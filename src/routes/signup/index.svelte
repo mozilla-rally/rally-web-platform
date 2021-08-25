@@ -83,11 +83,11 @@
           border-radius: 4px;
           font-weight: 600;
         ">
-          <img src="google-signin.png" alt='google signin' />
+          <img src="img/google-signin.png" alt='google signin' />
       </button>
       </div>
         <div class="mzp-c-form-header" style="font-weight: bold; font-size: 1.125rem;">
-          or the classic way
+          or create a Rally account
         </div>
         <fieldset class="mzp-c-field-set">
           <div class="mzp-c-field ">
@@ -115,7 +115,6 @@
               await store.signupWithEmailAndPassword(email, password);
             }}
           class="mzp-c-button mzp-t-secondary">Sign Up</button>
-          <p class="mzp-c-form-info mzp-t-xs">This site is protected by reCAPTCHA, and the Google Privacy Policy and Terms of Service apply.</p>
         </div>
       <div class="how-it-works">
         <a class="external-link" target="_blank" rel="noopener noreferrer" href="__BASE_SITE__/how-rally-works/">Wait – how does it work again?
