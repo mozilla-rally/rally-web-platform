@@ -1,4 +1,4 @@
-import initializeFirebase from "../src/lib/stores/initialize-firebase.js";
+import initializeFirebase from "../src/lib/stores/initialize-firebase";
 import config from "../firebase.config.js";
 import { setDoc, collection } from "firebase/firestore";
 
