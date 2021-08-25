@@ -88,7 +88,7 @@ When the website is re-built in "test integration" mode, it will automatically d
 Clients wishing to connect to the Firebase emulators, including the website any WebExtensions, must set
 this explicitly in their code after initializing the services.
 
-Connecting to the Firebase Authentication
+Connecting to the Firebase Authentication emulator:
 ```ts
 const auth = getAuth(app);
 connectAuthEmulator(auth, 'http://localhost:9099');
@@ -99,6 +99,8 @@ Connecting to the Firebase Firestore emulator:
 db = getFirestore(app);
 connectFirestoreEmulator(db, 'localhost', 8080);
 ```
+
+For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js`
 
 ## Tests
 
