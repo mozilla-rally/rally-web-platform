@@ -22,6 +22,7 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
   * Functions
   * Firestore
   * Hosting
+- & [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) – needed for integration tests
 
 ## Quickstart
 
