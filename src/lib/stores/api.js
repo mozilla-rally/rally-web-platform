@@ -165,11 +165,12 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.debug("user cred:", userCredential);
     } catch (err) {
       console.error("there was an error", err);
     }
     if (userCredential) {
-      initializeUserDocument(userCredential.user.uid);
+      initializeUserDocument(userCredential.user.uid, { createUser: true });
       listenForUserChanges(userCredential.user)
     } else {
       console.error("Unable to log in with email and password");
