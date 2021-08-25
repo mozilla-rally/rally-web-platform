@@ -146,6 +146,10 @@ export default {
 
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
+
+    // Allow user to select which Google account to use.
+    provider.setCustomParameters({ prompt: "select_account" });
+
     let userCredential = undefined;
     try {
       userCredential = await signInWithPopup(auth, provider);
