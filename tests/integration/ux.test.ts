@@ -182,7 +182,6 @@ describe("Rally Web Platform extension interop", function () {
       );
 
       // FIXME logout and log back in
-      // FIXME should we check the website again? The sign-in method shouldn't matter...
     }
   });
 
@@ -260,19 +259,6 @@ describe("Rally Web Platform extension interop", function () {
       await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
-      /* FIXME re-enable
-      // Start to leave Rally, but cancel.
-      await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), e => e.click());
-      await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Mozilla Rally"]'))), WAIT_FOR_PROPERTY);
-
-      // Start to leave Rally, and confirm.
-      // await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), e => e.click());
-
-      await findAndAct(driver, By.xpath('//button[text()="Leave Rally"]'), e => e.click());
-      // FIXME the website hasn't implemented this yet
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
-      */
       // TODO make sure in-page link works
       await driver.get("http://localhost:5000/profile");
     }
@@ -363,24 +349,6 @@ describe("Rally Web Platform extension interop", function () {
 
       fileBuffer = await fs.readFile("./integration.log");
       expect(fileBuffer.toString().includes(`Pause data collection`)).toBe(true);
-
-      /*
-      // Start to leave Rally, but cancel.
-      // await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), e => e.click());
-
-      // The Firebase emulator warning obscures the bottom, scroll to the bottom of the page.s
-      driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-      await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Mozilla Rally"]'))), WAIT_FOR_PROPERTY);
-
-      // Start to leave Rally, and confirm.
-      await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), e => e.click());
-
-      // The Firebase emulator warning obscures the bottom, scroll to the bottom of the page.s
-      driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-
-      await findAndAct(driver, By.xpath('//button[text()="Leave Rally"]'), e => e.click());
-      */
       // FIXME the website hasn't implemented this yet
       // await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
 
