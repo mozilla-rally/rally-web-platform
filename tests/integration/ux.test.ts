@@ -37,6 +37,7 @@ let enrolled = false;
 */
 async function findAndAct(driver, locator, action) {
   await driver.wait(until.elementLocated(locator), WAIT_FOR_PROPERTY);
+  await driver.wait(until.elementIsEnabled(await driver.findElement(locator)), WAIT_FOR_PROPERTY);
   await driver.wait(until.elementIsVisible(await driver.findElement(locator)), WAIT_FOR_PROPERTY);
   await driver.findElement(locator).then(e => action(e));
 }
@@ -103,22 +104,18 @@ describe("Rally Web Platform extension interop", function () {
       // Start to join study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
       // Start to join study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
       // Start to leave study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
       // Start to leave study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
       // TODO make sure in-page link works
       await driver.get("http://localhost:5000/profile");
@@ -181,7 +178,6 @@ describe("Rally Web Platform extension interop", function () {
       // Start to join study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
       let fileBuffer = await fs.readFile("./integration.log");
       expect(fileBuffer.toString().includes(`Current study installed but not enrolled`)).toBe(true);
@@ -190,7 +186,6 @@ describe("Rally Web Platform extension interop", function () {
       // Start to join study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
       fileBuffer = await fs.readFile("./integration.log");
       expect(fileBuffer.toString().includes(`Start data collection`)).toBe(true);
@@ -198,7 +193,6 @@ describe("Rally Web Platform extension interop", function () {
       // Start to leave study, but cancel.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Leave Study"]'))), WAIT_FOR_PROPERTY);
 
       fileBuffer = await fs.readFile("./integration.log");
       expect(fileBuffer.toString().includes(`Pause data collection`)).toBe(false);
@@ -206,7 +200,6 @@ describe("Rally Web Platform extension interop", function () {
       // Start to leave study, and confirm.
       await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
       await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
-      await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Join Study"]'))), WAIT_FOR_PROPERTY);
 
       fileBuffer = await fs.readFile("./integration.log");
       expect(fileBuffer.toString().includes(`Pause data collection`)).toBe(true);
