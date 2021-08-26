@@ -24,6 +24,10 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
   * Hosting
 - & [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) – needed for integration tests
 
+## Versioning
+
+You can always access the current version by going to `<hostname>/version.json`.
+
 ## Quickstart
 
 1. Clone this repository.
