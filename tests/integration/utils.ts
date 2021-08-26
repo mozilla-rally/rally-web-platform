@@ -21,6 +21,7 @@ export async function getFirefoxDriver(headless, installExtension) {
 
   if (headless) {
     firefoxOptions.headless();
+    firefoxOptions.addArguments("-width=1920", "-height=1080");
   }
 
   if (process.platform === "linux") {
@@ -60,11 +61,13 @@ export async function getFirefoxDriver(headless, installExtension) {
  *        Whether or not to run Chrome in headless mode.
  * @returns {WebDriver} a WebDriver instance to control Firefox.
  */
- export async function getChromeDriver(headless: boolean, installExtension: boolean) {
+export async function getChromeDriver(headless: boolean, installExtension: boolean) {
   const chromeOptions = new chrome.Options();
 
   if (headless) {
     chromeOptions.headless();
+    chromeOptions.headless();
+    chromeOptions.addArguments("window-size=1920,1080");
   }
 
   if (installExtension) {

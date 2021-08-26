@@ -6,7 +6,9 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  signOut,
+  sendEmailVerification
 } from "firebase/auth";
 import {
   doc,
@@ -165,16 +167,18 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.debug("user cred:", userCredential);
     } catch (err) {
       console.error("there was an error", err);
+      return;
     }
-    if (userCredential) {
-      initializeUserDocument(userCredential.user.uid);
-      listenForUserChanges(userCredential.user)
+    if (userCredential.user.emailVerified) {
+      initializeUserDocument(userCredential.user.uid, { createUser: true });
+      listenForUserChanges(userCredential.user);
     } else {
-      console.error("Unable to log in with email and password");
+      console.warn("Email account not verified, sending verification email");
+      await sendEmailVerification(userCredential.user);
     }
-
   },
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
@@ -182,13 +186,10 @@ export default {
       userCredential = await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
+      return;
     }
-    if (userCredential) {
-      initializeUserDocument(userCredential.user.uid, { createUser: true });
-      listenForUserChanges(userCredential.user);
-    } else {
-      console.error("Unable to sign up with email and password");
-    }
+    console.info("Sending verification email");
+    await sendEmailVerification(userCredential.user);
   },
 
   async notifyStudies(user) {
