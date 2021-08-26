@@ -41,6 +41,7 @@ build
 dev
 output
 static/fonts
+static/version.json
 
 # Compiled options page
 public/build

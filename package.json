@@ -2,7 +2,7 @@
   "name": "rally-web-platform",
   "version": "0.1.0",
   "scripts": {
-    "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh",
+    "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh && node scripts/add-version-object.js",
     "dev": "npm run pre-build && svelte-kit dev",
     "build": "npm run pre-build && svelte-kit build",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
