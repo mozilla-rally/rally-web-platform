@@ -19,7 +19,7 @@ jest.setTimeout(60 * 10000);
 const headlessMode = true;
 
 // Keep a list of WebDriver instances to shut down after screenshotting.
-// The tests are responsible for starting WebDrivers, because they need to control when the browser loads an extension at startup.
+// The tests are responsible for starting WebDrivers, because they need to control whether the browser loads an extension at startup.
 const drivers = [];
 let screenshotCount = 0;
 let enrolled = false;
