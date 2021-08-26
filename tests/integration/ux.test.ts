@@ -269,8 +269,6 @@ describe("Rally Web Platform extension interop", function () {
       // Start to leave Rally, and confirm.
       // await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), e => e.click());
 
-      // The Firebase emulator warning obscures the bottom, scroll to the bottom of the page.
-      driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
       await findAndAct(driver, By.xpath('//button[text()="Leave Rally"]'), e => e.click());
       // FIXME the website hasn't implemented this yet
       await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
