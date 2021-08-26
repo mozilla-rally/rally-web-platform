@@ -60,145 +60,6 @@ describe("Rally Web Platform extension interop", function () {
     }
   });
 
-  it("fails to sign up for a new email account with invalid info", async function () {
-    const installExtension = false;
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
-      const driver = await webDriver(headlessMode, installExtension);
-      drivers.push(driver);
-
-      await driver.get("http://localhost:5000");
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-
-      // Invalid email address fails.
-      await driver.findElement(By.id('id_name')).sendKeys("test123");
-      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
-
-      await driver.findElement(By.id('id_name')).clear();
-      await driver.findElement(By.id('id_user_email')).clear();
-
-      // Weak password fails.
-      await driver.findElement(By.id('id_name')).sendKeys("test123");
-      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
-
-      await driver.findElement(By.id('id_name')).clear();
-      await driver.findElement(By.id('id_user_email')).clear();
-
-      // Signing up into an ID already used registered with a different provider fails.
-      await driver.findElement(By.id('id_name')).sendKeys("test123");
-      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
-    }
-  });
-
-  it("fails to sign into website with invalid email credentials", async function () {
-    const installExtension = false;
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
-      const driver = await webDriver(headlessMode, installExtension);
-      drivers.push(driver);
-
-      await driver.get("http://localhost:5000");
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-
-      // Totally invalid credentials fail
-      await driver.findElement(By.id('id_name')).sendKeys("test123");
-      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
-
-      await driver.findElement(By.id('id_name')).clear();
-      await driver.findElement(By.id('id_user_email')).clear();
-
-      // Logging into an ID already used registered with a different provider fails
-      await driver.findElement(By.id('id_name')).sendKeys("test123");
-      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
-    }
-  });
-
-  it("signs up for website with valid email credentials", async function () {
-    const installExtension = false;
-    for (const webDriver of [getChromeDriver]) {
-      const driver = await webDriver(headlessMode, installExtension);
-      drivers.push(driver);
-
-      await driver.get("http://localhost:5000");
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-
-      // Valid credentials succeed.
-      await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-      await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
-      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
-
-      await driver.findElement(By.id('id_name')).clear();
-      await driver.findElement(By.id('id_user_email')).clear();
-
-      // Unverified account can be logged into, but cannot be used until verified.
-      await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-      await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
-      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
-
-      const readInterface = readline.createInterface({
-        input: createReadStream('integration.log'),
-        output: process.stdout
-      });
-
-      let verifiedEmail = false;
-      readInterface.on('line', async function (line) {
-        if (!verifiedEmail && line.includes(`To verify the email address test@example.com, follow this link:`)) {
-          const result = line.split(" ");
-          const url = result[result.length - 1];
-          await driver.executeScript(`window.open("${url}");`);
-          verifiedEmail = true;
-        }
-      });
-
-      // Wait for Selenium to open confirmation link.
-      await driver.wait(async () => {
-        return (await driver.getAllWindowHandles()).length === 2;
-      }, WAIT_FOR_PROPERTY);
-
-      // Switch back to original window.
-      await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
-
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
-
-      await driver.wait(
-        until.titleIs("Privacy Policy | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-
-      // FIXME logout and log back in
-    }
-  });
-
-  it("fails to sign into website with invalid credentials", async function () {
-    const installExtension = false;
-    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
-      const driver = await webDriver(headlessMode, installExtension);
-      drivers.push(driver);
-
-      await driver.get("http://localhost:5000");
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-    }
-  });
-
   it("signs into website and tries all UX flows without extension installed", async function () {
     const installExtension = false;
     for (const webDriver of [getFirefoxDriver]) {
@@ -354,6 +215,145 @@ describe("Rally Web Platform extension interop", function () {
 
       // TODO make sure in-page link works
       await driver.get("http://localhost:5000/profile");
+    }
+  });
+
+  it("fails to sign up for a new email account with invalid info", async function () {
+    const installExtension = false;
+    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+      const driver = await webDriver(headlessMode, installExtension);
+      drivers.push(driver);
+
+      await driver.get("http://localhost:5000");
+      await driver.wait(
+        until.titleIs("Sign Up | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
+
+      // Invalid email address fails.
+      await driver.findElement(By.id('id_name')).sendKeys("test123");
+      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
+
+      await driver.findElement(By.id('id_name')).clear();
+      await driver.findElement(By.id('id_user_email')).clear();
+
+      // Weak password fails.
+      await driver.findElement(By.id('id_name')).sendKeys("test123");
+      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
+
+      await driver.findElement(By.id('id_name')).clear();
+      await driver.findElement(By.id('id_user_email')).clear();
+
+      // Signing up into an ID already used registered with a different provider fails.
+      await driver.findElement(By.id('id_name')).sendKeys("test123");
+      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
+    }
+  });
+
+  it("fails to sign into website with invalid email credentials", async function () {
+    const installExtension = false;
+    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+      const driver = await webDriver(headlessMode, installExtension);
+      drivers.push(driver);
+
+      await driver.get("http://localhost:5000");
+      await driver.wait(
+        until.titleIs("Sign Up | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
+
+      // Totally invalid credentials fail
+      await driver.findElement(By.id('id_name')).sendKeys("test123");
+      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
+
+      await driver.findElement(By.id('id_name')).clear();
+      await driver.findElement(By.id('id_user_email')).clear();
+
+      // Logging into an ID already used registered with a different provider fails
+      await driver.findElement(By.id('id_name')).sendKeys("test123");
+      await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
+    }
+  });
+
+  it("signs up for website with valid email credentials", async function () {
+    const installExtension = false;
+    for (const webDriver of [getChromeDriver]) {
+      const driver = await webDriver(headlessMode, installExtension);
+      drivers.push(driver);
+
+      await driver.get("http://localhost:5000");
+      await driver.wait(
+        until.titleIs("Sign Up | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
+
+      // Valid credentials succeed.
+      await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
+      await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+      await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
+
+      await driver.findElement(By.id('id_name')).clear();
+      await driver.findElement(By.id('id_user_email')).clear();
+
+      // Unverified account can be logged into, but cannot be used until verified.
+      await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
+      await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
+
+      const readInterface = readline.createInterface({
+        input: createReadStream('integration.log'),
+        output: process.stdout
+      });
+
+      let verifiedEmail = false;
+      readInterface.on('line', async function (line) {
+        if (!verifiedEmail && line.includes(`To verify the email address test@example.com, follow this link:`)) {
+          const result = line.split(" ");
+          const url = result[result.length - 1];
+          await driver.executeScript(`window.open("${url}");`);
+          verifiedEmail = true;
+        }
+      });
+
+      // Wait for Selenium to open confirmation link.
+      await driver.wait(async () => {
+        return (await driver.getAllWindowHandles()).length === 2;
+      }, WAIT_FOR_PROPERTY);
+
+      // Switch back to original window.
+      await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
+
+      await driver.wait(
+        until.titleIs("Sign Up | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
+      await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
+
+      await driver.wait(
+        until.titleIs("Privacy Policy | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
+
+      // FIXME logout and log back in
+    }
+  });
+
+  it("fails to sign into website with invalid credentials", async function () {
+    const installExtension = false;
+    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+      const driver = await webDriver(headlessMode, installExtension);
+      drivers.push(driver);
+
+      await driver.get("http://localhost:5000");
+      await driver.wait(
+        until.titleIs("Sign Up | Mozilla Rally"),
+        WAIT_FOR_PROPERTY
+      );
     }
   });
 });
