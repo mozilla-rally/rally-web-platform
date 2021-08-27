@@ -1,49 +1,49 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import {studies} from "../..//data/studies";
+import { studies } from "../..//data/studies";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
 export const rallytoken = functions.https.onRequest(
-    async (request, response) => {
-      response.set("Access-Control-Allow-Origin", "*");
-      response.set("Access-Control-Allow-Headers", "Content-Type");
+  async (request, response) => {
+    response.set("Access-Control-Allow-Origin", "*");
+    response.set("Access-Control-Allow-Headers", "Content-Type");
 
-      if (request.method === "OPTIONS") {
-        response.set("Access-Control-Allow-Methods", "POST");
-        response.set("Access-Control-Allow-Headers", "Bearer, Content-Type");
-        response.status(204).send("");
-      } else if (request.method === "POST") {
-        functions.logger.info(
-            `body type: ${typeof request.body}`,
-            {payload: request.body}
-        );
+    if (request.method === "OPTIONS") {
+      response.set("Access-Control-Allow-Methods", "POST");
+      response.set("Access-Control-Allow-Headers", "Bearer, Content-Type");
+      response.status(204).send("");
+    } else if (request.method === "POST") {
+      functions.logger.info(
+        `body type: ${typeof request.body}`,
+        { payload: request.body }
+      );
 
-        try {
-          let idToken; let studyName;
-          if (typeof request.body === "string") {
-            const body = JSON.parse(request.body);
-            idToken = body.idToken;
-            studyName = body.studyName;
-          } else {
-            idToken = request.body.idToken;
-            studyName = request.body.studyName;
-          }
-
-          const rallyToken = await generateToken(idToken, studyName);
-          functions.logger.info("OK");
-          response.status(200).send({rallyToken});
-        } catch (ex) {
-          functions.logger.error(ex);
-          response.status(500).send(ex.message);
+      try {
+        let idToken; let studyName;
+        if (typeof request.body === "string") {
+          const body = JSON.parse(request.body);
+          idToken = body.idToken;
+          studyName = body.studyName;
+        } else {
+          idToken = request.body.idToken;
+          studyName = request.body.studyName;
         }
-      } else {
-        response.status(500).send("Only POST and OPTIONS methods are allowed.");
+
+        const rallyToken = await generateToken(idToken, studyName);
+        functions.logger.info("OK");
+        response.status(200).send({ rallyToken });
+      } catch (ex) {
+        functions.logger.error(ex);
+        response.status(500).send(ex.message);
       }
+    } else {
+      response.status(500).send("Only POST and OPTIONS methods are allowed.");
     }
+  }
 );
 
 /**
@@ -61,7 +61,7 @@ async function generateToken(idToken: string, studyName: string) {
   // when the token is first used to sign-in.
   const uid = `${studyName}:${decodedToken.uid}`;
   const rallyToken = await admin.auth().createCustomToken(
-      uid, {firebaseUid: decodedToken.uid}
+    uid, { firebaseUid: decodedToken.uid }
   );
 
   return rallyToken;
@@ -73,10 +73,28 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
     uid: user.uid, // FIXME seems redundant, do we really need this?
   };
   admin
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .set(userDoc, {merge: true});
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .set(userDoc, { merge: true });
+
+  const extensionUserDoc = {
+    studies: {}
+  }
+  admin
+    .firestore()
+    .collection("extensionUsers")
+    .doc(user.uid)
+    .set(extensionUserDoc, { merge: true });
+
+  const userStudiesDoc = {
+    studies: {}
+  };
+  admin
+    .firestore()
+    .collection("userStudies")
+    .doc(user.uid)
+    .set(userStudiesDoc, { merge: true });
 
   return true;
 });
@@ -87,21 +105,21 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
  * @param {object} study The study object.
  */
 function addRallyStudyToFirestore(index: string,
-    study: Record<string, unknown>) {
+  study: Record<string, unknown>) {
   admin
-      .firestore()
-      .collection("studies")
-      .doc(index)
-      .set(study, {merge: true});
+    .firestore()
+    .collection("studies")
+    .doc(index)
+    .set(study, { merge: true });
 }
 
 export const loadFirestore = functions.https.onRequest(
-    async (request, response) => {
-      for (const [index, study] of Object.entries(studies)) {
-        console.info(`Loading study ${index} into Firestore`);
-        addRallyStudyToFirestore(index, study);
-      }
-      response.status(200).send();
+  async (request, response) => {
+    for (const [index, study] of Object.entries(studies)) {
+      console.info(`Loading study ${index} into Firestore`);
+      addRallyStudyToFirestore(index, study);
     }
+    response.status(200).send();
+  }
 );
 

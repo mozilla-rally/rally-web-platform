@@ -13,27 +13,24 @@ service cloud.firestore {
             allow read, update: if request.auth != null && request.auth.uid == userId && request.auth.token.email_verified == true;
         }
 
-        // All web users have read/write access to their all of their own enrolled studies.
+        // All web users have read/write access to all of their own enrolled studies.
+        // NOTE: Neither study extensions nor anyone else should have read access!
         match /userStudies/{userId} {
             allow read, update: if request.auth != null && request.auth.uid == userId && request.auth.token.email_verified == true;
         }
 
-        // Study extension users have read-only access to their specific study.
-        // This is so they can listen for enroll/unenroll events.
-        match /userStudies/{userId}/studies/{studyName} {
-            allow read: if request.auth != null && request.auth.firebaseUid == userId && request.auth.studyName == studyName;;
+        // Study extension users have read-write access to their study document.
+        // This is so they can record their Rally ID and any other metadata.
+        // NOTE: Neither web users nor anyone else should have read access!
+        match /extensions/{userId}/studies/{studyName} {
+            allow read, update: if request.auth != null && request.auth.firebaseUid == userId && request.auth.studyName == studyName;
         }
 
-        // Study extension users have read-only access to their specific study.
+        // Study extension users have read-only access to their specific study document only.
         // This is so they can listen for enroll/unenroll events.
+        // NOTE: Only web users should have write access, and only study users should have read access.
         match /userStudies/{userId}/studies/{studyName} {
-            allow read: if request.auth != null && request.auth.firebaseUid == userId && request.auth.studyName == studyName;;
-        }
-
-        // Study extension users have read-only access to their specific study.
-        // This is so they can listen for enroll/unenroll events.
-        match /rallyIDs/{userId}/studies/{studyName} {
-            allow read: if request.auth != null && request.auth.firebaseUid == userId && request.auth.studyName == studyName;;
+            allow read: if request.auth != null && request.auth.firebaseUid == userId && request.auth.studyName == studyName;
         }
     }
 }
