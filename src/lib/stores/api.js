@@ -43,12 +43,8 @@ let __STATE__ = {
 
 let userRef;
 
-function initializeUserDocument(uid, { createUser = false } = {}) {
+function initializeUserDocument(uid) {
   userRef = doc(db, "users", uid);
-  // create the user document.
-  if (createUser) {
-    setDoc(userRef, { uid, createdOn: new Date() }, { merge: true });
-  }
 }
 
 function getUserDocument() {
@@ -159,7 +155,7 @@ export default {
       console.error("there was an error", err);
     }
     // create a new user.
-    initializeUserDocument(userCredential.user.uid, { createUser: true });
+    initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
   },
 
@@ -173,7 +169,7 @@ export default {
       return;
     }
     if (userCredential.user.emailVerified) {
-      initializeUserDocument(userCredential.user.uid, { createUser: true });
+      initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");

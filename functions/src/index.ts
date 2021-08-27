@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
+import {studies} from "../..//data/studies";
+
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
@@ -64,3 +66,42 @@ async function generateToken(idToken: string, studyName: string) {
 
   return rallyToken;
 }
+
+exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) => {
+  const userDoc = {
+    createdOn: new Date(),
+    uid: user.uid, // FIXME seems redundant, do we really need this?
+  };
+  admin
+      .firestore()
+      .collection("users")
+      .doc(user.uid)
+      .set(userDoc, {merge: true});
+
+  return true;
+});
+
+/**
+ *
+ * @param {string} index The firestore key.
+ * @param {object} study The study object.
+ */
+function addRallyStudyToFirestore(index: string,
+    study: Record<string, unknown>) {
+  admin
+      .firestore()
+      .collection("studies")
+      .doc(index)
+      .set(study, {merge: true});
+}
+
+export const loadFirestore = functions.https.onRequest(
+    async (request, response) => {
+      for (const [index, study] of Object.entries(studies)) {
+        console.info(`Loading study ${index} into Firestore`);
+        addRallyStudyToFirestore(index, study);
+      }
+      response.status(200).send();
+    }
+);
+
