@@ -2,13 +2,16 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { findAndAct, getChromeDriver, getFirefoxDriver, WAIT_FOR_PROPERTY } from "./utils";
+import fs from "fs";
+
+import { findAndAct, getChromeDriver, getFirefoxDriver, extensionLogsPresent, WAIT_FOR_PROPERTY } from "./utils";
 import { By, until } from "selenium-webdriver";
-import { promises as fs, createReadStream } from "fs";
+import { createReadStream } from "fs";
 import readline from "readline";
 import minimist from "minimist";
 
-const args = minimist(process.argv.slice(2));
+const args = (minimist(process.argv.slice(2)));
+console.debug(args);
 for (const arg of ["test_browser", "load_extension", "headless_mode"]) {
   if (!(arg in args)) {
     throw new Error(`Missing required option: --${arg}`);
@@ -45,10 +48,10 @@ describe("Rally Web Platform UX flows", function () {
 
     // If installed, the extension will open this page.
     if (loadExtension) {
-      await driver.wait(
-        until.titleIs("Sign Up | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
+      // Starting with a single tab.
+      await driver.wait(async () => {
+        return (await driver.getAllWindowHandles()).length === 2;
+      }, WAIT_FOR_PROPERTY);
 
       // Close the original tab, which is blank.
       await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
@@ -81,19 +84,17 @@ describe("Rally Web Platform UX flows", function () {
     const screenshotDir = `screenshots/${testBrowser}-${extension}-${headless}`;
     const screenshotFilename = `${screenshotDir}/out-${screenshotCount}.png`;
     try {
-      await fs.access(`./${screenshotDir}`)
+      await fs.promises.access(`./${screenshotDir}`)
     } catch (ex) {
-      await fs.mkdir(`./${screenshotDir}`);
+      await fs.promises.mkdir(`./${screenshotDir}`);
     }
-    await fs.writeFile(screenshotFilename, image, "base64");
+    await fs.promises.writeFile(screenshotFilename, image, "base64");
     console.log(`recorded screenshot: ${screenshotFilename}`)
 
     await driver.quit();
   });
 
   it("signs into website and tries all available UI", async function () {
-    let fileBuffer;
-
     await driver.wait(
       until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
@@ -142,8 +143,13 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
 
     if (loadExtension) {
-      fileBuffer = await fs.readFile("./integration.log");
-      expect(fileBuffer.toString().includes(`Current study installed but not enrolled`)).toBe(true);
+      // FIXME need to load Chrome-compatible study metadata into firestore.
+      if (testBrowser === "firefox") {
+        await driver.wait(async () =>
+          await extensionLogsPresent(driver, testBrowser, `Current study installed but not enrolled`),
+          WAIT_FOR_PROPERTY
+        );
+      }
     }
 
     // Start to join study, and confirm.
@@ -151,33 +157,29 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
 
     if (loadExtension) {
-      await driver.wait(async () => {
-        fileBuffer = await fs.readFile("./integration.log", "utf-8");
-        return fileBuffer.toString().includes('Start data collection');
-      }, WAIT_FOR_PROPERTY);
+      // FIXME need to load Chrome-compatible study metadata into firestore.
+      await driver.wait(async () =>
+        await extensionLogsPresent(driver, testBrowser, `Start data collection`),
+        WAIT_FOR_PROPERTY
+      );
     }
 
     // Start to leave study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
 
-    if (loadExtension) {
-      await driver.wait(async () => {
-        fileBuffer = await fs.readFile("./integration.log", "utf-8");
-        return !(fileBuffer.toString().includes('Pause data collection'));
-      }, WAIT_FOR_PROPERTY);
-    }
-
     // Start to leave study, and confirm.
     await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
 
     if (loadExtension) {
-      await driver.wait(async () => {
-        fileBuffer = await fs.readFile("./integration.log", "utf-8");
-        return fileBuffer.toString().includes("Pause data collection");
-      }, WAIT_FOR_PROPERTY);
+      // FIXME need to load Chrome-compatible study metadata into firestore.
+      await driver.wait(async () =>
+        await extensionLogsPresent(driver, testBrowser, `Pause data collection`),
+        WAIT_FOR_PROPERTY
+      );
     }
+
     // FIXME the website hasn't implemented this yet
     // await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
   });
@@ -277,4 +279,5 @@ describe("Rally Web Platform UX flows", function () {
 
     // FIXME logout and log back in
   });
+
 });
