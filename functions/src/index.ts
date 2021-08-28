@@ -68,9 +68,21 @@ async function generateToken(idToken: string, studyName: string) {
 }
 
 exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) => {
+  if (user.providerData.length == 0) {
+    functions.logger.info("Extension users do not get dedicated documents.")
+    return;
+  }
+
+  const extensionUserDoc = {}
+  admin
+    .firestore()
+    .collection("extensionUsers")
+    .doc(user.uid)
+    .set(extensionUserDoc, { merge: true });
+
   const userDoc = {
     createdOn: new Date(),
-    uid: user.uid, // FIXME seems redundant, do we really need this?
+    uid: user.uid, // FIXME seems redundant, do we really need this? It's already in the document name and a custom claim in the token.
   };
   admin
     .firestore()
@@ -78,23 +90,14 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
     .doc(user.uid)
     .set(userDoc, { merge: true });
 
-  const extensionUserDoc = {
-    studies: {}
-  }
+  const studyDoc = {}
   admin
     .firestore()
-    .collection("extensionUsers")
+    .collection("users")
     .doc(user.uid)
-    .set(extensionUserDoc, { merge: true });
-
-  const userStudiesDoc = {
-    studies: {}
-  };
-  admin
-    .firestore()
-    .collection("userStudies")
-    .doc(user.uid)
-    .set(userStudiesDoc, { merge: true });
+    .collection("studies")
+    .doc("exampleStudy1")
+    .set(studyDoc, { merge: true });
 
   return true;
 });

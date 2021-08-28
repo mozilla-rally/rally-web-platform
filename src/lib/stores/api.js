@@ -42,9 +42,11 @@ let __STATE__ = {
 };
 
 let userRef;
+let firebaseUid;
 
 function initializeUserDocument(uid) {
   userRef = doc(db, "users", uid);
+  firebaseUid = uid;
 }
 
 function getUserDocument() {
@@ -53,6 +55,14 @@ function getUserDocument() {
 
 function updateUserDocument(updates, merge = true) {
   return updateDoc(userRef, updates, { merge });
+}
+
+function updateUserStudiesCollection(updates, merge = true) {
+  for (const [id, update] of Object.entries(updates.studies)) {
+    const ref = doc(db, "users", firebaseUid, "studies", id);
+    console.debug("test:", id, update);
+    setDoc(ref, update, { merge: true });
+  }
 }
 
 async function getStudies() {
@@ -216,14 +226,14 @@ export default {
   },
 
   async updateStudyEnrollment(studyID, enroll) {
-    const enrolledStudies = { ...(__STATE__.user.enrolledStudies || {}) };
-    if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
-    enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
-    enrolledStudies[studyID].enrolled = enroll;
+    const studies = { ...(__STATE__.user.studies || {}) };
+    if (!(studyID in studies)) { studies[studyID] = {}; }
+    studies[studyID] = { ...studies[studyID] };
+    studies[studyID].enrolled = enroll;
     if (enroll) {
-      enrolledStudies[studyID].joinedOn = new Date();
+      studies[studyID].joinedOn = new Date();
     }
-    updateUserDocument({ enrolledStudies });
+    updateUserStudiesCollection({ studies });
     return true;
   },
 

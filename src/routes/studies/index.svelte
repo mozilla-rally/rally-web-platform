@@ -12,7 +12,7 @@ const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 const notifications: NotificationStore = getContext("rally:notifications");
 
 function joinStudy(studyID) { 
-    store.updateStudyEnrollment(studyID, true); 
+    store.updateStudyEnrollment(studyID, true);
     notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
 }
 function leaveStudy(studyID) { 
@@ -42,7 +42,7 @@ $: if ($store._initialized) {
         <StudiesContent
             sidebarOffset
             studies={$store.studies}
-            userEnrollment={$store.user?.enrolledStudies || {}}
+            userEnrollment={$store.user?.studies || {}}
             on:cta-clicked={() => {
                 notifications.clear();
             }}

@@ -21,7 +21,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
     createdOn: { seconds: number, nanoseconds: number },
     enrolled: boolean,
     onboarded: boolean,
-    enrolledStudies: UserStudies,
+    studies: UserStudies,
     demographicsData: object
   }
   
