@@ -267,8 +267,11 @@ describe("Rally Web Platform UX flows", function () {
     // Switch back to original window.
     await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
 
-    // FIXME site should do this responsively, does not seem to consistently.
-    await driver.get("http://localhost:5000/welcome/terms");
+    // Sign in again, need to get a new token that has email_verified as a claim.
+    await driver.get("http://localhost:5000/signup");
+    await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
+    await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+    await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
     await driver.wait(
       until.titleIs("Privacy Policy | Mozilla Rally"),
