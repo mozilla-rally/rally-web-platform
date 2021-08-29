@@ -108,8 +108,13 @@ describe("Rally Web Platform UX flows", function () {
 
     await driver.switchTo().window((await driver.getAllWindowHandles())[1]);
 
+    await driver.wait(
+      until.titleIs("Auth Emulator IDP Login Widget"),
+      WAIT_FOR_PROPERTY
+    );
+
     // FIXME this emulator auth pop-up isn't ready on the default "loaded" event, the window will close anyway so retry until it responds.
-    await driver.executeScript(`window.setInterval(() => document.querySelector(".mdc-button.mdc-button--outlined").click(), 1000)`);
+    await driver.executeScript(`window.setInterval(() => document.querySelector(".mdc-button").click(), 1000)`);
 
     await findAndAct(driver, By.id('autogen-button'), e => e.click());
     await findAndAct(driver, By.id('sign-in'), e => e.click());
