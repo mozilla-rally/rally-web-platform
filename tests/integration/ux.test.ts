@@ -99,7 +99,7 @@ describe("Rally Web Platform UX flows", function () {
       until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
-    findAndAct(driver, By.css("button"), e => e.click());
+    await findAndAct(driver, By.css("button"), e => e.click());
 
     // Google sign-in prompt should open
     await driver.wait(async () => {
@@ -127,19 +127,22 @@ describe("Rally Web Platform UX flows", function () {
     // Switch back to original window.
     await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
 
-    if (loadExtension) {
-      // FIXME reload page - the page doesn't seem to send the custom event with the token otherwise
-      await driver.get("http://localhost:5000/welcome/terms");
-
-      await driver.wait(
-        until.titleIs("Privacy Policy | Mozilla Rally"),
-        WAIT_FOR_PROPERTY
-      );
-    }
+    await driver.wait(
+      until.titleIs("Privacy Policy | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
 
     // TODO add Cancel button test, not implemented by site yet.
     await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
+
+    await driver.wait(
+      until.titleIs("Studies | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
+
+    // FIXME reload page - api.initialize needs to be called after the user has authenticated. This is a bug in the site.
+    await driver.get("http://localhost:5000");
 
     // Start to join study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
@@ -149,7 +152,7 @@ describe("Rally Web Platform UX flows", function () {
       // FIXME need to load Chrome-compatible study metadata into firestore.
       if (testBrowser === "firefox") {
         await driver.wait(async () =>
-          await extensionLogsPresent(driver, testBrowser, `Current study installed but not enrolled`),
+          await extensionLogsPresent(driver, testBrowser, `Pause data collection`),
           WAIT_FOR_PROPERTY
         );
       }
@@ -266,7 +269,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Wait for Selenium to open confirmation link.
     await driver.wait(async () => {
-      return (await driver.getAllWindowHandles()).length === 2;
+      return (await driver.getAllWindowHandles()).length >= 2;
     }, WAIT_FOR_PROPERTY);
 
     // Switch back to original window.
