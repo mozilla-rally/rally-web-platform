@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { studies } from "../..//data/studies";
+import { studies } from "./studies";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
