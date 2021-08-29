@@ -1,7 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
-        // FIXME site should not require read before user is authenticated
+        // FIXME site should not require read before user is authenticated.
         // List of available studies is public.
         match /studies/{studyId} {
             allow read;
