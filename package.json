@@ -11,6 +11,7 @@
     "watch:functions": "watch 'npm run build:functions' ./functions/src",
     "watch:web": "watch 'npm run pre-build && svelte-kit build -- --config-integration-test-mode' ./src",
     "watch:data": "watch 'curl http://localhost:5001/rally-web-spike/us-central1/loadFirestore' ./data",
+    "load:data": "curl http://localhost:5001/rally-web-spike/us-central1/loadFirestore",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
