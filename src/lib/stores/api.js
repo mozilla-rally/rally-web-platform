@@ -110,6 +110,7 @@ function listenForStudyChanges() {
 
 export default {
   async initialize(browser = true) {
+
     if (browser) {
       initializeFirestoreAPIs();
     } else {
@@ -243,7 +244,6 @@ export default {
     if (enroll) {
       userStudies[studyID].joinedOn = new Date();
     }
-    console.debug(userStudies);
     updateUserStudiesCollection(studyID, { userStudies });
     return true;
   },
