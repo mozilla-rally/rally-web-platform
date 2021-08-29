@@ -15,8 +15,8 @@ function joinStudy(studyID) {
     store.updateStudyEnrollment(studyID, true);
     notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
 }
-function leaveStudy(studyID) { 
-    store.updateStudyEnrollment(studyID, false); 
+function leaveStudy(studyID) {
+    store.updateStudyEnrollment(studyID, false);
     notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
 }
 
@@ -42,7 +42,7 @@ $: if ($store._initialized) {
         <StudiesContent
             sidebarOffset
             studies={$store.studies}
-            userEnrollment={$store.user?.studies || {}}
+            userEnrollment={$store.userStudies || {}}
             on:cta-clicked={() => {
                 notifications.clear();
             }}

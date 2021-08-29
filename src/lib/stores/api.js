@@ -38,6 +38,7 @@ async function initializeFirestoreAPIs() {
 // NOTE: this object is not to be touched.
 let __STATE__ = {
   user: undefined,
+  userStudies: undefined,
   onboarded: false
 };
 
@@ -58,11 +59,8 @@ function updateUserDocument(updates, merge = true) {
 }
 
 function updateUserStudiesCollection(updates, merge = true) {
-  for (const [id, update] of Object.entries(updates.studies)) {
-    const ref = doc(db, "users", firebaseUid, "studies", id);
-    console.debug("test:", id, update);
-    setDoc(ref, update, { merge: true });
-  }
+  const ref = doc(db, "users", firebaseUid, "studies", "exampleStudy1");
+  setDoc(ref, updates.userStudies, { merge });
 }
 
 async function getStudies() {
@@ -84,6 +82,16 @@ async function listenForUserChanges(user) {
     const nextState = doc.data();
     _updateLocalState((draft) => {
       draft.user = nextState;
+    });
+  });
+}
+
+async function listenForUserStudiesChanges(user) {
+  // get user doc and then call onSnapshot.
+  onSnapshot(doc(db, "users", user.uid, "studies", "exampleStudy1"), (doc) => {
+    const nextState = doc.data();
+    _updateLocalState((draft) => {
+      draft.userStudies = nextState;
     });
   });
 }
@@ -126,6 +134,7 @@ export default {
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
+      listenForUserStudiesChanges(authenticatedUser);
       await this.notifyStudies(authenticatedUser);
     }
 
@@ -173,7 +182,6 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.debug("user cred:", userCredential);
     } catch (err) {
       console.error("there was an error", err);
       return;
@@ -226,14 +234,14 @@ export default {
   },
 
   async updateStudyEnrollment(studyID, enroll) {
-    const studies = { ...(__STATE__.user.studies || {}) };
-    if (!(studyID in studies)) { studies[studyID] = {}; }
-    studies[studyID] = { ...studies[studyID] };
-    studies[studyID].enrolled = enroll;
+    const userStudies = { ...(__STATE__.userStudies || {}) };
+    if (!(studyID in userStudies)) { userStudies[studyID] = {}; }
+    userStudies[studyID] = { ...userStudies[studyID] };
+    userStudies[studyID].enrolled = enroll;
     if (enroll) {
-      studies[studyID].joinedOn = new Date();
+      userStudies[studyID].joinedOn = new Date();
     }
-    updateUserStudiesCollection({ studies });
+    updateUserStudiesCollection({ userStudies });
     return true;
   },
 
@@ -242,9 +250,7 @@ export default {
   },
 
   async updateDemographicSurvey(data) {
-    updateDoc(userRef, { demographicsData: data });
-    //updateUserDocument({ demographicsData: data });
-    return true;
+    return updateUserDocument({ demographicsData: data });
   },
 
   onAuthChange(callback) {

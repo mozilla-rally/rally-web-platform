@@ -11,6 +11,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   }
   
   export interface State {
+    userStudies: UserStudies;
     _initialized: boolean,
     user?: User,
     studies?: Array<StudyMetadata>
@@ -21,7 +22,6 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
     createdOn: { seconds: number, nanoseconds: number },
     enrolled: boolean,
     onboarded: boolean,
-    studies: UserStudies,
     demographicsData: object
   }
   
