@@ -58,9 +58,9 @@ function updateUserDocument(updates, merge = true) {
   return updateDoc(userRef, updates, { merge });
 }
 
-function updateUserStudiesCollection(updates, merge = true) {
-  const ref = doc(db, "users", firebaseUid, "studies", "exampleStudy1");
-  setDoc(ref, updates.userStudies, { merge });
+function updateUserStudiesCollection(studyID, updates, merge = true) {
+  const ref = doc(db, "users", firebaseUid, "studies", studyID);
+  setDoc(ref, updates.userStudies[studyID], { merge });
 }
 
 async function getStudies() {
@@ -91,7 +91,7 @@ async function listenForUserStudiesChanges(user) {
   onSnapshot(doc(db, "users", user.uid, "studies", "exampleStudy1"), (doc) => {
     const nextState = doc.data();
     _updateLocalState((draft) => {
-      draft.userStudies = nextState;
+      draft.userStudies = { "exampleStudy1": nextState };
     });
   });
 }
@@ -135,6 +135,7 @@ export default {
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
       listenForUserStudiesChanges(authenticatedUser);
+
       await this.notifyStudies(authenticatedUser);
     }
 
@@ -238,10 +239,12 @@ export default {
     if (!(studyID in userStudies)) { userStudies[studyID] = {}; }
     userStudies[studyID] = { ...userStudies[studyID] };
     userStudies[studyID].enrolled = enroll;
+    userStudies[studyID].enrolled = enroll;
     if (enroll) {
       userStudies[studyID].joinedOn = new Date();
     }
-    updateUserStudiesCollection({ userStudies });
+    console.debug(userStudies);
+    updateUserStudiesCollection(studyID, { userStudies });
     return true;
   },
 
