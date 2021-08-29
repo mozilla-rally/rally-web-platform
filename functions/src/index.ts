@@ -61,19 +61,20 @@ async function generateToken(idToken: string, studyName: string) {
   // when the token is first used to sign-in.
   const uid = `${studyName}:${decodedToken.uid}`;
   const rallyToken = await admin.auth().createCustomToken(
-    uid, { firebaseUid: decodedToken.uid }
+    uid, { firebaseUid: decodedToken.uid, studyId: studyName }
   );
 
   return rallyToken;
 }
 
 exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) => {
+  functions.logger.info("addRallyUserToFirestore fired")
   if (user.providerData.length == 0) {
     functions.logger.info("Extension users do not get dedicated documents.")
     return;
   }
 
-  const extensionUserDoc = {}
+  const extensionUserDoc = { rallyId: "" }
   admin
     .firestore()
     .collection("extensionUsers")

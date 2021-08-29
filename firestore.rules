@@ -17,7 +17,7 @@ service cloud.firestore {
         // Study extension users have read-only access to their specific study document only.
         match /users/{userId}/studies/{studyId} {
             allow create, read, update: if request.auth != null && request.auth.uid == userId && request.auth.token.email_verified == true;
-            allow read: if request.auth != null && request.auth.token.firebaseUid == userId && studyId == "exampleStudy1";
+            allow read: if request.auth != null && request.auth.token.firebaseUid == userId && request.auth.token.studyId == studyId;
         }
 
         // Study extension users have read-write access to their study document.
