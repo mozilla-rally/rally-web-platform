@@ -4,7 +4,7 @@
   "scripts": {
     "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh && node scripts/add-version-object.js",
     "dev": "npm run pre-build && svelte-kit dev",
-    "watch": "npm-run-all --parallel watch:web watch:functions & firebase emulators:exec 'npm run watch:data'",
+    "watch": "npm-run-all --parallel watch:web watch:functions & firebase emulators:exec --ui 'npm run watch:data'",
     "build": "npm run pre-build && svelte-kit build",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
     "build:web:emulator": "npm run pre-build && svelte-kit build -- --config-integration-test-mode",
