@@ -99,7 +99,7 @@ describe("Rally Web Platform UX flows", function () {
       until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
-    findAndAct(driver, By.css("button"), e => e.click());
+    await findAndAct(driver, By.css("button"), e => e.click());
 
     // Google sign-in prompt should open
     await driver.wait(async () => {
