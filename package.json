@@ -20,7 +20,7 @@
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "test:unit": "jest ./tests/unit/",
     "test:integration:jest": "jest ./tests/integration/",
-    "test:integration": "npm run build:functions && npm run build:web:emulator && ./scripts/integration-test.sh"
+    "test:integration": "npm run build:web:emulator && npm run build:functions &&  ./scripts/integration-test.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
