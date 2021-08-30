@@ -27,20 +27,19 @@ export const WAIT_FOR_PROPERTY = 10000;
 *        and receive the element once ready.
 */
 export async function findAndAct(driver: WebDriver, locator: Locator, action: Function) {
-  await driver.wait(until.elementLocated(locator), WAIT_FOR_PROPERTY);
-  await driver.wait(until.elementIsEnabled(await driver.findElement(locator)), WAIT_FOR_PROPERTY);
-  await driver.wait(until.elementIsVisible(await driver.findElement(locator)), WAIT_FOR_PROPERTY);
 
   // FIXME slow animations can obscure elements that the user is trying to interact with, without
   // a signal to know that they are complete the best we can do is retry them. Let's log it though,
   // the fact that it's happening at all means it might be a bad experience for users with slow and/or busy hardware.
   await driver.wait(async () => {
-    const element = await driver.findElement(locator);
     try {
+      const element = await driver.findElement(locator);
+      await driver.wait(until.elementIsEnabled(element), WAIT_FOR_PROPERTY);
+      await driver.wait(until.elementIsVisible(element), WAIT_FOR_PROPERTY);
       action(element);
       return true;
     } catch (ex) {
-      console.debug(ex);
+      console.debug(`Element not ready when expected, retrying: ${ex.message}`);
       return false;
     }
   }, WAIT_FOR_PROPERTY);
