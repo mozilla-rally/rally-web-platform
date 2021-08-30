@@ -135,7 +135,7 @@ describe("Rally Web Platform UX flows", function () {
     }
 
     // TODO add Cancel button test, not implemented by site yet.
-    // await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+    await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
     // await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), e => e.click());
 
     // Start to join study, but cancel.
@@ -152,36 +152,38 @@ describe("Rally Web Platform UX flows", function () {
       }
     }
 
-    /*
-    FIXME temporarily disable, will re-enable in https://github.com/mozilla-rally/rally-web-platform/pull/101
-
     // Start to join study, and confirm.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
 
     if (loadExtension) {
       // FIXME need to load Chrome-compatible study metadata into firestore.
-      await driver.wait(async () =>
-        await extensionLogsPresent(driver, testBrowser, `Start data collection`),
-        WAIT_FOR_PROPERTY
-      );
+      if (testBrowser === "firefox") {
+        await driver.wait(async () =>
+          await extensionLogsPresent(driver, testBrowser, `Start data collection`),
+          WAIT_FOR_PROPERTY
+        );
+      }
     }
-
-    // Start to leave study, but cancel.
-    await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
-    await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
-
-    // Start to leave study, and confirm.
-    await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
-    await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
-
-    if (loadExtension) {
-      // FIXME need to load Chrome-compatible study metadata into firestore.
-      await driver.wait(async () =>
-        await extensionLogsPresent(driver, testBrowser, `Pause data collection`),
-        WAIT_FOR_PROPERTY
-      );
-    }
+    /*
+    FIXME these will be implemented in PR #101.
+        // Start to leave study, but cancel.
+        await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
+        await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
+    
+        // Start to leave study, and confirm.
+        await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
+        await findAndAct(driver, By.xpath('(//button[text()="Leave Study"])[2]'), e => e.click());
+    
+        if (loadExtension) {
+          // FIXME need to load Chrome-compatible study metadata into firestore.
+          if (testBrowser === "firefox") {
+            await driver.wait(async () =>
+              await extensionLogsPresent(driver, testBrowser, `Pause data collection`),
+              WAIT_FOR_PROPERTY
+            );
+          }
+        }
     */
     // FIXME the website hasn't implemented this yet
     // await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
