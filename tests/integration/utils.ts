@@ -66,7 +66,6 @@ export async function getChromeDriver(headless: boolean, installExtension: boole
 
   if (headless) {
     chromeOptions.headless();
-    chromeOptions.headless();
     chromeOptions.addArguments("window-size=1920,1080");
   }
 
