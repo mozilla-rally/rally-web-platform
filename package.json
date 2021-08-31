@@ -9,7 +9,7 @@
     "build:functions": "cd functions && npm install && npm run build && cd ..",
     "build:web:emulator": "npm run pre-build && svelte-kit build -- --config-integration-test-mode",
     "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src",
-    "watch:web": "watch 'npm run pre-build && svelte-kit dev -- --config-integration-test-mode' ./src",
+    "watch:web": "watch 'svelte-kit dev -- --config-integration-test-mode' ./src",
     "load:data": "curl http://localhost:5001/rally-web-spike/us-central1/loadFirestore",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
