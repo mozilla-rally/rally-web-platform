@@ -73,7 +73,6 @@
     "webextension-polyfill-ts": "^0.26.0"
   },
   "dependencies": {
-    "@mozilla/rally": "github:rhelmer/rally-sdk#f244eae28a9f5e9b2c5b83f7f97579a2d77a0676",
     "firebase": "^9.0.0-beta.7",
     "firebase-tools": "^9.16.0",
     "sirv-cli": "^1.0.10",
