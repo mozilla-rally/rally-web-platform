@@ -6,8 +6,6 @@ import fs from "fs";
 
 import { findAndAct, getChromeDriver, getFirefoxDriver, extensionLogsPresent, WAIT_FOR_PROPERTY } from "./utils";
 import { By, until } from "selenium-webdriver";
-import { createReadStream } from "fs";
-import readline from "readline";
 import minimist from "minimist";
 
 const args = (minimist(process.argv.slice(2)));
@@ -280,5 +278,4 @@ describe("Rally Web Platform UX flows", function () {
 
     // FIXME logout and log back in
   });
-
 });
