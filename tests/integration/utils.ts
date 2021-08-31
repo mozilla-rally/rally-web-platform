@@ -39,7 +39,7 @@ export async function findAndAct(driver: WebDriver, locator: Locator, action: Fu
       action(element);
       return true;
     } catch (ex) {
-      console.debug(`Element not ready when expected, retrying: ${ex.message}`);
+      console.debug(`Element at locator ${locator} not ready when expected, retrying: ${ex.name}, ${ex.message}`);
       return false;
     }
   }, WAIT_FOR_PROPERTY);
