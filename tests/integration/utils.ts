@@ -146,7 +146,6 @@ export async function getChromeDriver(loadExtension: boolean, headlessMode: bool
 
   if (headlessMode) {
     chromeOptions.headless();
-    chromeOptions.headless();
     chromeOptions.addArguments("window-size=1920,1080");
   }
 
