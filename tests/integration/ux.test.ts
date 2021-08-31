@@ -148,16 +148,6 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
 
-    if (loadExtension) {
-      // FIXME need to load Chrome-compatible study metadata into firestore.
-      if (testBrowser === "firefox") {
-        await driver.wait(async () =>
-          await extensionLogsPresent(driver, testBrowser, `Pause data collection`),
-          WAIT_FOR_PROPERTY
-        );
-      }
-    }
-
     // Start to join study, and confirm.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
@@ -170,7 +160,6 @@ describe("Rally Web Platform UX flows", function () {
       );
     }
 
-    /*
     // Start to leave study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());
@@ -188,7 +177,7 @@ describe("Rally Web Platform UX flows", function () {
         );
       }
     }
-    */
+
     // FIXME the website hasn't implemented this yet
     // await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
   });
