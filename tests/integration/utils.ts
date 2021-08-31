@@ -17,30 +17,10 @@ import fs from "fs";
 export async function getFirefoxDriver(headless, installExtension) {
   const firefoxOptions = new firefox.Options();
   firefoxOptions.setPreference("devtools.console.stdout.content", true);
-  firefoxOptions.setPreference("xpinstall.signatures.required", false);
 
   if (headless) {
     firefoxOptions.headless();
     firefoxOptions.addArguments("-width=1920", "-height=1080");
-  }
-
-  if (process.platform === "linux") {
-    // Look for the Firefox executable in different locations.
-    const FIREFOX_PATHS = [
-      "/usr/bin/firefox-trunk",
-      "/usr/bin/firefox",
-    ];
-
-    for (const path of FIREFOX_PATHS) {
-      if (fs.existsSync(path)) {
-        firefoxOptions.setBinary(path);
-        break;
-      }
-    }
-  } else if (process.platform === "darwin") {
-    firefoxOptions.setBinary(
-      "/Applications/Firefox Nightly.app/Contents/MacOS/firefox"
-    );
   }
 
   if (installExtension) {
