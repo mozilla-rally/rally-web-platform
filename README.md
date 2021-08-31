@@ -37,53 +37,6 @@ You can always access the current version by going to `<hostname>/version.json`.
 
 ## Emulating the server backend (Firebase)
 
-### Starting the emulators
-The `firebase-tools` node package provides a suite of emulators for the various Firebase services:
-`npm install -g firebase-tools`
-
-By default, all emulators specified in `./firebase.json` will be started with an empty database and no user accounts:
-`firebase emulators:start`
-
-NOTE: any modifications you make within the emulators will not be saved, by default! You can save all data on exit
-by passing `--export-on-exit`:
-`firebase emulators:start --export-on-exit ./my-test-data/`
-
-You may then load this data into the emulator on startup:
-`firebase emulators:start --import ./my-test-data/`
-
-You may find the test data used for integration tests helpfully for local development too:
-`firebase emulators:start ./tests/integration/testdata`
-
-### Configuring and using the emulators
-
-Firebase will output something similar to the following:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ ✔  All emulators ready! It is now safe to connect your app. │
-│ i  View Emulator UI at http://localhost:4000                │
-└─────────────────────────────────────────────────────────────┘
-
-┌────────────────┬────────────────┬─────────────────────────────────┐
-│ Emulator       │ Host:Port      │ View in Emulator UI             │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Authentication │ localhost:9099 │ http://localhost:4000/auth      │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Functions      │ localhost:5001 │ http://localhost:4000/functions │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Firestore      │ localhost:8080 │ http://localhost:4000/firestore │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Hosting        │ localhost:5000 │ n/a                             │
-└────────────────┴────────────────┴─────────────────────────────────┘
-  Emulator Hub running at localhost:4400
-  Other reserved ports: 4500
-
-Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
-```
-
-You may now browse to http://localhost:4000 to access the various emulator control panels,
-which allow you to add/remove users and documents from the Firestore database.
-
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
 When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting:
