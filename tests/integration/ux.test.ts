@@ -94,7 +94,7 @@ describe("Rally Web Platform UX flows", function () {
     await driver.quit();
   });
 
-  it("signs into website and tries all available UI", async function () {
+  it("signs into website and completes join/study tasks", async function () {
     await driver.wait(
       until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
