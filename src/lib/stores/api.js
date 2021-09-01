@@ -88,8 +88,8 @@ async function listenForUserChanges(user) {
 
 async function listenForUserStudiesChanges(user) {
   // get user doc and then call onSnapshot.
-  for (const studyId in await getStudies()) {
-    onSnapshot(doc(db, "users", user.uid, "studies", studyId), (doc) => {
+  for (const study of await getStudies()) {
+    onSnapshot(doc(db, "users", user.uid, "studies", study.studyId), (doc) => {
       const nextState = doc.data();
       _updateLocalState((draft) => {
         draft.userStudies = { studyId: nextState };

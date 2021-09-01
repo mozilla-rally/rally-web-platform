@@ -61,14 +61,14 @@ p {
 
     <div class="studies">
 
-    {#each studies as study, studyId (study.addonId)}
+    {#each studies as study, i (study.studyId)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(studyId in userEnrollment && userEnrollment[studyId].enrolled)}
-        connected={(studyId in userEnrollment && userEnrollment[studyId].attached)}
+        joined={(study.studyId in userEnrollment && userEnrollment[study.studyId].enrolled)}
+        connected={(study.studyId in userEnrollment && userEnrollment[study.studyId].attached)}
         imageSrc={study.icons[64]}
-        studyId={studyId}
+        studyId={study.studyId}
         endDate={parseDateIfNeeded(study.endDate)}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
