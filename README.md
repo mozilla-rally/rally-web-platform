@@ -32,12 +32,17 @@ You can always access the current version by going to `<hostname>/version.json`.
 
 1. Clone this repository.
 2. Run `npm run install`
-3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000` (including Firebase emulators)
+3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
 4. Run `npm run build` to build the app; the results will be in `/build`
 
-The Firebase backend should be ready for use as soon as the studies are loaded into your emulated Firestore:
+The site will be ready for use when you see Svelte start up:
 ```
-i  functions: Finished "us-central1-loadFirestore" in ~1s
+  SvelteKit v1.0.0-next.141
+
+  local:   http://localhost:3000
+  network: not exposed
+
+  Use --host to expose server to other devices on this network
 ```
 
 ## Emulating the server backend (Firebase)
