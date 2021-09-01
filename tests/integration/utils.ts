@@ -101,10 +101,13 @@ export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boo
     .setFirefoxService(new firefox.ServiceBuilder().setStdio("inherit"))
     .build();
 
-  // Extensions can only be loaded temporarily at runtime for Firefox Release.
-  const isTemporaryAddon = true;
-  // @ts-ignore this appears to be missing from the type definition, but it exists!
-  driver.installAddon(`${__dirname}/extension.xpi`, isTemporaryAddon);
+  if (loadExtension) {
+    // Extensions can only be loaded temporarily at runtime for Firefox Release.
+    const isTemporaryAddon = true;
+    // @ts-ignore this appears to be missing from the type definition, but it exists!
+    driver.installAddon(`${__dirname}/extension.xpi`, isTemporaryAddon);
+  }
+
   return driver;
 }
 
