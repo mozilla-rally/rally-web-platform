@@ -61,14 +61,14 @@ p {
 
     <div class="studies">
 
-    {#each studies as study, i (study.addonId)}
+    {#each studies as study, studyId (study.addonId)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled)}
-        connected={(study.addonId in userEnrollment && userEnrollment[study.addonId].attached)}
+        joined={(studyId in userEnrollment && userEnrollment[studyId].enrolled)}
+        connected={(studyId in userEnrollment && userEnrollment[studyId].attached)}
         imageSrc={study.icons[64]}
-        addonId={study.addonId}
+        studyId={studyId}
         endDate={parseDateIfNeeded(study.endDate)}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
@@ -76,10 +76,10 @@ p {
         tags={study.tags}
         on:cta-clicked
         on:join={() => {
-            joinStudy(study.addonId);
+            joinStudy(studyId);
         }}
         on:leave={() => {
-            leaveStudy(study.addonId);
+            leaveStudy(studyId);
         }}
     />
         {:else}

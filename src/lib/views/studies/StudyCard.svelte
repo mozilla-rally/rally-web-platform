@@ -24,7 +24,7 @@ export let imageSrc;
 export let title = "Untitled Study";
 export let author = "Author Unknown";
 export let description = "no description.";
-export let addonId;
+export let studyId;
 export let endDate;
 export let dataCollectionDetails;
 export let studyDetailsLink;
@@ -90,12 +90,12 @@ onMount(async () => {
     </div>
     <div class:split-content-modal={joined} slot="body">
         {#if !joined}
-            <!-- Bake in the Princeton IRB. Once we have more studies, we will key this
+            <!-- FIXME Bake in the Princeton IRB. Once we have more studies, we will key this
                  by the study id.
             -->
                 <IRBWindow>
-                    {#if addonId in irb}
-                        <svelte:component this={irb[addonId]} />
+                    {#if studyId in irb}
+                        <svelte:component this={irb[studyId]} />
                     {:else}
                         <GenericConsent />
                     {/if}
