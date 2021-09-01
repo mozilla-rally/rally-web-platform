@@ -3,6 +3,8 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import fs from "fs";
+import { createReadStream } from "fs";
+import readline from "readline";
 
 import { findAndAct, getChromeDriver, getFirefoxDriver, extensionLogsPresent, WAIT_FOR_PROPERTY } from "./utils";
 import { By, until } from "selenium-webdriver";
