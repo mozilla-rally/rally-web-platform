@@ -36,7 +36,8 @@ export async function findAndAct(driver: WebDriver, locator: Locator, action: Fu
       const element = await driver.findElement(locator);
       await driver.wait(until.elementIsEnabled(element), WAIT_FOR_PROPERTY);
       await driver.wait(until.elementIsVisible(element), WAIT_FOR_PROPERTY);
-      action(element);
+
+      await action(element);
       return true;
     } catch (ex) {
       console.debug(`Element at locator ${locator} not ready when expected, retrying: ${ex.name}, ${ex.message}`);
@@ -94,15 +95,17 @@ export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boo
     firefoxOptions.addArguments("-width=1920", "-height=1080");
   }
 
-  if (loadExtension) {
-    firefoxOptions.addExtensions(`${__dirname}/extension.xpi`);
-  }
-
-  return await new Builder()
+  const driver = await new Builder()
     .forBrowser("firefox")
     .setFirefoxOptions(firefoxOptions)
     .setFirefoxService(new firefox.ServiceBuilder().setStdio("inherit"))
     .build();
+
+  // Extensions can only be loaded temporarily at runtime for Firefox Release.
+  const isTemporaryAddon = true;
+  // @ts-ignore this appears to be missing from the type definition, but it exists!
+  driver.installAddon(`${__dirname}/extension.xpi`, isTemporaryAddon);
+  return driver;
 }
 
 /**
