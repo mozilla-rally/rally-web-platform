@@ -88,12 +88,14 @@ async function listenForUserChanges(user) {
 
 async function listenForUserStudiesChanges(user) {
   // get user doc and then call onSnapshot.
-  onSnapshot(doc(db, "users", user.uid, "studies", "exampleStudy1"), (doc) => {
-    const nextState = doc.data();
-    _updateLocalState((draft) => {
-      draft.userStudies = { "exampleStudy1": nextState };
+  for (const studyId in await getStudies()) {
+    onSnapshot(doc(db, "users", user.uid, "studies", studyId), (doc) => {
+      const nextState = doc.data();
+      _updateLocalState((draft) => {
+        draft.userStudies = { studyId: nextState };
+      });
     });
-  });
+  }
 }
 
 function listenForStudyChanges() {
@@ -209,26 +211,28 @@ export default {
   },
 
   async notifyStudies(user) {
-    // FIXME each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    const studyName = "exampleStudy1";
+    // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
+    for (const studyId in await getStudies()) {
 
-    let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
-    // @ts-ignore
-    if (__INTEGRATION_TEST_MODE__) {
-      functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+      // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
+      let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
+      // @ts-ignore
+      if (__EMULATOR_MODE__) {
+        functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+      }
+
+      const idToken = await user.getIdToken();
+      const result = await fetch(`${functionsHost}/rallytoken`,
+        {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idToken, studyId })
+        });
+      const rallyToken = (await result.json()).rallyToken;
+      window.dispatchEvent(
+        new CustomEvent("complete-signup", { detail: { studyId, rallyToken } })
+      );
     }
-
-    const idToken = await user.getIdToken();
-    const result = await fetch(`${functionsHost}/rallytoken`,
-      {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, studyName })
-      });
-    const rallyToken = (await result.json()).rallyToken;
-    window.dispatchEvent(
-      new CustomEvent("complete-signup", { detail: { rallyToken } })
-    );
   },
 
   async updateOnboardedStatus(onboarded) {

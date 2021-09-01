@@ -16,7 +16,7 @@ export default function initializeFirebase(config, callback) {
         db = getFirestore(app);
 
         // @ts-ignore
-        if (__INTEGRATION_TEST_MODE__) {
+        if (__EMULATOR_MODE__) {
             connectAuthEmulator(auth, 'http://localhost:9099');
             connectFirestoreEmulator(db, 'localhost', 8080);
         }
