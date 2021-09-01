@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 import { studies } from "./studies";
+import { v4 as uuidv4 } from "uuid";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -74,7 +75,9 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
     return;
   }
 
-  const extensionUserDoc = { rallyId: "" }
+
+  const newRallyId = uuidv4();
+  const extensionUserDoc = { rallyId: newRallyId };
   admin
     .firestore()
     .collection("extensionUsers")
@@ -126,4 +129,3 @@ export const loadFirestore = functions.https.onRequest(
     response.status(200).send();
   }
 );
-
