@@ -32,57 +32,30 @@ You can always access the current version by going to `<hostname>/version.json`.
 
 1. Clone this repository.
 2. Run `npm run install`
-3. Run `npm run dev` to spin up the dev environment at `localhost:3000`
+3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000` (including Firebase emulators)
 4. Run `npm run build` to build the app; the results will be in `/build`
+
+The Firebase backend should be ready for use as soon as the studies are loaded into your emulated Firestore:
+```
+i  functions: Finished "us-central1-loadFirestore" in ~1s
+```
 
 ## Emulating the server backend (Firebase)
 
-### Starting the emulators
-The `firebase-tools` node package provides a suite of emulators for the various Firebase services:
-`npm install -g firebase-tools`
+The `npm run dev` command automatically runs the full set of Firebase emulators required for Rally, as well as the
+Svelte web app. There is a Firebase emulator UI which you may use that runs on `http://localhost:4000`.
 
-By default, all emulators specified in `./firebase.json` will be started with an empty database and no user accounts:
-`firebase emulators:start`
+It then watches for changes and automatically reloads services:
 
-NOTE: any modifications you make within the emulators will not be saved, by default! You can save all data on exit
-by passing `--export-on-exit`:
-`firebase emulators:start --export-on-exit ./my-test-data/`
+- the Rally Svelte website (`./src`)
+- Rally Cloud Functions (`./functions/src`)
+  - this includes the static list of studies in `./functions/src/studies.ts`
+- Firestore Rules (`./firestore.rules`)
 
-You may then load this data into the emulator on startup:
-`firebase emulators:start --import ./my-test-data/`
+NOTE: if you only want to run the Svelte web app and nothing else, you may use:
+`npm run dev:web`
 
-You may find the test data used for integration tests helpfully for local development too:
-`firebase emulators:start ./tests/integration/testdata`
-
-### Configuring and using the emulators
-
-Firebase will output something similar to the following:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ ✔  All emulators ready! It is now safe to connect your app. │
-│ i  View Emulator UI at http://localhost:4000                │
-└─────────────────────────────────────────────────────────────┘
-
-┌────────────────┬────────────────┬─────────────────────────────────┐
-│ Emulator       │ Host:Port      │ View in Emulator UI             │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Authentication │ localhost:9099 │ http://localhost:4000/auth      │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Functions      │ localhost:5001 │ http://localhost:4000/functions │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Firestore      │ localhost:8080 │ http://localhost:4000/firestore │
-├────────────────┼────────────────┼─────────────────────────────────┤
-│ Hosting        │ localhost:5000 │ n/a                             │
-└────────────────┴────────────────┴─────────────────────────────────┘
-  Emulator Hub running at localhost:4400
-  Other reserved ports: 4500
-
-Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
-```
-
-You may now browse to http://localhost:4000 to access the various emulator control panels,
-which allow you to add/remove users and documents from the Firestore database.
+However, you must configure a valid Firebase backend in `./firebase.config.js` for the site to function.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
