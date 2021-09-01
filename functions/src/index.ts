@@ -94,15 +94,6 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
     .doc(user.uid)
     .set(userDoc, { merge: true });
 
-  const studyDoc = {}
-  admin
-    .firestore()
-    .collection("users")
-    .doc(user.uid)
-    .collection("studies")
-    .doc("exampleStudy1")
-    .set(studyDoc, { merge: true });
-
   return true;
 });
 
