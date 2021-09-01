@@ -18,6 +18,7 @@ const config = {
 		vite: {
 			plugins: [
 				replace({
+					preventAssignment: true,
 					// the following replacements build the site URLs.
 					// In the templates, use (for example) __BASE_SITE_URL__/__FAQ_PATH__
 					__BASE_SITE__: "https://rally.mozilla.org",
