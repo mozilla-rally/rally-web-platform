@@ -151,6 +151,14 @@ describe("Rally Web Platform UX flows", function () {
     // Start to join study, and confirm.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Accept & Enroll"]'), e => e.click());
+  });
+    
+  it("fails to sign up for a new email account with invalid info", async function () {
+    const installExtension = false;
+    for (const webDriver of [getChromeDriver, getFirefoxDriver]) {
+      const driver = await webDriver(headlessMode, installExtension);
+      drivers.push(driver);
+
 
     if (loadExtension) {
       // FIXME need to load Chrome-compatible study metadata into firestore.
