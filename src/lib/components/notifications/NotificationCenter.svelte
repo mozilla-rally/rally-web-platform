@@ -14,12 +14,3 @@
         SUCCESSFULLY_UPDATED_PROFILE: SuccessfullyUpdatedProfileNotification
     }
     </script>
-      
-    {#key $notification.id}
-        {#if $notification.id}
-            <svelte:component this={messages[$notification.code]}
-            location={sidebarOffset ? "top-left" : "top"}
-            xOffset={sidebarOffset ? "var(--main-notification-offset)" : undefined }
-            />
-        {/if}
-    {/key}
