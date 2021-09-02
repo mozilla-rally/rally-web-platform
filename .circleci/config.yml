@@ -48,15 +48,53 @@ jobs:
           command: npm run test:integration
       - store_artifacts:
           path: ./screenshots
-  site-deploy:
+
+  # This pushes our deployable assets to a branch, for SRE to use in deploying to stage and prod.
+  deploy-branch-update:
     docker:
       - image: cimg/node:15.1
     steps:
       - attach_workspace:
           at: .
       - run:
+          name: Set up ssh known_hosts # https://circleci.com/docs/2.0/gh-bb-integration/
+          command: |
+            mkdir -p ~/.ssh
+            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+            ' >> ~/.ssh/known_hosts
+      - run:
+          name: Configure git for ci-build
+          command: |
+            git config user.email "ci-build@rally-web-platform"
+            git config user.name "ci-build"
+      - run:
+          name: Add website build output to git
+          command: |
+            git checkout functions/package-lock.json
+            git fetch origin && git checkout deploy
+            git add -f functions/ build static/
+            git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
+      - add_ssh_keys:
+          fingerprints:
+            - "ab:41:e3:9b:de:0b:ed:6d:fc:d1:58:c0:9e:a9:e6:dd"
+      - run:
+          name: Push deploy branch to origin
+          command: git push origin deploy
+  # This deploys directly to our dev site at https://rally-web-spike.web.app
+  dev-site-deploy:
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - run:
+          name: Check out the deploy branch.
+          command: git checkout deploy && git pull
+      - run:
           name: Create Service Account key JSON
           command: echo $GSA_KEY > "$HOME"/gcloud.json
+      - run:
+          name: Install Firebase Tools
+          command: npm install --save-dev firebase-tools
       - run:
           name: Firebase Deploy
           command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy
@@ -70,9 +108,16 @@ workflows:
       - build-and-test
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
-      - site-deploy:
+      - deploy-branch-update:
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: master
+
+      - dev-site-deploy:
+          requires:
+            - deploy-branch-update
           filters:
             branches:
               only: master
