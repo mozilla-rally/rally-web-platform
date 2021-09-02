@@ -29,7 +29,7 @@ jobs:
       #     pkg-manager: yarn
       - run:
           name: Run lint
-          command: npm run lint
+          command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
       - run:
           name: Run build
           command: npm run build
