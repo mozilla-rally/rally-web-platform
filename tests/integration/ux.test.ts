@@ -141,9 +141,6 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
-    // FIXME reload page - api.initialize needs to be called after the user has authenticated. This is a bug in the site.
-    await driver.get("http://localhost:5000");
-
     // Start to join study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), e => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), e => e.click());

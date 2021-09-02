@@ -186,6 +186,7 @@ export default {
     // create a new user.
     initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
+    listenForUserStudiesChanges(userCredential.user);
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -199,6 +200,7 @@ export default {
     if (userCredential.user.emailVerified) {
       initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
+      listenForUserStudiesChanges(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
