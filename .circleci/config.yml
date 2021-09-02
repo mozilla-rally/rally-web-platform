@@ -34,17 +34,18 @@ jobs:
           root: .
           paths:
             - .
-      - run:
-          name: Install Firefox, and dependencies for official Google Chrome package
-          command: sudo apt update && sudo apt install firefox default-jre fonts-liberation libgbm1 xdg-utils
-      - run:
-          name: Download and install official Google Chrome package
-          command: wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' && sudo dpkg -i google-chrome-stable_current_amd64.deb
-      - run:
-          name: Run tests
-          command: npm run test:integration
-      - store_artifacts:
-          path: ./screenshots
+# FIXME temp disable while testing deploy
+#      - run:
+#          name: Install Firefox, and dependencies for official Google Chrome package
+#          command: sudo apt update && sudo apt install firefox default-jre fonts-liberation libgbm1 xdg-utils
+#      - run:
+#          name: Download and install official Google Chrome package
+#          command: wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' && sudo dpkg -i google-chrome-stable_current_amd64.deb
+#      - run:
+#          name: Run tests
+#          command: npm run test:integration
+#      - store_artifacts:
+#          path: ./screenshots
 
   # This pushes our deployable assets to a branch, for SRE to use in deploying to stage and prod.
   deploy-branch-update:
