@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh && node scripts/add-version-object.js",
-    "dev": "firebase emulators:exec --ui 'npm run build:functions && npm run load:data && (npm-run-all watch:functions & npm run watch:web)'",
+    "dev": "firebase emulators:exec --ui 'npm run build:functions && sleep 1 && npm run load:data && (npm-run-all watch:functions & npm run watch:web)'",
     "dev:web": "npm run pre-build && svelte-kit dev",
     "build": "npm run pre-build && npm run build:functions && svelte-kit build",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
