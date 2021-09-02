@@ -58,9 +58,9 @@ function updateUserDocument(updates, merge = true) {
   return updateDoc(userRef, updates, { merge });
 }
 
-function updateUserStudiesCollection(studyID, updates, merge = true) {
-  const ref = doc(db, "users", firebaseUid, "studies", studyID);
-  setDoc(ref, updates.userStudies[studyID], { merge });
+async function updateUserStudiesCollection(studyID, updates, merge = true) {
+  const userStudyref = doc(db, "users", firebaseUid, "studies", studyID);
+  await setDoc(userStudyref, updates, { merge });
 }
 
 async function getStudies() {
@@ -87,15 +87,21 @@ async function listenForUserChanges(user) {
 }
 
 async function listenForUserStudiesChanges(user) {
-  // get user doc and then call onSnapshot.
-  for (const study of await getStudies()) {
-    onSnapshot(doc(db, "users", user.uid, "studies", study.studyId), (doc) => {
-      const nextState = doc.data();
-      _updateLocalState((draft) => {
-        draft.userStudies = { studyId: nextState };
-      });
+  const userStudiesRef = collection(db, "users", user.uid, "studies");
+
+  onSnapshot(userStudiesRef, (querySnapshot) => {
+    const nextState = {};
+
+    querySnapshot.forEach((doc) => {
+      const study = doc.data();
+      nextState[study.studyID] = study
+    })
+
+    _updateLocalState((draft) => {
+      draft.userStudies = nextState;
     });
-  }
+  });
+
 }
 
 function listenForStudyChanges() {
@@ -212,7 +218,7 @@ export default {
 
   async notifyStudies(user) {
     // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const studyId in await getStudies()) {
+    for (const studyID in await getStudies()) {
 
       // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
       let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
@@ -226,11 +232,11 @@ export default {
         {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idToken, studyId })
+          body: JSON.stringify({ idToken, studyID })
         });
       const rallyToken = (await result.json()).rallyToken;
       window.dispatchEvent(
-        new CustomEvent("complete-signup", { detail: { studyId, rallyToken } })
+        new CustomEvent("complete-signup", { detail: { studyID, rallyToken } })
       );
     }
   },
@@ -244,11 +250,10 @@ export default {
     if (!(studyID in userStudies)) { userStudies[studyID] = {}; }
     userStudies[studyID] = { ...userStudies[studyID] };
     userStudies[studyID].enrolled = enroll;
-    userStudies[studyID].enrolled = enroll;
     if (enroll) {
       userStudies[studyID].joinedOn = new Date();
     }
-    updateUserStudiesCollection(studyID, { userStudies });
+    await updateUserStudiesCollection(studyID, userStudies[studyID]);
     return true;
   },
 

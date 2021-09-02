@@ -13,11 +13,11 @@ const notifications: NotificationStore = getContext("rally:notifications");
 
 function joinStudy(studyID) { 
     store.updateStudyEnrollment(studyID, true);
-    notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
+    notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"});
 }
 function leaveStudy(studyID) {
     store.updateStudyEnrollment(studyID, false);
-    notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
+    notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"});
 }
 
 $: if ($isAuthenticated === false) {
@@ -42,7 +42,7 @@ $: if ($store._initialized) {
         <StudiesContent
             sidebarOffset
             studies={$store.studies}
-            userEnrollment={$store.userStudies || {}}
+            userStudies={$store.userStudies || {}}
             on:cta-clicked={() => {
                 notifications.clear();
             }}

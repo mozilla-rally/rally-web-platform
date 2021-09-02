@@ -8,7 +8,7 @@ import { fly } from 'svelte/transition';
 import StudyCard from './StudyCard.svelte';
 
 export let studies = [];
-export let userEnrollment = {};
+export let userStudies = {};
 
 const dispatch = createEventDispatcher();
 
@@ -61,14 +61,15 @@ p {
 
     <div class="studies">
 
-    {#each studies as study, i (study.studyId)}
+    {#each studies as study, i (study.studyID)}
+    {study} {study.studyID} {console.log("userStudies:", userStudies)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(study.studyId in userEnrollment && userEnrollment[study.studyId].enrolled)}
-        connected={(study.studyId in userEnrollment && userEnrollment[study.studyId].attached)}
+        joined={(study.studyID in userStudies && userStudies[study.studyID].enrolled)}
+        connected={(study.studyID in userStudies && userStudies[study.studyID].attached)}
         imageSrc={study.icons[64]}
-        studyId={study.studyId}
+        studyId={study.studyID}
         endDate={parseDateIfNeeded(study.endDate)}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
@@ -76,10 +77,10 @@ p {
         tags={study.tags}
         on:cta-clicked
         on:join={() => {
-            joinStudy(studyId);
+            joinStudy(study.studyID);
         }}
         on:leave={() => {
-            leaveStudy(studyId);
+            leaveStudy(study.studyID);
         }}
     />
         {:else}
