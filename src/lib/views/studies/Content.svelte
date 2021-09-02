@@ -62,7 +62,6 @@ p {
     <div class="studies">
 
     {#each studies as study, i (study.studyID)}
-    {study} {study.studyID} {console.log("userStudies:", userStudies)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
