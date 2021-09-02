@@ -85,7 +85,7 @@ jobs:
       - checkout
       - run:
           name: Check out the deploy branch.
-          command: git checkout deploy
+          command: git checkout deploy && git pull
       - run:
           name: Create Service Account key JSON
           command: echo $GSA_KEY > "$HOME"/gcloud.json
