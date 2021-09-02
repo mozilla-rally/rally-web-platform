@@ -35,16 +35,16 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async updateOnboardedStatus(onboardingOrNot) {
       return api.updateOnboardedStatus(onboardingOrNot);
     },
-    async updateStudyEnrollment(studyID, enroll) {
+    async updateStudyEnrollment(studyId, enroll) {
       // Enforce the truthyness of `enroll`, to make sure
       // it's always a boolean.
       const coercedEnroll = !!enroll;
       console.debug(
-        `Rally - changing study ${studyID} enrollment to ${coercedEnroll}`);
+        `Rally - changing study ${studyId} enrollment to ${coercedEnroll}`);
 
       // send study enrollment message
       try {
-        return await api.updateStudyEnrollment(studyID, coercedEnroll);
+        return await api.updateStudyEnrollment(studyId, coercedEnroll);
       } catch (err) {
         console.error(err);
       }

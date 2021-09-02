@@ -11,13 +11,13 @@ const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 const notifications: NotificationStore = getContext("rally:notifications");
 
-function joinStudy(studyID) { 
-    store.updateStudyEnrollment(studyID, true); 
-    notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"}); 
+function joinStudy(studyId) { 
+    store.updateStudyEnrollment(studyId, true);
+    notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"});
 }
-function leaveStudy(studyID) { 
-    store.updateStudyEnrollment(studyID, false); 
-    notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"}); 
+function leaveStudy(studyId) {
+    store.updateStudyEnrollment(studyId, false);
+    notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"});
 }
 
 $: if ($isAuthenticated === false) {
@@ -42,7 +42,7 @@ $: if ($store._initialized) {
         <StudiesContent
             sidebarOffset
             studies={$store.studies}
-            userEnrollment={$store.user?.enrolledStudies || {}}
+            userStudies={$store.userStudies || {}}
             on:cta-clicked={() => {
                 notifications.clear();
             }}

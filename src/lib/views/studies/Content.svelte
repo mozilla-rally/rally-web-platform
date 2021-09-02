@@ -8,16 +8,16 @@ import { fly } from 'svelte/transition';
 import StudyCard from './StudyCard.svelte';
 
 export let studies = [];
-export let userEnrollment = {};
+export let userStudies = {};
 
 const dispatch = createEventDispatcher();
 
-function joinStudy(studyID) {
-    dispatch("join-study", studyID);
+function joinStudy(studyId) {
+    dispatch("join-study", studyId);
 }
 
-function leaveStudy(studyID) {
-    dispatch("leave-study", studyID);
+function leaveStudy(studyId) {
+    dispatch("leave-study", studyId);
 }
 
 function parseDateIfNeeded(date) {
@@ -61,14 +61,14 @@ p {
 
     <div class="studies">
 
-    {#each studies as study, i (study.addonId)}
+    {#each studies as study, i (study.studyId)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(study.addonId in userEnrollment && userEnrollment[study.addonId].enrolled)}
-        connected={(study.addonId in userEnrollment && userEnrollment[study.addonId].attached)}
+        joined={(study.studyId in userStudies && userStudies[study.studyId].enrolled)}
+        connected={(study.studyId in userStudies && userStudies[study.studyId].attached)}
         imageSrc={study.icons[64]}
-        addonId={study.addonId}
+        studyId={study.studyId}
         endDate={parseDateIfNeeded(study.endDate)}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
@@ -76,10 +76,10 @@ p {
         tags={study.tags}
         on:cta-clicked
         on:join={() => {
-            joinStudy(study.addonId);
+            joinStudy(study.studyId);
         }}
         on:leave={() => {
-            leaveStudy(study.addonId);
+            leaveStudy(study.studyId);
         }}
     />
         {:else}

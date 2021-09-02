@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "scripts": {
     "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh && node scripts/add-version-object.js",
-    "dev": "npm run pre-build && svelte-kit dev",
-    "build": "npm run pre-build && svelte-kit build",
+    "dev": "firebase emulators:exec --only auth,functions,firestore --ui 'npm run build:functions && sleep 1 && npm run load:data && (npm run watch:functions & npm run watch:web)'",
+    "dev:web": "npm run pre-build && svelte-kit dev",
+    "build": "npm run pre-build && npm run build:functions && svelte-kit build",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
-    "build:test:integration": "npm run pre-build && svelte-kit build -- --config-integration-test-mode",
+    "build:web:emulator": "npm run pre-build && svelte-kit build -- --config-emulator-mode",
+    "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src > /dev/null",
+    "watch:web": "svelte-kit dev -- --config-emulator-mode",
+    "load:data": "curl -s http://localhost:5001/rally-web-spike/us-central1/loadFirestore",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
@@ -15,7 +19,7 @@
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
     "test:unit": "jest ./tests/unit/",
     "test:integration:jest": "jest ./tests/integration/",
-    "test:integration": "npm run build:functions && npm run build:test:integration && ./scripts/integration-test.sh"
+    "test:integration": "npm run build:web:emulator && npm run build:functions &&  ./scripts/integration-test.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
@@ -50,11 +54,12 @@
     "jest-webextension-mock": "^3.7.6",
     "jsdoc": "^3.6.6",
     "micromodal": "^0.4.6",
-    "npm-run-all": "^4.1.5",
+    "minimist": "^1.2.5",
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "sinon-chrome": "^3.0.1",
+    "source-map-support": "^0.5.19",
     "svelte": "^3.38.2",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
@@ -62,6 +67,7 @@
     "ts-jest": "^27.0.5",
     "tslib": "^2.0.0",
     "typescript": "^4.0.0",
+    "watch": "^1.0.2",
     "webextension-polyfill": "^0.8.0",
     "webextension-polyfill-ts": "^0.26.0"
   },

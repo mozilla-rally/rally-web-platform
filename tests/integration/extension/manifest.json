@@ -11,6 +11,12 @@
     "webNavigation",
     "storage"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "rally-web-platform-test@rally.mozilla.org",
+      "strict_min_version": "87.0"
+    }
+  },
   "background": {
     "scripts": [
       "dist/browser-polyfill.js",

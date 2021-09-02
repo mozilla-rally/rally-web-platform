@@ -38,17 +38,16 @@ async function initializeFirestoreAPIs() {
 // NOTE: this object is not to be touched.
 let __STATE__ = {
   user: undefined,
+  userStudies: undefined,
   onboarded: false
 };
 
 let userRef;
+let firebaseUid;
 
-function initializeUserDocument(uid, { createUser = false } = {}) {
+function initializeUserDocument(uid) {
   userRef = doc(db, "users", uid);
-  // create the user document.
-  if (createUser) {
-    setDoc(userRef, { uid, createdOn: new Date() }, { merge: true });
-  }
+  firebaseUid = uid;
 }
 
 function getUserDocument() {
@@ -57,6 +56,11 @@ function getUserDocument() {
 
 function updateUserDocument(updates, merge = true) {
   return updateDoc(userRef, updates, { merge });
+}
+
+async function updateUserStudiesCollection(studyId, updates, merge = true) {
+  const userStudyref = doc(db, "users", firebaseUid, "studies", studyId);
+  await setDoc(userStudyref, updates, { merge });
 }
 
 async function getStudies() {
@@ -82,6 +86,24 @@ async function listenForUserChanges(user) {
   });
 }
 
+async function listenForUserStudiesChanges(user) {
+  const userStudiesRef = collection(db, "users", user.uid, "studies");
+
+  onSnapshot(userStudiesRef, (querySnapshot) => {
+    const nextState = {};
+
+    querySnapshot.forEach((doc) => {
+      const study = doc.data();
+      nextState[study.studyId] = study
+    })
+
+    _updateLocalState((draft) => {
+      draft.userStudies = nextState;
+    });
+  });
+
+}
+
 function listenForStudyChanges() {
   onSnapshot(collection(db, "studies"), (querySnapshot) => {
     const studies = [];
@@ -96,6 +118,7 @@ function listenForStudyChanges() {
 
 export default {
   async initialize(browser = true) {
+
     if (browser) {
       initializeFirestoreAPIs();
     } else {
@@ -120,7 +143,10 @@ export default {
       userState = await getUserDocument();
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
-      await this.notifyStudies(authenticatedUser);
+      listenForUserStudiesChanges(authenticatedUser);
+
+      // FIXME more efficient to wait for studies to ask, vs. broadcasting
+      this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -159,22 +185,29 @@ export default {
       console.error("there was an error", err);
     }
     // create a new user.
-    initializeUserDocument(userCredential.user.uid, { createUser: true });
+    initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
+    listenForUserStudiesChanges(userCredential.user);
+
+    // FIXME more efficient to wait for studies to ask, vs. broadcasting
+    this.notifyStudies(userCredential.user);
   },
 
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.debug("user cred:", userCredential);
     } catch (err) {
       console.error("there was an error", err);
       return;
     }
     if (userCredential.user.emailVerified) {
-      initializeUserDocument(userCredential.user.uid, { createUser: true });
+      initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
+      listenForUserStudiesChanges(userCredential.user);
+
+      // FIXME more efficient to wait for studies to ask, vs. broadcasting
+      this.notifyStudies(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
@@ -193,41 +226,45 @@ export default {
   },
 
   async notifyStudies(user) {
-    // FIXME each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    const studyName = "exampleStudy1";
+    // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
+    for (const study of await getStudies()) {
 
-    let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
-    // @ts-ignore
-    if (__INTEGRATION_TEST_MODE__) {
-      functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+      // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
+      let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
+      // @ts-ignore
+      if (__EMULATOR_MODE__) {
+        functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
+      }
+
+      const idToken = await user.getIdToken();
+      const body = JSON.stringify({ studyId: study.studyId, idToken });
+      const result = await fetch(`${functionsHost}/rallytoken`,
+        {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body
+        });
+      const rallyToken = (await result.json()).rallyToken;
+      window.dispatchEvent(
+        new CustomEvent("complete-signup", { detail: { studyId: study.studyId, rallyToken } })
+      );
     }
-
-    const idToken = await user.getIdToken();
-    const result = await fetch(`${functionsHost}/rallytoken`,
-      {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, studyName })
-      });
-    const rallyToken = (await result.json()).rallyToken;
-    window.dispatchEvent(
-      new CustomEvent("complete-signup", { detail: { rallyToken } })
-    );
   },
 
   async updateOnboardedStatus(onboarded) {
     return updateUserDocument({ onboarded });
   },
 
-  async updateStudyEnrollment(studyID, enroll) {
-    const enrolledStudies = { ...(__STATE__.user.enrolledStudies || {}) };
-    if (!(studyID in enrolledStudies)) { enrolledStudies[studyID] = {}; }
-    enrolledStudies[studyID] = { ...enrolledStudies[studyID] };
-    enrolledStudies[studyID].enrolled = enroll;
+  async updateStudyEnrollment(studyId, enroll) {
+    const userStudies = { ...(__STATE__.userStudies || {}) };
+    if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
+    userStudies[studyId] = { ...userStudies[studyId] };
+    userStudies[studyId].enrolled = enroll;
+    userStudies[studyId].studyId = studyId;
     if (enroll) {
-      enrolledStudies[studyID].joinedOn = new Date();
+      userStudies[studyId].joinedOn = new Date();
     }
-    updateUserDocument({ enrolledStudies });
+    await updateUserStudiesCollection(studyId, userStudies[studyId]);
     return true;
   },
 
@@ -236,9 +273,7 @@ export default {
   },
 
   async updateDemographicSurvey(data) {
-    updateDoc(userRef, { demographicsData: data });
-    //updateUserDocument({ demographicsData: data });
-    return true;
+    return updateUserDocument({ demographicsData: data });
   },
 
   onAuthChange(callback) {
