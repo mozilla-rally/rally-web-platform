@@ -250,6 +250,7 @@ export default {
     if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
     userStudies[studyId] = { ...userStudies[studyId] };
     userStudies[studyId].enrolled = enroll;
+    userStudies[studyId].studyId = studyId;
     if (enroll) {
       userStudies[studyId].joinedOn = new Date();
     }
