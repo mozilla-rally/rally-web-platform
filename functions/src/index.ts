@@ -24,17 +24,18 @@ export const rallytoken = functions.https.onRequest(
       );
 
       try {
-        let idToken; let studyName;
+        let idToken;
+        let studyId;
         if (typeof request.body === "string") {
           const body = JSON.parse(request.body);
           idToken = body.idToken;
-          studyName = body.studyName;
+          studyId = body.studyId;
         } else {
           idToken = request.body.idToken;
-          studyName = request.body.studyName;
+          studyId = request.body.studyId;
         }
 
-        const rallyToken = await generateToken(idToken, studyName);
+        const rallyToken = await generateToken(idToken, studyId);
         functions.logger.info("OK");
         response.status(200).send({ rallyToken });
       } catch (ex) {
@@ -52,17 +53,17 @@ export const rallytoken = functions.https.onRequest(
  * for a restricted-access account (for use with studies).
  *
  * @param {string} idToken Firebase IDToken.
- * @param {string} studyName Rally study name.
+ * @param {string} studyId Rally study ID.
  * @return {Promise<string>} rallyToken
  */
-async function generateToken(idToken: string, studyName: string) {
+async function generateToken(idToken: string, studyId: string) {
   const decodedToken = await admin.auth().verifyIdToken(idToken);
 
   // Firebase will create this account if it does not exist,
   // when the token is first used to sign-in.
-  const uid = `${studyName}:${decodedToken.uid}`;
+  const uid = `${studyId}:${decodedToken.uid}`;
   const rallyToken = await admin.auth().createCustomToken(
-    uid, { firebaseUid: decodedToken.uid, studyId: studyName }
+    uid, { firebaseUid: decodedToken.uid, studyId }
   );
 
   return rallyToken;

@@ -151,10 +151,12 @@ describe("Rally Web Platform UX flows", function () {
 
     if (loadExtension) {
       // FIXME need to load Chrome-compatible study metadata into firestore.
-      await driver.wait(async () =>
-        await extensionLogsPresent(driver, testBrowser, `Start data collection`),
-        WAIT_FOR_PROPERTY
-      );
+      if (testBrowser === "firefox") {
+        await driver.wait(async () =>
+          await extensionLogsPresent(driver, testBrowser, `Start data collection`),
+          WAIT_FOR_PROPERTY
+        );
+      }
     }
 
     // Start to leave study, but cancel.

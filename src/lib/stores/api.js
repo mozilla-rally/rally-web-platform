@@ -145,7 +145,8 @@ export default {
       listenForUserChanges(authenticatedUser);
       listenForUserStudiesChanges(authenticatedUser);
 
-      await this.notifyStudies(authenticatedUser);
+      // FIXME more efficient to wait for studies to ask, vs. broadcasting
+      this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -187,6 +188,9 @@ export default {
     initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
     listenForUserStudiesChanges(userCredential.user);
+
+    // FIXME more efficient to wait for studies to ask, vs. broadcasting
+    this.notifyStudies(userCredential.user);
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -201,6 +205,9 @@ export default {
       initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
       listenForUserStudiesChanges(userCredential.user);
+
+      // FIXME more efficient to wait for studies to ask, vs. broadcasting
+      this.notifyStudies(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
@@ -220,7 +227,8 @@ export default {
 
   async notifyStudies(user) {
     // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const studyId in await getStudies()) {
+    for (const study of await getStudies()) {
+      console.debug("atudy:", study);
 
       // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
       let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
@@ -230,15 +238,17 @@ export default {
       }
 
       const idToken = await user.getIdToken();
+      const body = JSON.stringify({ studyId: study.studyId, idToken });
+      console.debug("body:", body);
       const result = await fetch(`${functionsHost}/rallytoken`,
         {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idToken, studyId })
+          body
         });
       const rallyToken = (await result.json()).rallyToken;
       window.dispatchEvent(
-        new CustomEvent("complete-signup", { detail: { studyId, rallyToken } })
+        new CustomEvent("complete-signup", { detail: { studyId: study.studyId, rallyToken } })
       );
     }
   },
