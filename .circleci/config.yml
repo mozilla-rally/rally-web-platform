@@ -62,7 +62,7 @@ jobs:
           name: Add website build output to git
           command: |
             git checkout -b deploy
-            git add -f functions/lib build static/build static/fonts
+            git add -f functions/lib build static/build static/fonts static/version.json
             git commit -m"adding build output to deploy branch" functions/lib build static/build static/fonts static/version.json
       - add_ssh_keys:
           fingerprints:
