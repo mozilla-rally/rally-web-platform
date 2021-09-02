@@ -91,6 +91,9 @@ jobs:
           name: Create Service Account key JSON
           command: echo $GSA_KEY > "$HOME"/gcloud.json
       - run:
+          name: Install Firebase Tools
+          command: npm install --save-dev firebase-tools
+      - run:
           name: Firebase Deploy
           command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy
 workflows:
