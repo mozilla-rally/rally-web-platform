@@ -98,7 +98,7 @@ workflows:
             - build-and-test
           filters:
             branches:
-              only: test-deploy # FIXME change to master when done testing
+              only: deploy-to-branch # FIXME change to master when done testing
 
       - dev-site-deploy:
           requires:
