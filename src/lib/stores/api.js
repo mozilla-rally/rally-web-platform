@@ -228,7 +228,6 @@ export default {
   async notifyStudies(user) {
     // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
     for (const study of await getStudies()) {
-      console.debug("atudy:", study);
 
       // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
       let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
@@ -239,7 +238,6 @@ export default {
 
       const idToken = await user.getIdToken();
       const body = JSON.stringify({ studyId: study.studyId, idToken });
-      console.debug("body:", body);
       const result = await fetch(`${functionsHost}/rallytoken`,
         {
           method: "POST",
