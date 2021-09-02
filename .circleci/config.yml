@@ -82,8 +82,10 @@ jobs:
     docker:
       - image: cimg/node:15.1
     steps:
-      - attach_workspace:
-          at: .
+      - checkout
+      - run:
+          name: Check out the deploy branch.
+          command: git checkout deploy
       - run:
           name: Create Service Account key JSON
           command: echo $GSA_KEY > "$HOME"/gcloud.json
@@ -112,4 +114,4 @@ workflows:
             - deploy-branch-update
           filters:
             branches:
-              only: master
+              only: deploy-to-branch
