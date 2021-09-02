@@ -8,7 +8,7 @@ export const studies = {
         },
         version: "0.0.1",
         addonId: "abc123",
-        studyID: "exampleStudy1",
+        studyId: "exampleStudy1",
         downloadLink: "http://example.com",
         endDate: "2021-10-27",
         studyEnded: false,

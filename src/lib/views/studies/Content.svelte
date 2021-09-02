@@ -12,12 +12,12 @@ export let userStudies = {};
 
 const dispatch = createEventDispatcher();
 
-function joinStudy(studyID) {
-    dispatch("join-study", studyID);
+function joinStudy(studyId) {
+    dispatch("join-study", studyId);
 }
 
-function leaveStudy(studyID) {
-    dispatch("leave-study", studyID);
+function leaveStudy(studyId) {
+    dispatch("leave-study", studyId);
 }
 
 function parseDateIfNeeded(date) {
@@ -61,14 +61,14 @@ p {
 
     <div class="studies">
 
-    {#each studies as study, i (study.studyID)}
+    {#each studies as study, i (study.studyId)}
     <StudyCard
         title={study.name}
         author={study.authors.name}
-        joined={(study.studyID in userStudies && userStudies[study.studyID].enrolled)}
-        connected={(study.studyID in userStudies && userStudies[study.studyID].attached)}
+        joined={(study.studyId in userStudies && userStudies[study.studyId].enrolled)}
+        connected={(study.studyId in userStudies && userStudies[study.studyId].attached)}
         imageSrc={study.icons[64]}
-        studyId={study.studyID}
+        studyId={study.studyId}
         endDate={parseDateIfNeeded(study.endDate)}
         description={study.description}
         dataCollectionDetails={study.dataCollectionDetails}
@@ -76,10 +76,10 @@ p {
         tags={study.tags}
         on:cta-clicked
         on:join={() => {
-            joinStudy(study.studyID);
+            joinStudy(study.studyId);
         }}
         on:leave={() => {
-            leaveStudy(study.studyID);
+            leaveStudy(study.studyId);
         }}
     />
         {:else}

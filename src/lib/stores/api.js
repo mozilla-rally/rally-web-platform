@@ -58,8 +58,8 @@ function updateUserDocument(updates, merge = true) {
   return updateDoc(userRef, updates, { merge });
 }
 
-async function updateUserStudiesCollection(studyID, updates, merge = true) {
-  const userStudyref = doc(db, "users", firebaseUid, "studies", studyID);
+async function updateUserStudiesCollection(studyId, updates, merge = true) {
+  const userStudyref = doc(db, "users", firebaseUid, "studies", studyId);
   await setDoc(userStudyref, updates, { merge });
 }
 
@@ -94,7 +94,7 @@ async function listenForUserStudiesChanges(user) {
 
     querySnapshot.forEach((doc) => {
       const study = doc.data();
-      nextState[study.studyID] = study
+      nextState[study.studyId] = study
     })
 
     _updateLocalState((draft) => {
@@ -218,7 +218,7 @@ export default {
 
   async notifyStudies(user) {
     // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const studyID in await getStudies()) {
+    for (const studyId in await getStudies()) {
 
       // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
       let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
@@ -232,11 +232,11 @@ export default {
         {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idToken, studyID })
+          body: JSON.stringify({ idToken, studyId })
         });
       const rallyToken = (await result.json()).rallyToken;
       window.dispatchEvent(
-        new CustomEvent("complete-signup", { detail: { studyID, rallyToken } })
+        new CustomEvent("complete-signup", { detail: { studyId, rallyToken } })
       );
     }
   },
@@ -245,15 +245,15 @@ export default {
     return updateUserDocument({ onboarded });
   },
 
-  async updateStudyEnrollment(studyID, enroll) {
+  async updateStudyEnrollment(studyId, enroll) {
     const userStudies = { ...(__STATE__.userStudies || {}) };
-    if (!(studyID in userStudies)) { userStudies[studyID] = {}; }
-    userStudies[studyID] = { ...userStudies[studyID] };
-    userStudies[studyID].enrolled = enroll;
+    if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
+    userStudies[studyId] = { ...userStudies[studyId] };
+    userStudies[studyId].enrolled = enroll;
     if (enroll) {
-      userStudies[studyID].joinedOn = new Date();
+      userStudies[studyId].joinedOn = new Date();
     }
-    await updateUserStudiesCollection(studyID, userStudies[studyID]);
+    await updateUserStudiesCollection(studyId, userStudies[studyId]);
     return true;
   },
 

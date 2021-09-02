@@ -11,12 +11,12 @@ const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 const notifications: NotificationStore = getContext("rally:notifications");
 
-function joinStudy(studyID) { 
-    store.updateStudyEnrollment(studyID, true);
+function joinStudy(studyId) { 
+    store.updateStudyEnrollment(studyId, true);
     notifications.send({code: "SUCCESSFULLY_JOINED_STUDY"});
 }
-function leaveStudy(studyID) {
-    store.updateStudyEnrollment(studyID, false);
+function leaveStudy(studyId) {
+    store.updateStudyEnrollment(studyId, false);
     notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"});
 }
 
