@@ -67,7 +67,7 @@ jobs:
             git commit -m"adding build output to deploy branch" functions/lib build static/build static/fonts static/version.json
       - add_ssh_keys:
           fingerprints:
-            - "11:04:64:b8:6e:5c:e4:9b:0c:6c:92:ad:7a:a6:41:3f"
+            - "84:98:64:0e:5b:e9:b7:85:25:ca:40:aa:c5:c0:9e:86"
       - run:
           name: Push deploy branch to origin
           command: git push origin deploy
