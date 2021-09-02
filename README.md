@@ -115,3 +115,11 @@ integration testing.
 `firebase.config.js` – contains our public firebase configuration for this application.
 
 `firebase.json` - contains the server-side configuration for this Firebase project.
+
+## Storybook
+
+To start storybook in development mode, run npm run storybook
+
+Test existing components by adding a "story" in `src/stories/components`, using the `stories.svelte` extension
+
+Please check [the Storybook documentation] https://storybook.js.org/docs/svelte/writing-stories/introduction for proper story definition
