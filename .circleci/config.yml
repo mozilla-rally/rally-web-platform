@@ -72,8 +72,10 @@ jobs:
           command: |
             git checkout functions/package-lock.json
             git add -f functions/ build static/
-            git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
+            git stash
             git fetch origin && git checkout deploy
+            git stash apply 0
+            git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
             git merge master
       - add_ssh_keys:
           fingerprints:
