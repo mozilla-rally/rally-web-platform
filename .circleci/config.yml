@@ -80,7 +80,7 @@ jobs:
           command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
       - run:
           name: Push deploy branch to origin
-          command: git push origin deploy
+          command: git pull --rebase origin deploy && git push origin deploy
   # This deploys directly to our dev site at https://rally-web-spike.web.app
   dev-site-deploy:
     docker:
