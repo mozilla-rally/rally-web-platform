@@ -71,9 +71,10 @@ jobs:
           name: Add website build output to git
           command: |
             git checkout functions/package-lock.json
-            git fetch origin && git checkout deploy
             git add -f functions/ build static/
             git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
+            git fetch origin && git checkout deploy
+            git merge master
       - add_ssh_keys:
           fingerprints:
             - "ab:41:e3:9b:de:0b:ed:6d:fc:d1:58:c0:9e:a9:e6:dd"
