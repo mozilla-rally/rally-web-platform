@@ -71,16 +71,17 @@ jobs:
           name: Add website build output to git
           command: |
             git checkout functions/package-lock.json
-            git add -f functions/ build static/
+            git add -f functions/lib/ build/
       - add_ssh_keys:
           fingerprints:
             - "ab:41:e3:9b:de:0b:ed:6d:fc:d1:58:c0:9e:a9:e6:dd"
       - run:
           name: Commit build artifacts to deploy branch
-          command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
+          command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/lib build/
       - run:
           name: Push deploy branch to origin
           command: git pull --rebase origin deploy && git push origin deploy
+
   # This deploys directly to our dev site at https://rally-web-spike.web.app
   dev-site-deploy:
     docker:
@@ -94,8 +95,8 @@ jobs:
           name: Create Service Account key JSON
           command: echo $GSA_KEY > "$HOME"/gcloud.json
       - run:
-          name: Install Firebase Tools
-          command: npm install --save-dev firebase-tools
+          name: Install Firebase Tools needed for deploy
+          command: npm install firebase-tools firebase-functions
       - run:
           name: Firebase Deploy
           command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy
