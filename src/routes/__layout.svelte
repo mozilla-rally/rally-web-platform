@@ -3,7 +3,7 @@ import { setContext, onMount } from 'svelte';
 import { page } from "$app/stores";
 import Layout from "$lib/layouts/main/Layout.svelte";
 import Button from '$lib/components/Button.svelte';
-import Sidebar from "./_Sidebar.svelte";
+import Sidebar from "$lib/layouts/main/Sidebar.svelte";
 import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
 import NotificationCenter from "$lib/components/notifications/NotificationCenter.svelte";
 import { store, isAuthenticated } from "$lib/stores/app-store";
@@ -31,11 +31,16 @@ const mounted = isMounted();
 
 {#if $isAuthenticated && $store?.user?.enrolled}
     <Layout>
-        <Sidebar 
-            on:change-view
+        <Sidebar
+            storeInitialized={$store._initialized}
+            profileQuestionsAnswered={$profileCompletionStatus.profileQuestionsAnswered}
+            totalProfileQuestions={$profileCompletionStatus.totalProfileQuestions}
+            path={$page?.path}
+            on:sign-out={store.signOut}
+            on:change-view 
             on:leave-rally={() => {
-            leaveModal = true;
-        }} />
+                leaveModal = true;
+            }} />
         <svelte:component this={$page.path === '/studies' ? StudyBackgroundElement : EmptySlot}>
             <ContentContainer>
                 {#if $store._initialized}

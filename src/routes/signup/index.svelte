@@ -5,15 +5,17 @@
   import { getContext } from "svelte";
   import { fly } from "svelte/transition";
   import { goto } from "$app/navigation";
+  import type { Readable } from "svelte/store";
   import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   
   import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");
+  const isAuthenticated: Readable<boolean> = getContext("rally:isAuthenticated");
 
   let email;
   let password;
 
-  $: if ($store._initialized && $store?.user?.uid) {
+  $: if ($store._initialized && $isAuthenticated) {
     if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
     } else {

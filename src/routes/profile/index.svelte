@@ -10,21 +10,22 @@ import { goto } from "$app/navigation";
 import ProfileContent from "$lib/views/profile/Content.svelte";
 
 import Button from "$lib/components/Button.svelte";
-//import { notification } from "../../notification-store";
 import { schema, inputFormatters } from "$lib/views/profile/survey-schema";
 import { formatAnswersForDisplay } from "$lib/views/profile/formatters";
+
+import redirectFromMainViewIfNeeded from "../_redirect-from-main-view-if-needed";
 
 import type { Readable } from "svelte/store";
 import type { AppStore } from "$lib/stores/types";
 import type { NotificationStore } from "$lib/components/notifications"
 
-const store: AppStore = getContext("rally:store");
-const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
 const notifications: NotificationStore = getContext('rally:notifications');
 
-$: if ($isAuthenticated === false) {
-    goto("/signup");
-  }
+
+const store: AppStore = getContext("rally:store");
+const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
+
+$: redirectFromMainViewIfNeeded($isAuthenticated, $store._initialized, !$store?.user?.enrolled);
 
 // Create a deep copy of $store.demographicsData for the "manage profile" view.
 // Only update the store when the submit button is explicitly clicked;
@@ -42,7 +43,7 @@ $: if ($store.user && $store.user.demographicsData) {
     <title>Manage Your Profile | Mozilla Rally</title>
 </svelte:head>
 
-{#if $store._initialized}
+{#if $isAuthenticated && $store._initialized}
 <ProfileContent results={intermediateResults}>
     <span slot="title">Manage Profile</span>
     <p slot="description">

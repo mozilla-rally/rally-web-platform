@@ -1,11 +1,11 @@
 <script lang="ts">
 import { getContext } from "svelte";
-import { goto } from "$app/navigation";
 import StudiesContent  from "$lib/views/studies/Content.svelte";
 
 import type { Readable } from "svelte/store";
 import type { AppStore } from "$lib/stores/types";
-import type { NotificationStore } from "$lib/components/notifications"
+import type { NotificationStore } from "$lib/components/notifications";
+import redirectFromMainViewIfNeeded from "../_redirect-from-main-view-if-needed";
 
 const store: AppStore = getContext("rally:store");
 const isAuthenticated :Readable<boolean> = getContext("rally:isAuthenticated");
@@ -20,16 +20,7 @@ function leaveStudy(studyId) {
     notifications.send({code: "SUCCESSFULLY_LEFT_STUDY"});
 }
 
-$: if ($isAuthenticated === false) {
-    goto("/signup");
-}
-$: if ($store._initialized) {
-    if (!$store?.user?.uid) {
-        goto("/signup");
-    } else if (!$store?.user?.enrolled) {
-        goto("/welcome/terms");
-    }
-}
+$: redirectFromMainViewIfNeeded($isAuthenticated, $store._initialized, !$store?.user?.enrolled);
 
 </script>
 
@@ -37,7 +28,7 @@ $: if ($store._initialized) {
     <title>Studies | Mozilla Rally</title>
 </svelte:head>
 
-{#if $store._initialized}
+{#if $isAuthenticated && $store._initialized}
     {#if $store.studies}
         <StudiesContent
             sidebarOffset
