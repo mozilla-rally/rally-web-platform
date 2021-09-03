@@ -21,12 +21,17 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+      - run:
+          name: Configure git for ci-build
+          command: |
+            git config user.email "ci-build@rally-web-platform"
+            git config user.name "ci-build"
+      - run:
+          name: Checkout deploy branch and rebase onto master
+          command: git checkout deploy && git rebase master
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages
-      # If you are using yarn instead npm, remove the line above and uncomment the two lines below.
-      # - node/install-packages:
-      #     pkg-manager: yarn
       - run:
           name: Run lint
           command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
@@ -63,23 +68,16 @@ jobs:
             echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
             ' >> ~/.ssh/known_hosts
       - run:
-          name: Configure git for ci-build
-          command: |
-            git config user.email "ci-build@rally-web-platform"
-            git config user.name "ci-build"
-      - run:
           name: Add website build output to git
           command: |
             git checkout functions/package-lock.json
             git add -f functions/ build static/
-            git stash
-            git fetch origin && git checkout deploy
-            git stash apply 0
-            git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
-            git merge master
       - add_ssh_keys:
           fingerprints:
             - "ab:41:e3:9b:de:0b:ed:6d:fc:d1:58:c0:9e:a9:e6:dd"
+      - run:
+          name: Commit build artifacts to deploy branch
+          command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/ build/ static/
       - run:
           name: Push deploy branch to origin
           command: git push origin deploy
