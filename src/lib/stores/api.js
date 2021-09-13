@@ -37,11 +37,6 @@ async function initializeFirestoreAPIs() {
   }));
   auth = fb.auth;
   db = fb.db;
-
-  window.dispatchEvent(
-    // Let the content script know the site is intialized.
-    new CustomEvent("web-check", {})
-  );
 }
 
 // NOTE: this object is not to be touched.
@@ -141,7 +136,6 @@ export default {
         // this.updateStudyEnrollment(true, e.detail.studyId, true);
         switch (e.type) {
           case "complete-signup":
-            console.debug("complete-signup fired:", e);
             // @ts-ignore
             const studyId = e.detail;
             if (!studyId) {
@@ -181,12 +175,14 @@ export default {
               });
             const rallyToken = (await result.json()).rallyToken;
 
+            console.debug("dispatching complete-signup-response with token");
             window.dispatchEvent(
               // Each study needs its own token. Send to content script.
               new CustomEvent("complete-signup-response", { detail: { studyId, rallyToken } })
             );
             break;
           case "web-check-response":
+            console.debug("Received web-check-response.");
             break;
           default:
             throw new Error(`Unknown message received from content script: ${e.type}`);
@@ -215,6 +211,11 @@ export default {
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
       listenForUserStudiesChanges(authenticatedUser);
+
+      // Let the Rally SDK content script know the site is intialized.
+      window.dispatchEvent(
+        new CustomEvent("web-check", {})
+      );
     }
 
     // fetch the initial studies.
@@ -257,6 +258,11 @@ export default {
     initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
     listenForUserStudiesChanges(userCredential.user);
+
+    // Let the Rally SDK content script know the site is intialized.
+    window.dispatchEvent(
+      new CustomEvent("web-check", {})
+    );
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -271,6 +277,11 @@ export default {
       initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
       listenForUserStudiesChanges(userCredential.user);
+
+      // Let the Rally SDK content script know the site is intialized.
+      window.dispatchEvent(
+        new CustomEvent("web-check", {})
+      );
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
@@ -293,17 +304,18 @@ export default {
   },
 
   async updateStudyEnrollment(studyId, enroll, attached) {
-    console.debug("attached?", attached);
+    const connected = !!attached;
     const userStudies = { ...(__STATE__.userStudies || {}) };
     if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
     userStudies[studyId] = { ...userStudies[studyId] };
     userStudies[studyId].enrolled = enroll;
     userStudies[studyId].studyId = studyId;
-    userStudies[studyId].attached = attached;
+    userStudies[studyId].attached = connected;
     if (enroll) {
       userStudies[studyId].joinedOn = new Date();
     }
     await updateUserStudiesCollection(studyId, userStudies[studyId]);
+
     return true;
   },
 
