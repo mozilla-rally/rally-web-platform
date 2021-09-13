@@ -135,11 +135,11 @@ export default {
         // TODO
         // this.updateStudyEnrollment(true, e.detail.studyId, true);
         switch (e.type) {
-          case "complete-signup":
+          case "rally-sdk.complete-signup":
             // @ts-ignore
             const studyId = e.detail;
             if (!studyId) {
-              throw new Error("handling complete-signup from content script: No study ID provided.")
+              throw new Error("handling rally-sdk.complete-signup from content script: No study ID provided.")
             }
             if (functionsHost === undefined) {
               throw new Error("Firebase Functions host not defined, cannot generate JWTs for extensions.");
@@ -156,7 +156,7 @@ export default {
             const studies = await getStudies();
             const found = studies.filter(a => a.studyId === studyId);
             if (!found) {
-              throw new Error(`Received complete-signup for non-existent study: ${studyId}`)
+              throw new Error(`Received rally-sdk.complete-signup for non-existent study: ${studyId}`)
             }
 
             const authenticatedUser = await new Promise((resolve) => {
@@ -175,21 +175,21 @@ export default {
               });
             const rallyToken = (await result.json()).rallyToken;
 
-            console.debug("dispatching complete-signup-response with token");
+            console.debug("dispatching rally-sdk.complete-signup-response with token");
             window.dispatchEvent(
               // Each study needs its own token. Send to content script.
-              new CustomEvent("complete-signup-response", { detail: { studyId, rallyToken } })
+              new CustomEvent("rally-sdk.complete-signup-response", { detail: { studyId, rallyToken } })
             );
             break;
-          case "web-check-response":
-            console.debug("Received web-check-response.");
+          case "rally-sdk.web-check-response":
+            console.debug("Received rally-sdk.web-check-response.");
             break;
           default:
-            throw new Error(`Unknown message received from content script: ${e.type}`);
+            console.warn(`Unknown message received from content script: ${e.type}`);
         }
       }
-      window.addEventListener("complete-signup", handleContentScriptEvents);
-      window.addEventListener("web-check-response", handleContentScriptEvents);
+      window.addEventListener("rally-sdk.complete-signup", handleContentScriptEvents);
+      window.addEventListener("rally-sdk.web-check-response", handleContentScriptEvents);
     }
 
     const initialState = {};
@@ -213,8 +213,9 @@ export default {
       listenForUserStudiesChanges(authenticatedUser);
 
       // Let the Rally SDK content script know the site is intialized.
+      console.debug("initialized, dispatching rally-sdk.web-check");
       window.dispatchEvent(
-        new CustomEvent("web-check", {})
+        new CustomEvent("rally-sdk.web-check", {})
       );
     }
 
@@ -260,8 +261,9 @@ export default {
     listenForUserStudiesChanges(userCredential.user);
 
     // Let the Rally SDK content script know the site is intialized.
+    console.debug("initialized, dispatching rally-sdk.web-check");
     window.dispatchEvent(
-      new CustomEvent("web-check", {})
+      new CustomEvent("rally-sdk.web-check", {})
     );
   },
 
@@ -279,8 +281,9 @@ export default {
       listenForUserStudiesChanges(userCredential.user);
 
       // Let the Rally SDK content script know the site is intialized.
+      console.debug("initialized, dispatching rally-sdk.web-check");
       window.dispatchEvent(
-        new CustomEvent("web-check", {})
+        new CustomEvent("rally-sdk.web-check", {})
       );
     } else {
       console.warn("Email account not verified, sending verification email");
