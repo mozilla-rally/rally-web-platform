@@ -2,6 +2,7 @@ import { Rally, runStates } from "@mozilla/rally";
 
 const devMode = true;
 const studyName = "exampleStudy1";
+const rallySite = "http://localhost:5000";
 
 const stateChangeCallback = async (state) => {
     switch (state) {
@@ -20,5 +21,5 @@ const stateChangeCallback = async (state) => {
             break;
     }
 };
-const rallySite = "http://localhost:5000";
+
 const rally = new Rally(devMode, stateChangeCallback, rallySite, studyName);
