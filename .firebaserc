@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "rally-web-spike"
-  }
+    "rhelmer-dev": "moz-fx-dev-rhelmer-rally-test1"
+  },
+  "targets": {}
 }
