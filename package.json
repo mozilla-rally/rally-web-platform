@@ -53,8 +53,9 @@
     "eslint-plugin-jest": "^24.1.3",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
-    "firebase-admin": "^9.11.0",
-    "firebase-tools": "^9.16.5",
+    "firebase": "^9.0.1",
+    "firebase-admin": "^9.11.1",
+    "firebase-tools": "^9.17.0",
     "geckodriver": "^1.22.3",
     "immer": "^9.0.3",
     "jest": "^27.0.6",
@@ -82,8 +83,6 @@
   },
   "dependencies": {
     "@storybook/svelte": "^6.3.7",
-    "firebase": "^9.0.0-beta.7",
-    "firebase-tools": "^9.16.0",
     "sirv-cli": "^1.0.10",
     "ts-node": "^10.2.1"
   },
