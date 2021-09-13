@@ -37,6 +37,11 @@ async function initializeFirestoreAPIs() {
   }));
   auth = fb.auth;
   db = fb.db;
+
+  window.dispatchEvent(
+    // Let the content script know the site is intialized.
+    new CustomEvent("web-check", {})
+  );
 }
 
 // NOTE: this object is not to be touched.
@@ -123,10 +128,72 @@ function listenForStudyChanges() {
 export default {
   async initialize(browser = true) {
 
-    if (browser) {
-      await initializeFirestoreAPIs();
-    } else {
+    if (!browser) {
       return;
+    } else {
+      await initializeFirestoreAPIs();
+
+      async function handleContentScriptEvents(e) {
+        console.log("message from content script received:", e.type, e);
+
+        // Mark this study as connected.
+        // TODO
+        // this.updateStudyEnrollment(true, e.detail.studyId, true);
+        switch (e.type) {
+          case "complete-signup":
+            console.debug("complete-signup fired:", e);
+            // @ts-ignore
+            const studyId = e.detail;
+            if (!studyId) {
+              throw new Error("handling complete-signup from content script: No study ID provided.")
+            }
+            if (functionsHost === undefined) {
+              throw new Error("Firebase Functions host not defined, cannot generate JWTs for extensions.");
+            }
+
+            // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
+            // @ts-ignore
+            if (__EMULATOR_MODE__) {
+              // FIXME pass the firebase project name in here
+              const firebaseProjectId = "rally-web-spike";
+              functionsHost = `http://localhost:5001/${firebaseProjectId}/us-central1`;
+            }
+
+            const studies = await getStudies();
+            const found = studies.filter(a => a.studyId === studyId);
+            if (!found) {
+              throw new Error(`Received complete-signup for non-existent study: ${studyId}`)
+            }
+
+            const authenticatedUser = await new Promise((resolve) => {
+              onAuthStateChanged(auth, (v) => {
+                resolve(v);
+              });
+            });
+
+            const idToken = await authenticatedUser.getIdToken();
+            const body = JSON.stringify({ studyId, idToken });
+            const result = await fetch(`${functionsHost}/rallytoken`,
+              {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body
+              });
+            const rallyToken = (await result.json()).rallyToken;
+
+            window.dispatchEvent(
+              // Each study needs its own token. Send to content script.
+              new CustomEvent("complete-signup-response", { detail: { studyId, rallyToken } })
+            );
+            break;
+          case "web-check-response":
+            break;
+          default:
+            throw new Error(`Unknown message received from content script: ${e.type}`);
+        }
+      }
+      window.addEventListener("complete-signup", handleContentScriptEvents);
+      window.addEventListener("web-check-response", handleContentScriptEvents);
     }
 
     const initialState = {};
@@ -148,9 +215,6 @@ export default {
       userState = userState.data();
       listenForUserChanges(authenticatedUser);
       listenForUserStudiesChanges(authenticatedUser);
-
-      // FIXME more efficient to wait for studies to ask, vs. broadcasting
-      await this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -193,9 +257,6 @@ export default {
     initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
     listenForUserStudiesChanges(userCredential.user);
-
-    // FIXME more efficient to wait for studies to ask, vs. broadcasting
-    await this.notifyStudies(userCredential.user);
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -210,9 +271,6 @@ export default {
       initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
       listenForUserStudiesChanges(userCredential.user);
-
-      // FIXME more efficient to wait for studies to ask, vs. broadcasting
-      await this.notifyStudies(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
@@ -230,48 +288,18 @@ export default {
     await sendEmailVerification(userCredential.user);
   },
 
-  async notifyStudies(user) {
-    if (functionsHost === undefined) {
-      console.debug("Firebase Functions host not defined, not notifying studies.");
-      return;
-    }
-
-    const studies = await getStudies();
-    console.debug("studies:", studies);
-    // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const study of studies) {
-
-      // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
-      // @ts-ignore
-      if (__EMULATOR_MODE__) {
-        functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
-      }
-
-      const idToken = await user.getIdToken();
-      const body = JSON.stringify({ studyId: study.studyId, idToken });
-      const result = await fetch(`${functionsHost}/rallytoken`,
-        {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body
-        });
-      const rallyToken = (await result.json()).rallyToken;
-      window.dispatchEvent(
-        new CustomEvent("complete-signup", { detail: { studyId: study.studyId, rallyToken } })
-      );
-    }
-  },
-
   async updateOnboardedStatus(onboarded) {
     return updateUserDocument({ onboarded });
   },
 
-  async updateStudyEnrollment(studyId, enroll) {
+  async updateStudyEnrollment(studyId, enroll, attached) {
+    console.debug("attached?", attached);
     const userStudies = { ...(__STATE__.userStudies || {}) };
     if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
     userStudies[studyId] = { ...userStudies[studyId] };
     userStudies[studyId].enrolled = enroll;
     userStudies[studyId].studyId = studyId;
+    userStudies[studyId].attached = attached;
     if (enroll) {
       userStudies[studyId].joinedOn = new Date();
     }
