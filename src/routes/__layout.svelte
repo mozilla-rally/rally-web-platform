@@ -32,7 +32,7 @@ const mounted = isMounted();
 {#if $isAuthenticated && $store?.user?.enrolled}
     <Layout>
         <Sidebar 
-            on:change-view 
+            on:change-view
             on:leave-rally={() => {
             leaveModal = true;
         }} />

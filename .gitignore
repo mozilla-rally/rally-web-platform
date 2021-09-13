@@ -127,3 +127,5 @@ generated/
 screenshots/
 
 .firebase
+
+static/firebase.config.json

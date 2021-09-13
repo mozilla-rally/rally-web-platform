@@ -25,7 +25,7 @@ let auth;
 let db;
 
 async function initializeFirestoreAPIs() {
-  const request = await fetch("firebase.config.rally-web-spike.json");
+  const request = await fetch("/firebase.config.json");
   const firebaseConfig = await request.json();
   const fb = initializeFirebase(firebaseConfig, (({ auth }) => {
     onAuthStateChanged(auth, change => {

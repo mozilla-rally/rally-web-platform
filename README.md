@@ -149,7 +149,7 @@ Then, enable the following in the Firebase console:
 
 2. Deploy
 
-Build the site in non-dev mode:
+Build the site in production mode:
 `firebase use {YOUR_FIREBASE_PROJECT_NAME}`
 `npm run build`
 
