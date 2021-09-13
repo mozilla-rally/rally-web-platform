@@ -122,3 +122,6 @@ generated/
 
 #miscell
 .vscode/
+
+!screenshots/README.md
+screenshots/
