@@ -1,4 +1,4 @@
-import CONFIG, { demoConfig } from "../../../firebase.config"
+import CONFIG, { demoConfig } from "../../../config/firebase.config.rally-web-spike"
 import { produce } from "immer/dist/immer.esm";
 
 import {
