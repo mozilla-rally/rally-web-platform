@@ -66,6 +66,7 @@
     "minimist": "^1.2.5",
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
+    "rollup-plugin-copy": "^3.4.0",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "sinon-chrome": "^3.0.1",
     "source-map-support": "^0.5.19",

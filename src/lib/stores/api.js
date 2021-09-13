@@ -1,4 +1,3 @@
-import CONFIG, { demoConfig } from "../../../config/firebase.config.rally-web-spike"
 import { produce } from "immer/dist/immer.esm";
 
 import {
@@ -26,7 +25,9 @@ let auth;
 let db;
 
 async function initializeFirestoreAPIs() {
-  const fb = initializeFirebase(CONFIG, (({ auth }) => {
+  const request = await fetch("firebase.config.rally-web-spike.json");
+  const firebaseConfig = await request.json();
+  const fb = initializeFirebase(firebaseConfig, (({ auth }) => {
     onAuthStateChanged(auth, change => {
       _authChangeCallbacks.forEach(callback => callback(change));
     });
@@ -120,7 +121,7 @@ export default {
   async initialize(browser = true) {
 
     if (browser) {
-      initializeFirestoreAPIs();
+      await initializeFirestoreAPIs();
     } else {
       return;
     }
@@ -168,7 +169,7 @@ export default {
   },
 
   async onAuthStateChanged(callback) {
-    initializeFirestoreAPIs();
+    await initializeFirestoreAPIs();
     onAuthStateChanged(auth, callback);
   },
 
