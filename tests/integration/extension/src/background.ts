@@ -1,8 +1,19 @@
 import { Rally, runStates } from "@mozilla/rally";
 
 const devMode = true;
-const studyName = "exampleStudy1";
 const rallySite = "http://localhost:5000";
+const studyName = "exampleStudy1";
+
+// TODO load from JSON file in /config/
+const firebaseConfig = {
+    "apiKey": "abc123",
+    "authDomain": "demo-rally.firebaseapp.com",
+    "projectId": "demo-rally",
+    "storageBucket": "demo-rally.appspot.com",
+    "messagingSenderId": "abc123",
+    "appId": "1:123:web:abc123",
+    "functionsHost": "http://localhost:5001"
+}
 
 const stateChangeCallback = async (state) => {
     switch (state) {
@@ -22,4 +33,4 @@ const stateChangeCallback = async (state) => {
     }
 };
 
-const rally = new Rally(devMode, stateChangeCallback, rallySite, studyName);
+const rally = new Rally(devMode, stateChangeCallback, rallySite, studyName, firebaseConfig);

@@ -149,7 +149,7 @@ export default {
             // @ts-ignore
             if (__EMULATOR_MODE__) {
               // FIXME pass the firebase project name in here
-              const firebaseProjectId = "rally-web-spike";
+              const firebaseProjectId = "demo-rally";
               functionsHost = `http://localhost:5001/${firebaseProjectId}/us-central1`;
             }
 
