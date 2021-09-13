@@ -71,12 +71,11 @@ async function generateToken(idToken: string, studyId: string) {
 
 exports.addRallyUserToFirestore = functions.auth.user().onCreate(
   async (user) => {
-    functions.logger.info("addRallyUserToFirestore fired");
+    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", { user });
     if (user.providerData.length == 0) {
       functions.logger.info("Extension users do not get user docs.");
       return;
     }
-
 
     const newRallyId = uuidv4();
     const extensionUserDoc = { rallyId: newRallyId };
