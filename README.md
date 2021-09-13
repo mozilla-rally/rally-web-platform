@@ -28,7 +28,7 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
 
 ## Versioning
 
-You can always access the current version by of the site by fetching `<hostname>/version.json`.
+You can always access the current version of the site by fetching `<hostname>/version.json`.
 
 ## Quickstart
 
@@ -116,7 +116,7 @@ The first option is the simplest for occasional manual deployments, the second i
 
 NOTE: if the Firebase environment you are deploying to is not set up yet, see the next section.
 
-Review the `./firebase.json` which contains the server configuration, and `./firebasers` which contains your project names and aliases.
+Review the `./firebase.json` which contains the server configuration, and `./firebaserc` which contains your project names and aliases.
 When ready, deploy to your project:
 
 `firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
@@ -127,7 +127,7 @@ The `./firebase.json` holds the desired services and basic configuration, but th
 
 1. Create new Web app in UI under Project Settings -> Your apps
 ​
-Place the returned configuration into `./firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.js`, then set up your project and an alias (dev/stage/prod/etc):
+Place the returned configuration into `./firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
 `firebase use --add`
 
 And complete the prompts:
@@ -190,7 +190,7 @@ https://{YOUR_FIREBASE_PROJECT_NAME}.web.app
 
 `svelte.config.js` – contains the configuration of the Sveltekit app. Sveltekit utilizes Vite under the hood, and has support for both Vite and Rollup plugins.
 
-`config/firebase.config.*.js` – the Firebase configuration files used by the Svelte site.
+`config/firebase.config.*.json` – the Firebase configuration files used by the Svelte site.
 
 `firebase.json` - contains the server-side configuration for this Firebase project.
 
