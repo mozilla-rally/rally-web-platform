@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "pre-build": "bash scripts/reset-build-directories.sh && bash scripts/add-protocol.sh && node scripts/add-version-object.js",
-    "dev": "firebase emulators:exec --only auth,functions,firestore --ui 'npm run build:functions && sleep 1 && npm run load:data && (npm run watch:functions & npm run watch:web)'",
+    "dev": "npm run config:web && firebase emulators:exec --only auth,functions,firestore --ui 'npm run build:functions && sleep 1 && npm run load:data && (npm run watch:functions & npm run watch:web)'",
     "config:web": "firebase_project=$(firebase use) && echo Configuring for Firebase project: ${firebase_project} && cp config/firebase.config.${firebase_project}.json ./static/firebase.config.json",
     "dev:web": "npm run pre-build && npm run config:web && svelte-kit dev -- --firebase-project ${firebase_project}",
     "build": "npm run pre-build && npm run build:functions && npm run config:web && svelte-kit build -- --firebase-project ${firebase_project}",
@@ -11,7 +11,7 @@
     "build:web:emulator": "npm run pre-build && npm run config:web && svelte-kit build -- --config-emulator-mode",
     "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src > /dev/null",
     "watch:web": "svelte-kit dev -- --config-emulator-mode",
-    "load:data": "curl -s http://localhost:5001/rally-web-spike/us-central1/loadFirestore",
+    "load:data": "firebase_project=$(firebase use) && curl -s http://localhost:5001/${firebase_project}/us-central1/loadFirestore",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
