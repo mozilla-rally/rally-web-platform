@@ -23,10 +23,13 @@ import initializeFirebase from "./initialize-firebase";
 
 let auth;
 let db;
+let functionsHost;
 
 async function initializeFirestoreAPIs() {
   const request = await fetch("/firebase.config.json");
   const firebaseConfig = await request.json();
+  functionsHost = firebaseConfig.functionsHost;
+  console.debug("configured functions host:", functionsHost);
   const fb = initializeFirebase(firebaseConfig, (({ auth }) => {
     onAuthStateChanged(auth, change => {
       _authChangeCallbacks.forEach(callback => callback(change));
@@ -147,7 +150,7 @@ export default {
       listenForUserStudiesChanges(authenticatedUser);
 
       // FIXME more efficient to wait for studies to ask, vs. broadcasting
-      this.notifyStudies(authenticatedUser);
+      await this.notifyStudies(authenticatedUser);
     }
 
     // fetch the initial studies.
@@ -186,12 +189,13 @@ export default {
       console.error("there was an error", err);
     }
     // create a new user.
+    console.debug("Logged in as", userCredential.user.email);
     initializeUserDocument(userCredential.user.uid);
     listenForUserChanges(userCredential.user);
     listenForUserStudiesChanges(userCredential.user);
 
     // FIXME more efficient to wait for studies to ask, vs. broadcasting
-    this.notifyStudies(userCredential.user);
+    await this.notifyStudies(userCredential.user);
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -208,7 +212,7 @@ export default {
       listenForUserStudiesChanges(userCredential.user);
 
       // FIXME more efficient to wait for studies to ask, vs. broadcasting
-      this.notifyStudies(userCredential.user);
+      await this.notifyStudies(userCredential.user);
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
@@ -227,11 +231,17 @@ export default {
   },
 
   async notifyStudies(user) {
+    if (functionsHost === undefined) {
+      console.debug("Firebase Functions host not defined, not notifying studies.");
+      return;
+    }
+
+    const studies = await getStudies();
+    console.debug("studies:", studies);
     // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const study of await getStudies()) {
+    for (const study of studies) {
 
       // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
-      let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
       // @ts-ignore
       if (__EMULATOR_MODE__) {
         functionsHost = "http://localhost:5001/rally-web-spike/us-central1";

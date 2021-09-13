@@ -4,5 +4,6 @@
   "projectId": "rally-web-spike",
   "storageBucket": "rally-web-spike.appspot.com",
   "messagingSenderId": "85993993890",
-  "appId": "1:85993993890:web:b975ff99733d2d8b50c9fb"
+  "appId": "1:85993993890:web:b975ff99733d2d8b50c9fb",
+  "functionsHost": "https://us-central1-rally-web-spike.cloudfunctions.net"
 }

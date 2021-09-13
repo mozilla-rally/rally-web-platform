@@ -8,7 +8,7 @@
     "dev:web": "npm run pre-build && npm run config:web && svelte-kit dev -- --firebase-project ${firebase_project}",
     "build": "npm run pre-build && npm run build:functions && npm run config:web && svelte-kit build -- --firebase-project ${firebase_project}",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
-    "build:web:emulator": "npm run pre-build && svelte-kit build -- --config-emulator-mode",
+    "build:web:emulator": "npm run pre-build && npm run config:web && svelte-kit build -- --config-emulator-mode",
     "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src > /dev/null",
     "watch:web": "svelte-kit dev -- --config-emulator-mode",
     "load:data": "curl -s http://localhost:5001/rally-web-spike/us-central1/loadFirestore",

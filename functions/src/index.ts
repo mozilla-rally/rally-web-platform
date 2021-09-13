@@ -40,7 +40,7 @@ export const rallytoken = functions.https.onRequest(
         response.status(200).send({ rallyToken });
       } catch (ex) {
         functions.logger.error(ex);
-        response.status(500).send(ex.message);
+        response.status(500).send();
       }
     } else {
       response.status(500).send("Only POST and OPTIONS methods are allowed.");
