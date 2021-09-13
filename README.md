@@ -152,6 +152,13 @@ Then, enable the following in the Firebase console:
 Build the site in production mode:
 `firebase use {YOUR_FIREBASE_PROJECT_NAME}`
 `npm run build`
+`npm run config:web`
+
+NOTE - if you are not logged into Firebase then it will not be able to automatically detect project name and details.
+If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
+
+`npm run build`
+`cp config/firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
 
 Then deploy to your Firebase project:
 `firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
