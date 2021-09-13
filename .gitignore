@@ -126,6 +126,7 @@ generated/
 !screenshots/README.md
 screenshots/
 
-.firebase
+.firebase/
+.firebaserc
 
 static/firebase.config.json
