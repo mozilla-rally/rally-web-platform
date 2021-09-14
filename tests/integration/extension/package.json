@@ -1,5 +1,5 @@
 {
-  "name": "textextension",
+  "name": "testextension",
   "version": "0.0.1",
   "description": "A minimal Rally test extension",
   "main": "dist/background.js",
