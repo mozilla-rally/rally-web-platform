@@ -92,14 +92,17 @@ jobs:
           name: Check out the deploy branch.
           command: git checkout deploy && git pull --rebase origin deploy
       - run:
-          name: Create Service Account key JSON
+          name: Create Service Account key JSON.
           command: echo $GSA_KEY > "$HOME"/gcloud.json
       - run:
-          name: Install Firebase Tools needed for deploy
+          name: Install Firebase Tools needed for deploy.
           command: npm install firebase-tools firebase-functions
       - run:
-          name: Firebase Deploy
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy
+          name: Configure Firebase for the deployment project name.
+          command: ./node_modules/.bin/firebase use --add rally-web-spike && cp config/firebase.config.rally-web-spike.json config/firebase.config.json
+      - run:
+          name: Firebase Deploy.
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project rally-web-spike
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.

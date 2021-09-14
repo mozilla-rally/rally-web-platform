@@ -10,6 +10,8 @@ import { until } from "selenium-webdriver";
 import firefox from "selenium-webdriver/firefox";
 import chrome from "selenium-webdriver/chrome";
 
+const TEST_EXTENSION = "/extension/web-ext-artifacts/rally_web_platform_test-0.0.1.zip";
+
 // The number of milliseconds to wait for some
 // property to change in tests. This should be
 // a long time to account for slow CI.
@@ -105,7 +107,7 @@ export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boo
     // Extensions can only be loaded temporarily at runtime for Firefox Release.
     const isTemporaryAddon = true;
     // @ts-ignore this appears to be missing from the type definition, but it exists!
-    driver.installAddon(`${__dirname}/extension.xpi`, isTemporaryAddon);
+    await driver.installAddon(`${__dirname}/${TEST_EXTENSION}`, isTemporaryAddon);
   }
 
   return driver;
@@ -141,7 +143,7 @@ export async function getChromeDriver(loadExtension: boolean, headlessMode: bool
       return Buffer.from(stream).toString("base64");
     }
 
-    chromeOptions.addExtensions(encode(path.resolve(__dirname, "extension.crx")));
+    chromeOptions.addExtensions(encode(path.resolve(`${__dirname}/${TEST_EXTENSION}`)));
   }
 
   return await new Builder()
