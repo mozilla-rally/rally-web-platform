@@ -1,4 +1,3 @@
-l
 # Rally Web Platform
 
 This repository contains the code needed to build the Rally Web Platform.
@@ -11,7 +10,7 @@ The Rally Web Platform consists of:
 - One or more WebExtensions which collect and submit user browsing data.
 
 The website is used to create/log in to a Rally account, and allows users to
-control what data is collected by any installed WebExtension(s).
+log in from one or more WebExtensions to configure what data may be collected.
 
 WebExtensions are built from the [Rally Study Template](https://github.com/mozilla-rally/study-template).
 
