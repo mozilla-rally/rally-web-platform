@@ -310,32 +310,6 @@ export default {
     }
   },
 
-  async notifyStudies(user) {
-    // Each study needs its own token. Need to iterate over any installed+consented studies and pass them their unique token.
-    for (const study of await getStudies()) {
-
-      // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
-      let functionsHost = "https://us-central1-rally-web-spike.cloudfunctions.net";
-      // @ts-ignore
-      if (__EMULATOR_MODE__) {
-        functionsHost = "http://localhost:5001/rally-web-spike/us-central1";
-      }
-
-      const idToken = await user.getIdToken();
-      const body = JSON.stringify({ studyId: study.studyId, idToken });
-      const result = await fetch(`${functionsHost}/rallytoken`,
-        {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body
-        });
-      const rallyToken = (await result.json()).rallyToken;
-      window.dispatchEvent(
-        new CustomEvent("complete-signup", { detail: { studyId: study.studyId, rallyToken } })
-      );
-    }
-  },
-
   async updateOnboardedStatus(onboarded) {
     return updateUserDocument({ onboarded });
   },
