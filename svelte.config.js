@@ -2,6 +2,8 @@ import adapter from "@sveltejs/adapter-static";
 import preprocess from "svelte-preprocess";
 import replace from "@rollup/plugin-replace";
 
+const emulatorMode = process.argv.includes("--config-emulator-mode");
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
@@ -22,11 +24,11 @@ const config = {
 					// the following replacements build the site URLs.
 					// In the templates, use (for example) __BASE_SITE_URL__/__FAQ_PATH__
 					__BASE_SITE__: "https://rally.mozilla.org",
-					__EMULATOR_MODE__: (process.argv.includes("--config-emulator-mode")),
+					__EMULATOR_MODE__: emulatorMode,
 				}),
 			]
 		}
-	}
+	},
 };
 
 export default config;
