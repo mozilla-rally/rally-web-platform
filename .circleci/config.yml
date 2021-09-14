@@ -21,14 +21,6 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      - run:
-          name: Configure git for ci-build
-          command: |
-            git config user.email "ci-build@rally-web-platform"
-            git config user.name "ci-build"
-      - run:
-          name: Checkout deploy branch and rebase onto master
-          command: git checkout deploy && git rebase master
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages
@@ -61,6 +53,14 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run:
+          name: Configure git for ci-build
+          command: |
+            git config user.email "ci-build@rally-web-platform"
+            git config user.name "ci-build"
+      - run:
+          name: Checkout deploy branch and rebase onto master
+          command: git checkout deploy && git rebase master
       - run:
           name: Set up ssh known_hosts # https://circleci.com/docs/2.0/gh-bb-integration/
           command: |
