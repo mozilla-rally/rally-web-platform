@@ -100,7 +100,7 @@ jobs:
           command: npm install firebase-tools firebase-functions
       - run:
           name: Configure Firebase for the deployment project name.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add rally-web-spike && cp config/firebase.config.rally-web-spike.json config/firebase.config.json
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add rally-web-spike && cp config/firebase.config.rally-web-spike.json build/firebase.config.json
       - run:
           name: Firebase Deploy.
           command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project rally-web-spike
