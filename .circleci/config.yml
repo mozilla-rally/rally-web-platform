@@ -60,7 +60,9 @@ jobs:
             git config user.name "ci-build"
       - run:
           name: Checkout deploy branch and rebase onto master
-          command: git checkout deploy && git rebase master
+          command: |
+            git checkout functions/package-lock.json
+            git checkout deploy && git rebase master
       - run:
           name: Set up ssh known_hosts # https://circleci.com/docs/2.0/gh-bb-integration/
           command: |
@@ -70,7 +72,6 @@ jobs:
       - run:
           name: Add website build output to git
           command: |
-            git checkout functions/package-lock.json
             git add -f functions/lib/ build/
       - add_ssh_keys:
           fingerprints:
