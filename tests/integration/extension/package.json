@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w --config-enable-developer-mode",
-    "package": "web-ext build --overwrite-dest",
+    "package": "node_modules/.bin/web-ext build --overwrite-dest",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
