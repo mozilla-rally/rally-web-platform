@@ -19,4 +19,4 @@
 
 {#if $isAuthenticated}
   <TermsContent />
-{/if}3
+{/if}
