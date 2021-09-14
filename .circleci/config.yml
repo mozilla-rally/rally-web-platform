@@ -21,6 +21,15 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+      # Build while on the deploy branch. Note - this will only be checked in if the deploy-branch-update runs.
+      - run:
+          name: Configure git for ci-build
+          command: |
+            git config user.email "ci-build@rally-web-platform"
+            git config user.name "ci-build"
+      - run:
+          name: Checkout deploy branch and rebase onto current branch
+          command: git checkout deploy && git rebase ${CIRCLE_BRANCH}
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages
@@ -54,16 +63,6 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Configure git for ci-build
-          command: |
-            git config user.email "ci-build@rally-web-platform"
-            git config user.name "ci-build"
-      - run:
-          name: Checkout deploy branch and rebase onto master
-          command: |
-            git checkout functions/package-lock.json
-            git checkout deploy && git rebase master
-      - run:
           name: Set up ssh known_hosts # https://circleci.com/docs/2.0/gh-bb-integration/
           command: |
             mkdir -p ~/.ssh
@@ -72,6 +71,7 @@ jobs:
       - run:
           name: Add website build output to git
           command: |
+            git checkout functions/package-lock.json
             git add -f functions/lib/ build/
       - add_ssh_keys:
           fingerprints:
