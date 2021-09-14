@@ -36,7 +36,7 @@ exports.rallytoken = functions.https.onRequest(async (request, response) => {
         }
         catch (ex) {
             functions.logger.error(ex);
-            response.status(500).send(ex.message);
+            response.status(500).send();
         }
     }
     else {
@@ -60,7 +60,7 @@ async function generateToken(idToken, studyId) {
     return rallyToken;
 }
 exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) => {
-    functions.logger.info("addRallyUserToFirestore fired");
+    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", { user });
     if (user.providerData.length == 0) {
         functions.logger.info("Extension users do not get user docs.");
         return;
