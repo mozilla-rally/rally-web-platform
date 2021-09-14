@@ -118,11 +118,11 @@ workflows:
             - build-and-test
           filters:
             branches:
-              only: master
+              only: test-deploy
 
       - dev-site-deploy:
           requires:
             - deploy-branch-update
           filters:
             branches:
-              only: master
+              only: test-deploy
