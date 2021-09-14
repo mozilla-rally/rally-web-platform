@@ -10,7 +10,7 @@ The Rally Web Platform consists of:
 - One or more WebExtensions which collect and submit user browsing data.
 
 The website is used to create/log in to a Rally account, and allows users to
-log in from one or more WebExtensions to configure what data may be collected.
+also log in from one or more WebExtensions to configure what data may be collected.
 
 WebExtensions are built from the [Rally Study Template](https://github.com/mozilla-rally/study-template).
 
@@ -20,14 +20,9 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
 * [Firebase](https://firebase.google.com/docs/cli)
   * Authentication
   * Functions
-  * Firestore
+  * Cloud Firestore
   * Hosting
 * [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
-
-
-## Versioning
-
-You can always access the current version of the site by fetching `<hostname>/version.json`.
 
 ## Quickstart
 
@@ -46,6 +41,21 @@ The site will be ready for use when you see Svelte start up:
   Use --host to expose server to other devices on this network
 ```
 
+## Tests
+
+Integration tests can be run with:
+
+`npm run test:integration`
+
+This uses Selenium and the Firebase Emulators to run the full Rally Web Platform stack and test that
+the various supported UX flows work as expected.
+
+This repository comes (aspirationally) with unit tests:
+- run `npm run test:unit`
+
+These are currently severely underdeveloped right now, we are currently prioritizing
+integration testing.
+
 ## Emulating the server backend (Firebase)
 
 The `npm run dev` command automatically runs the full set of Firebase emulators required for Rally, as well as the
@@ -61,14 +71,15 @@ It then watches for changes and automatically reloads services:
 NOTE: if you only want to run the Svelte web app and nothing else, you may use:
 `npm run dev:web`
 
-However, you must configure a valid Firebase backend in `./firebase.config.js` for the site to function.
+However, you must configure a valid Firebase backend in `firebase.config.json` for the site to function. See the
+`./configs/` directory for examples.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
-When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting:
-`npm run build:test:integration`
+When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting service:
+`npm run build:web:emulator`
 
-Clients wishing to connect to the Firebase emulators, including the website any WebExtensions, must set
+Clients wishing to connect to the Firebase emulators, including the website and any WebExtensions, must set
 this explicitly in their code after initializing the services.
 
 Connecting to the Firebase Authentication emulator:
@@ -83,22 +94,8 @@ db = getFirestore(app);
 connectFirestoreEmulator(db, 'localhost', 8080);
 ```
 
-For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js`
-
-## Tests
-
-Integration tests can be run with:
-
-`npm run test:integration`
-
-This uses Selenium and the Firebase Emulators to run the full Rally Web Platform stack and test that
-the various supported UX flows work as expected.
-
-This repository comes (aspirationally) with unit tests:
-- run `npm run test:unit`
-
-These are currently severely underdeveloped right now, we are currently prioritizing
-integration testing.
+For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js` and automatically enabled when built in
+emulator mode.
 
 ## Deploying
 
@@ -176,6 +173,13 @@ Upgrading to the Blaze plan is necessary for access to Firebase Cloud Functions.
 
 You should now be able to access your site at:
 https://{YOUR_FIREBASE_PROJECT_NAME}.web.app
+
+## Versioning
+
+The current version of the site is available at: `<hostname>/version.json`. There are currently no releases, the main branch is
+automatically deployed to dev environment.
+
+As we add a staging and production environment, we will start using tags.
 
 ## Organization
 
