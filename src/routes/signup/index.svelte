@@ -41,7 +41,7 @@
     }
 
     if (password) {
-      if (name === "id_user_pw") {
+      if (name === "id_user_email") {
         password.length >= 8 ? (errorMsg = false) : (errorMsg = true);
       }
     }
@@ -145,26 +145,26 @@
     <form>
       <fieldset class="mzp-c-field-set">
         <div class="mzp-c-field ">
-          <label class="mzp-c-field-label" for="id_user_email">Email</label>
+          <label class="mzp-c-field-label" for="id_name">Email</label>
           <input
             class="mzp-c-field-control "
             bind:value={email}
             on:keyup|preventDefault={handleKeyup}
-            id="id_user_email"
-            name="id_user_email"
+            id="id_name"
+            name="id_name"
             type="email"
             required
           />
         </div>
         <div class="mzp-c-field ">
-          <label class="mzp-c-field-label" for="id_user_pw">Password</label>
+          <label class="mzp-c-field-label" for="id_user_email">Password</label>
           <input
             class="mzp-c-field-control"
             bind:value={password}
             bind:this={passwordEl}
             on:keyup|preventDefault={handleKeyup}
-            id="id_user_pw"
-            name="id_user_pw"
+            id="id_user_email"
+            name="id_user_email"
             type="password"
             min="8"
             required
