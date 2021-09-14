@@ -10,7 +10,7 @@ The Rally Web Platform consists of:
 - One or more WebExtensions which collect and submit user browsing data.
 
 The website is used to create/log in to a Rally account, and allows users to
-control what data is collected by any installed WebExtension(s).
+log in from one or more WebExtensions to configure what data may be collected.
 
 WebExtensions are built from the [Rally Study Template](https://github.com/mozilla-rally/study-template).
 
@@ -22,11 +22,12 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
   * Functions
   * Firestore
   * Hosting
-- & [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) – needed for integration tests
+* [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
+
 
 ## Versioning
 
-You can always access the current version by going to `<hostname>/version.json`.
+You can always access the current version of the site by fetching `<hostname>/version.json`.
 
 ## Quickstart
 
@@ -88,7 +89,7 @@ For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-fireba
 
 Integration tests can be run with:
 
-- integration tests: run `npm run test:integration`
+`npm run test:integration`
 
 This uses Selenium and the Firebase Emulators to run the full Rally Web Platform stack and test that
 the various supported UX flows work as expected.
@@ -99,6 +100,82 @@ This repository comes (aspirationally) with unit tests:
 These are currently severely underdeveloped right now, we are currently prioritizing
 integration testing.
 
+## Deploying
+
+CircleCI is used to generate build artifacts, which are pushed to the `deploy` branch on this repository.
+A deploy job is then triggered from this branch to the dev environment on merge to the `master` branch:
+https://rally-web-spike.web.app/
+
+NOTE: if you want to deploy to your own environment, you must either:
+
+1. `firebase login` and use your own GCP account.
+2. point `GOOGLE_APPLICATION_CREDENTIALS` shell variable to a GCP service account JSON file. The service account must have the role "Cloud Build Service Account".
+
+The first option is the simplest for occasional manual deployments, the second is necessary if you're doing automated deployment from CI.
+
+NOTE: if the Firebase environment you are deploying to is not set up yet, see the next section.
+
+Review the `./firebase.json` which contains the server configuration, and `./firebaserc` which contains your project names and aliases.
+When ready, deploy to your project:
+
+`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+
+## One-time Firebase server setup
+
+The `./firebase.json` holds the desired services and basic configuration, but there are a number of one-time configuration changes that must be made using the [Firebase console](https://console.firebase.google.com/):
+
+1. Create new Web app in UI under Project Settings -> Your apps
+​
+Place the returned configuration into `./firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
+`firebase use --add`
+
+And complete the prompts:
+
+```
+? Which project do you want to add?
+? What alias do you want to use for this project? (e.g. staging)
+```
+​
+Then, enable the following in the Firebase console:
+
+- Authentication, along with the email and Google providers.
+- Cloud Firestore
+- Hosting
+
+1. Grant the ability to generate custom tokens to your Firebase functions:
+   1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=211360280873
+   2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project={YOUR_FIREBASE_PROJECT_NAME}.
+
+2. Deploy
+
+Build the site in production mode:
+`firebase use {YOUR_FIREBASE_PROJECT_NAME}`
+`npm run build`
+`npm run config:web`
+
+NOTE - if you are not logged into Firebase then it will not be able to automatically detect project name and details.
+If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
+
+`npm run build`
+`cp config/firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
+
+Then deploy to your Firebase project:
+`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+
+If you are still on the free billing plan, you will get a message similar to the following:
+​
+```
+Error: Your project {YOUR_FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
+​
+https://console.firebase.google.com/project/{YOUR_FIREBASE_PROJECT_NAME}/usage/details
+​
+Having trouble? Try firebase [command] --help
+```
+
+Upgrading to the Blaze plan is necessary for access to Firebase Cloud Functions.
+
+You should now be able to access your site at:
+https://{YOUR_FIREBASE_PROJECT_NAME}.web.app
 
 ## Organization
 
@@ -112,7 +189,7 @@ integration testing.
 
 `svelte.config.js` – contains the configuration of the Sveltekit app. Sveltekit utilizes Vite under the hood, and has support for both Vite and Rollup plugins.
 
-`firebase.config.js` – contains our public firebase configuration for this application.
+`config/firebase.config.*.json` – the Firebase configuration files used by the Svelte site.
 
 `firebase.json` - contains the server-side configuration for this Firebase project.
 

@@ -5,6 +5,7 @@
 import commonjs from "@rollup/plugin-commonjs";
 import replace from "@rollup/plugin-replace";
 import resolve from "@rollup/plugin-node-resolve";
+import copy from "rollup-plugin-copy";
 
 /**
   * Helper to detect developer mode.
@@ -39,7 +40,11 @@ export default (cliArgs) => [
         preferBuiltins: false,
       }),
       commonjs(),
-    ],
-  },
-  // NOTE: a content script rollup is not needed for this study.
-];
+      copy({
+        targets: [
+          { src: 'node_modules/@mozilla/rally/dist/rally-content.js', dest: 'dist/' },
+        ],
+      })
+    ]
+  }
+]

@@ -21,14 +21,15 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+      # Build while on the deploy branch. Note - this will only be checked in if the deploy-branch-update runs.
       - run:
           name: Configure git for ci-build
           command: |
             git config user.email "ci-build@rally-web-platform"
             git config user.name "ci-build"
       - run:
-          name: Checkout deploy branch and rebase onto master
-          command: git checkout deploy && git rebase master
+          name: Checkout deploy branch and rebase onto current branch
+          command: git checkout deploy && git rebase ${CIRCLE_BRANCH}
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages
@@ -92,14 +93,17 @@ jobs:
           name: Check out the deploy branch.
           command: git checkout deploy && git pull --rebase origin deploy
       - run:
-          name: Create Service Account key JSON
+          name: Create Service Account key JSON.
           command: echo $GSA_KEY > "$HOME"/gcloud.json
       - run:
-          name: Install Firebase Tools needed for deploy
+          name: Install Firebase Tools needed for deploy.
           command: npm install firebase-tools firebase-functions
       - run:
-          name: Firebase Deploy
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy
+          name: Configure Firebase for the deployment project name.
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add rally-web-spike && cp config/firebase.config.rally-web-spike.json build/firebase.config.json
+      - run:
+          name: Firebase Deploy.
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project rally-web-spike
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.

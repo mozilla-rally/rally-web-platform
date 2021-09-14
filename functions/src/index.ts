@@ -40,7 +40,7 @@ export const rallytoken = functions.https.onRequest(
         response.status(200).send({ rallyToken });
       } catch (ex) {
         functions.logger.error(ex);
-        response.status(500).send(ex.message);
+        response.status(500).send();
       }
     } else {
       response.status(500).send("Only POST and OPTIONS methods are allowed.");
@@ -71,12 +71,11 @@ async function generateToken(idToken: string, studyId: string) {
 
 exports.addRallyUserToFirestore = functions.auth.user().onCreate(
   async (user) => {
-    functions.logger.info("addRallyUserToFirestore fired");
+    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", { user });
     if (user.providerData.length == 0) {
       functions.logger.info("Extension users do not get user docs.");
       return;
     }
-
 
     const newRallyId = uuidv4();
     const extensionUserDoc = { rallyId: newRallyId };

@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 import type { SvelteComponent } from "svelte";
 import { writable, derived } from "svelte/store";
-import type { Readable } from "svelte/store"
+import type { Readable } from "svelte/store";
 
 const NOTIFICATION_TIMEOUT = 2000;
 
