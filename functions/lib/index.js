@@ -83,6 +83,35 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
         .set(userDoc, { merge: true });
     return true;
 });
+exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
+    functions.logger.info("deleteRallyUser fired for user:", user);
+    // Delete the extension user document.
+    admin
+        .firestore()
+        .collection("extensionUsers")
+        .doc(user.uid)
+        .delete();
+    // Delete the user studies subcollection.
+    const collectionRef = admin
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .collection("studies");
+    // There will be one document per study here, use batching in case it ever goes over the limit
+    // that we can process in one operation (over 500 documents, per https://firebase.google.com/docs/firestore/manage-data/transactions),
+    const batch = admin.firestore().batch();
+    const userStudyDocs = await collectionRef.get();
+    userStudyDocs.forEach(async (userStudyDoc) => {
+        batch.delete(userStudyDoc.ref);
+    });
+    // Finally, delete the user document.
+    admin
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .delete();
+    return true;
+});
 /**
  *
  * @param {string} index The firestore key.
