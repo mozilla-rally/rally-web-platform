@@ -104,7 +104,7 @@ exports.deleteRallyUser = functions.auth.user().onDelete(
     functions.logger.info("deleteRallyUser fired for user:", user);
 
     // Delete the extension user document.
-    admin
+    await admin
       .firestore()
       .collection("extensionUsers")
       .doc(user.uid)
@@ -117,16 +117,24 @@ exports.deleteRallyUser = functions.auth.user().onDelete(
       .doc(user.uid)
       .collection("studies");
 
-    // There will be one document per study here, use batching in case it ever goes over the limit
-    // that we can process in one operation (over 500 documents, per https://firebase.google.com/docs/firestore/manage-data/transactions),
+    // There will be one document per study here, use batching in case it ever goes over the limit.
+    // Work in batches of 5: https://firebase.google.com/docs/firestore/manage-data/transactions#security_rules_limits
     const batch = admin.firestore().batch();
     const userStudyDocs = await collectionRef.get();
-    userStudyDocs.forEach(async (userStudyDoc) => {
+    for (const [count, userStudyDoc] of userStudyDocs.docs.entries()) {
       batch.delete(userStudyDoc.ref);
-    });
+
+      // Count is 0-based, so commit on multiples of 4.
+      if (count % 4 === 0) {
+        await batch.commit();
+      }
+    }
+
+    // Do a final commit in case we ended on a partial batch.
+    await batch.commit();
 
     // Finally, delete the user document.
-    admin
+    await admin
       .firestore()
       .collection("users")
       .doc(user.uid)
