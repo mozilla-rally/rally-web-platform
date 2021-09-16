@@ -81,7 +81,7 @@ However, you must first configure a valid Firebase backend in `./static/firebase
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
-When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting service:
+When the website is re-built in "emulator" mode, it will automatically deploy to the emulated Firebase Hosting service:
 `npm run build:web:emulator`
 
 Clients wishing to connect to the Firebase emulators, including the website and any WebExtensions, must set
@@ -117,15 +117,73 @@ The first option is the simplest for occasional manual deployments, the second i
 
 NOTE: if the Firebase environment you are deploying to is not set up yet, see the next section.
 
-Review the `./firebase.json` which contains the server configuration, and `./firebaserc` which contains your project names and aliases.
-
 First, set your project name as a shell environment variable. NOTE - If you don't yet have a Firebase project set up, see the next section.
 
 `FIREBASE_PROJECT_NAME="my-firebase-project"`
 
+Build the site in production mode:
+`firebase use ${FIREBASE_PROJECT_NAME}`
+`npm run build`
+`npm run config:web`
+
+NOTE - if you are not logged into Firebase then it will not be able to automatically detect project name and details.
+If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
+
+`npm run build`
+`cp config/firebase.config.${FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
+
+Review `./firebase.json` which contains the server configuration, `./firebaserc` which contains your project names and aliases, and
+`./build/firebase.config.json` which contains the website configuration.
+
 When ready, deploy to your project:
 
 `firebase deploy --project ${FIREBASE_PROJECT_NAME}`
+
+The following services will be deployed
+
+- Cloud Firestore Rules from `./firestore.rules`
+- Cloud Functions from `functions/src/index.ts`
+- Hosting from `./build`
+
+A successful deploy should look something like this:
+
+```
+=== Deploying to '${FIREBASE_PROJECT_NAME}'...
+
+i  deploying firestore, functions, hosting
+i  cloud.firestore: checking firestore.rules for compilation errors...
+✔  cloud.firestore: rules file firestore.rules compiled successfully
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+✔  functions: required API cloudbuild.googleapis.com is enabled
+✔  functions: required API cloudfunctions.googleapis.com is enabled
+i  functions: preparing functions directory for uploading...
+i  functions: packaged functions (285.95 KB) for uploading
+i  firestore: latest version of firestore.rules already up to date, skipping upload...
+✔  functions: functions folder uploaded successfully
+i  hosting[${FIREBASE_PROJECT_NAME}]: beginning deploy...
+i  hosting[${FIREBASE_PROJECT_NAME}]: found 94 files in build
+✔  hosting[${FIREBASE_PROJECT_NAME}]: file upload complete
+✔  firestore: released rules firestore.rules to cloud.firestore
+i  functions: updating Node.js 14 function rallytoken(us-central1)...
+i  functions: updating Node.js 14 function loadFirestore(us-central1)...
+i  functions: updating Node.js 14 function addRallyUserToFirestore(us-central1)...
+✔  functions[rallytoken(us-central1)]: Successful update operation.
+✔  functions[loadFirestore(us-central1)]: Successful update operation.
+✔  functions[addRallyUserToFirestore(us-central1)]: Successful update operation. 
+i  functions: cleaning up build files...
+Function URL (loadFirestore(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/loadFirestore
+Function URL (rallytoken(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/rallytoken
+i  hosting[${FIREBASE_PROJECT_NAME}]: finalizing version...
+✔  hosting[${FIREBASE_PROJECT_NAME}]: version finalized
+i  hosting[${FIREBASE_PROJECT_NAME}]: releasing new version...
+✔  hosting[${FIREBASE_PROJECT_NAME}]: release complete
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/${FIREBASE_PROJECT_NAME}/overview
+Hosting URL: https://${FIREBASE_PROJECT_NAME}.web.app
+```
 
 ## One-time Firebase server setup
 
@@ -186,7 +244,8 @@ Having trouble? Try firebase [command] --help
 
 Upgrading to the Blaze plan is necessary for access to Firebase Cloud Functions.
 
-You should now be able to access your site at:
+Re-deploy using the above command, and you should now be able to access your site at:
+
 https://${FIREBASE_PROJECT_NAME}.web.app
 
 ## Versioning
