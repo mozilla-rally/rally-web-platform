@@ -212,7 +212,7 @@ Then, enable the following in the Firebase console:
 - Hosting
 
 1. Grant the ability to generate custom tokens to your Firebase functions:
-   1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=211360280873
+   1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=${FIREBASE_PROJECT_NAME}
    2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project=${FIREBASE_PROJECT_NAME}.
       1. NOTE - be sure to replace `${FIREBASE_PROJECT_NAME}` above
 
