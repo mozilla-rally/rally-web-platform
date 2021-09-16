@@ -142,7 +142,7 @@
     >
       or create a Rally account
     </div>
-    <form>
+    <form method="post">
       <fieldset class="mzp-c-field-set">
         <div class="mzp-c-field ">
           <label class="mzp-c-field-label" for="id_user_email">Email</label>
@@ -187,23 +187,23 @@
           </p>
         </div>
       </fieldset>
-      <div class="mzp-c-form-footer">
-        <button
-          on:click={async () => {
-            await store.loginWithEmailAndPassword(email, password);
-          }}
-          class="mzp-c-button"
-          disabled={btnDisabled}>Log In</button
-        >
-        <button
-          on:click={async () => {
-            await store.signupWithEmailAndPassword(email, password);
-          }}
-          class="mzp-c-button mzp-t-secondary"
-          disabled={btnDisabled}>Sign Up</button
-        >
-      </div>
     </form>
+    <div class="mzp-c-form-footer">
+      <button
+        on:click={async () => {
+          await store.loginWithEmailAndPassword(email, password);
+        }}
+        class="mzp-c-button"
+        disabled={btnDisabled}>Log In</button
+      >
+      <button
+        on:click={async () => {
+          await store.signupWithEmailAndPassword(email, password);
+        }}
+        class="mzp-c-button mzp-t-secondary"
+        disabled={btnDisabled}>Sign Up</button
+      >
+    </div>
     <div class="how-it-works">
       <a
         class="external-link"
@@ -216,5 +216,4 @@
     </div>
   </div>
 </section>
-
 

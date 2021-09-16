@@ -268,8 +268,8 @@ describe("Rally Web Platform UX flows", function () {
 
     // Sign in again, need to get a new token that has email_verified as a claim.
     await driver.get("http://localhost:5000/signup");
-    await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
     await driver.wait(
