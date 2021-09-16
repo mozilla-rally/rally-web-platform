@@ -54,7 +54,7 @@ This uses Selenium and the Firebase Emulators to run the full Rally Web Platform
 the various supported UX flows work as expected.
 
 This repository comes (aspirationally) with unit tests:
-- run `npm run test:unit`
+`npm run test:unit`
 
 These are currently severely underdeveloped right now, we are currently prioritizing
 integration testing.
