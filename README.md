@@ -74,8 +74,10 @@ It then watches for changes and automatically reloads services:
 NOTE: if you only want to run the Svelte web app and nothing else, you may use:
 `npm run dev:web`
 
-However, you must configure a valid Firebase backend in `firebase.config.json` for the site to function. See the
-`./configs/` directory for examples.
+However, you must first configure a valid Firebase backend in `./static/firebase.config.json` for the site to function. See the
+`./config/` directory for examples.
+
+`npm run dev` automatically manages this configuration for you, since it uses local emulators for the Firebase backend.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
