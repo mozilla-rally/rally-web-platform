@@ -1,18 +1,21 @@
 # Rally Web Platform
 
 This repository contains the code needed to build the Rally Web Platform.
-Mozilla Rally is an opt-in data collection platform.
+
+Mozilla Rally is a program that allows you to donate your browsing data to help us understand the Web, how people interact with it, and how people use their browsers
+(see [this Mozilla Blog post](https://blog.mozilla.org/en/mozilla/take-control-over-your-data-with-rally-a-novel-privacy-first-data-sharing-platform/) for more information).
+Participation in Mozilla Rally is strictly voluntary.
 
 The Rally Web Platform consists of:
 
 - A static website, built with Svelte.
 - A storage and authentication backend, powered by Firebase.
-- One or more WebExtensions which collect and submit user browsing data.
+- One or more studies (implemented as WebExtensions) which collect and submit user browsing data.
 
-The website is used to create/log in to a Rally account, and allows users to
-also log in from one or more WebExtensions to configure what data may be collected.
+The website is used to create/log in to a Rally account, and to join and leave studies. Studies must be installed
+from the appropriate browser store (addons.mozilla.org, Chrome Web Store, etc).
 
-WebExtensions are built from the [Rally Study Template](https://github.com/mozilla-rally/study-template).
+Study extensions are based on the [Rally Study Template](https://github.com/mozilla-rally/study-template).
 
 ## Requirements
 
@@ -113,17 +116,26 @@ The first option is the simplest for occasional manual deployments, the second i
 NOTE: if the Firebase environment you are deploying to is not set up yet, see the next section.
 
 Review the `./firebase.json` which contains the server configuration, and `./firebaserc` which contains your project names and aliases.
+
+First, set your project name as a shell environment variable. NOTE - If you don't yet have a Firebase project set up, see the next section.
+
+`FIREBASE_PROJECT_NAME="my-firebase-project"`
+
 When ready, deploy to your project:
 
-`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase deploy --project ${FIREBASE_PROJECT_NAME}`
 
 ## One-time Firebase server setup
 
 The `./firebase.json` holds the desired services and basic configuration, but there are a number of one-time configuration changes that must be made using the [Firebase console](https://console.firebase.google.com/):
 
 1. Create new Web app in UI under Project Settings -> Your apps
+
+Set your project name as a shell environment variable:
+
+`FIREBASE_PROJECT_NAME="my-firebase-project"`
 ​
-Place the returned configuration into `./firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
+Place the returned configuration into `./firebase.config.${FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
 `firebase use --add`
 
 And complete the prompts:
@@ -141,12 +153,13 @@ Then, enable the following in the Firebase console:
 
 1. Grant the ability to generate custom tokens to your Firebase functions:
    1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=211360280873
-   2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project={YOUR_FIREBASE_PROJECT_NAME}.
+   2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project=${FIREBASE_PROJECT_NAME}.
+      1. NOTE - be sure to replace `${FIREBASE_PROJECT_NAME}` above
 
 2. Deploy
 
 Build the site in production mode:
-`firebase use {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase use ${FIREBASE_PROJECT_NAME}`
 `npm run build`
 `npm run config:web`
 
@@ -154,17 +167,17 @@ NOTE - if you are not logged into Firebase then it will not be able to automatic
 If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
 
 `npm run build`
-`cp config/firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
+`cp config/firebase.config.${FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
 
 Then deploy to your Firebase project:
-`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase deploy --project ${FIREBASE_PROJECT_NAME}`
 
 If you are still on the free billing plan, you will get a message similar to the following:
 ​
 ```
-Error: Your project {YOUR_FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
+Error: Your project ${FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
 ​
-https://console.firebase.google.com/project/{YOUR_FIREBASE_PROJECT_NAME}/usage/details
+https://console.firebase.google.com/project/${FIREBASE_PROJECT_NAME}/usage/details
 ​
 Having trouble? Try firebase [command] --help
 ```
@@ -172,7 +185,7 @@ Having trouble? Try firebase [command] --help
 Upgrading to the Blaze plan is necessary for access to Firebase Cloud Functions.
 
 You should now be able to access your site at:
-https://{YOUR_FIREBASE_PROJECT_NAME}.web.app
+https://${FIREBASE_PROJECT_NAME}.web.app
 
 ## Versioning
 
