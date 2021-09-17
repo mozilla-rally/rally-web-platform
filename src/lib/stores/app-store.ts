@@ -8,6 +8,7 @@ import { browser } from "$app/env";
 import firestoreAPI from "./api";
 import type { AppStore, State } from "./types"
 
+
 export function createAppStore(api = firestoreAPI): AppStore {
   const _store: Writable<State> = writable({ _initialized: false });
   const { subscribe, set } = _store;
