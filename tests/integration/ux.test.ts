@@ -188,24 +188,24 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     // Invalid email address fails.
-    await driver.findElement(By.id('id_name')).sendKeys("test123");
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
 
-    await driver.findElement(By.id('id_name')).clear();
     await driver.findElement(By.id('id_user_email')).clear();
+    await driver.findElement(By.id('id_user_pw')).clear();
 
     // Weak password fails.
-    await driver.findElement(By.id('id_name')).sendKeys("test123");
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
 
-    await driver.findElement(By.id('id_name')).clear();
     await driver.findElement(By.id('id_user_email')).clear();
+    await driver.findElement(By.id('id_user_pw')).clear();
 
     // Signing up into an ID already used registered with a different provider fails.
-    await driver.findElement(By.id('id_name')).sendKeys("test123");
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
   });
 
@@ -216,31 +216,31 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     // Totally invalid credentials fail
-    await driver.findElement(By.id('id_name')).sendKeys("test123");
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
-    await driver.findElement(By.id('id_name')).clear();
     await driver.findElement(By.id('id_user_email')).clear();
+    await driver.findElement(By.id('id_user_pw')).clear();
 
     // Logging into an ID already used registered with a different provider fails
-    await driver.findElement(By.id('id_name')).sendKeys("test123");
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
   });
 
   it("signs up for website with valid email credentials", async function () {
     // Valid credentials succeed.
-    await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
 
-    await driver.findElement(By.id('id_name')).clear();
     await driver.findElement(By.id('id_user_email')).clear();
+    await driver.findElement(By.id('id_user_pw')).clear();
 
     // Unverified account can be logged into, but cannot be used until verified.
-    await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
     const readInterface = readline.createInterface({
@@ -268,8 +268,8 @@ describe("Rally Web Platform UX flows", function () {
 
     // Sign in again, need to get a new token that has email_verified as a claim.
     await driver.get("http://localhost:5000/signup");
-    await driver.findElement(By.id('id_name')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_email')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
     await driver.wait(
