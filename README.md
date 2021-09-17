@@ -1,18 +1,21 @@
 # Rally Web Platform
 
 This repository contains the code needed to build the Rally Web Platform.
-Mozilla Rally is an opt-in data collection platform.
+
+Mozilla Rally is a program that allows you to donate your browsing data to help us understand the Web, how people interact with it, and how people use their browsers
+(see [this Mozilla Blog post](https://blog.mozilla.org/en/mozilla/take-control-over-your-data-with-rally-a-novel-privacy-first-data-sharing-platform/) for more information).
+Participation in Mozilla Rally is strictly voluntary.
 
 The Rally Web Platform consists of:
 
 - A static website, built with Svelte.
 - A storage and authentication backend, powered by Firebase.
-- One or more WebExtensions which collect and submit user browsing data.
+- One or more studies (implemented as WebExtensions) which collect and submit user browsing data.
 
-The website is used to create/log in to a Rally account, and allows users to
-log in from one or more WebExtensions to configure what data may be collected.
+The website is used to create/log in to a Rally account, and to join and leave studies. Studies must be installed
+from the appropriate browser store (addons.mozilla.org, Chrome Web Store, etc).
 
-WebExtensions are built from the [Rally Study Template](https://github.com/mozilla-rally/study-template).
+Study extensions are based on the [Rally Study Template](https://github.com/mozilla-rally/study-template).
 
 ## Requirements
 
@@ -20,14 +23,9 @@ WebExtensions are built from the [Rally Study Template](https://github.com/mozil
 * [Firebase](https://firebase.google.com/docs/cli)
   * Authentication
   * Functions
-  * Firestore
+  * Cloud Firestore
   * Hosting
 * [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
-
-
-## Versioning
-
-You can always access the current version of the site by fetching `<hostname>/version.json`.
 
 ## Quickstart
 
@@ -46,6 +44,21 @@ The site will be ready for use when you see Svelte start up:
   Use --host to expose server to other devices on this network
 ```
 
+## Tests
+
+Integration tests can be run with:
+
+`npm run test:integration`
+
+This uses Selenium and the Firebase Emulators to run the full Rally Web Platform stack and test that
+the various supported UX flows work as expected.
+
+This repository comes (aspirationally) with unit tests:
+`npm run test:unit`
+
+These are currently severely underdeveloped right now, we are currently prioritizing
+integration testing.
+
 ## Emulating the server backend (Firebase)
 
 The `npm run dev` command automatically runs the full set of Firebase emulators required for Rally, as well as the
@@ -61,14 +74,17 @@ It then watches for changes and automatically reloads services:
 NOTE: if you only want to run the Svelte web app and nothing else, you may use:
 `npm run dev:web`
 
-However, you must configure a valid Firebase backend in `./firebase.config.js` for the site to function.
+However, you must first configure a valid Firebase backend in `./static/firebase.config.json` for the site to function. See the
+`./config/` directory for examples.
+
+`npm run dev` automatically manages this configuration for you, since it uses local emulators for the Firebase backend.
 
 ### Configuring the Rally Web Platform website and WebExtensions to use the emulators
 
-When the website is re-built in "test integration" mode, it will automatically deploy to the emulated Firebase Hosting:
-`npm run build:test:integration`
+When the website is re-built in "emulator" mode, it will automatically deploy to the emulated Firebase Hosting service:
+`npm run build:web:emulator`
 
-Clients wishing to connect to the Firebase emulators, including the website any WebExtensions, must set
+Clients wishing to connect to the Firebase emulators, including the website and any WebExtensions, must set
 this explicitly in their code after initializing the services.
 
 Connecting to the Firebase Authentication emulator:
@@ -83,22 +99,8 @@ db = getFirestore(app);
 connectFirestoreEmulator(db, 'localhost', 8080);
 ```
 
-For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js`
-
-## Tests
-
-Integration tests can be run with:
-
-`npm run test:integration`
-
-This uses Selenium and the Firebase Emulators to run the full Rally Web Platform stack and test that
-the various supported UX flows work as expected.
-
-This repository comes (aspirationally) with unit tests:
-- run `npm run test:unit`
-
-These are currently severely underdeveloped right now, we are currently prioritizing
-integration testing.
+For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js` and automatically enabled when built in
+emulator mode.
 
 ## Deploying
 
@@ -115,18 +117,85 @@ The first option is the simplest for occasional manual deployments, the second i
 
 NOTE: if the Firebase environment you are deploying to is not set up yet, see the next section.
 
-Review the `./firebase.json` which contains the server configuration, and `./firebaserc` which contains your project names and aliases.
+First, set your project name as a shell environment variable. NOTE - If you don't yet have a Firebase project set up, see the next section.
+
+`FIREBASE_PROJECT_NAME="my-firebase-project"`
+
+Build the site in production mode:
+`firebase use ${FIREBASE_PROJECT_NAME}`
+`npm run build`
+`npm run config:web`
+
+NOTE - if you are not logged into Firebase then it will not be able to automatically detect project name and details.
+If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
+
+`npm run build`
+`cp config/firebase.config.${FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
+
+Review `./firebase.json` which contains the server configuration, `./firebaserc` which contains your project names and aliases, and
+`./build/firebase.config.json` which contains the website configuration.
+
 When ready, deploy to your project:
 
-`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase deploy --project ${FIREBASE_PROJECT_NAME}`
+
+The following services will be deployed
+
+- Cloud Firestore Rules from `./firestore.rules`
+- Cloud Functions from `functions/src/index.ts`
+- Hosting from `./build`
+
+A successful deploy should look something like this:
+
+```
+=== Deploying to '${FIREBASE_PROJECT_NAME}'...
+
+i  deploying firestore, functions, hosting
+i  cloud.firestore: checking firestore.rules for compilation errors...
+✔  cloud.firestore: rules file firestore.rules compiled successfully
+i  functions: ensuring required API cloudfunctions.googleapis.com is enabled...
+i  functions: ensuring required API cloudbuild.googleapis.com is enabled...
+✔  functions: required API cloudbuild.googleapis.com is enabled
+✔  functions: required API cloudfunctions.googleapis.com is enabled
+i  functions: preparing functions directory for uploading...
+i  functions: packaged functions (285.95 KB) for uploading
+i  firestore: latest version of firestore.rules already up to date, skipping upload...
+✔  functions: functions folder uploaded successfully
+i  hosting[${FIREBASE_PROJECT_NAME}]: beginning deploy...
+i  hosting[${FIREBASE_PROJECT_NAME}]: found 94 files in build
+✔  hosting[${FIREBASE_PROJECT_NAME}]: file upload complete
+✔  firestore: released rules firestore.rules to cloud.firestore
+i  functions: updating Node.js 14 function rallytoken(us-central1)...
+i  functions: updating Node.js 14 function loadFirestore(us-central1)...
+i  functions: updating Node.js 14 function addRallyUserToFirestore(us-central1)...
+✔  functions[rallytoken(us-central1)]: Successful update operation.
+✔  functions[loadFirestore(us-central1)]: Successful update operation.
+✔  functions[addRallyUserToFirestore(us-central1)]: Successful update operation. 
+i  functions: cleaning up build files...
+Function URL (loadFirestore(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/loadFirestore
+Function URL (rallytoken(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/rallytoken
+i  hosting[${FIREBASE_PROJECT_NAME}]: finalizing version...
+✔  hosting[${FIREBASE_PROJECT_NAME}]: version finalized
+i  hosting[${FIREBASE_PROJECT_NAME}]: releasing new version...
+✔  hosting[${FIREBASE_PROJECT_NAME}]: release complete
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/${FIREBASE_PROJECT_NAME}/overview
+Hosting URL: https://${FIREBASE_PROJECT_NAME}.web.app
+```
 
 ## One-time Firebase server setup
 
 The `./firebase.json` holds the desired services and basic configuration, but there are a number of one-time configuration changes that must be made using the [Firebase console](https://console.firebase.google.com/):
 
 1. Create new Web app in UI under Project Settings -> Your apps
+
+Set your project name as a shell environment variable:
+
+`FIREBASE_PROJECT_NAME="my-firebase-project"`
 ​
-Place the returned configuration into `./firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
+Place the returned configuration into `./firebase.config.${FIREBASE_PROJECT_NAME}.json`, then set up your project and an alias (dev/stage/prod/etc):
 `firebase use --add`
 
 And complete the prompts:
@@ -143,13 +212,14 @@ Then, enable the following in the Firebase console:
 - Hosting
 
 1. Grant the ability to generate custom tokens to your Firebase functions:
-   1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project={YOUR_FIREBASE_PROJECT_NAME}
-   2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project={YOUR_FIREBASE_PROJECT_NAME}.
+   1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=${FIREBASE_PROJECT_NAME}
+   2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project=${FIREBASE_PROJECT_NAME}.
+     1. NOTE - be sure to replace `${FIREBASE_PROJECT_NAME}` above
 
 2. Deploy
 
 Build the site in production mode:
-`firebase use {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase use ${FIREBASE_PROJECT_NAME}`
 `npm run build`
 `npm run config:web`
 
@@ -157,25 +227,33 @@ NOTE - if you are not logged into Firebase then it will not be able to automatic
 If you want to build in a restricted environment, then make sure to copy the correct configuration file after building:
 
 `npm run build`
-`cp config/firebase.config.{YOUR_FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
+`cp config/firebase.config.${FIREBASE_PROJECT_NAME}.json ./static/firebase.config.json`
 
 Then deploy to your Firebase project:
-`firebase deploy --project {YOUR_FIREBASE_PROJECT_NAME}`
+`firebase deploy --project ${FIREBASE_PROJECT_NAME}`
 
 If you are still on the free billing plan, you will get a message similar to the following:
 ​
 ```
-Error: Your project {YOUR_FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
+Error: Your project ${FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
 ​
-https://console.firebase.google.com/project/{YOUR_FIREBASE_PROJECT_NAME}/usage/details
+https://console.firebase.google.com/project/${FIREBASE_PROJECT_NAME}/usage/details
 ​
 Having trouble? Try firebase [command] --help
 ```
 
 Upgrading to the Blaze plan is necessary for access to Firebase Cloud Functions.
 
-You should now be able to access your site at:
-https://{YOUR_FIREBASE_PROJECT_NAME}.web.app
+Re-deploy using the above command, and you should now be able to access your site at:
+
+https://${FIREBASE_PROJECT_NAME}.web.app
+
+## Versioning
+
+The current version of the site is available at: `<hostname>/version.json`. There are currently no releases, the main branch is
+automatically deployed to dev environment.
+
+As we add a staging and production environment, we will start using tags.
 
 ## Organization
 
