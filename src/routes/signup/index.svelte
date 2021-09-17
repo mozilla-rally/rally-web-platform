@@ -100,6 +100,7 @@
             bind:value={email}
             bind:this={emailEl}
             on:change={handleChange}
+            on:keyup={handleChange}
             id="id_user_email"
             name="id_user_email"
             type="email"
@@ -112,7 +113,8 @@
             class="mzp-c-field-control"
             bind:value={password}
             bind:this={passwordEl}
-            on:change|preventDefault={handleChange}
+            on:change={handleChange}
+            on:keyup={handleChange}
             id="id_user_pw"
             name="id_user_pw"
             type="password"
@@ -211,7 +213,7 @@
     max-width: 233px;
     text-align: left;
     font-size: 12px;
-    color: red;
+    color: gray;
     padding: 10px;
   }
 

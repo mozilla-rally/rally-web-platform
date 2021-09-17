@@ -189,7 +189,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Invalid email address fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -197,7 +197,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Weak password fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -205,7 +205,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Signing up into an ID already used registered with a different provider fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Sign Up"]'), e => e.click());
   });
 
@@ -217,7 +217,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Totally invalid credentials fail
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -225,7 +225,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Logging into an ID already used registered with a different provider fails
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
     await findAndAct(driver, By.xpath('//button[text()="Log In"]'), e => e.click());
   });
 
