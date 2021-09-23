@@ -130,3 +130,8 @@ screenshots/
 .firebaserc
 
 static/firebase.config.json
+
+# vi/vim
+*.swp
+*.swo
+*~
