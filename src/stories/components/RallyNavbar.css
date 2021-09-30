@@ -1,0 +1,11 @@
+.btn-sign-in-up {
+  margin-left: 1.5rem !important;
+  font-weight: 700;
+  font-size: 1.125rem !important; 
+}
+
+.sign-in:hover{
+    background-color: #000000 !important;
+    color: #ffffff !important; 
+    border-color: transparent !important;
+}

@@ -1,41 +1,49 @@
 <script context=module>
-// import MicroModal from "micromodal";
-// MicroModal.init({ disableScroll: true, disableFocus: true });
-let MicroModal;
+  // import MicroModal from "micromodal";
+  // MicroModal.init({ disableScroll: true, disableFocus: true });
+  let MicroModal;
 </script>
 
 <script>
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
   import { fly, fade } from "svelte/transition";
-  import Portal from './Portal.svelte';
+  import Portal from "./Portal.svelte";
   import Close from "./icons/Close.svelte";
 
   export let width;
   export let height;
   export let topPadding;
+  export let minHeight; 
+  export let fontSize = "38px";
+  export let custom = "";
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
 
-  function addStyleVariables({width, height, topPadding}) {
+  function addStyleVariables({ width, height, topPadding, fontSize, minHeight }) {
     const values = [
-      toVariable("--width", width), 
+      toVariable("--width", width),
       toVariable("--height", height),
-      toVariable("--top-padding", topPadding)].filter(d=> d !== undefined);
+      toVariable("--fontSize", fontSize),
+      toVariable("--top-padding", topPadding),
+      toVariable("--min-height", minHeight),
+    ].filter((d) => d !== undefined);
     if (values.length === 0) return undefined;
-    return values.join('; ');
+    return values.join("; ");
   }
 
-  $: styles = addStyleVariables({width, height, topPadding});
+  $: styles = addStyleVariables({ width, height, topPadding, fontSize, minHeight });
+  $: classSet = ["modal-body", custom].filter((t) => t).join(" ");
 
   const dispatch = createEventDispatcher();
-  const key =
-    `modal-${Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)}`;
+  const key = `modal-${
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  }`;
 
   function onCancel() {
     MicroModal.close(key);
@@ -66,7 +74,7 @@ let MicroModal;
       MicroModal = (await import("micromodal")).default;
       MicroModal.init({ disableScroll: true, disableFocus: true });
     }
-    
+
     MicroModal.init({ disableScroll: true, disableFocus: true });
     MicroModal.show(key, { disableScroll: true, disableFocus: true });
   });
@@ -75,6 +83,50 @@ let MicroModal;
     MicroModal.close(key);
   });
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
+
+<Portal>
+  <div id={key} aria-hidden="true" transition:fade={{ duration: 200 }}>
+    <div
+      tabindex="-1"
+      transition:fly={{ duration: 200, y: 5 }}
+      data-micromodal-close
+      class="overlay"
+      style={styles}
+      on:click={dismissParent}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-1-title"
+        class="container radius-sm mzp-t-mozilla"
+      >
+        <header class="container-header">
+          <h2 class="mzp-t-mozilla">
+            <slot name="title">Title.</slot>
+          </h2>
+          <button class="dismiss" on:click={onDismiss}>
+            <Close size="28px" />
+          </button>
+        </header>
+
+        <div class={classSet}>
+          <slot name="body">
+            <p>I am a dialog</p>
+          </slot>
+        </div>
+        <!-- [4] -->
+        <div class="cta">
+          <slot name="cta">
+            <button on:click={onAccept}>Accept</button>
+            <button on:click={onCancel}>Cancel</button>
+          </slot>
+        </div>
+      </div>
+    </div>
+  </div>
+</Portal>
 
 <style>
   .overlay {
@@ -94,9 +146,8 @@ let MicroModal;
   }
 
   h2 {
-    font-size: 38px;
+    font-size: var(--fontSize);
   }
-
   header {
     display: grid;
     grid-template-columns: auto max-content;
@@ -112,6 +163,7 @@ let MicroModal;
     display: grid;
     grid-template-rows: max-content auto max-content;
     font-size: 14px;
+    min-height: var(--min-height);
   }
 
   .cta {
@@ -139,45 +191,3 @@ let MicroModal;
     color: black;
   }
 </style>
-
-<svelte:window on:keydown={handleKeydown} />
-
-<Portal>
-  <div id={key} aria-hidden="true" transition:fade={{ duration: 200 }}>
-    <div
-      tabindex="-1"
-      transition:fly={{duration: 200, y: 5}}
-      data-micromodal-close
-      class="overlay"
-      style={styles}
-      on:click={dismissParent}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-1-title"
-        class="container radius-sm mzp-t-mozilla">
-        <header>
-          <h2 class="mzp-t-mozilla">
-            <slot name="title">Title.</slot>
-          </h2>
-          <button on:click={onDismiss}>
-            <Close size="28px" />
-          </button>
-        </header>
-
-        <div class="modal-body">
-          <slot name="body">
-            <p>I am a dialog</p>
-          </slot>
-        </div>
-        <!-- [4] -->
-        <div class="cta">
-          <slot name="cta">
-            <button on:click={onAccept}>Accept</button>
-            <button on:click={onCancel}>Cancel</button>
-          </slot>
-        </div>
-      </div>
-    </div>
-  </div>
-</Portal>

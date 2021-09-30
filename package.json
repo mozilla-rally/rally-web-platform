@@ -24,7 +24,8 @@
     "test:integration:jest": "jest ./tests/integration/",
     "test:integration": "npm run build:web:emulator && npm run build:functions &&  ./scripts/integration-test.sh",
     "storybook": "start-storybook -s ./static -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "build-static-webapp":"expo build:web"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
@@ -85,7 +86,9 @@
   },
   "dependencies": {
     "@storybook/svelte": "^6.3.7",
+    "sal.js": "^0.8.5",
     "sirv-cli": "^1.0.10",
+    "styled-components": "^5.3.1",
     "ts-node": "^10.2.1"
   },
   "engines": {

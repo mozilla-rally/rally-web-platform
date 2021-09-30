@@ -1,0 +1,56 @@
+
+.mzp-t-mozilla,
+.modal-body,
+.cta {
+  justify-self: center;
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  margin-top: 45px;
+}
+
+.modal-body-signin{
+  width: 80%; 
+}
+
+.cta {
+  display: none !important;
+}
+
+.mzp-t-mozilla {
+  grid-area: title;
+  width: 100%;
+}
+
+.dismiss {
+  grid-area: dismiss;
+}
+
+.container-header {
+  direction: rtl;
+  grid-template-rows: auto max-content;
+  grid-template-areas:
+    "dismiss"
+    "title";
+  margin-bottom: 20px;
+}
+
+.modal-button {
+  display: flex;
+  margin-top: 15px;
+  width: 100%;
+  align-items: center;
+  padding: 6px 20px !important;
+}
+
+.modal-button.signin, .modal-button.create {
+  justify-content: center;
+  margin-top: 0;
+  height: 50px; 
+}
+
+.reset-pw{
+  width: 85%; 
+}
+
