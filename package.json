@@ -24,7 +24,7 @@
     "test:integration:jest": "jest ./tests/integration/",
     "test:integration": "npm run build:web:emulator && npm run build:functions &&  ./scripts/integration-test.sh",
     "storybook": "start-storybook -s ./static -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -o docs-build -s ./static",
     "build-static-webapp":"expo build:web"
   },
   "devDependencies": {
