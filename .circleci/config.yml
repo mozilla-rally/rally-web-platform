@@ -58,9 +58,9 @@ jobs:
   # This deploys directly to our dev site at https://rally-web-stage.nonprod.dataops.mozgcp.net
   site-deploy:
     parameters:
-      project_name:
-        type: string
-        default: $PROJECT_ID_STAGE
+      #project_name:
+      #type: string
+      #default: $PROJECT_ID_STAGE
       project_config:
         type: string
         default: rally-web-stage
