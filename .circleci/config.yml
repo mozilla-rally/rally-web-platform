@@ -55,37 +55,37 @@ jobs:
       - store_artifacts:
           path: ./screenshots
 
-# This deploys directly to our dev site at https://rally-web-stage.nonprod.dataops.mozgcp.net
-site-deploy:
-  parameters:
-    project_name:
-      type: string
-      default: $PROJECT_ID_STAGE
-    project_config:
-      type: string
-      default: rally-web-stage
-    service_key:
-      type: string
-      default: $GCLOUD_SERVICE_KEY
-  docker:
-    - image: cimg/node:15.1
-  steps:
-    - checkout
-    - run:
-        name: Check out the deploy branch.
-        command: git checkout deploy && git pull --rebase origin deploy
-    - run:
-        name: Create Service Account key JSON.
-        command: echo << parameters.service_key >> | base64 --decode --ignore-garbage > "$HOME"/gcloud.json
-    - run:
-        name: Install Firebase Tools needed for deploy.
-        command: npm install firebase-tools firebase-functions
-    - run:
-        name: Configure Firebase for the deployment project name.
-        command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add << parameters.project_name >> && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
-    - run:
-        name: Firebase Deploy.
-        command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project << parameters.project_name >>
+  # This deploys directly to our dev site at https://rally-web-stage.nonprod.dataops.mozgcp.net
+  site-deploy:
+    parameters:
+      project_name:
+        type: string
+        default: $PROJECT_ID_STAGE
+      project_config:
+        type: string
+        default: rally-web-stage
+      service_key:
+        type: string
+        default: $GCLOUD_SERVICE_KEY
+    docker:
+      - image: cimg/node:15.1
+    steps:
+      - checkout
+      - run:
+          name: Check out the deploy branch.
+          command: git checkout deploy && git pull --rebase origin deploy
+      - run:
+          name: Create Service Account key JSON.
+          command: echo << parameters.service_key >> | base64 --decode --ignore-garbage > "$HOME"/gcloud.json
+      - run:
+          name: Install Firebase Tools needed for deploy.
+          command: npm install firebase-tools firebase-functions
+      - run:
+          name: Configure Firebase for the deployment project name.
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add << parameters.project_name >> && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
+      - run:
+          name: Firebase Deploy.
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project << parameters.project_name >>
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
