@@ -60,10 +60,13 @@ site-deploy:
   parameters:
     project_name:
       type: string
+      default: $PROJECT_ID_STAGE
     project_config:
       type: string
+      default: rally-web-stage
     service_key:
       type: string
+      default: $GCLOUD_SERVICE_KEY
   docker:
     - image: cimg/node:15.1
   steps:
