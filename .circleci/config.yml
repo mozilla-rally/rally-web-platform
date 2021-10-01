@@ -82,10 +82,10 @@ jobs:
           command: npm install firebase-tools firebase-functions
       - run:
           name: Configure Firebase for the deployment project name.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add << parameters.project_name >> && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add moz-fx-data-rall-nonprod-ac2a && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
       - run:
           name: Firebase Deploy.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project << parameters.project_name >>
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project moz-fx-data-rall-nonprod-ac2a
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
@@ -99,7 +99,7 @@ workflows:
       # - node/test
       - site-deploy:
           context: rally-web
-          project_name: $PROJECT_ID_STAGE
+          #project_name: $PROJECT_ID_STAGE
           project_config: rally-web-stage
           service_key: $GCLOUD_SERVICE_KEY
           requires:
