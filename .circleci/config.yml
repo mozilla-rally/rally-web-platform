@@ -85,7 +85,7 @@ jobs:
   site-deploy:
     parameters:
       project_name:
-      type: string
+        type: string
       #default: $PROJECT_ID_STAGE
       project_config:
         type: string
