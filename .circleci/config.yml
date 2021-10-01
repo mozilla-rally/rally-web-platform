@@ -55,75 +55,68 @@ jobs:
       - store_artifacts:
           path: ./screenshots
 
-  # This pushes our deployable assets to a branch, for SRE to use in deploying to stage and prod.
-  deploy-branch-update:
-    docker:
-      - image: cimg/node:15.1
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Set up ssh known_hosts # https://circleci.com/docs/2.0/gh-bb-integration/
-          command: |
-            mkdir -p ~/.ssh
-            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-            ' >> ~/.ssh/known_hosts
-      - run:
-          name: Add website build output to git
-          command: |
-            git checkout functions/package-lock.json
-            git add -f functions/lib/ build/
-      - add_ssh_keys:
-          fingerprints:
-            - "ab:41:e3:9b:de:0b:ed:6d:fc:d1:58:c0:9e:a9:e6:dd"
-      - run:
-          name: Commit build artifacts to deploy branch
-          command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/lib build/
-      - run:
-          name: Push deploy branch to origin
-          command: git pull --rebase origin deploy && git push origin deploy
-
-  # This deploys directly to our dev site at https://rally-web-spike.web.app
-  dev-site-deploy:
-    docker:
-      - image: cimg/node:15.1
-    steps:
-      - checkout
-      - run:
-          name: Check out the deploy branch.
-          command: git checkout deploy && git pull --rebase origin deploy
-      - run:
-          name: Create Service Account key JSON.
-          command: echo $GSA_KEY > "$HOME"/gcloud.json
-      - run:
-          name: Install Firebase Tools needed for deploy.
-          command: npm install firebase-tools firebase-functions
-      - run:
-          name: Configure Firebase for the deployment project name.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add rally-web-spike && cp config/firebase.config.rally-web-spike.json build/firebase.config.json
-      - run:
-          name: Firebase Deploy.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project rally-web-spike
+# This deploys directly to our dev site at https://rally-web-stage.nonprod.dataops.mozgcp.net
+site-deploy:
+  parameters:
+    project_name:
+      type: string
+    project_config:
+      type: string
+    service_key:
+      type: string
+  docker:
+    - image: cimg/node:15.1
+  steps:
+    - checkout
+    - run:
+        name: Check out the deploy branch.
+        command: git checkout deploy && git pull --rebase origin deploy
+    - run:
+        name: Create Service Account key JSON.
+        command: echo << parameters.service_key >> | base64 --decode --ignore-garbage > "$HOME"/gcloud.json
+    - run:
+        name: Install Firebase Tools needed for deploy.
+        command: npm install firebase-tools firebase-functions
+    - run:
+        name: Configure Firebase for the deployment project name.
+        command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add << parameters.project_name >> && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
+    - run:
+        name: Firebase Deploy.
+        command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project << parameters.project_name >>
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  version: 2
   build:
     jobs:
       - build-and-test
       # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
       # - node/test
-      - deploy-branch-update:
+      - site-deploy:
+          context: rally-web
+          project_name: $PROJECT_ID_STAGE
+          project_config: rally-web-stage
+          service_key: $GCLOUD_SERVICE_KEY
           requires:
             - build-and-test
           filters:
             branches:
-              only: master
-
-      - dev-site-deploy:
-          requires:
-            - deploy-branch-update
-          filters:
-            branches:
-              only: master
+              only: rally-web-platform-stage
+#      - hold:
+#          type: approval
+#          requires:
+#            - site-deploy
+#      - site-deploy:
+#          context: rally-web
+#          project_name: $PROJECT_ID_PROD
+#           project_config: rally-web-prod
+#          service_account: $GCLOUD_SERVICE_KEY
+#          requires:
+#            - hold
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              only: master
