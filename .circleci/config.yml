@@ -81,7 +81,7 @@ jobs:
       - run:
           name: Push deploy branch to origin
           command: git pull --rebase origin deploy && git push origin deploy
-  # This deploys directly to our dev site at https://rally-web-stage.nonprod.dataops.mozgcp.net
+  #rally-web platform deploy block. Env variables are defined in rally-web context
   site-deploy:
     parameters:
       project_name:
@@ -126,7 +126,7 @@ workflows:
       - deploy-branch-update:
           requires:
             - build-and-test
-      - site-deploy:
+      - site-deploy: # This deploys to our stage site at https://stage.rally-web.nonprod.dataops.mozgcp.net
           context: rally-web
           project_name: $PROJECT_ID_STAGE
           project_config: rally-web-stage
@@ -137,12 +137,12 @@ workflows:
             #tags:
             # only: /.*/
             branches:
-              only: rally-web-platform-stage
-#      - hold:
+              only: master
+#      - hold: # requires approval for prod deployment
 #          type: approval
 #          requires:
 #            - site-deploy
-#      - site-deploy:
+#      - site-deploy: # This deploys directly to our prod site at <unknown yet>
 #          context: rally-web
 #          project_name: $PROJECT_ID_PROD
 #           project_config: rally-web-prod
