@@ -12,7 +12,7 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "@mozilla/rally": "github:mozilla-rally/rally-sdk#b3bb288106f3fe66619fae92c9608e6fca6f5e70",
+    "@mozilla/rally": "^0.8.1",
     "rollup": "^2.56.3",
     "rollup-plugin-copy": "^3.4.0",
     "web-ext": "^6.4.0"

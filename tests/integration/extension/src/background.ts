@@ -1,8 +1,8 @@
 import { Rally, runStates } from "@mozilla/rally";
 
-const devMode = true;
+const enableDevMode = false;
 const rallySite = "http://localhost:5000";
-const studyName = "exampleStudy1";
+const studyId = "exampleStudy1";
 
 // TODO load from JSON file in /config/
 const firebaseConfig = {
@@ -14,6 +14,8 @@ const firebaseConfig = {
     "appId": "1:123:web:abc123",
     "functionsHost": "http://localhost:5001"
 }
+
+const enableEmulatorMode = true;
 
 const stateChangeCallback = async (state) => {
     switch (state) {
@@ -33,4 +35,4 @@ const stateChangeCallback = async (state) => {
     }
 };
 
-const rally = new Rally(devMode, stateChangeCallback, rallySite, studyName, firebaseConfig);
+const rally = new Rally({ enableDevMode, stateChangeCallback, rallySite, studyId, firebaseConfig, enableEmulatorMode });
