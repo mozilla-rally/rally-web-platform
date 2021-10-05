@@ -28,8 +28,8 @@ jobs:
             git config user.email "ci-build@rally-web-platform"
             git config user.name "ci-build"
       - run:
-          name: Checkout deploy branch and rebase onto current branch
-          command: git checkout deploy && git rebase ${CIRCLE_BRANCH}
+          name: Checkout deploy branch and merge onto current branch
+          command: git checkout deploy && git merge --no-ff -m"automated merge to deploy branch" ${CIRCLE_BRANCH}
       # Next, the node orb's install-packages step will install the dependencies from a package.json.
       # The orb install-packages step will also automatically cache them for faster future runs.
       - node/install-packages
