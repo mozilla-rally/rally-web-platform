@@ -17,17 +17,6 @@ const firebaseConfig = {
 
 const enableEmulatorMode = true;
 
-// TODO load from JSON file in /config/
-const firebaseConfig = {
-    "apiKey": "abc123",
-    "authDomain": "demo-rally.firebaseapp.com",
-    "projectId": "demo-rally",
-    "storageBucket": "demo-rally.appspot.com",
-    "messagingSenderId": "abc123",
-    "appId": "1:123:web:abc123",
-    "functionsHost": "http://localhost:5001"
-}
-
 const stateChangeCallback = async (state) => {
     switch (state) {
         case runStates.RUNNING:
