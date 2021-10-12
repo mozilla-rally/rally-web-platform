@@ -18,7 +18,7 @@
 </script>
 
 <Meta
-  title="Launch Dialogs"
+  title="Components/Launch Dialogs"
   component={Dialog}
   argTypes={{
     title: { control: "text" },

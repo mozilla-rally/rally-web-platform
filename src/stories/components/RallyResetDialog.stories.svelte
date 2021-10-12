@@ -12,10 +12,12 @@
   let passwordVisible = false;
   let btnDisabled = true;
   let errorMsg = false;
+  let number;
+  let length;
+  let capital;
+  let letter;
   const minPasswordLength = 8;
   let passwordInputVisible = "none";
-  let dialogHeight = "auto";
-  let formHeight = "auto";
 
   let titleEl;
   let textWidth;
@@ -28,7 +30,6 @@
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: inputStyles = `--inputVisible:${passwordInputVisible}`;
-  $: formStyles = `--formHeight:${formHeight}`;
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
@@ -39,21 +40,54 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    if (emailEl) {
-      emailEl.value.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
+    if (email) {
+      email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
+    }
+    if (passwordEl) {
+      // Validate lowercase letters
+      let lowerCaseLetters = /[a-z]/g;
+      passwordEl.value.match(lowerCaseLetters)
+        ? letter.classList.add("valid")
+        : letter.classList.remove("valid");
+
+      // Validate capital letters
+      let upperCaseLetters = /[A-Z]/g;
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("valid")
+        : capital.classList.remove("valid");
+
+      // Validate numbers
+      let numbers = /[0-9]/g;
+      passwordEl.value.match(numbers)
+        ? number.classList.add("valid")
+        : number.classList.remove("valid");
+
+      // Validate length
+      passwordEl.value.length >= 8
+        ? length.classList.add("valid")
+        : length.classList.remove("valid");
 
       if (name === "id_user_pw") {
-        passwordEl.value.length >= minPasswordLength
-          ? (errorMsg = false)
-          : (errorMsg = true);
+        // password.length <= minPasswordLength
+        //   ? (errorMsg = false)
+        //   : (errorMsg = true);
+        if (
+          password.length >= minPasswordLength &&
+          passwordEl.value.match(numbers) &&
+          passwordEl.value.match(upperCaseLetters) &&
+          passwordEl.value.match(lowerCaseLetters)
+        ) {
+          btnDisabled = false;
+        } else {
+          btnDisabled = true;
+        }
       }
     }
   };
-
 </script>
 
 <Meta
-  title="Reset PW Dialog"
+  title="Components/Reset PW Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -66,8 +100,8 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
-    minHeight: {control: "text"},
-    custom: {control: "text"}
+    minHeight: { control: "text" },
+    custom: { control: "text" },
   }}
 />
 
@@ -132,10 +166,18 @@
               Your password should be unique, and must contain:
             </p>
             <ul class="info-rules">
-              <li>At least 8 characters</li>
-              <li>At least 1 uppercase letter</li>
-              <li>At least 1 lowercase letter</li>
-              <li>At least 1 number</li>
+              <li bind:this={length} id="length" class="invalid">
+                At least 8 characters
+              </li>
+              <li bind:this={capital} id="capital" class="invalid">
+                At least 1 uppercase letter
+              </li>
+              <li bind:this={letter} id="letter" class="invalid">
+                At least 1 lowercase letter
+              </li>
+              <li bind:this={number} id="number" class="invalid">
+                At least 1 number
+              </li>
             </ul>
 
             <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
@@ -144,11 +186,7 @@
           </div>
         </fieldset>
       </form>
-      <Button
-        disabled={btnDisabled}
-        size="xl"
-        custom="modal-button create"
-      >
+      <Button disabled={btnDisabled} size="xl" custom="modal-button create">
         <div class="button-text">{args.cta1}</div></Button
       >
     </div>
@@ -168,7 +206,7 @@
     body: "Text",
     cta1: "Reset Password",
     minHeight: "400px",
-    custom: "reset-pw"
+    custom: "reset-pw",
   }}
 />
 
@@ -223,23 +261,13 @@
     color: #000000;
   }
 
-  .body-text-action {
-    font-size: 16px;
-    padding-top: 40px;
-    color: #000000;
-  }
-
-  .body-text-action a {
-    font-weight: 700;
-  }
-
   input {
     width: 100%;
     height: 50px;
   }
 
   form {
-    height: var(--formHeight);
+    height: auto; 
   }
 
   form img {
@@ -277,10 +305,6 @@
     display: none;
   }
 
-  .enter-pw {
-    color: #818282;
-  }
-
   .label-wrapper {
     display: flex;
     justify-content: space-between;
@@ -293,14 +317,5 @@
   .mzp-c-field-label a {
     text-decoration: none;
     color: var(--color-blue-50);
-  }
-
-  .field-pw {
-    display: block;
-  }
-
-  .body-text-privacy {
-    font-size: 12px;
-    padding-top: 20px;
   }
 </style>

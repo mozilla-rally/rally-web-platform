@@ -6,14 +6,12 @@
   import "./RallyDialog.css";
 
   let email;
-  let password;
   let emailEl;
   let passwordEl;
   let passwordVisible = false;
   let btnDisabled = true;
   let errorMsg = false;
   const minPasswordLength = 8;
-  let passwordInputVisible = "none";
   let formHeight = "auto";
 
   let titleEl;
@@ -25,8 +23,7 @@
     }
   });
 
-  $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: inputStyles = `--inputVisible:${passwordInputVisible}`;
+  $: cssVarStyles = `--titleWidth:${textWidth}px`; 
   $: formStyles = `--formHeight:${formHeight}`;
 
   const handleToggle = () => {
@@ -52,7 +49,7 @@
 </script>
 
 <Meta
-  title="Reset PW Email Dialog"
+  title="Components/Reset PW Email Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -143,10 +140,7 @@
     width: 100%;
   }
 
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
+ 
 
   .title-wrapper {
     display: flex;
@@ -178,10 +172,6 @@
     margin: auto;
   }
 
-  p a {
-    color: #000000;
-  }
-
   .body-text-action {
     font-size: 14px;
     padding-top: 20px;
@@ -196,24 +186,9 @@
   form {
     height: var(--formHeight);
   }
-
-  form img {
-    position: absolute;
-    margin: 14px 0 0 -35px;
-    cursor: pointer;
-  }
-
+  
   input[required]:invalid:focus {
     border: 2px solid red;
-  }
-
-  .error-msg-active,
-  .info-msg-active {
-    text-align: left;
-    font-size: 12px;
-    color: gray;
-    padding: 10px;
-    display: var(--inputVisible);
   }
 
   .info-msg-active {
@@ -226,14 +201,6 @@
     font-size: 12px;
     color: gray;
     padding: 5px 0 0 23px;
-  }
-
-  .hide-error-msg {
-    display: none;
-  }
-
-  .enter-pw {
-    color: #818282;
   }
 
   .label-wrapper {
@@ -250,12 +217,4 @@
     color: var(--color-blue-50);
   }
 
-  .field-pw {
-    display: var(--inputVisible);
-  }
-
-  .body-text-privacy {
-    font-size: 12px;
-    padding-top: 20px;
-  }
 </style>

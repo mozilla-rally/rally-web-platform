@@ -51,7 +51,7 @@
 </script>
 
 <Meta
-  title="SignIn Form Dialog"
+  title="Components/SignIn Form Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },

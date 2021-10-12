@@ -1,4 +1,8 @@
 
+ .valid{
+  color: var(--color-green-70) !important;
+}
+
 .mzp-t-mozilla,
 .modal-body,
 .cta {

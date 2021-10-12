@@ -1,11 +1,89 @@
+
+header{
+  flex-shrink: 0; 
+}
+
+.header-navToggle {
+  background-image: none;
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-weight: 400;
+  height: 2.5rem;
+  letter-spacing: 0;
+  line-height: normal;
+  margin: 0 0 0 auto;
+  padding: 0.5rem;
+  text-align: left;
+  text-shadow: none;
+  text-transform: none;
+  width: 3rem;
+}
+
+.header-navToggle[aria-expanded=true] {
+  background-color: transparent;
+}
+
+.header-navToggle-icon {
+  display: inline-block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.header-navToggle-icon,
+.header-navToggle-icon::before,
+.header-navToggle-icon::after {
+  border-radius: 10px;
+  background-color: var(--color-ink-80);
+  height: 4px;
+  transition: 0.2s;
+  transition-property: background-color, transform;
+  width: 100%;
+}
+
+.header-navToggle-icon::before,
+.header-navToggle-icon::after {
+  left: 0;
+  content: "";
+  position: absolute;
+}
+
+.header-navToggle-icon::before {
+  top: -10px;
+}
+
+.header-navToggle-icon::after {
+  top: 10px;
+}
+
+.header-navToggle[aria-expanded="true"] .header-navToggle-icon::before {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.header-navToggle[aria-expanded="true"] .header-navToggle-icon::after {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+.header-navToggle[aria-expanded="true"] .header-navToggle-icon {
+  background-color: transparent;
+}
+
 .btn-sign-in-up {
   margin-left: 1.5rem !important;
   font-weight: 700;
-  font-size: 1.125rem !important; 
+  font-size: 1.125rem !important;
 }
 
-.sign-in:hover{
-    background-color: #000000 !important;
-    color: #ffffff !important; 
-    border-color: transparent !important;
+.sign-in:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
 }
+
+

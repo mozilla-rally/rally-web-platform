@@ -11,16 +11,21 @@
   let passwordEl;
   let passwordVisible = false;
   let btnDisabled = true;
+  let number;
+  let length;
+  let capital;
+  let letter;
   let errorMsg = false;
   const minPasswordLength = 8;
+  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   let passwordInputVisible = "none";
-  let dialogHeight = "auto"
-  let formHeight = "auto"
+  let dialogHeight = "auto";
+  let formHeight = "auto";
 
   let titleEl;
   let textWidth;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
       textWidth = titleEl.clientWidth;
     }
@@ -39,26 +44,66 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    if (emailEl) {
-      emailEl.value.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
+    if (email) {
+      email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
+    }
+    if (passwordEl) {
+      // Validate lowercase letters
+      let lowerCaseLetters = /[a-z]/g;
+      passwordEl.value.match(lowerCaseLetters)
+        ? letter.classList.add("valid")
+        : letter.classList.remove("valid");
 
+      // Validate capital letters
+      let upperCaseLetters = /[A-Z]/g;
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("valid")
+        : capital.classList.remove("valid");
+
+      // Validate numbers
+      let numbers = /[0-9]/g;
+      passwordEl.value.match(numbers)
+        ? number.classList.add("valid")
+        : number.classList.remove("valid");
+
+      // Validate length
+      passwordEl.value.length >= 8
+        ? length.classList.add("valid")
+        : length.classList.remove("valid");
       if (name === "id_user_pw") {
-        passwordEl.value.length >= minPasswordLength
-          ? (errorMsg = false)
-          : (errorMsg = true);
+        if (
+          passwordEl.value.length >= minPasswordLength &&
+          passwordEl.value.match(numbers) &&
+          passwordEl.value.match(upperCaseLetters) &&
+          passwordEl.value.match(lowerCaseLetters)
+        ) {
+          btnDisabled = false;
+        } else {
+          btnDisabled = true;
+        }
       }
+
+      // if (name === "id_user_pw") {
+      //   // password.length <= minPasswordLength
+      //   //   ? (errorMsg = false)
+      //   //   : (errorMsg = true);
+
+      // }
     }
   };
 
   const showPasswordInput = () => {
-    passwordInputVisible = "block";
-    dialogHeight = "626px"
-    formHeight = "270px"
+    if (!password) {
+      btnDisabled = true;
+      passwordInputVisible = "block";
+      dialogHeight = "626px";
+      formHeight = "270px";
+    }
   };
 </script>
 
 <Meta
-  title="Create Form Dialog"
+  title="Components/Create Form Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -122,7 +167,7 @@
               id="id_user_pw"
               name="id_user_pw"
               type="password"
-              min={minPasswordLength}
+              {pattern}
               width="100%"
               required
             />
@@ -148,19 +193,22 @@
               />
             {/if}
             <p style={inputStyles} class="info-msg-active">
-                Your password should be unique, and must contain: 
+              Your password should be unique, and must contain:
             </p>
             <ul class="info-rules">
-              <li>At least 8 characters</li>
-              <li>At least 1 uppercase letter</li>
-              <li>At least 1 lowercase letter</li>
-              <li>At least 1 number</li>
+              <li bind:this={length} id="length">At least 8 characters</li>
+              <li bind:this={capital} id="capital">
+                At least 1 uppercase letter
+              </li>
+              <li bind:this={letter} id="letter">
+                At least 1 lowercase letter
+              </li>
+              <li bind:this={number} id="number">At least 1 number</li>
             </ul>
 
             <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
-              Please choose a password that is at least 8 characters
+              Please matching the password requirements 
             </p> -->
-
           </div>
         </fieldset>
       </form>
@@ -189,7 +237,7 @@
   name="Create Account"
   args={{
     width: "460px",
-    height: dialogHeight, 
+    height: dialogHeight,
     topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Create Account",
@@ -267,8 +315,8 @@
     height: 50px;
   }
 
-  form{
-    height: var(--formHeight); 
+  form {
+    height: var(--formHeight);
   }
 
   form img {
@@ -281,7 +329,8 @@
     border: 2px solid red;
   }
 
-  .error-msg-active, .info-msg-active {
+  .error-msg-active,
+  .info-msg-active {
     text-align: left;
     font-size: 12px;
     color: gray;
@@ -289,16 +338,16 @@
     display: var(--inputVisible);
   }
 
-  .info-msg-active{
+  .info-msg-active {
     padding: 0;
-    margin-top: 10px; 
+    margin-top: 10px;
   }
 
-  ul{
+  ul {
     list-style: disc;
-    font-size: 12px; 
+    font-size: 12px;
     color: gray;
-    padding: 5px 0 0 23px; 
+    padding: 5px 0 0 23px;
   }
 
   .hide-error-msg {
@@ -331,5 +380,4 @@
     font-size: 12px;
     padding-top: 20px;
   }
-
 </style>

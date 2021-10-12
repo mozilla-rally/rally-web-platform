@@ -1,0 +1,17 @@
+body {
+  display: flex !important;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+footer{
+    background-color: var(--color-light-gray-20);
+    flex: 1; 
+}
