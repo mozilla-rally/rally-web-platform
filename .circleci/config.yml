@@ -80,7 +80,7 @@ jobs:
           command: git diff-index --quiet HEAD || git commit -m "adding build output to deploy branch" functions/lib build/
       - run:
           name: Push deploy branch to origin
-          command: git pull --rebase origin deploy && git push origin deploy
+          command: git fetch origin && git merge -s ours deploy && git push origin deploy
   #rally-web platform deploy block. Env variables are defined in rally-web context
   site-deploy:
     parameters:
