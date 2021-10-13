@@ -191,6 +191,8 @@ The `./firebase.json` holds the desired services and basic configuration, but th
 
 1. Create new Web app in UI under Project Settings -> Your apps
 
+Make sure to choose ["Native" not "Datastore" mode for Cloud Firestore](https://cloud.google.com/datastore/docs/firestore-or-datastore#choosing_a_database_mode).
+
 Set your project name as a shell environment variable:
 
 `FIREBASE_PROJECT_NAME="my-firebase-project"`
