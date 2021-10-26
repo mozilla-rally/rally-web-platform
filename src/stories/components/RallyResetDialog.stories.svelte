@@ -87,7 +87,7 @@
 </script>
 
 <Meta
-  title="Components/Reset PW Dialog"
+  title="Components/Dialogs/Reset PW Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -107,12 +107,7 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <Dialog
-    {...args}
-    height={args.height}
-    topPadding={args.topPadding}
-    width={args.width}
-  >
+  <Dialog {...args}>
     <div class="title-wrapper" slot="title">
       <div style={cssVarStyles} class="title-highlight" />
       <div bind:this={titleEl} class="title-text">{args.title}</div>
@@ -128,40 +123,43 @@
               >
             </div>
 
-            <input
-              class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
-              on:change={handleChange}
-              on:keyup={handleChange}
-              id="id_user_pw"
-              name="id_user_pw"
-              type="password"
-              min={minPasswordLength}
-              width="100%"
-              required
-            />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
+            <div class="input-wrapper">
+              <input
+                class="mzp-c-field-control"
+                bind:value={password}
+                bind:this={passwordEl}
+                on:change={handleChange}
+                on:keyup={handleChange}
+                id="id_user_pw"
+                name="id_user_pw"
+                type="password"
+                min={minPasswordLength}
+                width="100%"
+                required
               />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
+              {#if passwordVisible}
+                <img
+                  src="img/eye-slash.svg"
+                  alt="Eye with slash across it"
+                  class="fas fa-eye-slash togglePassword"
+                  id="hide-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {:else}
+                <img
+                  src="img/eye-open.svg"
+                  alt="Open eye"
+                  class="togglePassword"
+                  id="show-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {/if}
+            </div>
+
             <p style={inputStyles} class="info-msg-active">
               Your password should be unique, and must contain:
             </p>
@@ -211,32 +209,9 @@
 />
 
 <style>
-  .modal-body-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
   .modal-body-content.sigin-modal {
     margin-top: 8px;
     width: 100%;
-  }
-
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
-
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
   }
 
   .title-highlight {
@@ -248,36 +223,8 @@
     margin-top: 24px;
   }
 
-  .button-text {
-    margin-left: 10px;
-    text-align: center;
-  }
-
-  p {
-    margin: auto;
-  }
-
-  p a {
-    color: #000000;
-  }
-
-  input {
-    width: 100%;
-    height: 50px;
-  }
-
   form {
-    height: auto; 
-  }
-
-  form img {
-    position: absolute;
-    margin: 14px 0 0 -35px;
-    cursor: pointer;
-  }
-
-  input[required]:invalid:focus {
-    border: 2px solid red;
+    height: auto;
   }
 
   .error-msg-active,
@@ -289,33 +236,8 @@
     display: block;
   }
 
+  .error-msg-active,
   .info-msg-active {
-    padding: 0;
-    margin-top: 10px;
-  }
-
-  ul {
-    list-style: disc;
-    font-size: 12px;
-    color: gray;
-    padding: 5px 0 0 23px;
-  }
-
-  .hide-error-msg {
-    display: none;
-  }
-
-  .label-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
-  .mzp-c-field-label {
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .mzp-c-field-label a {
-    text-decoration: none;
-    color: var(--color-blue-50);
+    display: var(--inputVisible);
   }
 </style>

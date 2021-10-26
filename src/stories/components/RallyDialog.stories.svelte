@@ -18,7 +18,7 @@
 </script>
 
 <Meta
-  title="Components/Launch Dialogs"
+  title="Components/Dialogs/Launch Dialogs"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -34,14 +34,9 @@
   }}
 />
 
-<!-- 👇 We create a “template” of how args map to rendering -->
+<!--We create a “template” of how args map to rendering -->
 <Template let:args>
-  <Dialog
-    {...args}
-    height={args.height}
-    topPadding={args.topPadding}
-    width={args.width}
-  >
+  <Dialog {...args}>
     <div class="title-wrapper" slot="title">
       <div style={cssVarStyles} class="title-highlight" />
       <div bind:this={titleEl} class="title-text">{args.title}</div>
@@ -96,7 +91,7 @@
   </Dialog>
 </Template>
 
-<!-- 👇 Each story then reuses that template -->
+<!--Each story then reuses that template -->
 <Story
   name="Welcome Back"
   args={{
@@ -128,29 +123,6 @@
 />
 
 <style>
-  .modal-body-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
-
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
@@ -159,33 +131,4 @@
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
   }
-
-  .button-text {
-    margin-left: 10px;
-  }
-
-  p {
-    margin: auto;
-  }
-
-  p a {
-    color: #000000;
-  }
-
-  .body-text-privacy {
-    font-size: 12px;
-    padding-top: 20px;
-  }
-
-  .body-text-action {
-    font-size: 16px;
-    padding-top: 40px;
-    color: #000000;
-  }
-
-  .body-text-action a {
-    font-weight: 700;
-  }
-
-
 </style>

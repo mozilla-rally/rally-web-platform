@@ -46,12 +46,10 @@
       }
     }
   };
-
-
 </script>
 
 <Meta
-  title="Components/SignIn Form Dialog"
+  title="Components/Dialogs/SignIn Form Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -69,12 +67,7 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <Dialog
-    {...args}
-    height={args.height}
-    topPadding={args.topPadding}
-    width={args.width}
-  >
+  <Dialog {...args}>
     <div class="title-wrapper" slot="title">
       <div style={cssVarStyles} class="title-highlight" />
       <div bind:this={titleEl} class="title-text">{args.title}</div>
@@ -107,40 +100,42 @@
               >
             </div>
 
-            <input
-              class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
-              on:change={handleChange}
-              on:keyup={handleChange}
-              id="id_user_pw"
-              name="id_user_pw"
-              type="password"
-              min={minPasswordLength}
-              width="100%"
-              required
-            />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
+            <div class="input-wrapper">
+              <input
+                class="mzp-c-field-control"
+                bind:value={password}
+                bind:this={passwordEl}
+                on:change={handleChange}
+                on:keyup={handleChange}
+                id="id_user_pw"
+                name="id_user_pw"
+                type="password"
+                min={minPasswordLength}
+                width="100%"
+                required
               />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
+              {#if passwordVisible}
+                <img
+                  src="img/eye-slash.svg"
+                  alt="Eye with slash across it"
+                  class="fas fa-eye-slash togglePassword"
+                  id="hide-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {:else}
+                <img
+                  src="img/eye-open.svg"
+                  alt="Open eye"
+                  class="togglePassword"
+                  id="show-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {/if}
+            </div>
             <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
               Please choose a password that is at least 8 characters
             </p> -->
@@ -188,14 +183,8 @@
     width: 100%;
   }
 
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
   .title-text {
     z-index: 1;
-    position: absolute;
     white-space: nowrap;
     display: inline-block;
   }
@@ -214,14 +203,6 @@
     text-align: center;
   }
 
-  p {
-    margin: auto;
-  }
-
-  p a {
-    color: #000000;
-  }
-
   .body-text-action {
     font-size: 16px;
     padding-top: 40px;
@@ -235,12 +216,6 @@
   input {
     width: 100%;
     height: 50px;
-  }
-
-  form img {
-    position: absolute;
-    margin: 14px 0 0 -35px;
-    cursor: pointer;
   }
 
   input[required]:invalid:focus {

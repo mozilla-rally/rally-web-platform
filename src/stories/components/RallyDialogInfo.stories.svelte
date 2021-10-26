@@ -17,7 +17,7 @@
 </script>
 
 <Meta
-  title="Components/Info Dialogs"
+  title="Components/Dialogs/Info Dialogs"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -93,24 +93,6 @@
 />
 
 <style>
-  .modal-body-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
@@ -120,14 +102,6 @@
     margin-top: 24px;
   }
 
-  p {
-    margin: auto;
-  }
-
-  p a {
-    color: #000000;
-  }
-
   .body-text-action,
   .body-text-info {
     font-size: 15px;
@@ -135,12 +109,9 @@
     color: #000000;
   }
 
-  .body-text-action a {
-    font-weight: 700;
-  }
-
   .body-text-info {
     padding: 20px 52px 0px;
     text-align: center;
   }
+
 </style>

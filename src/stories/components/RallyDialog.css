@@ -5,13 +5,14 @@
 
 .mzp-t-mozilla,
 .modal-body,
+.card-body,
 .cta {
   justify-self: center;
 }
 .modal-body {
   display: flex;
   flex-direction: column;
-  margin-top: 45px;
+  /* margin-top: 45px; */
 }
 
 .modal-body-signin{
@@ -31,6 +32,10 @@
   grid-area: dismiss;
 }
 
+.card-container {
+  margin-bottom: 4rem;
+}
+
 .container-header {
   direction: rtl;
   grid-template-rows: auto max-content;
@@ -40,7 +45,7 @@
   margin-bottom: 20px;
 }
 
-.modal-button {
+.modal-button, .card-button {
   display: flex;
   margin-top: 15px;
   width: 100%;
@@ -48,7 +53,7 @@
   padding: 6px 20px !important;
 }
 
-.modal-button.signin, .modal-button.create {
+.modal-button.signin, .modal-button.create, .card-button.signin, c.ard-button.create  {
   justify-content: center;
   margin-top: 0;
   height: 50px; 
@@ -56,5 +61,124 @@
 
 .reset-pw{
   width: 85%; 
+}
+
+/* dialog body styles */
+.modal-body-content, .card-body-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.button-wrapper {
+  width: 244px;
+  margin: auto;
+}
+
+.title-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.title-text {
+  z-index: 1;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.button-text {
+  margin-left: 10px;
+  font-size: 16px; 
+}
+
+p {
+  margin: auto;
+}
+
+p a {
+  color: #000000;
+}
+
+.body-text-privacy {
+  font-size: 12px;
+  padding-top: 20px;
+}
+
+.body-text-action {
+  font-size: 16px;
+  padding-top: 40px;
+  color: #000000;
+}
+
+.body-text-action a {
+  font-weight: 700;
+}
+
+/* form styles */
+.label-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-wrapper{
+  display: flex; 
+}
+
+input {
+  width: 100%;
+  height: 50px;
+}
+
+input[required]:invalid:focus {
+  border: 2px solid red;
+}
+
+
+form img {
+  margin: 2px 0 0 -35px;
+  cursor: pointer;
+}
+
+.info-msg-active {
+  padding: 0;
+  margin-top: 10px;
+}
+
+.error-msg-active,
+.info-msg-active {
+  text-align: left;
+  font-size: 12px;
+  color: gray;
+  padding: 10px;
+}
+
+ul {
+  list-style: disc;
+  font-size: 12px;
+  color: gray;
+  padding: 5px 0 0 23px;
+}
+
+.hide-error-msg {
+  display: none;
+}
+
+.enter-pw {
+  color: #818282;
+}
+
+.label-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mzp-c-field-label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.mzp-c-field-label a {
+  text-decoration: none;
+  color: var(--color-blue-50);
 }
 

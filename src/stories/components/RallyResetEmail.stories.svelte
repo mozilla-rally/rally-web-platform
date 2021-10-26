@@ -23,7 +23,7 @@
     }
   });
 
-  $: cssVarStyles = `--titleWidth:${textWidth}px`; 
+  $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
 
   const handleToggle = () => {
@@ -45,11 +45,10 @@
       }
     }
   };
-
 </script>
 
 <Meta
-  title="Components/Reset PW Email Dialog"
+  title="Components/Dialogs/Reset PW Email Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -68,12 +67,7 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <Dialog
-    {...args}
-    height={args.height}
-    topPadding={args.topPadding}
-    width={args.width}
-  >
+  <Dialog {...args}>
     <div class="title-wrapper" slot="title">
       <div style={cssVarStyles} class="title-highlight" />
       <div bind:this={titleEl} class="title-text">{args.title}</div>
@@ -140,18 +134,9 @@
     width: 100%;
   }
 
- 
-
   .title-wrapper {
     display: flex;
     justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
   }
 
   .title-highlight {
@@ -186,35 +171,8 @@
   form {
     height: var(--formHeight);
   }
-  
+
   input[required]:invalid:focus {
     border: 2px solid red;
   }
-
-  .info-msg-active {
-    padding: 0;
-    margin-top: 10px;
-  }
-
-  ul {
-    list-style: disc;
-    font-size: 12px;
-    color: gray;
-    padding: 5px 0 0 23px;
-  }
-
-  .label-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
-  .mzp-c-field-label {
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .mzp-c-field-label a {
-    text-decoration: none;
-    color: var(--color-blue-50);
-  }
-
 </style>

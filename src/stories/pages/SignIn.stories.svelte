@@ -1,4 +1,5 @@
 <script>
+  import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import RallyNavbar from "../../lib/layouts/main/Navbar.svelte";
@@ -10,7 +11,7 @@
   import "../components/RallyNavbar.css";
   import "../components/RallyDialog.css";
 
-  const dispatch = createEventDispatcher();
+  // const dispatch = createEventDispatcher();
   const mounted = isMounted();
 
   //launch modal states
@@ -132,20 +133,21 @@
     linkText: "Contact Us",
     custom: "info-dialog",
     minHeight: "null",
-  }
+  };
 
   onMount(async () => {
     Dialog = (await import("../../lib/components/Dialog.svelte")).default;
   });
 
   // reactivity
-  $: titleEl ? (textWidth = titleEl.clientWidth) : null;
-  $: cssVarStyles1 = `--nav-opacity:${navOpacity}`;
-  $: cssVarStyles2 = `--titleWidth:${textWidth}px`;
+
   $: if (welcomeModal === true) {
     args = welcomeArgs;
   } else if (joinModal === true) {
     args = joinArgs;
+    if (textWidth) {
+      console.log(textWidth, titleEl.clientWidth);
+    }
   } else if (createAcctModal === true) {
     args = createArgs;
   } else if (signinModal === true) {
@@ -154,9 +156,12 @@
     args = forgetPWArgs;
   } else if (checkEmailPWModal === true) {
     args = checkEmailPWArgs;
-  }else if (checkEmailModal === true) {
+  } else if (checkEmailModal === true) {
     args = checkEmailArgs;
   }
+  $: titleEl ? (textWidth = titleEl.clientWidth) : null;
+  $: cssVarStyles1 = `--nav-opacity:${navOpacity}`;
+  $: cssVarStyles2 = `--titleWidth:${textWidth}px`;
   //input reactivity
 
   $: inputStyles = `--inputVisible:${passwordInputVisible}`;
@@ -287,15 +292,13 @@
   };
 
   const showPasswordInput = () => {
-    console.log(passwordEl.value.length)
+    console.log(passwordEl.value.length);
     if (passwordEl.value.length <= 0) {
       btnDisabled = true;
       passwordInputVisible = "block";
       dialogHeight = "626px";
       formHeight = "270px";
-    } 
-
-    if(password){
+    } else {
       triggerModal("check-create");
     }
   };
@@ -419,16 +422,21 @@
         </div>
       </RallyNavbar>
     </header>
-    <TestSignIn />
-    <footer/>
+    <!-- <div class="how-it-works">
+      <a
+        class="external-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        href="__BASE_SITE__/how-rally-works/"
+        >Wait – how does it work again?
+        <ExternalLink /></a
+      >
+    </div> -->
   </div>
 
   {#if (welcomeModal || joinModal) && mounted && Dialog}
     <Dialog
       {...args}
-      height={args.height}
-      topPadding={args.topPadding}
-      width={args.width}
       on:dismiss={() => {
         joinModal = false;
         welcomeModal = false;
@@ -499,9 +507,6 @@
   {#if createAcctModal && mounted && Dialog}
     <Dialog
       {...args}
-      height={args.height}
-      topPadding={args.topPadding}
-      width={args.width}
       on:dismiss={() => {
         createAcctModal = false;
         joinModal = false;
@@ -537,41 +542,43 @@
                   >Choose a Password</label
                 >
               </div>
+              <div class="input-wrapper">
+                <input
+                  class="mzp-c-field-control"
+                  bind:value={password}
+                  bind:this={passwordEl}
+                  on:change={handleChange}
+                  on:keyup={handleChange}
+                  id="id_user_pw"
+                  name="id_user_pw"
+                  type="password"
+                  {pattern}
+                  width="100%"
+                  required
+                />
+                {#if passwordVisible}
+                  <img
+                    src="img/eye-slash.svg"
+                    alt="Eye with slash across it"
+                    class="fas fa-eye-slash togglePassword"
+                    id="hide-eye"
+                    width="24px"
+                    height="24px"
+                    on:click|preventDefault={handleToggle}
+                  />
+                {:else}
+                  <img
+                    src="img/eye-open.svg"
+                    alt="Open eye"
+                    class="togglePassword"
+                    id="show-eye"
+                    width="24px"
+                    height="24px"
+                    on:click|preventDefault={handleToggle}
+                  />
+                {/if}
+              </div>
 
-              <input
-                class="mzp-c-field-control"
-                bind:value={password}
-                bind:this={passwordEl}
-                on:change={handleChange}
-                on:keyup={handleChange}
-                id="id_user_pw"
-                name="id_user_pw"
-                type="password"
-                {pattern}
-                width="100%"
-                required
-              />
-              {#if passwordVisible}
-                <img
-                  src="img/eye-slash.svg"
-                  alt="Eye with slash across it"
-                  class="fas fa-eye-slash togglePassword"
-                  id="hide-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {:else}
-                <img
-                  src="img/eye-open.svg"
-                  alt="Open eye"
-                  class="togglePassword"
-                  id="show-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {/if}
               <p style={inputStyles} class="info-msg-active">
                 Your password should be unique, and must contain:
               </p>
@@ -625,9 +632,6 @@
   {#if signinModal && mounted && Dialog}
     <Dialog
       {...args}
-      height={args.height}
-      topPadding={args.topPadding}
-      width={args.width}
       on:dismiss={() => {
         signinModal = false;
         welcomeModal = false;
@@ -670,40 +674,43 @@
                 </label>
               </div>
 
-              <input
-                class="mzp-c-field-control"
-                bind:value={password}
-                bind:this={passwordEl}
-                on:change={handleChange}
-                on:keyup={handleChange}
-                id="id_user_pw"
-                name="id_user_pw"
-                type="password"
-                min={minPasswordLength}
-                width="100%"
-                required
-              />
-              {#if passwordVisible}
-                <img
-                  src="img/eye-slash.svg"
-                  alt="Eye with slash across it"
-                  class="fas fa-eye-slash togglePassword"
-                  id="hide-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
+              <div class="input-wrapper">
+                <input
+                  class="mzp-c-field-control"
+                  bind:value={password}
+                  bind:this={passwordEl}
+                  on:change={handleChange}
+                  on:keyup={handleChange}
+                  id="id_user_pw"
+                  name="id_user_pw"
+                  type="password"
+                  min={minPasswordLength}
+                  width="100%"
+                  required
                 />
-              {:else}
-                <img
-                  src="img/eye-open.svg"
-                  alt="Open eye"
-                  class="togglePassword"
-                  id="show-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {/if}
+                {#if passwordVisible}
+                  <img
+                    src="img/eye-slash.svg"
+                    alt="Eye with slash across it"
+                    class="fas fa-eye-slash togglePassword"
+                    id="hide-eye"
+                    width="24px"
+                    height="24px"
+                    on:click|preventDefault={handleToggle}
+                  />
+                {:else}
+                  <img
+                    src="img/eye-open.svg"
+                    alt="Open eye"
+                    class="togglePassword"
+                    id="show-eye"
+                    width="24px"
+                    height="24px"
+                    on:click|preventDefault={handleToggle}
+                  />
+                {/if}
+              </div>
+
               <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
             Please choose a password that is at least 8 characters
           </p> -->
@@ -721,7 +728,8 @@
           <button
             on:click={() => {
               signinModal = false;
-              triggerModal(null);
+              welcomeModal = false;
+              triggerModal("join");
             }}>{args.linkText}</button
           >
         </p>
@@ -732,9 +740,7 @@
   <!-- forget password modal -->
   {#if forgetPWModal && mounted && Dialog}
     <Dialog
-      height={args.height}
-      topPadding={args.topPadding}
-      width={args.width}
+      {...args}
       on:dismiss={() => {
         signinModal = false;
         welcomeModal = false;
@@ -790,9 +796,7 @@
   <!-- check email modal -->
   {#if (checkEmailModal || checkEmailPWModal) && mounted && Dialog}
     <Dialog
-      height={args.height}
-      topPadding={args.topPadding}
-      width={args.width}
+      {...args}
       on:dismiss={() => {
         checkEmailPWModal = false;
         checkEmailModal = false;
@@ -821,41 +825,35 @@
     text-decoration: none;
     color: black;
   }
-
   .header {
     padding-bottom: 1.125rem;
     padding-top: 1.125rem;
   }
-
   .header-navToggle {
     display: block;
   }
-
   .header-logo-nav {
     display: flex;
     background-color: #fff;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     width: 100%;
     padding-left: 1.0625rem;
     padding-right: 1.0625rem;
     position: relative;
-    /* z-index: 901; */
+    z-index: 901;
   }
-
   .header-logo-link {
     max-width: 9.125rem;
+    width: 100%;
   }
-
   .header-logo-link img {
     display: block;
     width: 100%;
   }
-
   .nav {
     padding: 0.9375rem 1.0625rem 1.1875rem;
   }
-
   .navbar-nav {
     max-height: 315px;
     background-color: #fff;
@@ -870,13 +868,11 @@
     left: 0;
     visibility: visible;
   }
-
   .navbar-nav[aria-hidden="true"] {
     transition: max-height 0.4s cubic-bezier(0.215, 0.61, 0.355, 1),
       visibility 0s linear 0.4s;
     max-height: 0 !important;
   }
-
   .navbar-nav[aria-hidden="false"] {
     transition: max-height 0.4s cubic-bezier(0.215, 0.61, 0.355, 1),
       visibility 0s linear 0s;
@@ -887,15 +883,12 @@
     padding: 0;
     margin: 0;
   }
-
   .nav-list li {
     margin-right: 0;
   }
-
   .nav-list a {
     transition: all 0.15s ease-in-out;
   }
-
   .nav-link,
   .nav-btns {
     font-weight: 700;
@@ -906,39 +899,32 @@
     padding-bottom: 1rem;
     padding-top: 1rem;
   }
-
   .nav-link:hover {
     text-decoration: underline;
   }
-
   .nav-sign-up {
     display: block;
   }
-
   .sign-in-up {
     display: flex;
     justify-content: space-between;
     margin: auto;
     padding-top: 32px;
   }
-
   .nav-btns {
     justify-content: center;
   }
-
   /* queries */
   /* --mobile: 20em; 
   --tablet: 43em; 
   --desktop: 64.125em;
   --large-screen: 82em; */
-
   /* min-width of 1026px */
   @media screen and (min-width: 64.125em) {
     .header {
       /* padding: 2rem 2.5rem; */
       padding: 2rem 2.5rem 0rem 2.5rem;
     }
-
     .header-navToggle {
       display: none;
     }
@@ -948,11 +934,9 @@
       align-items: center;
       padding-left: 0;
     }
-
     .nav {
       padding: unset;
     }
-
     .navbar-nav {
       max-height: unset;
       margin-left: 0;
@@ -967,11 +951,9 @@
       position: unset;
       opacity: 1;
     }
-
     .navbar-nav[aria-hidden="true"] {
       max-height: unset !important;
     }
-
     .nav-list {
       align-items: center;
       display: flex;
@@ -980,19 +962,16 @@
       padding: 0;
       margin: 0;
     }
-
     .nav-list li {
       margin-right: 2.5rem;
       line-height: 1.2;
     }
-
     .nav-link {
       border-top: unset;
       display: block;
       padding-bottom: unset;
       padding-top: unset;
     }
-
     .nav-sign-up {
       display: none;
     }
@@ -1003,38 +982,11 @@
       white-space: nowrap;
     }
   }
-
   @media screen and (min-width: 40em) {
     .header-logo-link {
       max-width: 12.75rem;
     }
   }
-
-  /* dialog styles */
-
-  .modal-body-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
-
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
@@ -1044,35 +996,16 @@
     margin-top: 24px;
   }
 
-  .button-text {
-    margin-left: 10px;
+  .body-text-action button,
+  .forgot-pw button {
+    border-color: transparent;
+    background: transparent;
+    cursor: pointer;
   }
 
-  p {
-    margin: auto;
-  }
-
-  p a {
-    color: #000000;
-  }
-
-  .body-text-privacy {
-    font-size: 12px;
-    padding-top: 20px;
-  }
-
-  .body-text-action {
-    font-size: 16px;
-    padding-top: 40px;
-    color: #000000;
-  }
-
-  .forgot-pw button,
   .body-text-action button {
     font-weight: 700;
-    border: transparent;
-    background-color: transparent;
-    cursor: pointer;
+    text-decoration: underline;
   }
 
   .forgot-pw button {
@@ -1081,118 +1014,14 @@
     font-size: 12px;
   }
 
-  /* create account styles */
-  .modal-body-content.sigin-modal {
-    margin-top: 8px;
-    width: 100%;
-  }
-
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
-
-  .title-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  .title-text {
-    z-index: 1;
-    position: absolute;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
-  .title-highlight {
-    background-color: #f9cd34;
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-  }
-
-  .button-text {
-    margin-left: 10px;
-    text-align: center;
-  }
-
-  p {
-    margin: auto;
-  }
-
-  .body-text-action a {
-    font-weight: 700;
-  }
-
-  input {
-    width: 100%;
-    height: 50px;
-  }
-
-  form {
-    height: var(--formHeight);
-  }
-
-  form img {
-    position: absolute;
-    margin: 14px 0 0 -35px;
-    cursor: pointer;
-  }
-
-  input[required]:invalid:focus {
-    border: 2px solid red;
-  }
-
-  .error-msg-active,
-  .info-msg-active {
-    text-align: left;
-    font-size: 12px;
-    color: gray;
-    padding: 10px;
-    display: var(--inputVisible);
-  }
-
-  .info-msg-active {
-    padding: 0;
-    margin-top: 10px;
-  }
-
-  ul {
-    list-style: disc;
-    font-size: 12px;
-    color: gray;
-    padding: 5px 0 0 23px;
-  }
-
-  .hide-error-msg {
-    display: none;
-  }
-
-  .enter-pw {
-    color: #818282;
-  }
-
-  .label-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
-  .mzp-c-field-label {
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .mzp-c-field-label a {
-    text-decoration: none;
-    color: var(--color-blue-50);
-  }
-
   .field-pw {
     display: var(--inputVisible);
   }
 
-  /* check info styles */
+  .title-wrapper {
+    padding-bottom: 10px;
+  }
+
   .body-text-info {
     padding: 20px 52px 0px;
     text-align: center;

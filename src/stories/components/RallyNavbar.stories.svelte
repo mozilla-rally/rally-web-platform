@@ -28,7 +28,7 @@
   $: cssVarStyles = `--nav-opacity:${navOpacity}`;
 </script>
 
-<Meta title="Components/RallyNavbar" component={RallyNavbar} />
+<Meta title="Components/Layout/RallyNavbar" component={RallyNavbar} />
 
 <Template>
   <header class="header">
@@ -162,7 +162,7 @@
     display: flex;
     background-color: #fff;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     width: 100%;
     padding-left: 1.0625rem;
     padding-right: 1.0625rem;
@@ -172,6 +172,7 @@
 
   .header-logo-link {
     max-width: 9.125rem;
+    width: 100%; 
   }
 
   .header-logo-link img {
@@ -270,7 +271,6 @@
       display: none;
     }
     .header-logo-nav {
-      width: auto;
       flex-direction: row;
       align-items: center;
       padding-left: 0;

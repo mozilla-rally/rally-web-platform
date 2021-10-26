@@ -130,3 +130,6 @@ screenshots/
 .firebaserc
 
 static/firebase.config.json
+
+# Local Netlify folder
+.netlify
