@@ -6,12 +6,10 @@
   import isMounted from "../../lib/is-mounted";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
-  import Button from "../../lib/components/Button.svelte";
   import Card from "../../lib/components/Card.svelte";
   import "./SignIn.css";
   import "../components/RallyNavbar.css";
   import "../components/RallyDialog.css";
-import { EventEmitter } from "selenium-webdriver";
 
   const mounted = isMounted();
 
@@ -24,7 +22,6 @@ import { EventEmitter } from "selenium-webdriver";
   let resetPWCard = false;
   let checkEmailCard = false;
   let checkEmailPWCard = false;
-  let startState;
 
   //create account states
   let email;
@@ -44,62 +41,125 @@ import { EventEmitter } from "selenium-webdriver";
   let CardHeight = "auto";
   let formHeight = "auto";
 
-  //nav states
-  let ariaExpanded = false;
-  let ariaHidden = true;
-  let isOpaque = false;
-  let navOpacity = 0;
+  // onMount(() => {
 
-  //title text states
-  let titleEl;
-  let textWidth;
+  // });
 
-  onMount(() => {
-    if (titleEl) {
-      textWidth = titleEl.clientWidth;
-    }
-  });
+  //Card args
+  const argTypes = {
+    width: { control: "text" },
+    height: { control: "text" },
+    topPadding: { control: "text" },
+    fontSize: { control: "text" },
+  };
+
+  let cardArgs = {
+    width: "460px",
+    fontSize: "38px",
+    topPadding: "calc(10vh - 20px)",
+  };
+
+  let welcomeArgs = {
+    ...cardArgs,
+    title: "Welcome Back",
+    body: "Text",
+    cta1: "Continue with Google",
+    cta2: "Continue with email",
+    bodyText: "Don't have an account?",
+    linkText: "Create Account",
+    welcomeCard,
+  };
+
+  let joinArgs = {
+    ...cardArgs,
+    title: "Join Rally",
+    body: "Text",
+    cta1: "Sign up with Google",
+    cta2: "Sign up with email",
+    bodyText: "Already have an account?",
+    linkText: "Sign In",
+  };
+
+  let createArgs = {
+    ...cardArgs,
+    height: CardHeight,
+    title: "Create Account",
+    body: "Text",
+    cta1: "Continue",
+    bodyText: "Already have an account?",
+    linkText: "Sign In",
+  };
+
+  let signinArgs = {
+    ...cardArgs,
+    title: "Welcome Back",
+    body: "Text",
+    cta1: "Sign In",
+    bodyText: "Don't have an account?",
+    linkText: "Create Account",
+    custom: "Card-body-signin",
+    signinCard,
+  };
+
+  let forgetPWArgs = {
+    ...cardArgs,
+    height: "339px",
+    title: "?Forgot Your Password",
+    body: "Text",
+    cta1: "Request Password Reset",
+    bodyText: "We'll send you a link to reset your password",
+    custom: "Card-body-signin",
+    minHeight: "339px",
+  };
+
+  let checkEmailPWArgs = {
+    ...cardArgs,
+    height: "300px",
+    title: "Check Your Email",
+    body:
+      "An email has been sent to [example@workmail.com] to reset your password",
+    bodyText: "Need additional help?",
+    linkText: "Contact Us",
+    custom: "info-Card",
+    minHeight: "300px",
+  };
+
+  let checkEmailArgs = {
+    ...cardArgs,
+    height: "276px",
+    title: "Check Your Email",
+    body:
+      "To finish creating your account with Rally, you will need to verify your email address.",
+    bodyText: "Need additional help?",
+    linkText: "Contact Us",
+    custom: "info-Card",
+    minHeight: "null",
+  };
 
   // reactivity
-  $: if (welcomeCard === true) {
+  $: if (welcomeCard) {
     cardArgs = welcomeArgs;
-    // setTimeout(() => {
-    //   if (titleEl) {
-    //     textWidth = titleEl.clientWidth;
-    //   }
-    // }, 100);
-    // console.log("THE WELCOME", textWidth);
-  } else if (joinCard === true) {
+  } else if (joinCard) {
     cardArgs = joinArgs;
-    // setTimeout(() => {
-    //   if (titleEl) {
-    //     textWidth = titleEl.clientWidth;
-    //   }
-    // }, 100);
-    // console.log("THE JOIN", textWidth);
-  } else if (createAcctCard === true) {
+  } else if (createAcctCard) {
     cardArgs = createArgs;
-  } else if (signinCard === true) {
+  } else if (signinCard) {
     cardArgs = signinArgs;
-  } else if (forgetPWCard === true) {
+  } else if (forgetPWCard) {
     cardArgs = forgetPWArgs;
-  } else if (checkEmailPWCard === true) {
+  } else if (checkEmailPWCard) {
     cardArgs = checkEmailPWArgs;
-  } else if (checkEmailCard === true) {
+  } else if (checkEmailCard) {
     cardArgs = checkEmailArgs;
   }
-  $: titleEl ? (textWidth = titleEl.clientWidth) : null;
-
-  $: cssVarStyles1 = `--nav-opacity:${navOpacity}`;
-
-
+  // $: titleEl ? (textWidth = titleEl.clientWidth) : null;
 
   //input reactivity
   $: inputStyles = `--inputVisible:${passwordInputVisible}`;
   $: formStyles = `--formHeight:${formHeight}`;
 
   //methods
-  const triggerCardEvent = (event) => {
+  const triggerCard = (event) => {
     console.log("TRIGGER", event.detail.text);
     switch (event.detail.text) {
       case "join":
@@ -116,9 +176,7 @@ import { EventEmitter } from "selenium-webdriver";
         break;
       case "signin":
         welcomeCard = false;
-        setTimeout(() => {
-          signinCard = true;
-        }, 500);
+        signinCard = true;
         break;
       case "forget":
         welcomeCard = false;
@@ -151,9 +209,9 @@ import { EventEmitter } from "selenium-webdriver";
     checkOpacity();
   };
 
-  const checkOpacity = () => {
-    isOpaque ? (navOpacity = 1) : (navOpacity = 0);
-  };
+  // const checkOpacity = () => {
+  //   isOpaque ? (navOpacity = 1) : (navOpacity = 0);
+  // };
 
   //input methods
   const handleToggle = () => {
@@ -218,114 +276,26 @@ import { EventEmitter } from "selenium-webdriver";
       CardHeight = "626px";
       formHeight = "270px";
     } else {
-      triggerCardEvent("check-create");
+      triggerCard("check-create");
     }
-  };
-
-  //Card args
-  const argTypes = {
-    width: { control: "text" },
-    height: { control: "text" },
-    topPadding: { control: "text" },
-    fontSize: { control: "text" },
-  };
-
-  let cardArgs = {
-    width: "460px",
-    fontSize: "38px",
-    topPadding: "calc(10vh - 20px)",
-  };
-
-  let welcomeArgs = {
-    ...cardArgs,
-    title: "Welcome Back",
-    body: "Text",
-    cta1: "Continue with Google",
-    cta2: "Continue with email",
-    bodyText: "Don't have an account?",
-    linkText: "Create Account",
-    welcomeCard,
-    joinCard,
-    startState
-  };
-
-  let joinArgs = {
-    ...cardArgs,
-    title: "Join Rally",
-    body: "Text",
-    cta1: "Sign up with Google",
-    cta2: "Sign up with email",
-    bodyText: "Already have an account?",
-    linkText: "Sign In",
-  };
-
-  let createArgs = {
-    ...cardArgs,
-    height: CardHeight,
-    title: "Create Account",
-    body: "Text",
-    cta1: "Continue",
-    bodyText: "Already have an account?",
-    linkText: "Sign In",
-  };
-
-  let signinArgs = {
-    ...cardArgs,
-    title: "Welcome Back",
-    body: "Text",
-    cta1: "Sign In",
-    bodyText: "Don't have an account?",
-    linkText: "Create Account",
-    custom: "Card-body-signin",
-  };
-
-  let forgetPWArgs = {
-    ...cardArgs,
-    height: "339px",
-    title: "?Forgot Your Password",
-    body: "Text",
-    cta1: "Request Password Reset",
-    bodyText: "We'll send you a link to reset your password",
-    custom: "Card-body-signin",
-    minHeight: "339px",
-  };
-
-  let checkEmailPWArgs = {
-    ...cardArgs,
-    height: "300px",
-    title: "Check Your Email",
-    body:
-      "An email has been sent to [example@workmail.com] to reset your password",
-    bodyText: "Need additional help?",
-    linkText: "Contact Us",
-    custom: "info-Card",
-    minHeight: "300px",
-  };
-
-  let checkEmailArgs = {
-    ...cardArgs,
-    height: "276px",
-    title: "Check Your Email",
-    body:
-      "To finish creating your account with Rally, you will need to verify your email address.",
-    bodyText: "Need additional help?",
-    linkText: "Contact Us",
-    custom: "info-Card",
-    minHeight: "null",
   };
 </script>
 
 <Meta title="Pages/SignInCard" component={Card} {argTypes} />
 
 <Template let:args>
-  <div class="sign-in-container" style={cssVarStyles1}>
+  <div class="sign-in-container">
     <TestSignIn />
 
-    {#if isMounted}
-      <div class="cards-wrapper">
-        <LaunchCard on:message={triggerCardEvent} {...cardArgs} />
-      </div>
-    {/if}
+    <div class="cards-wrapper">
+      {#if (welcomeCard || joinCard) && mounted}
+        <LaunchCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if signinCard && mounted && !welcomeCard && !joinCard}
+        <SignInCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+    </div>
 
     <div class="how-it-works">
       <a
@@ -343,44 +313,7 @@ import { EventEmitter } from "selenium-webdriver";
 <Story name="SignInCard" args={cardArgs} />
 
 <style>
-  .title-highlight {
-    background-color: #f9cd34;
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-    transition: width 0.2s ease-in;
-  }
-
-  .body-text-action button,
-  .forgot-pw button {
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .forgot-pw button {
-    color: var(--color-blue-50);
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .field-pw {
-    display: var(--inputVisible);
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
+  .cards-wrapper {
+    position: relative;
   }
 </style>

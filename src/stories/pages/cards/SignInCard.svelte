@@ -2,19 +2,25 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher  } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
   import "../../components/RallyDialog.css"
 
+  const dispatch = createEventDispatcher();
 
   export let title;
   export let cta1;
   export let bodyText;
   export let linkText;
+  export let signinCard
+  export let width
+  export let topPadding
+  export let fontSize 
 
   let titleEl;
   let textWidth;
+  let startState;
   let email;
   let password;
   let emailEl;
@@ -31,6 +37,7 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: startState = signinCard ? "join" : "welcome";
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
@@ -53,9 +60,15 @@
       }
     }
   };
+
+  const handleTrigger = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
 </script>
 
-<Card>
+<Card {width} {topPadding} {fontSize}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -137,30 +150,51 @@
     >
 
     <p class="body-text-action">
-      {bodyText} <a href="/">{linkText}</a>
+      {bodyText} 
+      <button on:click={()=>{ handleTrigger("join")}}>{linkText}</button>
     </p>
   </div>
 </Card>
 
 <style>
-  h2 {
-    font-size: var(--fontSize);
+   .title-highlight {
+    background-color: #f9cd34;
+    border-radius: 4px;
+    position: absolute;
+    height: 1.375rem;
+    width: calc(var(--titleWidth) + 15px);
+    margin-top: 24px;
+    transition: width 0.2s ease-in;
   }
-  header {
-    display: grid;
-    grid-template-columns: auto max-content;
+
+  .body-text-action button,
+  .forgot-pw button {
+    border-color: transparent;
+    background: transparent;
+    cursor: pointer;
   }
-  .card-container {
-    width: calc(var(--width, var(--content-width)) - 40px);
-    height: calc(var(--height, auto));
-    min-width: calc(var(--width, var(--content-width)) - 40px);
-    min-height: var(--modal-min-height);
-    background-color: var(--color-white);
-    padding: 20px;
-    box-shadow: var(--box-shadow-lg);
-    display: grid;
-    grid-template-rows: max-content auto max-content;
-    font-size: 14px;
-    min-height: var(--min-height);
+
+  .body-text-action button {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .forgot-pw button {
+    color: var(--color-blue-50);
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .field-pw {
+    display: var(--inputVisible);
+  }
+
+  .title-wrapper {
+    padding-bottom: 10px;
+  }
+
+  .body-text-info {
+    padding: 20px 52px 0px;
+    text-align: center;
   }
 </style>

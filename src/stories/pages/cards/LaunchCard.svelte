@@ -1,31 +1,27 @@
 <script>
-  import { onMount,} from "svelte";
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
   import "../../components/RallyDialog.css";
 
-//   const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
- 
-
-  export let cssVarStyles2;
   export let title;
   export let cta1;
   export let cta2;
-  export let startState;
   export let bodyText;
   export let linkText;
   export let welcomeCard;
-  export let joinCard;
-//   export let triggerCard;
   export let width;
   export let topPadding;
   export let fontSize;
 
   let titleEl;
   let textWidth;
-
-  const styles = { width, topPadding, fontSize };
+  let startState;
 
   onMount(() => {
     if (titleEl) {
@@ -33,15 +29,18 @@
     }
   });
 
-  $: cssVarStyles2 = `--titleWidth:${textWidth}px`;
-  $: if (welcomeCard === true) {
+  $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: startState = welcomeCard ? "join" : "welcome";
+
+  $: if (welcomeCard) {
     setTimeout(() => {
       if (titleEl) {
         textWidth = titleEl.clientWidth;
       }
     }, 100);
     console.log("THE WELCOME", textWidth);
-  } else if (joinCard === true) {
+  }
+  $: if (!welcomeCard) {
     setTimeout(() => {
       if (titleEl) {
         textWidth = titleEl.clientWidth;
@@ -49,19 +48,17 @@
     }, 100);
     console.log("THE JOIN", textWidth);
   }
-  $: startState = welcomeCard ? "join" : "welcome";
 
-
-//   const triggerCard = (state)=>{
-//     dispatch('message', {
-//         text:startState
-//     })
-//   }
+  const handleTrigger = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
 </script>
 
-<Card style={styles}>
+<Card {width} {topPadding} {fontSize}>
   <div class="title-wrapper" slot="card-title">
-    <div style={cssVarStyles2} class="title-highlight" />
+    <div style={cssVarStyles} class="title-highlight" />
     <div {title} bind:this={titleEl} class="title-text">
       {title}
     </div>
@@ -99,7 +96,7 @@
         <img width="24px" height="24px" src="img/email.svg" alt="Email icon" />
         <div
           on:click={() => {
-            welcomeCard ? triggerCard("signin") : triggerCard("create");
+            welcomeCard ? handleTrigger("signin") : handleTrigger("create");
           }}
           class="button-text"
         >
@@ -113,7 +110,7 @@
     </p>
     <p class="body-text-action">
       {bodyText}
-      <button on:click={() => triggerCard(startState)}>{linkText}</button>
+      <button on:click={()=>{handleTrigger(startState)}}>{linkText}</button>
     </p>
   </div>
 </Card>
@@ -139,16 +136,6 @@
   .body-text-action button {
     font-weight: 700;
     text-decoration: underline;
-  }
-
-  .forgot-pw button {
-    color: var(--color-blue-50);
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  .field-pw {
-    display: var(--inputVisible);
   }
 
   .title-wrapper {

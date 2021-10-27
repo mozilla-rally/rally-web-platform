@@ -86,6 +86,7 @@
   },
   "dependencies": {
     "@storybook/svelte": "^6.3.7",
+    "fs": "^0.0.1-security",
     "sal.js": "^0.8.5",
     "sirv-cli": "^1.0.10",
     "styled-components": "^5.3.1",
