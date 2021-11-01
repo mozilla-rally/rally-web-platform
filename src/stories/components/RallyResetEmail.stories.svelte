@@ -7,11 +7,8 @@
 
   let email;
   let emailEl;
-  let passwordEl;
-  let passwordVisible = false;
   let btnDisabled = true;
-  let errorMsg = false;
-  const minPasswordLength = 8;
+  // let errorMsg = false;
   let formHeight = "auto";
 
   let titleEl;
@@ -26,29 +23,15 @@
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
 
-  const handleToggle = () => {
-    passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
-  };
-
   const handleChange = (e) => {
-    const name = e.srcElement.name;
     if (emailEl) {
       emailEl.value.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
-
-      if (name === "id_user_pw") {
-        passwordEl.value.length >= minPasswordLength
-          ? (errorMsg = false)
-          : (errorMsg = true);
-      }
     }
   };
 </script>
 
 <Meta
-  title="Components/Dialogs/Reset PW Email Dialog"
+  title="Components/Dialogs/Forgot Your PW Dialog"
   component={Dialog}
   argTypes={{
     title: { control: "text" },
@@ -107,7 +90,7 @@
 <!-- 👇 Each story then reuses that template -->
 
 <Story
-  name="Forgot Password"
+  name="Forgot Your Password?"
   args={{
     width: "460px",
     height: "339px",

@@ -1,17 +1,20 @@
 <script>
-  import { onMount } from "svelte";
+  import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
+  import Card from "../../lib/components/Card.svelte";
   import LaunchCard from "./cards/LaunchCard.svelte";
   import SignInCard from "./cards/SignInCard.svelte";
+  import CreateCard from "./cards/CreateCard.svelte";
+  import CheckEmailCard from "./cards/CheckEmailCard.svelte";
+  import ForgetPWCard from "./cards/ForgetPWCard.svelte";
+  import ResetPwCard from "./cards/ResetPWCard.svelte";
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
-  import isMounted from "../../lib/is-mounted";
-  import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
-  import Card from "../../lib/components/Card.svelte";
+  // import isMounted from "../../lib/is-mounted";
   import "./SignIn.css";
   import "../components/RallyNavbar.css";
   import "../components/RallyDialog.css";
 
-  const mounted = isMounted();
+  // const mounted = isMounted();
 
   //launch card states
   let welcomeCard = true;
@@ -22,28 +25,7 @@
   let resetPWCard = false;
   let checkEmailCard = false;
   let checkEmailPWCard = false;
-
-  //create account states
-  let email;
-  let password;
-  let emailEl;
-  let passwordEl;
-  let passwordVisible = false;
-  let btnDisabled = true;
-  let number;
-  let length;
-  let capital;
-  let letter;
-  // let errorMsg = false;
-  const minPasswordLength = 8;
-  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  let passwordInputVisible = "none";
-  let CardHeight = "auto";
-  let formHeight = "auto";
-
-  // onMount(() => {
-
-  // });
+  let cardHeight = "auto";
 
   //Card args
   const argTypes = {
@@ -73,7 +55,6 @@
   let joinArgs = {
     ...cardArgs,
     title: "Join Rally",
-    body: "Text",
     cta1: "Sign up with Google",
     cta2: "Sign up with email",
     bodyText: "Already have an account?",
@@ -82,30 +63,29 @@
 
   let createArgs = {
     ...cardArgs,
-    height: CardHeight,
+    height: cardHeight,
     title: "Create Account",
-    body: "Text",
     cta1: "Continue",
     bodyText: "Already have an account?",
     linkText: "Sign In",
+    custom: "modal-body-signin",
   };
 
   let signinArgs = {
     ...cardArgs,
     title: "Welcome Back",
-    body: "Text",
     cta1: "Sign In",
     bodyText: "Don't have an account?",
     linkText: "Create Account",
     custom: "Card-body-signin",
     signinCard,
+    cardHeight,
   };
 
   let forgetPWArgs = {
     ...cardArgs,
     height: "339px",
     title: "?Forgot Your Password",
-    body: "Text",
     cta1: "Request Password Reset",
     bodyText: "We'll send you a link to reset your password",
     custom: "Card-body-signin",
@@ -122,6 +102,7 @@
     linkText: "Contact Us",
     custom: "info-Card",
     minHeight: "300px",
+    checkPW: true,
   };
 
   let checkEmailArgs = {
@@ -133,7 +114,17 @@
     bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-Card",
-    minHeight: "null",
+    minHeight: "300px",
+    checkPW: false,
+  };
+
+  let resetPWArgs = {
+    ...cardArgs,
+    height: "276px",
+    title: "Reset Your Password",
+    cta1: "Reset Password",
+    minHeight: "400px",
+    custom: "reset-pw",
   };
 
   // reactivity
@@ -151,14 +142,23 @@
     cardArgs = checkEmailPWArgs;
   } else if (checkEmailCard) {
     cardArgs = checkEmailArgs;
+  } else if (resetPWCard) {
+    cardArgs = resetPWArgs;
   }
-  // $: titleEl ? (textWidth = titleEl.clientWidth) : null;
-
-  //input reactivity
-  $: inputStyles = `--inputVisible:${passwordInputVisible}`;
-  $: formStyles = `--formHeight:${formHeight}`;
 
   //methods
+
+  const resetState = () => {
+    welcomeCard = true;
+    joinCard = false;
+    createAcctCard = false;
+    signinCard = false;
+    forgetPWCard = false;
+    resetPWCard = false;
+    checkEmailCard = false;
+    checkEmailPWCard = false;
+    cardHeight = "auto";
+  };
   const triggerCard = (event) => {
     console.log("TRIGGER", event.detail.text);
     switch (event.detail.text) {
@@ -167,133 +167,71 @@
         joinCard = true;
         break;
       case "welcome":
-        joinCard = false;
-        welcomeCard = true;
+        resetState()
         break;
       case "create":
         joinCard = false;
+        signinCard = false;
         createAcctCard = true;
         break;
       case "signin":
         welcomeCard = false;
+        joinCard = false;
+        createAcctCard = false;
         signinCard = true;
         break;
       case "forget":
         welcomeCard = false;
         signinCard = false;
-        setTimeout(() => {
-          forgetPWCard = true;
-        }, 500);
+        forgetPWCard = true;
+        break;
+      case "reset":
+        checkEmailPWCard = false;
+        resetPWCard = true;
         break;
       case "check-pw":
         forgetPWCard = false;
-        setTimeout(() => {
-          checkEmailPWCard = true;
-        }, 500);
+        checkEmailPWCard = true;
         break;
       case "check-create":
         createAcctCard = false;
-        setTimeout(() => {
-          checkEmailCard = true;
-        }, 500);
+        checkEmailCard = true;
         break;
       default:
         break;
     }
   };
-
-  const toggleNavIcon = () => {
-    ariaExpanded = !ariaExpanded;
-    ariaHidden = !ariaHidden;
-    isOpaque = !isOpaque;
-    checkOpacity();
-  };
-
-  // const checkOpacity = () => {
-  //   isOpaque ? (navOpacity = 1) : (navOpacity = 0);
-  // };
-
-  //input methods
-  const handleToggle = () => {
-    passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
-  };
-
-  const handleChange = (e) => {
-    const name = e.srcElement.name;
-    if (email) {
-      email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
-    }
-    if (passwordEl) {
-      // Validate lowercase letters
-      let lowerCaseLetters = /[a-z]/g;
-      passwordEl.value.match(lowerCaseLetters)
-        ? letter.classList.add("valid")
-        : letter.classList.remove("valid");
-
-      // Validate capital letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
-      // Validate numbers
-      let numbers = /[0-9]/g;
-      passwordEl.value.match(numbers)
-        ? number.classList.add("valid")
-        : number.classList.remove("valid");
-
-      // Validate length
-      passwordEl.value.length >= 8
-        ? length.classList.add("valid")
-        : length.classList.remove("valid");
-
-      if (name === "id_user_pw") {
-        // password.length <= minPasswordLength
-        //   ? (errorMsg = false)
-        //   : (errorMsg = true);
-        if (
-          password.length >= minPasswordLength &&
-          passwordEl.value.match(numbers) &&
-          passwordEl.value.match(upperCaseLetters) &&
-          passwordEl.value.match(lowerCaseLetters)
-        ) {
-          btnDisabled = false;
-        } else {
-          btnDisabled = true;
-        }
-      }
-    }
-  };
-
-  const showPasswordInput = () => {
-    console.log(passwordEl.value.length);
-    if (passwordEl.value.length <= 0) {
-      btnDisabled = true;
-      passwordInputVisible = "block";
-      CardHeight = "626px";
-      formHeight = "270px";
-    } else {
-      triggerCard("check-create");
-    }
-  };
 </script>
 
-<Meta title="Pages/SignInCard" component={Card} {argTypes} />
+<Meta title="Pages/SignIn" component={Card} {argTypes} />
 
 <Template let:args>
   <div class="sign-in-container">
     <TestSignIn />
 
     <div class="cards-wrapper">
-      {#if (welcomeCard || joinCard) && mounted}
+      {#if welcomeCard || joinCard}
         <LaunchCard {...cardArgs} on:type={triggerCard} />
       {/if}
 
-      {#if signinCard && mounted && !welcomeCard && !joinCard}
+      {#if signinCard && !welcomeCard && !joinCard}
         <SignInCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
+        <CreateCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+        <CheckEmailCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if forgetPWCard && !welcomeCard && !signinCard}
+        <ForgetPWCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if resetPWCard && !checkEmailPWCard}
+        <ResetPwCard {...cardArgs} on:type={triggerCard} />
       {/if}
     </div>
 
@@ -310,7 +248,7 @@
   </div>
 </Template>
 
-<Story name="SignInCard" args={cardArgs} />
+<Story name="SignIn" args={cardArgs} />
 
 <style>
   .cards-wrapper {

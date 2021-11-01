@@ -11,17 +11,16 @@
 
   export let title;
   export let cta1;
-  export let cta2;
   export let bodyText;
   export let linkText;
-  export let welcomeCard;
   export let width;
   export let topPadding;
   export let fontSize;
+  export let height;
+  export let cardHeight;
 
   let titleEl;
   let textWidth;
-  let startState;
 
   onMount(() => {
     if (titleEl) {
@@ -30,22 +29,6 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: startState = welcomeCard ? "join" : "welcome";
-
-  $: if (welcomeCard) {
-    setTimeout(() => {
-      if (titleEl) {
-        textWidth = titleEl.clientWidth;
-      }
-    }, 100);
-  }
-  $: if (!welcomeCard) {
-    setTimeout(() => {
-      if (titleEl) {
-        textWidth = titleEl.clientWidth;
-      }
-    }, 100);
-  }
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -94,11 +77,11 @@
         <img width="24px" height="24px" src="img/email.svg" alt="Email icon" />
         <div
           on:click={() => {
-            welcomeCard ? handleTrigger("signin") : handleTrigger("create");
+            // welcomeCard ? handleTrigger("signin") : handleTrigger("create");
           }}
           class="button-text"
         >
-          {cta2}
+          {cta}
         </div></Button
       >
     </div>
@@ -108,40 +91,45 @@
     </p>
     <p class="body-text-action">
       {bodyText}
-      <button on:click={()=>{handleTrigger(startState)}}>{linkText}</button>
+      <button
+        on:click={() => {
+          handleTrigger(startState);
+        }}>{linkText}</button
+      >
     </p>
   </div>
 </Card>
 
+
 <style>
-  .title-highlight {
-    background-color: #f9cd34;
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-    transition: width 0.2s ease-in;
-  }
-
-  .body-text-action button,
-  .forgot-pw button {
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
-  }
-</style>
+    .title-highlight {
+      background-color: #f9cd34;
+      border-radius: 4px;
+      position: absolute;
+      height: 1.375rem;
+      width: calc(var(--titleWidth) + 15px);
+      margin-top: 24px;
+      transition: width 0.2s ease-in;
+    }
+  
+    .body-text-action button,
+    .forgot-pw button {
+      border-color: transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+  
+    .body-text-action button {
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  
+    .title-wrapper {
+      padding-bottom: 10px;
+    }
+  
+    .body-text-info {
+      padding: 20px 52px 0px;
+      text-align: center;
+    }
+  </style>

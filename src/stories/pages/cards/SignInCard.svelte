@@ -2,10 +2,10 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, createEventDispatcher  } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../components/RallyDialog.css"
+  import "../../components/RallyDialog.css";
 
   const dispatch = createEventDispatcher();
 
@@ -13,10 +13,11 @@
   export let cta1;
   export let bodyText;
   export let linkText;
-  export let signinCard
-  export let width
-  export let topPadding
-  export let fontSize 
+  export let signinCard;
+  export let width;
+  export let topPadding;
+  export let fontSize;
+  export let custom 
 
   let titleEl;
   let textWidth;
@@ -68,7 +69,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize}>
+<Card {width} {topPadding} {fontSize} {custom}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -96,8 +97,12 @@
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Enter your Password</label
             >
-            <label class="mzp-c-field-label forgot-pw" for="id_user_pw"
-              ><a href="/">Forgot Password?</a></label
+            <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+              <button
+                on:click={() => {
+                  handleTrigger("forget");
+                }}>Forget Password</button
+              ></label
             >
           </div>
 
@@ -150,14 +155,18 @@
     >
 
     <p class="body-text-action">
-      {bodyText} 
-      <button on:click={()=>{ handleTrigger("join")}}>{linkText}</button>
+      {bodyText}
+      <button
+        on:click={() => {
+          handleTrigger("join");
+        }}>{linkText}</button
+      >
     </p>
   </div>
 </Card>
 
 <style>
-   .title-highlight {
+  .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
     position: absolute;

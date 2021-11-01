@@ -131,12 +131,5 @@ screenshots/
 
 static/firebase.config.json
 
-<<<<<<< HEAD
 # Local Netlify folder
 .netlify
-=======
-# vi/vim
-*.swp
-*.swo
-*~
->>>>>>> 957a5d3f992bfafe3a4a077520241d23285fecee

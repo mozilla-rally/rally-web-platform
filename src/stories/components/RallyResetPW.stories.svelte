@@ -5,9 +5,8 @@
   import Button from "../../lib/components/Button.svelte";
   import "./RallyDialog.css";
 
-  let email;
+
   let password;
-  let emailEl;
   let passwordEl;
   let passwordVisible = false;
   let btnDisabled = true;
@@ -40,9 +39,6 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    if (email) {
-      email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
-    }
     if (passwordEl) {
       // Validate lowercase letters
       let lowerCaseLetters = /[a-z]/g;
@@ -113,7 +109,7 @@
       <div bind:this={titleEl} class="title-text">{args.title}</div>
     </div>
 
-    <div class="modal-body-content sigin-modal" slot="body">
+    <div class="modal-body-content signin-modal" slot="body">
       <form method="post">
         <fieldset class="mzp-c-field-set">
           <div class="mzp-c-field field-pw">
@@ -209,7 +205,7 @@
 />
 
 <style>
-  .modal-body-content.sigin-modal {
+  .modal-body-content.signin-modal {
     margin-top: 8px;
     width: 100%;
   }
