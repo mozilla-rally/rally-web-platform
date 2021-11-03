@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { onMount } from "svelte";
-  import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
+  import { Meta, Template } from "@storybook/addon-svelte-csf";
   import RallyNavbar from "../../lib/layouts/main/Navbar.svelte";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
   import { fly } from "svelte/transition";

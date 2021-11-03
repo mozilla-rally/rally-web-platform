@@ -104,7 +104,7 @@
     </div>
 
     <p class="body-text-privacy">
-      By proceeding, you agree to our <a href="/">Privacy Notice</a>
+      By proceeding, you agree to our <a href="/">privacy notice</a>
     </p>
     <p class="body-text-action">
       {bodyText}

@@ -16,8 +16,7 @@
   export let width;
   export let topPadding;
   export let fontSize;
-  export let height;
-  export let cardHeight;
+ 
 
   let titleEl;
   let textWidth;

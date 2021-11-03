@@ -24,7 +24,6 @@
   //   let errorMsg = false;
   let number;
   let length;
-  let capital;
   let letter;
   let passwordVisible = false;
   const minPasswordLength = 8;
@@ -54,12 +53,6 @@
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
-      // Validate capital letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
       // Validate numbers
       let numbers = /[0-9]/g;
       passwordEl.value.match(numbers)
@@ -78,7 +71,6 @@
         if (
           password.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(upperCaseLetters) &&
           passwordEl.value.match(lowerCaseLetters)
         ) {
           btnDisabled = false;
@@ -109,7 +101,7 @@
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Choose a New Password</label
+              >Choose a new password</label
             >
           </div>
 
@@ -156,9 +148,6 @@
           <ul class="info-rules">
             <li bind:this={length} id="length" class="invalid">
               At least 8 characters
-            </li>
-            <li bind:this={capital} id="capital" class="invalid">
-              At least 1 uppercase letter
             </li>
             <li bind:this={letter} id="letter" class="invalid">
               At least 1 lowercase letter

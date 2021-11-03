@@ -32,7 +32,6 @@
   let btnDisabled = true;
   let number;
   let length;
-  let capital;
   let letter;
   // let errorMsg = false;
   const minPasswordLength = 8;
@@ -77,12 +76,6 @@
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
-      // Validate capital letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
       // Validate numbers
       let numbers = /[0-9]/g;
       passwordEl.value.match(numbers)
@@ -101,11 +94,10 @@
         if (
           passwordEl.value.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(upperCaseLetters) &&
           passwordEl.value.match(lowerCaseLetters)
         ) {
           btnDisabled = false;
-          checkEmail = true
+          checkEmail = true;
         } else {
           btnDisabled = true;
         }
@@ -141,7 +133,7 @@
             name="id_user_email"
             type="email"
             width="100%"
-            placeholder="enter your email address"
+            placeholder="Enter your email address"
             required
           />
         </div>
@@ -195,9 +187,6 @@
           </p>
           <ul class="info-rules">
             <li bind:this={length} id="length">At least 8 characters</li>
-            <li bind:this={capital} id="capital">
-              At least 1 uppercase letter
-            </li>
             <li bind:this={letter} id="letter">At least 1 lowercase letter</li>
             <li bind:this={number} id="number">At least 1 number</li>
           </ul>
@@ -232,7 +221,7 @@
       >
     {/if}
     <p class="body-text-privacy">
-      By proceeding, you agree to our <a href="/">Privacy Notice</a>
+      By proceeding, you agree to our <a href="/">privacy notice</a>
     </p>
 
     <p class="body-text-action">

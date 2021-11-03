@@ -43,12 +43,12 @@
 
   let welcomeArgs = {
     ...cardArgs,
-    title: "Welcome Back",
+    title: "Welcome back",
     body: "Text",
     cta1: "Continue with Google",
     cta2: "Continue with email",
     bodyText: "Don't have an account?",
-    linkText: "Create Account",
+    linkText: "Create account",
     welcomeCard,
   };
 
@@ -58,25 +58,25 @@
     cta1: "Sign up with Google",
     cta2: "Sign up with email",
     bodyText: "Already have an account?",
-    linkText: "Sign In",
+    linkText: "Sign in",
   };
 
   let createArgs = {
     ...cardArgs,
     height: cardHeight,
-    title: "Create Account",
+    title: "Create account",
     cta1: "Continue",
     bodyText: "Already have an account?",
-    linkText: "Sign In",
+    linkText: "Sign in",
     custom: "modal-body-signin",
   };
 
   let signinArgs = {
     ...cardArgs,
-    title: "Welcome Back",
-    cta1: "Sign In",
+    title: "Welcome back",
+    cta1: "Sign in",
     bodyText: "Don't have an account?",
-    linkText: "Create Account",
+    linkText: "Create account",
     custom: "Card-body-signin",
     signinCard,
     cardHeight,
@@ -85,8 +85,8 @@
   let forgetPWArgs = {
     ...cardArgs,
     height: "339px",
-    title: "?Forgot Your Password",
-    cta1: "Request Password Reset",
+    title: "?Forgot your password",
+    cta1: "Request password reset",
     bodyText: "We'll send you a link to reset your password",
     custom: "Card-body-signin",
     minHeight: "339px",
@@ -95,11 +95,11 @@
   let checkEmailPWArgs = {
     ...cardArgs,
     height: "300px",
-    title: "Check Your Email",
+    title: "Check your email",
     body:
-      "An email has been sent to [example@workmail.com] to reset your password",
+      "An email has been sent to [example@workmail.com] to reset your password.",
     bodyText: "Need additional help?",
-    linkText: "Contact Us",
+    linkText: "Contact us",
     custom: "info-Card",
     minHeight: "300px",
     checkPW: true,
@@ -108,11 +108,11 @@
   let checkEmailArgs = {
     ...cardArgs,
     height: "276px",
-    title: "Check Your Email",
+    title: "Check your email",
     body:
       "To finish creating your account with Rally, you will need to verify your email address.",
     bodyText: "Need additional help?",
-    linkText: "Contact Us",
+    linkText: "Contact us",
     custom: "info-Card",
     minHeight: "300px",
     checkPW: false,
@@ -121,8 +121,8 @@
   let resetPWArgs = {
     ...cardArgs,
     height: "276px",
-    title: "Reset Your Password",
-    cta1: "Reset Password",
+    title: "Reset your password",
+    cta1: "Reset password",
     minHeight: "400px",
     custom: "reset-pw",
   };
@@ -245,6 +245,7 @@
         <ExternalLink /></a
       >
     </div>
+
   </div>
 </Template>
 

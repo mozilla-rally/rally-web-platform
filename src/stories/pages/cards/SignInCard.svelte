@@ -95,13 +95,13 @@
         <div class="mzp-c-field ">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Enter your Password</label
+              >Enter your password</label
             >
             <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
               <button
                 on:click={() => {
                   handleTrigger("forget");
-                }}>Forget Password</button
+                }}>Forget password</button
               ></label
             >
           </div>
