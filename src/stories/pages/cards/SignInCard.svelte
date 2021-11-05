@@ -13,15 +13,13 @@
   export let cta1;
   export let bodyText;
   export let linkText;
-  export let signinCard;
   export let width;
   export let topPadding;
   export let fontSize;
-  export let custom 
+  export let custom;
 
   let titleEl;
   let textWidth;
-  let startState;
   let email;
   let password;
   let emailEl;
@@ -38,7 +36,6 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: startState = signinCard ? "join" : "welcome";
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
@@ -194,16 +191,7 @@
     font-size: 12px;
   }
 
-  .field-pw {
-    display: var(--inputVisible);
-  }
-
   .title-wrapper {
     padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
   }
 </style>

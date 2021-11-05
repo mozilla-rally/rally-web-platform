@@ -12,7 +12,6 @@
   export let title;
   export let cta1;
   export let bodyText;
-  export let bodyText2;
   export let width;
   export let topPadding;
   export let fontSize;
@@ -109,8 +108,7 @@
     transition: width 0.2s ease-in;
   }
 
-  .body-text-action button,
-  .forgot-pw button {
+  .body-text-action button{
     border-color: transparent;
     background: transparent;
     cursor: pointer;
@@ -123,10 +121,5 @@
 
   .title-wrapper {
     padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
   }
 </style>

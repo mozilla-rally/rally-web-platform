@@ -26,8 +26,8 @@
   //create account states
   let email;
   let password;
-  let emailEl;
   let passwordEl;
+  let emailEl; 
   let passwordVisible = false;
   let btnDisabled = true;
   let number;

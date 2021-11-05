@@ -1,11 +1,15 @@
 <script>
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
+  import * as state from "./state.svelte";
   import Card from "../../lib/components/Card.svelte";
-  import LaunchCard from "./cards/LaunchCard.svelte";
   import SignInCard from "./cards/SignInCard.svelte";
+  import LaunchCard from "./cards/LaunchCard.svelte";
   import CreateCard from "./cards/CreateCard.svelte";
+  import ForgetPwCard from "./cards/ForgetPWCard.svelte";
   import CheckEmailCard from "./cards/CheckEmailCard.svelte";
-  import ForgetPWCard from "./cards/ForgetPWCard.svelte";
   import ResetPwCard from "./cards/ResetPWCard.svelte";
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
@@ -16,118 +20,29 @@
 
   // const mounted = isMounted();
 
-  //launch card states
-  let welcomeCard = true;
-  let joinCard = false;
-  let createAcctCard = false;
-  let signinCard = false;
-  let forgetPWCard = false;
-  let resetPWCard = false;
-  let checkEmailCard = false;
-  let checkEmailPWCard = false;
-  let cardHeight = "auto";
+  let {
+    cardArgs,
+    welcomeArgs,
+    joinArgs,
+    createArgs,
+    signinArgs,
+    forgetPWArgs,
+    checkEmailPWArgs,
+    checkEmailArgs,
+    resetPWArgs,
+  } = state;
 
-  //Card args
-  const argTypes = {
-    width: { control: "text" },
-    height: { control: "text" },
-    topPadding: { control: "text" },
-    fontSize: { control: "text" },
-  };
-
-  let cardArgs = {
-    width: "460px",
-    fontSize: "38px",
-    topPadding: "calc(10vh - 20px)",
-  };
-
-  let welcomeArgs = {
-    ...cardArgs,
-    title: "Welcome back",
-    body: "Text",
-    cta1: "Continue with Google",
-    cta2: "Continue with email",
-    bodyText: "Don't have an account?",
-    linkText: "Create account",
+  let {
     welcomeCard,
-  };
-
-  let joinArgs = {
-    ...cardArgs,
-    title: "Join Rally",
-    cta1: "Sign up with Google",
-    cta2: "Sign up with email",
-    bodyText: "Already have an account?",
-    linkText: "Sign in",
-  };
-
-  let createArgs = {
-    ...cardArgs,
-    height: cardHeight,
-    title: "Create account",
-    cta1: "Continue",
-    bodyText: "Already have an account?",
-    linkText: "Sign in",
-    custom: "modal-body-signin",
-  };
-
-  let signinArgs = {
-    ...cardArgs,
-    title: "Welcome back",
-    cta1: "Sign in",
-    bodyText: "Don't have an account?",
-    linkText: "Create account",
-    custom: "Card-body-signin",
+    joinCard,
+    createAcctCard,
     signinCard,
-    cardHeight,
-  };
+    forgetPWCard,
+    checkEmailCard,
+    checkEmailPWCard,
+    resetPWCard,
+  } = state.card;
 
-  let forgetPWArgs = {
-    ...cardArgs,
-    height: "339px",
-    title: "?Forgot your password",
-    cta1: "Request password reset",
-    bodyText: "We'll send you a link to reset your password",
-    custom: "Card-body-signin",
-    minHeight: "339px",
-  };
-
-  let checkEmailPWArgs = {
-    ...cardArgs,
-    height: "300px",
-    title: "Check your email",
-    body:
-      "An email has been sent to [example@workmail.com] to reset your password.",
-    bodyText: "Need additional help?",
-    linkText: "Contact us",
-    custom: "info-Card",
-    minHeight: "300px",
-    checkPW: true,
-  };
-
-  let checkEmailArgs = {
-    ...cardArgs,
-    height: "276px",
-    title: "Check your email",
-    body:
-      "To finish creating your account with Rally, you will need to verify your email address.",
-    bodyText: "Need additional help?",
-    linkText: "Contact us",
-    custom: "info-Card",
-    minHeight: "300px",
-    checkPW: false,
-  };
-
-  let resetPWArgs = {
-    ...cardArgs,
-    height: "276px",
-    title: "Reset your password",
-    cta1: "Reset password",
-    minHeight: "400px",
-    custom: "reset-pw",
-  };
-
-  // reactivity
   $: if (welcomeCard) {
     cardArgs = welcomeArgs;
   } else if (joinCard) {
@@ -146,8 +61,6 @@
     cardArgs = resetPWArgs;
   }
 
-  //methods
-
   const resetState = () => {
     welcomeCard = true;
     joinCard = false;
@@ -157,8 +70,9 @@
     resetPWCard = false;
     checkEmailCard = false;
     checkEmailPWCard = false;
-    cardHeight = "auto";
+    state.card.cardHeight = "auto";
   };
+
   const triggerCard = (event) => {
     console.log("TRIGGER", event.detail.text);
     switch (event.detail.text) {
@@ -167,7 +81,7 @@
         joinCard = true;
         break;
       case "welcome":
-        resetState()
+        resetState();
         break;
       case "create":
         joinCard = false;
@@ -203,7 +117,7 @@
   };
 </script>
 
-<Meta title="Pages/SignIn" component={Card} {argTypes} />
+<Meta title="Pages/SignIn" component={Card} argTypes={state.card.argTypes} />
 
 <Template let:args>
   <div class="sign-in-container">
@@ -227,7 +141,7 @@
       {/if}
 
       {#if forgetPWCard && !welcomeCard && !signinCard}
-        <ForgetPWCard {...cardArgs} on:type={triggerCard} />
+        <ForgetPwCard {...cardArgs} on:type={triggerCard} />
       {/if}
 
       {#if resetPWCard && !checkEmailPWCard}
@@ -245,7 +159,6 @@
         <ExternalLink /></a
       >
     </div>
-
   </div>
 </Template>
 

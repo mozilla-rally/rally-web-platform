@@ -1,7 +1,10 @@
+
+
 <script>
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+   /*
   import { onMount } from "svelte";
   import { Meta, Template } from "@storybook/addon-svelte-csf";
   import RallyNavbar from "../../lib/layouts/main/Navbar.svelte";
@@ -303,16 +306,16 @@
       triggerModal("check-create");
     }
   };
+  */
 </script>
 
-<Meta title="Pages/SignIn" component={TestSignIn} />
+<!-- <Meta title="Pages/SignIn" component={TestSignIn} /> -->
 
-<Template>
+<!-- <Template>
   <div class="container" style={cssVarStyles1}>
     <header class="header">
       <RallyNavbar>
         <div class="header-logo-nav" slot="logo-nav">
-          <!-- rally logo -->
           <a class="header-logo-link" href="/" alt="">
             {#if $mounted}
               <h1 in:fly={{ duration: 800, x: -15 }}>
@@ -320,8 +323,6 @@
               </h1>
             {/if}
           </a>
-
-          <!-- main nav -->
           <div
             class="navbar-nav"
             id="nav"
@@ -386,9 +387,8 @@
               </ul>
             </nav>
           </div>
-          <!-- main nav end -->
-
-          <!-- mobile nav toggle -->
+  
+ 
           <button
             on:click={toggleNavIcon}
             class="header-navToggle btn"
@@ -403,7 +403,6 @@
           </button>
         </div>
 
-        <!-- signin create-->
         <div class="sign-in-up" slot="signup-login">
           <Button
             on:click={() => triggerModal("welcome")}
@@ -423,7 +422,7 @@
         </div>
       </RallyNavbar>
     </header>
-    <!-- <div class="how-it-works">
+   <div class="how-it-works">
       <a
         class="external-link"
         target="_blank"
@@ -432,7 +431,7 @@
         >Wait – how does it work again?
         <ExternalLink /></a
       >
-    </div> -->
+    </div> 
   </div>
 
   {#if (welcomeModal || joinModal) && mounted && Dialog}
@@ -598,9 +597,9 @@
                 </li>
               </ul>
 
-              <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
+             <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
               Please matching the password requirements 
-            </p> -->
+            </p> 
             </div>
           </fieldset>
         </form>
@@ -629,7 +628,7 @@
     </Dialog>
   {/if}
 
-  <!-- SIGNIN MODAL -->
+  SIGNIN MODAL
   {#if signinModal && mounted && Dialog}
     <Dialog
       {...args}
@@ -712,9 +711,9 @@
                 {/if}
               </div>
 
-              <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
+              <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
             Please choose a password that is at least 8 characters
-          </p> -->
+          </p> 
             </div>
           </fieldset>
         </form>
@@ -738,7 +737,7 @@
     </Dialog>
   {/if}
 
-  <!-- forget password modal -->
+forget password modal
   {#if forgetPWModal && mounted && Dialog}
     <Dialog
       {...args}
@@ -791,10 +790,10 @@
       </div>
     </Dialog>
   {/if}
-  <!-- 
-  {#if resetPWModal && mounted && Dialog}{/if} -->
+ 
+  {#if resetPWModal && mounted && Dialog}{/if} 
 
-  <!-- check email modal -->
+   check email modal 
   {#if (checkEmailModal || checkEmailPWModal) && mounted && Dialog}
     <Dialog
       {...args}
@@ -818,9 +817,9 @@
   {/if}
 </Template>
 
-<!-- <Story name="SignIn" /> -->
+ <Story name="SignIn" /> -->
 
-<style>
+<!-- <style>
   /* navbar styles */
   a {
     text-decoration: none;
@@ -1027,4 +1026,4 @@
     padding: 20px 52px 0px;
     text-align: center;
   }
-</style>
+</style> -->
