@@ -123,8 +123,8 @@ generated/
 #miscell
 .vscode/
 
-!screenshots/README.md
-screenshots/
+# !screenshots/README.md
+# screenshots/
 
 .firebase/
 .firebaserc
