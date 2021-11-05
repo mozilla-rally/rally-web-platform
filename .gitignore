@@ -131,5 +131,7 @@ screenshots/
 
 static/firebase.config.json
 
+#storybook build
+docs-build
 # Local Netlify folder
 .netlify
