@@ -23,6 +23,11 @@
   export let compact = false;
 
   export let disabled = false;
+  export let custom;
+  export let customControl = false;
+  export let textColor
+  export let background
+  export let borderColor
 
   const forwardAll = forwardEvents(getComponent());
 
@@ -36,6 +41,8 @@
   $: textClass = text ? "mzp-t-secondary mzp-t-text" : undefined;
   $: errorClass = error ? "mzp-t-error" : undefined;
   $: compactClass = compact ? "mzp-t-compact" : undefined;
+  $: customClass = custom ? custom : undefined;
+  $: customControlClass = customControl ? "custom-control" : undefined;
   $: classSet = [
     "mzp-c-button",
     sizeClass,
@@ -48,9 +55,31 @@
     iconClass,
     errorClass,
     compactClass,
+    customClass,
+    customControlClass,
   ]
     .filter((t) => t)
     .join(" ");
+
+  // custom styles
+
+  export let styles = {
+    "btn-color": textColor,
+    "btn-bg": background,
+    "btn-border": borderColor
+  };
+
+  $: cssVarStyles = Object.entries(styles)
+		.map(([key, value]) => `--${key}:${value}`)
+		.join(';');
 </script>
 
-<button use:forwardAll class={classSet} {disabled}><slot /></button>
+<button style={cssVarStyles} use:forwardAll class={classSet} {disabled}><slot /></button>
+
+<style>
+  .custom-control {
+    background-color: var(--btn-bg, black);
+    color: var(--btn-color, white);
+    border-color: var(--btn-border, black);
+  }
+</style>
