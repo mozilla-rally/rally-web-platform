@@ -1,1 +1,1 @@
-import{r as o}from"./singletons-12a22614.js";const n=async function(n,s){return o.goto(n,s,[])};export{n as g};
+import{r}from"./singletons-12a22614.js";const g=n;async function n(o,t){return r.goto(o,t,[])}export{g};
