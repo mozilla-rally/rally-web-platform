@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Dialog from "../../lib/components/Dialog.svelte";
-  import "./RallyDialog.css";
+  import "../../lib/components/auth-cards/Auth.css";
 
   let titleEl;
   let textWidth;

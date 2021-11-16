@@ -5,7 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../components/RallyDialog.css";
+  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
