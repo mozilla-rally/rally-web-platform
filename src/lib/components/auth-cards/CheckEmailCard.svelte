@@ -10,8 +10,8 @@
 
   export let title;
   export let body;
-  export let bodyText;
-  export let linkText;
+  // export let bodyText;
+  // export let linkText;
   export let width;
   export let topPadding;
   export let fontSize;

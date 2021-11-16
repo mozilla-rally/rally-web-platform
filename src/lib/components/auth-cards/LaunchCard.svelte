@@ -95,15 +95,15 @@
         textColor="#000000"
         background="transparent"
         borderColor="#000000"
-        custom="card-button"
+        custom = "card-button"
+        btnID = {welcomeCard ? "signin" : "create"}
+        on:click={() => {
+          welcomeCard ? handleTrigger("signin") : handleTrigger("create");
+          console.log("THIS IS A HIT ON LAUNCH CARD")
+        }}
       >
         <img width="24px" height="24px" src="img/email.svg" alt="Email icon" />
-        <div
-          on:click={() => {
-            welcomeCard ? handleTrigger("signin") : handleTrigger("create");
-          }}
-          class="button-text"
-        >
+        <div class="button-text">
           {cta2}
         </div></Button
       >

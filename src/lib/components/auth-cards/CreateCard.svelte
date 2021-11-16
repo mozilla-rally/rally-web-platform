@@ -221,6 +221,7 @@
         </div>
       </fieldset>
     </form>
+
     {#if !checkEmail}
       <Button disabled={btnDisabled} size="xl" custom="card-button create">
         <div class="button-text">{cta1}</div></Button
@@ -236,6 +237,7 @@
         disabled={btnDisabled}
         size="xl"
         custom="card-button create"
+        btnID="continue"
       >
         <div class="button-text">{cta1}</div></Button
       >
@@ -249,6 +251,7 @@
         disabled={btnDisabled}
         size="xl"
         custom="card-button create"
+        btnID="continue"
       >
         <div class="button-text">{cta1}</div></Button
       >
