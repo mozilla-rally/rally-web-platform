@@ -65,7 +65,7 @@
     }
 
     setTimeout(() => {
-      localStorage.clear("signInError");
+      localStorage.removeItem("signInError");
     }, 10000);
   };
 
@@ -121,6 +121,7 @@
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Enter your password</label
             >
+            <!-- will use later -->
             <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
               <button
                 on:click={() => {

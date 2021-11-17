@@ -3,7 +3,6 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { getContext } from "svelte";
-  import { fly } from "svelte/transition";
   import { goto } from "$app/navigation";
   import * as state from "$lib/components/auth-cards/state.svelte";
   import SignInCard from "$lib/components/auth-cards/SignInCard.svelte";

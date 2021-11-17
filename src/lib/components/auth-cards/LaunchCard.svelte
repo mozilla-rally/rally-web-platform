@@ -3,7 +3,6 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { onMount, createEventDispatcher } from "svelte";
-
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
   import "./Auth.css";
@@ -75,7 +74,6 @@
         custom="card-button"
         on:click={async () => {
           await store.loginWithGoogle();
-          // dispatch('user-signup-login-complete');
         }}
       >
         <img
@@ -99,7 +97,6 @@
         btnID = {welcomeCard ? "signin" : "create"}
         on:click={() => {
           welcomeCard ? handleTrigger("signin") : handleTrigger("create");
-          console.log("THIS IS A HIT ON LAUNCH CARD")
         }}
       >
         <img width="24px" height="24px" src="img/email.svg" alt="Email icon" />

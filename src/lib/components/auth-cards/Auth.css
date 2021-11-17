@@ -159,7 +159,7 @@ p a {
   color: #000000;
 }
 
-ul {
+.info-rules {
   list-style: disc;
   font-size: 12px;
   color: gray;

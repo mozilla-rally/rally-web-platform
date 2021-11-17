@@ -17,7 +17,6 @@
   export let topPadding;
   export let fontSize;
   export let height;
-  //export let cardHeight;
   export let custom;
   export let store;
   export let test;
@@ -39,7 +38,6 @@
   let fireBaseErr = null;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  // let passwordInputVisible = "none";
   let checkEmail = false;
 
   let formHeight = "auto";
@@ -51,7 +49,6 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  // $: inputStyles = `--inputVisible:${passwordInputVisible}`;
   $: formStyles = `--formHeight:${formHeight}`;
   $: fireBaseErr === null ? (createErr = false) : (createErr = true);
 
@@ -70,9 +67,6 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    // if (email) {
-    //   email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
-    // }
     if (passwordEl) {
       // Validate lowercase letters
       let lowerCaseLetters = /[a-z]/g;
@@ -120,7 +114,7 @@
       createErrText = "Account already exist. Please sign in.";
     }
 
-    localStorage.clear("createError");
+    localStorage.removeItem("createErr");
     setTimeout(() => {
       resetState();
     }, 10000);
@@ -128,12 +122,6 @@
 
   const resetState = () => (fireBaseErr = null);
 
-  // const showPasswordInput = () => {
-  //   btnDisabled = true;
-  //   passwordInputVisible = "block";
-  //   cardHeight = "626px";
-  //   formHeight = "270px";
-  // };
 </script>
 
 <Card {width} {topPadding} {fontSize} {height} {custom}>
@@ -286,7 +274,6 @@
   }
 
   .field-pw {
-    /* display: var(--inputVisible); */
     position: relative;
   }
 </style>

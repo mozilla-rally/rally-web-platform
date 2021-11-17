@@ -9,8 +9,6 @@
   export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
-  export let state;
-  export let goto;
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;

@@ -10,8 +10,6 @@
 
   export let title;
   export let body;
-  // export let bodyText;
-  // export let linkText;
   export let width;
   export let topPadding;
   export let fontSize;
@@ -54,9 +52,6 @@
         >
       </p>
     {/if}
-    <!-- <p class="body-text-action">
-      {bodyText} <a href="/">{linkText}</a>
-    </p> -->
 
     {#if checkPW}
       <p class="body-text-action">
