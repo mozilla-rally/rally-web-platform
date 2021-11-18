@@ -5,7 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../components/RallyDialog.css";
+  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
@@ -18,6 +18,7 @@
   export let width;
   export let topPadding;
   export let fontSize;
+  export let store;
 
   let titleEl;
   let textWidth;
@@ -71,6 +72,9 @@
         background="transparent !important"
         borderColor="#000000"
         custom="card-button"
+        on:click={async () => {
+          await store.loginWithGoogle();
+        }}
       >
         <img
           width="20px"
@@ -89,15 +93,14 @@
         textColor="#000000"
         background="transparent"
         borderColor="#000000"
-        custom="card-button"
+        custom = "card-button"
+        btnID = {welcomeCard ? "signin" : "create"}
+        on:click={() => {
+          welcomeCard ? handleTrigger("signin") : handleTrigger("create");
+        }}
       >
         <img width="24px" height="24px" src="img/email.svg" alt="Email icon" />
-        <div
-          on:click={() => {
-            welcomeCard ? handleTrigger("signin") : handleTrigger("create");
-          }}
-          class="button-text"
-        >
+        <div class="button-text">
           {cta2}
         </div></Button
       >
@@ -108,7 +111,11 @@
     </p>
     <p class="body-text-action">
       {bodyText}
-      <button on:click={()=>{handleTrigger(startState)}}>{linkText}</button>
+      <button
+        on:click={() => {
+          handleTrigger(startState);
+        }}>{linkText}</button
+      >
     </p>
   </div>
 </Card>
@@ -122,26 +129,5 @@
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
     transition: width 0.2s ease-in;
-  }
-
-  .body-text-action button,
-  .forgot-pw button {
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
   }
 </style>

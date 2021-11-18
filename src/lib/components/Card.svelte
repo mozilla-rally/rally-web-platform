@@ -63,24 +63,25 @@
 </div>
 
 <style>
-  h2 {
-    font-size: var(--fontSize);
-  }
-  header {
-    display: grid;
-    grid-template-columns: auto max-content;
-  }
   .card-container {
     width: calc(var(--width, var(--content-width)) - 40px);
     height: calc(var(--height, auto));
     min-width: calc(var(--width, var(--content-width)) - 40px);
-    min-height: var(--modal-min-height);
+    min-height: var(--min-height);
     background-color: var(--color-white);
     padding: 20px;
     box-shadow: var(--box-shadow-lg);
     display: grid;
     grid-template-rows: max-content auto max-content;
     font-size: 14px;
-    min-height: var(--min-height);
+  }
+
+  header {
+    display: grid;
+    grid-template-columns: auto max-content;
+  }
+
+  h2 {
+    font-size: var(--fontSize);
   }
 </style>

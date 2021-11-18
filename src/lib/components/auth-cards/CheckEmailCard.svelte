@@ -4,20 +4,18 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
-  import "../../components/RallyDialog.css";
+  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
   export let title;
   export let body;
-  export let bodyText;
-  export let linkText;
   export let width;
   export let topPadding;
   export let fontSize;
-  export let minHeight
-  export let custom
-  export let checkPW
+  export let minHeight;
+  export let custom;
+  export let checkPW;
 
   let titleEl;
   let textWidth;
@@ -45,10 +43,17 @@
 
   <div class="modal-body-content" slot="card-body">
     <p class="body-text-info">{body}</p>
-    <p class="body-text-action">
-      {bodyText} <a href="/">{linkText}</a>
-    </p>
-    {#if checkPW} 
+    {#if !checkPW}
+      <p class="body-text-action">
+        Ready to sign in?<button
+          on:click={() => {
+            handleTrigger("welcome");
+          }}>Sign in</button
+        >
+      </p>
+    {/if}
+
+    {#if checkPW}
       <p class="body-text-action">
         <button
           on:click={() => {
@@ -69,22 +74,6 @@
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
     transition: width 0.2s ease-in;
-  }
-
-  .body-text-action button,
-  .forgot-pw button {
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
   }
 
   .body-text-info {
