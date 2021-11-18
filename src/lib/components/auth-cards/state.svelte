@@ -47,12 +47,12 @@
 
   export let createArgs = {
     ...cardArgs,
+    custom:"card-body-create",
     height: card.cardHeight,
     title: "Create account",
     cta1: "Continue",
     bodyText: "Already have an account?",
     linkText: "Sign in",
-    custom: "modal-body-signin",
   };
 
   export let signinArgs = {
@@ -61,7 +61,6 @@
     cta1: "Sign in",
     bodyText: "Don't have an account?",
     linkText: "Create account",
-    custom: "Card-body-signin",
     sigininCard: card.signinCard,
     cardHeight: card.cardHeight,
   };
@@ -72,7 +71,7 @@
     title: "?Forgot your password",
     cta1: "Request password reset",
     bodyText: "We'll send you a link to reset your password",
-    custom: "Card-body-signin",
+    custom: "card-body-signin",
     minHeight: "339px",
   };
 

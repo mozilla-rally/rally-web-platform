@@ -273,6 +273,7 @@ export default {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
+      localStorage.setItem("signInErr", err)
       return;
     }
     if (userCredential.user.emailVerified) {
@@ -296,6 +297,7 @@ export default {
       userCredential = await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
+      localStorage.setItem("createErr", err)
       return;
     }
     console.info("Sending verification email");

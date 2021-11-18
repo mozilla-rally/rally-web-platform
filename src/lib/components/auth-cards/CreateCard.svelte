@@ -5,7 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../components/RallyDialog.css";
+  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
@@ -17,8 +17,9 @@
   export let topPadding;
   export let fontSize;
   export let height;
-  export let cardHeight;
   export let custom;
+  export let store;
+  export let test;
 
   let titleEl;
   let textWidth;
@@ -27,16 +28,16 @@
   let email;
   let password;
   let passwordEl;
-  let emailEl; 
   let passwordVisible = false;
   let btnDisabled = true;
   let number;
   let length;
   let letter;
-  // let errorMsg = false;
+  let createErr = false;
+  let createErrText = "";
+  let fireBaseErr = null;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  let passwordInputVisible = "none";
   let checkEmail = false;
 
   let formHeight = "auto";
@@ -48,8 +49,8 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: inputStyles = `--inputVisible:${passwordInputVisible}`;
   $: formStyles = `--formHeight:${formHeight}`;
+  $: fireBaseErr === null ? (createErr = false) : (createErr = true);
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -66,9 +67,6 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    if (email) {
-      email.length > 0 ? (btnDisabled = false) : (btnDisabled = true);
-    }
     if (passwordEl) {
       // Validate lowercase letters
       let lowerCaseLetters = /[a-z]/g;
@@ -88,9 +86,6 @@
         : length.classList.remove("valid");
 
       if (name === "id_user_pw") {
-        // password.length <= minPasswordLength
-        //   ? (errorMsg = false)
-        //   : (errorMsg = true);
         if (
           passwordEl.value.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
@@ -105,12 +100,28 @@
     }
   };
 
-  const showPasswordInput = () => {
-    btnDisabled = true;
-    passwordInputVisible = "block";
-    cardHeight = "626px";
-    formHeight = "270px";
+  const handleNextState = () => {
+    fireBaseErr = localStorage.getItem("createErr");
+    fireBaseErr === null ? handleTrigger("check-create") : setMessage();
   };
+
+  const setMessage = () => {
+    let emailAlreadyExist = "auth/email-already-in-use";
+    let isExistingEmail;
+
+    isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
+    if (isExistingEmail > -1) {
+      createErrText = "Account already exist. Please sign in.";
+    }
+
+    localStorage.removeItem("createErr");
+    setTimeout(() => {
+      resetState();
+    }, 10000);
+  };
+
+  const resetState = () => (fireBaseErr = null);
+
 </script>
 
 <Card {width} {topPadding} {fontSize} {height} {custom}>
@@ -119,14 +130,13 @@
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="modal-body-content sigin-modal" slot="card-body">
+  <div class="card-body-content" slot="card-body">
     <form method="post" style={formStyles}>
       <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field ">
+        <div class="mzp-c-field input-wrapper">
           <input
             class="mzp-c-field-control "
             bind:value={email}
-            bind:this={emailEl}
             on:change={handleChange}
             on:keyup={handleChange}
             id="id_user_email"
@@ -138,14 +148,14 @@
           />
         </div>
 
-        <div style={inputStyles} class="mzp-c-field field-pw">
+        <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
-            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+            <label class="mzp-c-field-label" for="id_user_pw"
               >Choose a Password</label
             >
           </div>
 
-          <div class="input-wrapper">
+          <div class="mzp-c-field input-wrapper">
             <input
               class="mzp-c-field-control"
               bind:value={password}
@@ -182,7 +192,7 @@
             {/if}
           </div>
 
-          <p style={inputStyles} class="info-msg-active">
+          <p class="info-msg-active">
             Your password should be unique, and must contain:
           </p>
           <ul class="info-rules">
@@ -191,31 +201,45 @@
             <li bind:this={number} id="number">At least 1 number</li>
           </ul>
 
-          <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
-              Please matching the password requirements 
-            </p> -->
+          {#if createErr}
+            <p class="error-msg-active">
+              {createErrText}
+            </p>
+          {/if}
         </div>
       </fieldset>
     </form>
+
     {#if !checkEmail}
+      <Button disabled={btnDisabled} size="xl" custom="card-button create">
+        <div class="button-text">{cta1}</div></Button
+      >
+    {/if}
+
+    {#if checkEmail && !test}
       <Button
+        on:click={async () => {
+          await store.signupWithEmailAndPassword(email, password);
+          handleNextState();
+        }}
         disabled={btnDisabled}
         size="xl"
-        custom="modal-button create"
-        on:click={showPasswordInput}
+        custom="card-button create"
+        btnID="continue"
       >
         <div class="button-text">{cta1}</div></Button
       >
     {/if}
 
-    {#if checkEmail}
+    {#if checkEmail && test}
       <Button
-        disabled={btnDisabled}
-        size="xl"
-        custom="modal-button create"
         on:click={() => {
           handleTrigger("check-create");
         }}
+        disabled={btnDisabled}
+        size="xl"
+        custom="card-button create"
+        btnID="continue"
       >
         <div class="button-text">{cta1}</div></Button
       >
@@ -236,16 +260,6 @@
 </Card>
 
 <style>
-  .modal-body-content.sigin-modal {
-    margin-top: 8px;
-    width: 100%;
-  }
-
-  .button-wrapper {
-    width: 244px;
-    margin: auto;
-  }
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
@@ -255,51 +269,11 @@
     margin-top: 24px;
   }
 
-  .button-text {
-    margin-left: 10px;
-    text-align: center;
-  }
-
   form {
     height: var(--formHeight);
   }
 
-  .error-msg-active,
-  .info-msg-active {
-    text-align: left;
-    font-size: 12px;
-    color: gray;
-    padding: 10px;
-    display: var(--inputVisible);
-  }
-
-  .info-msg-active {
-    padding: 0;
-    margin-top: 10px;
-  }
-
   .field-pw {
-    display: var(--inputVisible);
-  }
-
-  .body-text-action button,
-  .forgot-pw button {
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
+    position: relative;
   }
 </style>

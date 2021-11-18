@@ -3,7 +3,7 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Dialog from "../../lib/components/Dialog.svelte";
   import Button from "../../lib/components/Button.svelte";
-  import "./RallyDialog.css";
+  import "../../lib/components/auth-cards/Auth.css";
 
   let email;
   let emailEl;
@@ -56,7 +56,7 @@
       <div bind:this={titleEl} class="title-text">{args.title}</div>
     </div>
 
-    <div class="modal-body-content sigin-modal" slot="body">
+    <div class="card-body-content signin-card" slot="body">
       <form method="post" style={formStyles}>
         <fieldset class="mzp-c-field-set">
           <div class="mzp-c-field ">
@@ -106,13 +106,13 @@
 />
 
 <style>
-  .modal-body-content {
+  .card-body-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
-  .modal-body-content.sigin-modal {
+  .card-body-content.signin-card {
     margin-top: 8px;
     width: 100%;
   }

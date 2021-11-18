@@ -24,6 +24,7 @@
 
   export let disabled = false;
   export let custom;
+  export let btnID;
   export let customControl = false;
   export let textColor
   export let background
@@ -74,7 +75,7 @@
 		.join(';');
 </script>
 
-<button style={cssVarStyles} use:forwardAll class={classSet} {disabled}><slot /></button>
+<button id={btnID} style={cssVarStyles} use:forwardAll class={classSet} {disabled}><slot /></button>
 
 <style>
   .custom-control {

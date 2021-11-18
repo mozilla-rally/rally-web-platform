@@ -5,7 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../components/RallyDialog.css";
+  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
@@ -169,7 +169,7 @@
       }}
       disabled={btnDisabled}
       size="xl"
-      custom="modal-button create"
+      custom="card-button create"
     >
       <div class="button-text">{cta1}</div></Button
     >
@@ -177,11 +177,6 @@
 </Card>
 
 <style>
-  .modal-card-content.signin-card {
-    margin-top: 8px;
-    width: 100%;
-  }
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;
@@ -189,6 +184,11 @@
     height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
+  }
+
+  .modal-card-content.signin-card {
+    margin-top: 8px;
+    width: 100%;
   }
 
   form {
