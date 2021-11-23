@@ -192,7 +192,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Invalid email address fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Test1234");
     await findAndAct(driver, By.id('continue'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -200,7 +200,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Weak password fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Test1234");
     await findAndAct(driver, By.id('continue'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -208,7 +208,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Signing up into an ID already used registered with a different provider fails.
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Test1234");
     await findAndAct(driver, By.id('continue'), e => e.click());
   });
 
@@ -222,7 +222,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Totally invalid credentials fail
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Test1234");
     await findAndAct(driver, By.id('signin-btn'), e => e.click());
 
     await driver.findElement(By.id('id_user_email')).clear();
@@ -230,7 +230,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Logging into an ID already used registered with a different provider fails
     await driver.findElement(By.id('id_user_email')).sendKeys("test123");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("test1234");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Test1234");
     await findAndAct(driver, By.id('signin-btn'), e => e.click());
   });
 
@@ -240,7 +240,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Valid credentials succeed.
     await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Validpass123");
     await findAndAct(driver, By.id('continue'), e => e.click());
     
     //navigate to sign in cards
@@ -249,7 +249,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Unverified account can be logged into, but cannot be used until verified.
     await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Validpass123");
     await findAndAct(driver, By.id('signin-btn'), e => e.click());
 
     const readInterface = readline.createInterface({
@@ -279,7 +279,7 @@ describe("Rally Web Platform UX flows", function () {
     await driver.get("http://localhost:5000/signup");
     await findAndAct(driver, By.id('signin'), e => e.click());
     await driver.findElement(By.id('id_user_email')).sendKeys("test@example.com");
-    await driver.findElement(By.id('id_user_pw')).sendKeys("validpass123");
+    await driver.findElement(By.id('id_user_pw')).sendKeys("Validpass123");
     await findAndAct(driver, By.id('signin-btn'), e => e.click());
 
     await driver.wait(
