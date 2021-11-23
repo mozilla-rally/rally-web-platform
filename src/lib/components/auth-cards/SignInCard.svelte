@@ -124,7 +124,7 @@
               <button
                 on:click={() => {
                   handleTrigger("forget");
-                }}><a href="#forgotpassword">Forgot password</a></button
+                }}><Forgot password</button
               ></label
             >
           </div>
