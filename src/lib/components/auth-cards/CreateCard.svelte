@@ -30,6 +30,7 @@
   let passwordEl;
   let passwordVisible = false;
   let btnDisabled = true;
+  let capital;
   let number;
   let length;
   let letter;
@@ -74,6 +75,12 @@
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
+      // Validate uppercase letters
+      let upperCaseLetters = /[A-Z]/g;
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("valid")
+        : capital.classList.remove("valid");
+
       // Validate numbers
       let numbers = /[0-9]/g;
       passwordEl.value.match(numbers)
@@ -89,7 +96,8 @@
         if (
           passwordEl.value.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(lowerCaseLetters)
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
         ) {
           btnDisabled = false;
           checkEmail = true;
@@ -121,7 +129,6 @@
   };
 
   const resetState = () => (fireBaseErr = null);
-
 </script>
 
 <Card {width} {topPadding} {fontSize} {height} {custom}>
@@ -198,6 +205,7 @@
           <ul class="info-rules">
             <li bind:this={length} id="length">At least 8 characters</li>
             <li bind:this={letter} id="letter">At least 1 lowercase letter</li>
+            <li bind:this={capital} id="capital">At least 1 uppercase letter</li>
             <li bind:this={number} id="number">At least 1 number</li>
           </ul>
 

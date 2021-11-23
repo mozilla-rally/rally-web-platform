@@ -16,7 +16,6 @@
   export let width;
   export let topPadding;
   export let fontSize;
-  export let custom;
   export let store;
   export let test;
 
@@ -88,7 +87,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize} {custom}>
+<Card {width} {topPadding} {fontSize}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -116,19 +115,18 @@
             required
           />
         </div>
-        <div class="mzp-c-field ">
+        <div class="mzp-c-field">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Enter your password</label
             >
-            <!-- will use later -->
-            <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+            <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
               <button
                 on:click={() => {
                   handleTrigger("forget");
-                }}>Forget password</button
+                }}><a href="#forgotpassword">Forgot password</a></button
               ></label
-            > -->
+            >
           </div>
 
           <div class="input-wrapper">

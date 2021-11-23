@@ -68,23 +68,23 @@
   export let forgetPWArgs = {
     ...cardArgs,
     height: "339px",
-    title: "?Forgot your password",
+    title: "Forgot your password?",
     cta1: "Request password reset",
     bodyText: "We'll send you a link to reset your password",
-    custom: "card-body-signin",
     minHeight: "339px",
+    custom: "reset-pw",
   };
 
   export let checkEmailPWArgs = {
     ...cardArgs,
-    height: "300px",
+    height: "200px",
     title: "Check your email",
     body:
       "An email has been sent to [example@workmail.com] to reset your password.",
     bodyText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-Card",
-    minHeight: "300px",
+    minHeight: "200px",
     checkPW: true,
   };
 

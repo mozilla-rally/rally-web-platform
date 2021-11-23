@@ -11,20 +11,23 @@
 
   export let title;
   export let cta1;
+  export let custom;
   export let bodyText;
   export let width;
   export let topPadding;
   export let fontSize;
-  export let minHeight
-  export let custom;
+  export let minHeight;
+  export let store;
+  export let sendUserInfo;
 
+  let btnDisabled = true;
   let email;
   let emailEl;
-  //   let errorMsg = false;
-  let formHeight = "auto";
+  let fireBaseErr = null;
+  let requestErr = false;
+  let requestErrText = "";
   let titleEl;
   let textWidth;
-  let btnDisabled = true;
 
   onMount(() => {
     if (titleEl) {
@@ -33,7 +36,7 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: formStyles = `--formHeight:${formHeight}`;
+  $: fireBaseErr ? (requestErr = true) : (requestErr = false);
 
   const handleChange = () => {
     if (emailEl) {
@@ -41,46 +44,76 @@
     }
   };
 
+  const handleForgetPassword = async () => {
+    email = email.trim();
+    await store.sendUserPasswordResetEmail(email);
+    handleNextState();
+    sendUserInfo(email);
+  };
+
+  const handleNextState = () => {
+    fireBaseErr = localStorage.getItem("resetPasswordErr");
+    fireBaseErr ? setMessage() : handleTrigger("check-pw");
+  };
+
   const handleTrigger = (type) => {
     dispatch("type", {
       text: type,
     });
   };
+  const setMessage = () => {
+    let userNotFound = "auth/user-not-found";
+    let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
+
+    if (isNotFoundErr > -1) {
+      requestErrText = "User not found. Please try again.";
+    }
+
+    setTimeout(() => {
+      localStorage.removeItem("resetPasswordErr");
+    }, 10000);
+  };
 </script>
 
-<Card {width} {topPadding} {fontSize} {custom} {minHeight}>
+<Card {width} {topPadding} {fontSize} {minHeight} {custom}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="modal-body-content sigin-modal" slot="card-body">
-    <form method="post" style={formStyles}>
+  <div class="card-body-content" slot="card-body">
+    <form method="post">
       <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field ">
-          <input
-            class="mzp-c-field-control "
-            bind:value={email}
-            bind:this={emailEl}
-            on:change={handleChange}
-            on:keyup={handleChange}
-            id="id_user_email"
-            name="id_user_email"
-            type="email"
-            width="100%"
-            placeholder="enter your email address"
-            required
-          />
+        <div class="mzp-c-field">
+          <div class="input-wrapper">
+            <input
+              class="mzp-c-field-control "
+              bind:value={email}
+              bind:this={emailEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_email"
+              name="id_user_email"
+              type="email"
+              width="100%"
+              placeholder="enter your email address"
+              required
+            />
+          </div>
         </div>
+        <!-- ERROR MESSAGE -->
+        {#if requestErr}
+          <p class="info-msg-err-reset">
+            {requestErrText}
+          </p>
+        {/if}
       </fieldset>
     </form>
     <Button
-      on:click={() => {
-        handleTrigger("check-pw");
-      }}
+      on:click={handleForgetPassword}
       disabled={btnDisabled}
       size="xl"
-      custom="modal-button create"
+      custom="card-button create"
     >
       <div class="button-text">{cta1}</div></Button
     >
@@ -91,7 +124,7 @@
       Nevermind,<button
         on:click={() => {
           handleTrigger("signin");
-        }}>go back</button
+        }}><a href="/">go back</a></button
       >
     </p>
   </div>
@@ -107,19 +140,22 @@
     margin-top: 24px;
     transition: width 0.2s ease-in;
   }
+  .info-msg-err-reset {
+    text-align: left;
+    font-size: 12px;
+    color: red;
+    padding: 10px 0px;
+    margin-top: -20px;
+  }
 
-  .body-text-action button{
-    border-color: transparent;
-    background: transparent;
-    cursor: pointer;
+  .body-text-action {
+    text-align: left;
+    font-size: 12px;
+    color: gray;
+    padding-top: 10px;
   }
 
   .body-text-action button {
-    font-weight: 700;
-    text-decoration: underline;
-  }
-
-  .title-wrapper {
-    padding-bottom: 10px;
+    font-size: 14px;
   }
 </style>
