@@ -26,7 +26,7 @@
 
 <style>
   .mzp-c-call-out {
-    background-color: transparent; 
+    background-color: transparent;
     padding: 0;
   }
 

@@ -5,12 +5,13 @@
 <h1>Rally Study Consent Notice</h1>
 
 <p>
-  Data will be collected through a custom browser web extension developed by the Rally team.  
-  We will install the web extension and data will be collected through browser data after you opt-in. 
-  Mozilla will store the data on Google Cloud where all analysis will be conducted. 
-  This server is restricted to the study researchers and is encrypted. 
-  Data will be transferred by TLS between the participant's browser and the Mozilla analysis database. 
-  TLS stands for "transport layer security" which encrypts browser data.
+  Data will be collected through a custom browser web extension developed by the
+  Rally team. We will install the web extension and data will be collected
+  through browser data after you opt-in. Mozilla will store the data on Google
+  Cloud where all analysis will be conducted. This server is restricted to the
+  study researchers and is encrypted. Data will be transferred by TLS between
+  the participant's browser and the Mozilla analysis database. TLS stands for
+  "transport layer security" which encrypts browser data.
 </p>
 
 <h2>Leaving the Study</h2>

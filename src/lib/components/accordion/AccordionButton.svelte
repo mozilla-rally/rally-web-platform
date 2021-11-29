@@ -12,7 +12,24 @@
   };
 </script>
 
-<style> 
+<button
+  on:click={() => {
+    expand(!revealed);
+  }}
+  class="accordion-summary"
+>
+  <div class="title">
+    <slot>Channel</slot>
+    <span
+      class="caret gafc"
+      style="transform: rotate({revealed ? 90 : 0}deg) translateY(.5px);"
+    >
+      <CaretRight size="1em" />
+    </span>
+  </div></button
+>
+
+<style>
   .accordion-summary {
     cursor: pointer;
     background-color: transparent;
@@ -52,15 +69,3 @@
     display: inline-grid;
   }
 </style>
-
-<button
-  on:click={() => {
-    expand(!revealed);
-  }}
-  class="accordion-summary">
-  <div class="title">
-    <slot>Channel</slot>
-    <span class="caret gafc" style="transform: rotate({revealed ? 90 : 0}deg) translateY(.5px);">
-      <CaretRight size="1em" />
-    </span>
-  </div></button>

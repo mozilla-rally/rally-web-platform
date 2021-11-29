@@ -8,11 +8,11 @@ import resolve from "@rollup/plugin-node-resolve";
 import copy from "rollup-plugin-copy";
 
 /**
-  * Helper to detect developer mode.
-  *
-  * @param cliArgs the command line arguments.
-  * @return {Boolean} whether or not developer mode is enabled.
-  */
+ * Helper to detect developer mode.
+ *
+ * @param cliArgs the command line arguments.
+ * @return {Boolean} whether or not developer mode is enabled.
+ */
 function isDevMode(cliArgs) {
   return Boolean(cliArgs["config-enable-developer-mode"]);
 }
@@ -42,9 +42,12 @@ export default (cliArgs) => [
       commonjs(),
       copy({
         targets: [
-          { src: 'node_modules/@mozilla/rally/dist/rally-content.js', dest: 'dist/' },
+          {
+            src: "node_modules/@mozilla/rally/dist/rally-content.js",
+            dest: "dist/",
+          },
         ],
-      })
-    ]
-  }
-]
+      }),
+    ],
+  },
+];

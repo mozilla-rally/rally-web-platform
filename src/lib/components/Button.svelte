@@ -26,9 +26,9 @@
   export let custom;
   export let btnID;
   export let customControl = false;
-  export let textColor
-  export let background
-  export let borderColor
+  export let textColor;
+  export let background;
+  export let borderColor;
 
   const forwardAll = forwardEvents(getComponent());
 
@@ -67,15 +67,21 @@
   export let styles = {
     "btn-color": textColor,
     "btn-bg": background,
-    "btn-border": borderColor
+    "btn-border": borderColor,
   };
 
   $: cssVarStyles = Object.entries(styles)
-		.map(([key, value]) => `--${key}:${value}`)
-		.join(';');
+    .map(([key, value]) => `--${key}:${value}`)
+    .join(";");
 </script>
 
-<button id={btnID} style={cssVarStyles} use:forwardAll class={classSet} {disabled}><slot /></button>
+<button
+  id={btnID}
+  style={cssVarStyles}
+  use:forwardAll
+  class={classSet}
+  {disabled}><slot /></button
+>
 
 <style>
   .custom-control {

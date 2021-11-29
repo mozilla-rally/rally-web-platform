@@ -1,14 +1,14 @@
 <script>
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import Header from "./Header.svelte";
   import Button from "../Button.svelte";
   import CheckCircle from "../icons/CheckCircle.svelte";
   import Alert from "../icons/Alert.svelte";
-  import ExternalLink from '../icons/ExternalLink.svelte';
+  import ExternalLink from "../icons/ExternalLink.svelte";
   import studyCategories from "./study-categories";
 
   import AccordionButton from "../accordion/AccordionButton.svelte";
@@ -24,8 +24,130 @@
   export let tags = [];
 
   const dispatch = createEventDispatcher();
-
 </script>
+
+<div class="study-card-container radius-sm">
+  <Header {endDate}>
+    <img
+      slot="study-icon"
+      class="study-card-image"
+      width="60"
+      alt="study icon"
+      src={imageSrc || "img/default-study-icon.png"}
+    />
+    <span slot="study-name"><slot name="name">Study Title</slot></span>
+    <span slot="study-author"><slot name="author">Study Author</slot></span>
+    <span slot="study-cta">
+      <div class="study-card-cta">
+        <Button
+          size={"md"}
+          product={!joined}
+          leave={joined}
+          on:click={() => {
+            dispatch(joined ? "leave" : "join");
+          }}
+        >
+          {#if joined}Leave Study{:else}Join Study{/if}
+        </Button>
+      </div></span
+    >
+  </Header>
+  <hr class="header-divider" />
+  {#if joined}
+    <div class="joined-study-accordion">
+      <AccordionButton bind:revealed>
+        <h4 class="study-card-subheader text-display-xxs">Study Description</h4>
+      </AccordionButton>
+      {#if joined}
+        <div class="study-card-joined-date">
+          <div
+            style="text-align: right; align-items: baseline; grid-column-gap: 8px; color: var(--color-dark-gray-10);"
+            class="gafc"
+          >
+            {#if connected}
+              <div>connected</div>
+            {:else}
+              <div style="font-weight: normal;">not connected</div>
+            {/if}
+          </div>
+          <span class="gafc" style="transform: translateY(-1px);">
+            {#if joined && !connected}
+              <Alert size="20px" color="#FFA537" />
+            {:else}
+              <CheckCircle size="20px" color="var(--color-green-60)" />
+            {/if}
+          </span>
+        </div>
+      {/if}
+    </div>
+  {/if}
+  {#if revealed || !joined}
+    <div class="study-card-body" transition:slide|local={{ duration: 200 }}>
+      <div class="study-card-content">
+        {#if !joined}<h4 class="study-card-subheader text-display-xxs">
+            Study Description
+          </h4>{/if}
+        <div class="study-card-description body-copy text-body-sm">
+          <slot name="description">
+            <p>description missing</p>
+          </slot>
+        </div>
+        {#if dataCollectionDetails.length}
+          <div
+            class="study-card-section study-card-collected body-copy text-body-sm"
+          >
+            <h4
+              class="study-card-subheader text-display-xxs"
+              style="margin-bottom: 10px;"
+            >
+              Key Data Collected
+            </h4>
+            <ul
+              class="mzp-u-list-styled study-card-section-body data-collection-details body-copy text-body-sm"
+            >
+              {#each dataCollectionDetails as detail}
+                <li>{detail}</li>
+              {/each}
+            </ul>
+          </div>
+        {/if}
+      </div>
+      <hr />
+
+      <div class="study-card-footer">
+        <div class="study-card-tags">
+          {#each tags as tag}
+            <div
+              class="tag radius-sm"
+              style={`
+                color: ${
+                  (studyCategories[tag] && studyCategories[tag].color) ||
+                  "var(--color-marketing-gray-100)"
+                }; 
+                background: ${
+                  (studyCategories[tag] && studyCategories[tag].background) ||
+                  "white"
+                };
+                `}
+            >
+              {tag}
+            </div>
+          {/each}
+        </div>
+
+        <div class="study-card-privacy-policy">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            class="external-link"
+            style="--spacing: 6px;"
+            href={studyDetailsLink}>View Full Study Details <ExternalLink /></a
+          >
+        </div>
+      </div>
+    </div>
+  {/if}
+</div>
 
 <style>
   .study-card-container {
@@ -36,7 +158,7 @@
     padding: 1.25rem;
     box-shadow: var(--rally-box-shadow-sm);
     background-color: var(--color-white);
-    border: 1px solid #ECECED;
+    border: 1px solid #ececed;
   }
 
   .study-card-content {
@@ -54,8 +176,8 @@
     letter-spacing: -0.2px;
     color: var(--color-marketing-gray-80);
     margin: 0;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
   }
 
@@ -154,102 +276,4 @@
     align-items: center;
     grid-column-gap: 6px;
   }
-
 </style>
-
-<div class="study-card-container radius-sm">
-  <Header {endDate}>
-    <img
-      slot="study-icon"
-      class="study-card-image"
-      width="60"
-      alt="study icon"
-      src={imageSrc || "img/default-study-icon.png"} />
-    <span slot="study-name"><slot name="name">Study Title</slot></span>
-    <span slot="study-author"><slot name="author">Study Author</slot></span>
-    <span slot="study-cta">
-      <div class="study-card-cta">
-        <Button
-          size={"md"}
-          product={!joined}
-          leave={joined}
-          on:click={() => {
-            dispatch(joined ? 'leave' : 'join');
-          }}>
-          {#if joined}Leave Study{:else}Join Study{/if}
-        </Button>
-      </div></span>
-  </Header>
-  <hr class="header-divider" />
-  {#if joined}
-    <div class="joined-study-accordion">
-      <AccordionButton bind:revealed>
-        <h4 class="study-card-subheader text-display-xxs">Study Description</h4>
-      </AccordionButton>
-      {#if joined}
-          <div class="study-card-joined-date">
-            <div style="text-align: right; align-items: baseline; grid-column-gap: 8px; color: var(--color-dark-gray-10);" class='gafc'>
-              {#if connected}
-              <div>
-                connected
-              </div>
-              {:else}
-                <div style='font-weight: normal;'>
-                  not connected
-                </div>
-              {/if}
-            </div>
-            <span class='gafc' style="transform: translateY(-1px);">
-              {#if joined && !connected}
-                <Alert size="20px" color="#FFA537" />
-              {:else}
-                <CheckCircle size="20px" color="var(--color-green-60)" />
-              {/if}
-            </span>
-          </div>
-        {/if}
-    </div>
-  {/if}
-  {#if revealed || !joined}
-    <div class="study-card-body" transition:slide|local={{ duration: 200 }}>
-      <div class="study-card-content">
-      {#if !joined}<h4 class="study-card-subheader text-display-xxs">Study Description</h4>{/if}
-      <div class="study-card-description body-copy text-body-sm">
-        <slot name="description">
-          <p>description missing</p>
-        </slot>
-      </div>
-      {#if dataCollectionDetails.length}
-        <div
-          class="study-card-section study-card-collected body-copy text-body-sm">
-          <h4 class="study-card-subheader text-display-xxs" style="margin-bottom: 10px;">Key Data Collected</h4>
-          <ul
-            class="mzp-u-list-styled study-card-section-body data-collection-details body-copy text-body-sm">
-            {#each dataCollectionDetails as detail}
-              <li>{detail}</li>
-            {/each}
-          </ul>
-        </div>
-      {/if}
-      </div>
-      <hr />
-
-      <div class="study-card-footer">
-        <div class="study-card-tags">
-          {#each tags as tag}
-            <div 
-              class="tag radius-sm" 
-              style={`
-                color: ${(studyCategories[tag] && studyCategories[tag].color) || "var(--color-marketing-gray-100)"}; 
-                background: ${(studyCategories[tag] && studyCategories[tag].background) || "white"};
-                `}>{tag}</div>
-          {/each}
-        </div>
-    
-        <div class="study-card-privacy-policy">
-          <a target="_blank" rel="noopener noreferrer" class="external-link" style="--spacing: 6px;" href={studyDetailsLink}>View Full Study Details <ExternalLink /></a>
-        </div>
-      </div>
-    </div>
-  {/if}
-</div>

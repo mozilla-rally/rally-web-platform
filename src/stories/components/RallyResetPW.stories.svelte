@@ -5,7 +5,6 @@
   import Button from "../../lib/components/Button.svelte";
   import "../../lib/components/auth-cards/Auth.css";
 
-
   let password;
   let passwordEl;
   let passwordVisible = false;

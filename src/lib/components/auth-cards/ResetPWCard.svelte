@@ -21,13 +21,13 @@
   let btnDisabled = true;
   let password;
   let passwordEl;
-  //   let errorMsg = false;
+  let capital;
   let number;
   let length;
   let letter;
   let passwordVisible = false;
   const minPasswordLength = 8;
-  let passwordInputVisible = "none";
+  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
   onMount(() => {
     if (titleEl) {
@@ -36,7 +36,6 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: inputStyles = `--inputVisible:${passwordInputVisible}`;
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -53,6 +52,12 @@
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
+      // Validate uppercase letters
+      let upperCaseLetters = /[A-Z]/g;
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("valid")
+        : capital.classList.remove("valid");
+
       // Validate numbers
       let numbers = /[0-9]/g;
       passwordEl.value.match(numbers)
@@ -65,13 +70,11 @@
         : length.classList.remove("valid");
 
       if (name === "id_user_pw") {
-        // password.length <= minPasswordLength
-        //   ? (errorMsg = false)
-        //   : (errorMsg = true);
         if (
           password.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(lowerCaseLetters)
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
         ) {
           btnDisabled = false;
         } else {
@@ -95,7 +98,7 @@
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="card-body-content signin-card" slot="card-body">
+  <div class="card-body-content" slot="card-body">
     <form method="post">
       <fieldset class="mzp-c-field-set">
         <div class="mzp-c-field field-pw">
@@ -115,6 +118,7 @@
               id="id_user_pw"
               name="id_user_pw"
               type="password"
+              {pattern}
               min={minPasswordLength}
               width="100%"
               required
@@ -142,7 +146,7 @@
             {/if}
           </div>
 
-          <p style={inputStyles} class="info-msg-active">
+          <p class="info-msg-active-reset">
             Your password should be unique, and must contain:
           </p>
           <ul class="info-rules">
@@ -152,14 +156,13 @@
             <li bind:this={letter} id="letter" class="invalid">
               At least 1 lowercase letter
             </li>
+            <li bind:this={capital} id="capital">
+              At least 1 uppercase letter
+            </li>
             <li bind:this={number} id="number" class="invalid">
               At least 1 number
             </li>
           </ul>
-
-          <!-- <p class={errorMsg ? "error-msg-active" : "hide-error-msg"}>
-                  Please choose a password that is at least 8 characters
-                </p> -->
         </div>
       </fieldset>
     </form>
@@ -185,27 +188,14 @@
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
   }
-
-  .modal-card-content.signin-card {
-    margin-top: 8px;
-    width: 100%;
-  }
-
   form {
     height: auto;
   }
 
-  .error-msg-active,
-  .info-msg-active {
+  .info-msg-active-reset {
     text-align: left;
     font-size: 12px;
     color: gray;
-    padding: 10px;
-    display: block;
-  }
-
-  .error-msg-active,
-  .info-msg-active {
-    display: var(--inputVisible);
+    padding-top: 10px;
   }
 </style>

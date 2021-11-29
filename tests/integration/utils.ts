@@ -10,7 +10,8 @@ import { until } from "selenium-webdriver";
 import firefox from "selenium-webdriver/firefox";
 import chrome from "selenium-webdriver/chrome";
 
-const TEST_EXTENSION = "/extension/web-ext-artifacts/rally_web_platform_test-0.0.1.zip";
+const TEST_EXTENSION =
+  "/extension/web-ext-artifacts/rally_web_platform_test-0.0.1.zip";
 
 // The number of milliseconds to wait for some
 // property to change in tests. This should be
@@ -18,18 +19,21 @@ const TEST_EXTENSION = "/extension/web-ext-artifacts/rally_web_platform_test-0.0
 export const WAIT_FOR_PROPERTY = 10000;
 
 /**
-* Find the element and perform an action on it.
-*
-* @param {WebDriver} driver
-*        The Selenium driver to use.
-* @param {Locator} locator
-*        The locator for an element to look for and execute actions on.
-* @param {Function} action
-*        A function in the form `e => {}` that will be called
-*        and receive the element once ready.
-*/
-export async function findAndAct(driver: WebDriver, locator: Locator, action: Function) {
-
+ * Find the element and perform an action on it.
+ *
+ * @param {WebDriver} driver
+ *        The Selenium driver to use.
+ * @param {Locator} locator
+ *        The locator for an element to look for and execute actions on.
+ * @param {Function} action
+ *        A function in the form `e => {}` that will be called
+ *        and receive the element once ready.
+ */
+export async function findAndAct(
+  driver: WebDriver,
+  locator: Locator,
+  action: Function
+) {
   // FIXME slow animations can obscure elements that the user is trying to interact with, without
   // a signal to know that they are complete the best we can do is retry them. Let's log it though,
   // the fact that it's happening at all means it might be a bad experience for users with slow and/or busy hardware.
@@ -42,7 +46,9 @@ export async function findAndAct(driver: WebDriver, locator: Locator, action: Fu
       await action(element);
       return true;
     } catch (ex) {
-      console.debug(`Element at locator ${locator} not ready when expected, retrying: ${ex.name}, ${ex.message}`);
+      console.debug(
+        `Element at locator ${locator} not ready when expected, retrying: ${ex.name}, ${ex.message}`
+      );
       return false;
     }
   }, WAIT_FOR_PROPERTY);
@@ -60,7 +66,11 @@ export async function findAndAct(driver: WebDriver, locator: Locator, action: Fu
  * @returns {Promise<boolean>}
  *        Whether or not the message was found.
  */
-export async function extensionLogsPresent(driver: WebDriver, testBrowser: string, message: string): Promise<boolean> {
+export async function extensionLogsPresent(
+  driver: WebDriver,
+  testBrowser: string,
+  message: string
+): Promise<boolean> {
   switch (testBrowser) {
     case "chrome":
       const logEntries = await driver.manage().logs().get(logging.Type.BROWSER);
@@ -88,7 +98,10 @@ export async function extensionLogsPresent(driver: WebDriver, testBrowser: strin
  *        Whether or not to run Firefox in headless mode.
  * @returns {Promise<WebDriver>} a WebDriver instance to control Firefox.
  */
-export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boolean): Promise<WebDriver> {
+export async function getFirefoxDriver(
+  loadExtension: boolean,
+  headlessMode: boolean
+): Promise<WebDriver> {
   const firefoxOptions = new firefox.Options();
   firefoxOptions.setPreference("devtools.console.stdout.content", true);
 
@@ -107,7 +120,10 @@ export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boo
     // Extensions can only be loaded temporarily at runtime for Firefox Release.
     const isTemporaryAddon = true;
     // @ts-ignore this appears to be missing from the type definition, but it exists!
-    await driver.installAddon(`${__dirname}/${TEST_EXTENSION}`, isTemporaryAddon);
+    await driver.installAddon(
+      `${__dirname}/${TEST_EXTENSION}`,
+      isTemporaryAddon
+    );
   }
 
   return driver;
@@ -122,11 +138,14 @@ export async function getFirefoxDriver(loadExtension: boolean, headlessMode: boo
  *        Whether or not to run Firefox in headless mode.
  * @returns {Promise<WebDriver>} a WebDriver instance to control Chrome.
  */
-export async function getChromeDriver(loadExtension: boolean, headlessMode: boolean) {
+export async function getChromeDriver(
+  loadExtension: boolean,
+  headlessMode: boolean
+) {
   const chromeOptions = new chrome.Options();
 
   if (headlessMode && loadExtension) {
-    throw new Error("Chrome Headless does not support extensionss")
+    throw new Error("Chrome Headless does not support extensionss");
   }
 
   const loggingPrefs = new logging.Preferences();
@@ -141,9 +160,11 @@ export async function getChromeDriver(loadExtension: boolean, headlessMode: bool
     const encode = (file) => {
       var stream = fs.readFileSync(file);
       return Buffer.from(stream).toString("base64");
-    }
+    };
 
-    chromeOptions.addExtensions(encode(path.resolve(`${__dirname}/${TEST_EXTENSION}`)));
+    chromeOptions.addExtensions(
+      encode(path.resolve(`${__dirname}/${TEST_EXTENSION}`))
+    );
   }
 
   return await new Builder()

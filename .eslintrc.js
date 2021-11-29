@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
- module.exports = {
+module.exports = {
   env: {
     browser: true,
     es6: true,
@@ -19,11 +19,9 @@
       files: "tests/**",
       env: {
         mocha: true,
-        jest: true
+        jest: true,
       },
-      extends: [
-        "plugin:mocha/recommended",
-      ],
+      extends: ["plugin:mocha/recommended"],
     },
   ],
   globals: {
@@ -35,15 +33,11 @@
     ecmaVersion: 2021,
     sourceType: "module",
   },
-  plugins: [
-    "import",
-    "node",
-    "mocha"
-  ],
+  plugins: ["import", "node", "mocha"],
   root: true,
   rules: {
-    "curly": "error",
-    "quotes": ["error", "double"],
+    curly: "error",
+    quotes: ["error", "double"],
     "node/no-deprecated-api": "error",
     "node/no-extraneous-require": "off",
     "node/no-missing-import": "off",
@@ -52,7 +46,10 @@
     "node/no-unsupported-features/es-syntax": "off",
 
     "no-multi-spaces": "error",
-    "no-unused-vars": [ "error", { vars: "all", args: "none", ignoreRestSiblings: false } ],
+    "no-unused-vars": [
+      "error",
+      { vars: "all", args: "none", ignoreRestSiblings: false },
+    ],
     "no-var": "warn",
     "prefer-const": "warn",
   },

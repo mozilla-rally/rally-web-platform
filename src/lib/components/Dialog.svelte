@@ -16,7 +16,7 @@
   export let width;
   export let height;
   export let topPadding;
-  export let minHeight; 
+  export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
 
@@ -24,7 +24,13 @@
     return value ? `${key}: ${value};` : undefined;
   }
 
-  function addStyleVariables({ width, height, topPadding, fontSize, minHeight }) {
+  function addStyleVariables({
+    width,
+    height,
+    topPadding,
+    fontSize,
+    minHeight,
+  }) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
@@ -36,7 +42,13 @@
     return values.join("; ");
   }
 
-  $: styles = addStyleVariables({ width, height, topPadding, fontSize, minHeight });
+  $: styles = addStyleVariables({
+    width,
+    height,
+    topPadding,
+    fontSize,
+    minHeight,
+  });
   $: classSet = ["modal-body", custom].filter((t) => t).join(" ");
 
   const dispatch = createEventDispatcher();
@@ -143,7 +155,7 @@
     display: flex;
     justify-content: center;
     align-items: start;
-    z-index: 903; 
+    z-index: 903;
   }
 
   h2 {

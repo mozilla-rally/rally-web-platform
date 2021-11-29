@@ -19,7 +19,7 @@
     size: { control: "text" },
     secondary: { control: "boolean" },
     text: { control: "boolean" },
-    label: { control: "text" }
+    label: { control: "text" },
   }}
 />
 
