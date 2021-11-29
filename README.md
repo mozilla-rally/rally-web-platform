@@ -19,13 +19,13 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 ## Requirements
 
-* [Node.js](https://nodejs.org/en/)
-* [Firebase](https://firebase.google.com/docs/cli)
-  * Authentication
-  * Functions
-  * Cloud Firestore
-  * Hosting
-* [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
+- [Node.js](https://nodejs.org/en/)
+- [Firebase](https://firebase.google.com/docs/cli)
+  - Authentication
+  - Functions
+  - Cloud Firestore
+  - Hosting
+- [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
 
 ## Quickstart
 
@@ -35,6 +35,7 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 4. Run `npm run build` to build the app; the results will be in `/build`
 
 The site will be ready for use when you see Svelte start up:
+
 ```
   SvelteKit v1.0.0-next.141
 
@@ -88,15 +89,17 @@ Clients wishing to connect to the Firebase emulators, including the website and 
 this explicitly in their code after initializing the services.
 
 Connecting to the Firebase Authentication emulator:
+
 ```ts
 const auth = getAuth(app);
-connectAuthEmulator(auth, 'http://localhost:9099');
+connectAuthEmulator(auth, "http://localhost:9099");
 ```
 
 Connecting to the Firebase Firestore emulator:
+
 ```ts
 db = getFirestore(app);
-connectFirestoreEmulator(db, 'localhost', 8080);
+connectFirestoreEmulator(db, "localhost", 8080);
 ```
 
 For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js` and automatically enabled when built in
@@ -170,7 +173,7 @@ i  functions: updating Node.js 14 function loadFirestore(us-central1)...
 i  functions: updating Node.js 14 function addRallyUserToFirestore(us-central1)...
 ✔  functions[rallytoken(us-central1)]: Successful update operation.
 ✔  functions[loadFirestore(us-central1)]: Successful update operation.
-✔  functions[addRallyUserToFirestore(us-central1)]: Successful update operation. 
+✔  functions[addRallyUserToFirestore(us-central1)]: Successful update operation.
 i  functions: cleaning up build files...
 Function URL (loadFirestore(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/loadFirestore
 Function URL (rallytoken(us-central1)): https://us-central1-${FIREBASE_PROJECT_NAME}.cloudfunctions.net/rallytoken
@@ -206,6 +209,7 @@ And complete the prompts:
 ? Which project do you want to add?
 ? What alias do you want to use for this project? (e.g. staging)
 ```
+
 ​
 Then, enable the following in the Firebase console:
 
@@ -214,9 +218,10 @@ Then, enable the following in the Firebase console:
 - Hosting
 
 1. Grant the ability to generate custom tokens to your Firebase functions:
+
    1. Add the IAM Service Account Credentials API at https://console.developers.google.com/apis/api/iamcredentials.googleapis.com/overview?project=${FIREBASE_PROJECT_NAME}
    2. Give the "Service Account Token Creator" role to your appspot service account in https://console.cloud.google.com/iam-admin/iam?authuser=0&project=${FIREBASE_PROJECT_NAME}.
-     1. NOTE - be sure to replace `${FIREBASE_PROJECT_NAME}` above
+   3. NOTE - be sure to replace `${FIREBASE_PROJECT_NAME}` above
 
 2. Deploy
 
@@ -236,6 +241,7 @@ Then deploy to your Firebase project:
 
 If you are still on the free billing plan, you will get a message similar to the following:
 ​
+
 ```
 Error: Your project ${FIREBASE_PROJECT_NAME} must be on the Blaze (pay-as-you-go) plan to complete this command. Required API cloudbuild.googleapis.com can't be enabled until the upgrade is complete. To upgrade, visit the following URL:
 ​

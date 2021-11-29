@@ -93,8 +93,8 @@
         textColor="#000000"
         background="transparent"
         borderColor="#000000"
-        custom = "card-button"
-        btnID = {welcomeCard ? "signin" : "create"}
+        custom="card-button"
+        btnID={welcomeCard ? "signin" : "create"}
         on:click={() => {
           welcomeCard ? handleTrigger("signin") : handleTrigger("create");
         }}

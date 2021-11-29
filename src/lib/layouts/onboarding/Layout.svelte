@@ -6,6 +6,10 @@
   export let noOverflow = false;
 </script>
 
+<div class="mzp-t-mozilla noise-background" class:no-overflow={noOverflow}>
+  <slot />
+</div>
+
 <style>
   div {
     min-height: 100vh;
@@ -15,7 +19,3 @@
     overflow: hidden;
   }
 </style>
-
-<div class="mzp-t-mozilla noise-background" class:no-overflow={noOverflow}>
-  <slot />
-</div>

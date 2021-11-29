@@ -63,9 +63,7 @@
       signInErrText = "Wrong password. Please try again.";
     }
 
-    setTimeout(() => {
-      localStorage.removeItem("signInError");
-    }, 10000);
+    localStorage.removeItem("signInError");
   };
 
   const handleNextState = () => {

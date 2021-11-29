@@ -2,15 +2,17 @@
   * License, v. 2.0. If a copy of the MPL was not distributed with this
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <script>
-export let size = '1em';
-export let color = "currentColor";
+  export let size = "1em";
+  export let color = "currentColor";
 </script>
+
 <svg
   width={size}
   height={size}
   viewBox="0 0 24 24"
   fill="none"
-  xmlns="http://www.w3.org/2000/svg">
+  xmlns="http://www.w3.org/2000/svg"
+>
   <path
     fill-rule="evenodd"
     clip-rule="evenodd"
@@ -18,16 +20,19 @@ export let color = "currentColor";
     stroke={color}
     stroke-width="2"
     stroke-linecap="round"
-    stroke-linejoin="round" />
+    stroke-linejoin="round"
+  />
   <path
     d="M12 9V13"
     stroke={color}
     stroke-width="2"
     stroke-linecap="round"
-    stroke-linejoin="round" />
+    stroke-linejoin="round"
+  />
   <path
     fill-rule="evenodd"
     clip-rule="evenodd"
     d="M12 18C12.5523 18 13 17.5523 13 17C13 16.4477 12.5523 16 12 16C11.4477 16 11 16.4477 11 17C11 17.5523 11.4477 18 12 18Z"
-    fill={color} />
+    fill={color}
+  />
 </svg>

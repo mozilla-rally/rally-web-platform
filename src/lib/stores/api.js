@@ -9,7 +9,7 @@ import {
   signOut,
   sendEmailVerification,
   sendPasswordResetEmail,
-  updatePassword 
+  updatePassword,
 } from "firebase/auth";
 import {
   doc,
@@ -320,10 +320,10 @@ export default {
     await sendEmailVerification(userCredential.user);
   },
 
-  async sendUserPasswordResetEmail(email){
+  async sendUserPasswordResetEmail(email) {
     try {
-      await sendPasswordResetEmail(auth, email)
-      console.info("Sending password reset email")
+      await sendPasswordResetEmail(auth, email);
+      console.info("Sending password reset email");
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("resetPasswordErr", err);
@@ -331,11 +331,11 @@ export default {
     }
   },
 
-  async resetUserPassword(newPassword){
+  async resetUserPassword(newPassword) {
     try {
-      let user = auth.currentUser
-      await updatePassword(user, newPassword)
-      console.info("reset password")
+      let user = auth.currentUser;
+      await updatePassword(user, newPassword);
+      console.info("reset password");
     } catch (err) {
       console.error("there was an error", err);
       return;

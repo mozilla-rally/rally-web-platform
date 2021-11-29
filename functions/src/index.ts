@@ -18,10 +18,9 @@ export const rallytoken = functions.https.onRequest(
       response.set("Access-Control-Allow-Headers", "Bearer, Content-Type");
       response.status(204).send("");
     } else if (request.method === "POST") {
-      functions.logger.info(
-        `body type: ${typeof request.body}`,
-        { payload: request.body }
-      );
+      functions.logger.info(`body type: ${typeof request.body}`, {
+        payload: request.body,
+      });
 
       try {
         let idToken;
@@ -62,16 +61,19 @@ async function generateToken(idToken: string, studyId: string) {
   // Firebase will create this account if it does not exist,
   // when the token is first used to sign-in.
   const uid = `${studyId}:${decodedToken.uid}`;
-  const rallyToken = await admin.auth().createCustomToken(
-    uid, { firebaseUid: decodedToken.uid, studyId }
-  );
+  const rallyToken = await admin
+    .auth()
+    .createCustomToken(uid, { firebaseUid: decodedToken.uid, studyId });
 
   return rallyToken;
 }
 
-exports.addRallyUserToFirestore = functions.auth.user().onCreate(
-  async (user) => {
-    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", { user });
+exports.addRallyUserToFirestore = functions.auth
+  .user()
+  .onCreate(async (user) => {
+    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
+      user,
+    });
     if (user.providerData.length == 0) {
       functions.logger.info("Extension users do not get user docs.");
       return;
@@ -96,62 +98,53 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(
       .set(userDoc, { merge: true });
 
     return true;
-  }
-);
+  });
 
-exports.deleteRallyUser = functions.auth.user().onDelete(
-  async (user) => {
-    functions.logger.info("deleteRallyUser fired for user:", user);
+exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
+  functions.logger.info("deleteRallyUser fired for user:", user);
 
-    // Delete the extension user document.
-    await admin
-      .firestore()
-      .collection("extensionUsers")
-      .doc(user.uid)
-      .delete();
+  // Delete the extension user document.
+  await admin.firestore().collection("extensionUsers").doc(user.uid).delete();
 
-    // Delete the user studies subcollection.
-    const collectionRef = admin
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .collection("studies");
+  // Delete the user studies subcollection.
+  const collectionRef = admin
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .collection("studies");
 
-    // There will be one document per study here, use batching in case it ever goes over the limit.
-    // Work in batches of 5: https://firebase.google.com/docs/firestore/manage-data/transactions#security_rules_limits
-    let batch = admin.firestore().batch();
-    const userStudyDocs = await collectionRef.get();
-    for (const [count, userStudyDoc] of userStudyDocs.docs.entries()) {
-      batch.delete(userStudyDoc.ref);
+  // There will be one document per study here, use batching in case it ever goes over the limit.
+  // Work in batches of 5: https://firebase.google.com/docs/firestore/manage-data/transactions#security_rules_limits
+  let batch = admin.firestore().batch();
+  const userStudyDocs = await collectionRef.get();
+  for (const [count, userStudyDoc] of userStudyDocs.docs.entries()) {
+    batch.delete(userStudyDoc.ref);
 
-      // Count is 0-based, so commit on multiples of 4.
-      if (count % 4 === 0) {
-        await batch.commit();
-        batch = admin.firestore().batch();
-      }
+    // Count is 0-based, so commit on multiples of 4.
+    if (count % 4 === 0) {
+      await batch.commit();
+      batch = admin.firestore().batch();
     }
-
-    // Do a final commit in case we ended on a partial batch.
-    await batch.commit();
-
-    // Finally, delete the user document.
-    await admin
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .delete();
-
-    return true;
   }
-);
+
+  // Do a final commit in case we ended on a partial batch.
+  await batch.commit();
+
+  // Finally, delete the user document.
+  await admin.firestore().collection("users").doc(user.uid).delete();
+
+  return true;
+});
 
 /**
  *
  * @param {string} index The firestore key.
  * @param {object} study The study object.
  */
-function addRallyStudyToFirestore(index: string,
-  study: Record<string, unknown>) {
+function addRallyStudyToFirestore(
+  index: string,
+  study: Record<string, unknown>
+) {
   admin
     .firestore()
     .collection("studies")

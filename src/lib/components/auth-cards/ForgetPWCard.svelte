@@ -69,9 +69,7 @@
       requestErrText = "User not found. Please try again.";
     }
 
-    setTimeout(() => {
-      localStorage.removeItem("resetPasswordErr");
-    }, 10000);
+    localStorage.removeItem("resetPasswordErr");
   };
 </script>
 

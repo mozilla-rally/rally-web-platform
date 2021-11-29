@@ -6,6 +6,14 @@
   export let padForOnboarding = false;
 </script>
 
+<main
+  style="--bottom-pad: {padForOnboarding
+    ? 'var(--onboarding-cta-offset)'
+    : '0px'};"
+>
+  <slot />
+</main>
+
 <style>
   main {
     width: var(--content-width);
@@ -15,8 +23,3 @@
     padding-bottom: var(--bottom-pad, 0);
   }
 </style>
-
-<main
-  style="--bottom-pad: {padForOnboarding ? 'var(--onboarding-cta-offset)' : '0px'};">
-  <slot />
-</main>

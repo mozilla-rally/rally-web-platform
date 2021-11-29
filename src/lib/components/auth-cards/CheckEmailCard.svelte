@@ -17,11 +17,11 @@
   export let height;
   export let custom;
   export let checkPW;
-  export let userEmail
+  export let userEmail;
 
   let titleEl;
   let textWidth;
-  let resetPWText = `An email has been sent to ${userEmail} to reset your password.`
+  let resetPWText = `An email has been sent to ${userEmail} to reset your password.`;
 
   onMount(() => {
     if (titleEl) {
@@ -30,8 +30,7 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: checkPW ? body = resetPWText : body = body 
-
+  $: checkPW ? (body = resetPWText) : (body = body);
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -48,13 +47,13 @@
 
   <div class="modal-body-content" slot="card-body">
     <p class="body-text-info">{body}</p>
-      <p class="body-text-action">
-        Ready to sign in?<button
-          on:click={() => {
-            handleTrigger("welcome");
-          }}>Sign in</button
-        >
-      </p>
+    <p class="body-text-action">
+      Ready to sign in?<button
+        on:click={() => {
+          handleTrigger("welcome");
+        }}>Sign in</button
+      >
+    </p>
   </div>
 </Card>
 

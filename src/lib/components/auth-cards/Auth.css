@@ -75,11 +75,11 @@ form img {
   top: 87px;
 }
 
-.error-msg-active{
+.error-msg-active {
   position: inherit;
   color: red;
   padding-top: 5px;
-  top: 0px; 
+  top: 0px;
 }
 
 .valid {

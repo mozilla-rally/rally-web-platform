@@ -47,7 +47,7 @@
 
   export let createArgs = {
     ...cardArgs,
-    custom:"card-body-create",
+    custom: "card-body-create",
     height: card.cardHeight,
     title: "Create account",
     cta1: "Continue",

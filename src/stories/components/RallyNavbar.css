@@ -1,6 +1,5 @@
-
-header{
-  flex-shrink: 0; 
+header {
+  flex-shrink: 0;
 }
 
 .header-navToggle {
@@ -20,7 +19,7 @@ header{
   width: 3rem;
 }
 
-.header-navToggle[aria-expanded=true] {
+.header-navToggle[aria-expanded="true"] {
   background-color: transparent;
 }
 
@@ -85,5 +84,3 @@ header{
   color: #ffffff !important;
   border-color: transparent !important;
 }
-
-

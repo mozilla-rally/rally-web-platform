@@ -35,8 +35,7 @@
   let length;
   let letter;
   let createErr = false;
-  let createErrText = null;
-  let invalidEmailText = null
+  let emailErrText = null;
   let fireBaseErr = null;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
@@ -116,27 +115,22 @@
 
   const setMessage = () => {
     let emailAlreadyExist = "auth/email-already-in-use";
-    let invalidEmail = "auth/invalid-email"
+    let invalidEmail = "auth/invalid-email";
     let isExistingEmail;
-    let isInvalidEmail
+    let isInvalidEmail;
 
     isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
     if (isExistingEmail > -1) {
-      createErrText = "Account already exist. Please sign in.";
+      emailErrText = "Account already exists. Please sign in.";
     }
 
     isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
     if (isInvalidEmail > -1) {
-      invalidEmailText = "Email is invalid. Please enter a valid email.";
+      emailErrText = "Email is invalid. Please enter a valid email.";
     }
 
     localStorage.removeItem("createErr");
-    setTimeout(() => {
-      resetState();
-    }, 15000);
   };
-
-  const resetState = () => (fireBaseErr = null);
 </script>
 
 <Card {width} {topPadding} {fontSize} {height} {custom}>
@@ -163,9 +157,9 @@
           />
         </div>
 
-        {#if createErr && invalidEmailText}
+        {#if createErr}
           <p class="error-msg-active invalid-email">
-            {invalidEmailText}
+            {emailErrText}
           </p>
         {/if}
 
@@ -224,12 +218,6 @@
             </li>
             <li bind:this={number} id="number">At least 1 number</li>
           </ul>
-
-          {#if createErr && !invalidEmailText}
-            <p class="error-msg-active">
-              {createErrText}
-            </p>
-          {/if}
         </div>
       </fieldset>
     </form>
@@ -297,9 +285,9 @@
     height: var(--formHeight);
   }
 
-  .invalid-email{
+  .invalid-email {
     margin-top: -19px;
-    padding-bottom: 10px; 
+    padding-bottom: 10px;
   }
 
   .field-pw {

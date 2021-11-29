@@ -172,7 +172,7 @@
 
   .header-logo-link {
     max-width: 9.125rem;
-    width: 100%; 
+    width: 100%;
   }
 
   .header-logo-link img {

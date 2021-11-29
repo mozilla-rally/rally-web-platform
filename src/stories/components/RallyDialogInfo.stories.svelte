@@ -113,5 +113,4 @@
     padding: 20px 52px 0px;
     text-align: center;
   }
-
 </style>
