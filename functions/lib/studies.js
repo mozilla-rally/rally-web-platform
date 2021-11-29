@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.studies = void 0;
 exports.studies = {
-    "exampleStudy1": {
+    exampleStudy1: {
         name: "Rally Test",
         icons: {},
         authors: {
@@ -17,12 +17,8 @@ exports.studies = {
         studyPaused: false,
         description: "Test",
         studyDetailsLink: "http://example.com",
-        dataCollectionDetails: [
-            "Nothing",
-        ],
-        tags: [
-            "test",
-        ],
+        dataCollectionDetails: ["Nothing"],
+        tags: ["test"],
     },
 };
 //# sourceMappingURL=studies.js.map

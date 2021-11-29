@@ -17,7 +17,9 @@ exports.rallytoken = functions.https.onRequest(async (request, response) => {
         response.status(204).send("");
     }
     else if (request.method === "POST") {
-        functions.logger.info(`body type: ${typeof request.body}`, { payload: request.body });
+        functions.logger.info(`body type: ${typeof request.body}`, {
+            payload: request.body,
+        });
         try {
             let idToken;
             let studyId;
@@ -56,11 +58,17 @@ async function generateToken(idToken, studyId) {
     // Firebase will create this account if it does not exist,
     // when the token is first used to sign-in.
     const uid = `${studyId}:${decodedToken.uid}`;
-    const rallyToken = await admin.auth().createCustomToken(uid, { firebaseUid: decodedToken.uid, studyId });
+    const rallyToken = await admin
+        .auth()
+        .createCustomToken(uid, { firebaseUid: decodedToken.uid, studyId });
     return rallyToken;
 }
-exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) => {
-    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", { user });
+exports.addRallyUserToFirestore = functions.auth
+    .user()
+    .onCreate(async (user) => {
+    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
+        user,
+    });
     if (user.providerData.length == 0) {
         functions.logger.info("Extension users do not get user docs.");
         return;
@@ -86,11 +94,7 @@ exports.addRallyUserToFirestore = functions.auth.user().onCreate(async (user) =>
 exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
     functions.logger.info("deleteRallyUser fired for user:", user);
     // Delete the extension user document.
-    await admin
-        .firestore()
-        .collection("extensionUsers")
-        .doc(user.uid)
-        .delete();
+    await admin.firestore().collection("extensionUsers").doc(user.uid).delete();
     // Delete the user studies subcollection.
     const collectionRef = admin
         .firestore()
@@ -112,11 +116,7 @@ exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
     // Do a final commit in case we ended on a partial batch.
     await batch.commit();
     // Finally, delete the user document.
-    await admin
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .delete();
+    await admin.firestore().collection("users").doc(user.uid).delete();
     return true;
 });
 /**
