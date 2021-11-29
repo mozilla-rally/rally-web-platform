@@ -14,11 +14,14 @@
   export let topPadding;
   export let fontSize;
   export let minHeight;
+  export let height;
   export let custom;
   export let checkPW;
+  export let userEmail;
 
   let titleEl;
   let textWidth;
+  let resetPWText = `An email has been sent to ${userEmail} to reset your password.`;
 
   onMount(() => {
     if (titleEl) {
@@ -27,6 +30,7 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: checkPW ? (body = resetPWText) : (body = body);
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -35,7 +39,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize} {minHeight} {custom}>
+<Card {width} {topPadding} {fontSize} {minHeight} {custom} {height}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -43,25 +47,13 @@
 
   <div class="modal-body-content" slot="card-body">
     <p class="body-text-info">{body}</p>
-    {#if !checkPW}
-      <p class="body-text-action">
-        Ready to sign in?<button
-          on:click={() => {
-            handleTrigger("welcome");
-          }}>Sign in</button
-        >
-      </p>
-    {/if}
-
-    {#if checkPW}
-      <p class="body-text-action">
-        <button
-          on:click={() => {
-            handleTrigger("reset");
-          }}>Next State</button
-        >
-      </p>
-    {/if}
+    <p class="body-text-action">
+      Ready to sign in?<button
+        on:click={() => {
+          handleTrigger("welcome");
+        }}>Sign in</button
+      >
+    </p>
   </div>
 </Card>
 

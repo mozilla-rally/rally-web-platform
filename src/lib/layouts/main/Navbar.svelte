@@ -13,7 +13,6 @@
   if (mounted) {
     scrollAnimations.enable();
   }
-
 </script>
 
 <div

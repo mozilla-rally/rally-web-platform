@@ -11,11 +11,10 @@ function addStudyToFirebase(index, study) {
     .firestore()
     .collection("studies")
     .doc(index)
-    .set(study, { merge: true })
+    .set(study, { merge: true });
 }
 
 for (const [index, study] of Object.entries(studies)) {
   console.info(`Loading study ${index} into Firestore`);
   addStudyToFirebase(index, study);
 }
-

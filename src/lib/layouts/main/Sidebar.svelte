@@ -1,8 +1,14 @@
 <script>
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 </script>
+
+<div class="sidebar">
+  <slot name="header" />
+  <slot name="navigation" />
+  <slot name="settings" />
+</div>
 
 <style>
   .sidebar {
@@ -19,12 +25,6 @@
     align-content: stretch;
     align-items: start;
     grid-row-gap: 2rem;
-    border-right: 1px solid #E1E1E3;
+    border-right: 1px solid #e1e1e3;
   }
 </style>
-
-<div class="sidebar">
-  <slot name="header" />
-  <slot name="navigation" />
-  <slot name="settings" />
-</div>

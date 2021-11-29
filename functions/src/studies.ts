@@ -1,6 +1,5 @@
-
 export const studies = {
-  "exampleStudy1": {
+  exampleStudy1: {
     name: "Rally Test",
     icons: {},
     authors: {
@@ -15,11 +14,7 @@ export const studies = {
     studyPaused: false,
     description: "Test",
     studyDetailsLink: "http://example.com",
-    dataCollectionDetails: [
-      "Nothing",
-    ],
-    tags: [
-      "test",
-    ],
+    dataCollectionDetails: ["Nothing"],
+    tags: ["test"],
   },
 };

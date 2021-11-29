@@ -37,6 +37,22 @@
 `;
 </script>
 
+<svelte:window bind:scrollY bind:innerHeight />
+
+<div class="onboarding-cta-container" {style}>
+  <div class="onboarding-cta-inner">
+    <slot />
+  </div>
+  <div class="onboarding-cta-steps">
+    {#each Array.from({ length: totalSteps }).map((_, i) => i) as s}
+      <div
+        class="onboarding-cta-step"
+        style="opacity: {s + 1 === step ? '1' : '.25'};"
+      />
+    {/each}
+  </div>
+</div>
+
 <style>
   .onboarding-cta-container {
     pointer-events: none;
@@ -83,18 +99,3 @@
     transition: opacity 200ms;
   }
 </style>
-
-<svelte:window bind:scrollY bind:innerHeight />
-
-<div class="onboarding-cta-container" {style}>
-  <div class="onboarding-cta-inner">
-    <slot />
-  </div>
-  <div class="onboarding-cta-steps">
-    {#each Array.from({ length: totalSteps }).map((_, i) => i) as s}
-      <div
-        class="onboarding-cta-step"
-        style="opacity: {s + 1 === step ? '1' : '.25'};" />
-    {/each}
-  </div>
-</div>

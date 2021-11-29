@@ -7,7 +7,9 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  sendEmailVerification
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updatePassword,
 } from "firebase/auth";
 import {
   doc,
@@ -16,7 +18,7 @@ import {
   getDocs,
   updateDoc,
   collection,
-  onSnapshot
+  onSnapshot,
 } from "firebase/firestore";
 
 import initializeFirebase from "./initialize-firebase";
@@ -30,11 +32,11 @@ async function initializeFirestoreAPIs() {
   const firebaseConfig = await request.json();
   functionsHost = firebaseConfig.functionsHost;
   console.debug("configured functions host:", functionsHost);
-  const fb = initializeFirebase(firebaseConfig, (({ auth }) => {
-    onAuthStateChanged(auth, change => {
-      _authChangeCallbacks.forEach(callback => callback(change));
+  const fb = initializeFirebase(firebaseConfig, ({ auth }) => {
+    onAuthStateChanged(auth, (change) => {
+      _authChangeCallbacks.forEach((callback) => callback(change));
     });
-  }));
+  });
   auth = fb.auth;
   db = fb.db;
 }
@@ -43,7 +45,7 @@ async function initializeFirestoreAPIs() {
 let __STATE__ = {
   user: undefined,
   userStudies: undefined,
-  onboarded: false
+  onboarded: false,
 };
 
 let userRef;
@@ -69,7 +71,7 @@ async function updateUserStudiesCollection(studyId, updates, merge = true) {
 
 async function getStudies() {
   const snapshot = await getDocs(collection(db, "studies"));
-  return snapshot.docs.map(doc => doc.data());
+  return snapshot.docs.map((doc) => doc.data());
 }
 
 const _stateChangeCallbacks = [];
@@ -77,7 +79,7 @@ const _authChangeCallbacks = [];
 
 function _updateLocalState(callback) {
   __STATE__ = produce(__STATE__, callback);
-  _stateChangeCallbacks.forEach(callback => callback(__STATE__));
+  _stateChangeCallbacks.forEach((callback) => callback(__STATE__));
 }
 
 async function listenForUserChanges(user) {
@@ -98,14 +100,13 @@ async function listenForUserStudiesChanges(user) {
 
     querySnapshot.forEach((doc) => {
       const study = doc.data();
-      nextState[study.studyId] = study
-    })
+      nextState[study.studyId] = study;
+    });
 
     _updateLocalState((draft) => {
       draft.userStudies = nextState;
     });
   });
-
 }
 
 function listenForStudyChanges() {
@@ -117,12 +118,11 @@ function listenForStudyChanges() {
     _updateLocalState((draft) => {
       draft.studies = studies;
     });
-  })
+  });
 }
 
 export default {
   async initialize(browser = true) {
-
     if (!browser) {
       return;
     } else {
@@ -139,10 +139,14 @@ export default {
             // @ts-ignore
             const studyId = e.detail;
             if (!studyId) {
-              throw new Error("handling rally-sdk.complete-signup from content script: No study ID provided.")
+              throw new Error(
+                "handling rally-sdk.complete-signup from content script: No study ID provided."
+              );
             }
             if (functionsHost === undefined) {
-              throw new Error("Firebase Functions host not defined, cannot generate JWTs for extensions.");
+              throw new Error(
+                "Firebase Functions host not defined, cannot generate JWTs for extensions."
+              );
             }
 
             // FIXME use the firebase functions library instead of raw `fetch`, then we don't need to configure it ourselves.
@@ -154,9 +158,11 @@ export default {
             }
 
             const studies = await getStudies();
-            const found = studies.filter(a => a.studyId === studyId);
+            const found = studies.filter((a) => a.studyId === studyId);
             if (!found) {
-              throw new Error(`Received rally-sdk.complete-signup for non-existent study: ${studyId}`)
+              throw new Error(
+                `Received rally-sdk.complete-signup for non-existent study: ${studyId}`
+              );
             }
 
             const authenticatedUser = await new Promise((resolve) => {
@@ -167,29 +173,40 @@ export default {
 
             const idToken = await authenticatedUser.getIdToken();
             const body = JSON.stringify({ studyId, idToken });
-            const result = await fetch(`${functionsHost}/rallytoken`,
-              {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body
-              });
+            const result = await fetch(`${functionsHost}/rallytoken`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body,
+            });
             const rallyToken = (await result.json()).rallyToken;
 
-            console.debug("dispatching rally-sdk.complete-signup-response with token");
+            console.debug(
+              "dispatching rally-sdk.complete-signup-response with token"
+            );
             window.dispatchEvent(
               // Each study needs its own token. Send to content script.
-              new CustomEvent("rally-sdk.complete-signup-response", { detail: { studyId, rallyToken } })
+              new CustomEvent("rally-sdk.complete-signup-response", {
+                detail: { studyId, rallyToken },
+              })
             );
             break;
           case "rally-sdk.web-check-response":
             console.debug("Received rally-sdk.web-check-response.");
             break;
           default:
-            console.warn(`Unknown message received from content script: ${e.type}`);
+            console.warn(
+              `Unknown message received from content script: ${e.type}`
+            );
         }
       }
-      window.addEventListener("rally-sdk.complete-signup", handleContentScriptEvents);
-      window.addEventListener("rally-sdk.web-check-response", handleContentScriptEvents);
+      window.addEventListener(
+        "rally-sdk.complete-signup",
+        handleContentScriptEvents
+      );
+      window.addEventListener(
+        "rally-sdk.web-check-response",
+        handleContentScriptEvents
+      );
     }
 
     const initialState = {};
@@ -214,9 +231,7 @@ export default {
 
       // Let the Rally SDK content script know the site is intialized.
       console.debug("initialized, dispatching rally-sdk.web-check");
-      window.dispatchEvent(
-        new CustomEvent("rally-sdk.web-check", {})
-      );
+      window.dispatchEvent(new CustomEvent("rally-sdk.web-check", {}));
     }
 
     // fetch the initial studies.
@@ -262,9 +277,7 @@ export default {
 
     // Let the Rally SDK content script know the site is intialized.
     console.debug("initialized, dispatching rally-sdk.web-check");
-    window.dispatchEvent(
-      new CustomEvent("rally-sdk.web-check", {})
-    );
+    window.dispatchEvent(new CustomEvent("rally-sdk.web-check", {}));
   },
 
   async loginWithEmailAndPassword(email, password) {
@@ -273,7 +286,7 @@ export default {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
-      localStorage.setItem("signInErr", err)
+      localStorage.setItem("signInErr", err);
       return;
     }
     if (userCredential.user.emailVerified) {
@@ -283,25 +296,50 @@ export default {
 
       // Let the Rally SDK content script know the site is intialized.
       console.debug("initialized, dispatching rally-sdk.web-check");
-      window.dispatchEvent(
-        new CustomEvent("rally-sdk.web-check", {})
-      );
+      window.dispatchEvent(new CustomEvent("rally-sdk.web-check", {}));
     } else {
       console.warn("Email account not verified, sending verification email");
       await sendEmailVerification(userCredential.user);
     }
   },
+
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
     try {
-      userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
     } catch (err) {
       console.error("there was an error", err);
-      localStorage.setItem("createErr", err)
+      localStorage.setItem("createErr", err);
       return;
     }
     console.info("Sending verification email");
     await sendEmailVerification(userCredential.user);
+  },
+
+  async sendUserPasswordResetEmail(email) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      console.info("Sending password reset email");
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("resetPasswordErr", err);
+      return;
+    }
+  },
+
+  async resetUserPassword(newPassword) {
+    try {
+      let user = auth.currentUser;
+      await updatePassword(user, newPassword);
+      console.info("reset password");
+    } catch (err) {
+      console.error("there was an error", err);
+      return;
+    }
   },
 
   async updateOnboardedStatus(onboarded) {
@@ -311,7 +349,9 @@ export default {
   async updateStudyEnrollment(studyId, enroll, attached) {
     const connected = !!attached;
     const userStudies = { ...(__STATE__.userStudies || {}) };
-    if (!(studyId in userStudies)) { userStudies[studyId] = {}; }
+    if (!(studyId in userStudies)) {
+      userStudies[studyId] = {};
+    }
     userStudies[studyId] = { ...userStudies[studyId] };
     userStudies[studyId].enrolled = enroll;
     userStudies[studyId].studyId = studyId;
@@ -338,5 +378,5 @@ export default {
 
   onNextState(callback) {
     _stateChangeCallbacks.push(callback);
-  }
+  },
 };

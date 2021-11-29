@@ -30,11 +30,12 @@
   let passwordEl;
   let passwordVisible = false;
   let btnDisabled = true;
+  let capital;
   let number;
   let length;
   let letter;
   let createErr = false;
-  let createErrText = "";
+  let emailErrText = null;
   let fireBaseErr = null;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
@@ -74,6 +75,12 @@
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
+      // Validate uppercase letters
+      let upperCaseLetters = /[A-Z]/g;
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("valid")
+        : capital.classList.remove("valid");
+
       // Validate numbers
       let numbers = /[0-9]/g;
       passwordEl.value.match(numbers)
@@ -89,7 +96,8 @@
         if (
           passwordEl.value.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(lowerCaseLetters)
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
         ) {
           btnDisabled = false;
           checkEmail = true;
@@ -107,21 +115,22 @@
 
   const setMessage = () => {
     let emailAlreadyExist = "auth/email-already-in-use";
+    let invalidEmail = "auth/invalid-email";
     let isExistingEmail;
+    let isInvalidEmail;
 
     isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
     if (isExistingEmail > -1) {
-      createErrText = "Account already exist. Please sign in.";
+      emailErrText = "Account already exists. Please sign in.";
+    }
+
+    isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
+    if (isInvalidEmail > -1) {
+      emailErrText = "Email is invalid. Please enter a valid email.";
     }
 
     localStorage.removeItem("createErr");
-    setTimeout(() => {
-      resetState();
-    }, 10000);
   };
-
-  const resetState = () => (fireBaseErr = null);
-
 </script>
 
 <Card {width} {topPadding} {fontSize} {height} {custom}>
@@ -147,6 +156,12 @@
             required
           />
         </div>
+
+        {#if createErr}
+          <p class="error-msg-active invalid-email">
+            {emailErrText}
+          </p>
+        {/if}
 
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
@@ -198,14 +213,11 @@
           <ul class="info-rules">
             <li bind:this={length} id="length">At least 8 characters</li>
             <li bind:this={letter} id="letter">At least 1 lowercase letter</li>
+            <li bind:this={capital} id="capital">
+              At least 1 uppercase letter
+            </li>
             <li bind:this={number} id="number">At least 1 number</li>
           </ul>
-
-          {#if createErr}
-            <p class="error-msg-active">
-              {createErrText}
-            </p>
-          {/if}
         </div>
       </fieldset>
     </form>
@@ -271,6 +283,11 @@
 
   form {
     height: var(--formHeight);
+  }
+
+  .invalid-email {
+    margin-top: -19px;
+    padding-bottom: 10px;
   }
 
   .field-pw {

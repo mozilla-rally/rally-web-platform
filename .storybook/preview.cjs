@@ -1,5 +1,5 @@
 export const parameters = {
-  layout: 'fullscreen',
+  layout: "fullscreen",
   actions: {
     argTypesRegex: "^on[A-Z].*",
     argTypesRegex: "^fetch[A-Z].*",

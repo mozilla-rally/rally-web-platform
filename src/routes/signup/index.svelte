@@ -17,6 +17,8 @@
   import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");
 
+  let userEmail;
+
   let {
     cardArgs,
     welcomeArgs,
@@ -79,7 +81,8 @@
   };
 
   const triggerCard = (event) => {
-    switch (event.detail.text) {
+    let text = event.detail.text;
+    switch (text) {
       case "join":
         welcomeCard = false;
         joinCard = true;
@@ -113,11 +116,16 @@
         break;
       case "check-create":
         createAcctCard = false;
+        forgetPWCard = false;
         checkEmailCard = true;
         break;
       default:
         break;
     }
+  };
+
+  const sendUserInfo = (info) => {
+    userEmail = info;
   };
 </script>
 
@@ -147,15 +155,20 @@
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard {...cardArgs} on:type={triggerCard} />
+        <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
       {/if}
 
-      {#if forgetPWCard && !welcomeCard && !signinCard}
-        <ForgetPwCard {...cardArgs} on:type={triggerCard} />
+      {#if forgetPWCard && !welcomeCard && !joinCard && !signinCard && !createAcctCard && !checkEmailCard}
+        <ForgetPwCard
+          {...cardArgs}
+          {sendUserInfo}
+          {store}
+          on:type={triggerCard}
+        />
       {/if}
 
       {#if resetPWCard && !checkEmailPWCard}
-        <ResetPwCard {...cardArgs} on:type={triggerCard} />
+        <ResetPwCard {...cardArgs} {store} on:type={triggerCard} />
       {/if}
     </div>
 

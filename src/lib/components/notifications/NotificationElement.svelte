@@ -1,8 +1,8 @@
 <script>
   /* This Source Code Form is subject to the terms of the Mozilla Public
-  * License, v. 2.0. If a copy of the MPL was not distributed with this
-  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { scale } from 'svelte/transition'
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { scale } from "svelte/transition";
   export let width = undefined;
   export let level = "info"; // info, error.
 
@@ -14,18 +14,36 @@
 
   // if specified, set the width variable.
 
-  function makeStyle({width, xOffset, yOffset}) {
+  function makeStyle({ width, xOffset, yOffset }) {
     let styles = [
       width ? `--width: ${width}` : undefined,
       xOffset ? `--x-offset: ${xOffset}` : undefined,
       yOffset ? `--y-offset: ${yOffset}` : undefined,
-    ]
-    return styles.filter(d=> d !== undefined).join('; ');
+    ];
+    return styles.filter((d) => d !== undefined).join("; ");
   }
 
-  $: style = makeStyle({width, xOffset, yOffset});
-  
+  $: style = makeStyle({ width, xOffset, yOffset });
 </script>
+
+<aside
+  transition:scale={{ duration: 200, start: 0.98, opacity: 0 }}
+  {style}
+  class="radius-sm notification-{level} 
+    {location !== undefined
+    ? `notification-floating notification-floating-${location}`
+    : ''}"
+>
+  <div class="icon centered">
+    <slot name="icon" />
+  </div>
+  <div class="body centered">
+    <slot name="body" />
+  </div>
+  <div class="cta centered">
+    <slot name="cta" />
+  </div>
+</aside>
 
 <style>
   aside {
@@ -35,8 +53,8 @@
     width: var(--width);
     box-shadow: var(--rally-box-shadow-sm);
     /* taken from Figma. Is there a display style we have now that matches? */
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
     font-style: normal;
     font-weight: 600;
@@ -94,7 +112,8 @@
     --y-pad: calc(var(--pad) + var(--y-offset));
   }
 
-  .notification-floating-bottom, .notification-floating-bottom-center {
+  .notification-floating-bottom,
+  .notification-floating-bottom-center {
     bottom: var(--y-pad);
     left: calc(50% + var(--x-offset));
     transform: translateX(-50%);
@@ -110,7 +129,8 @@
     bottom: var(--y-pad);
   }
 
-  .notification-floating-top, .notification-floating-top-center {
+  .notification-floating-top,
+  .notification-floating-top-center {
     top: var(--y-pad);
     left: calc(50% + var(--x-offset));
     transform: translateX(-50%);
@@ -126,18 +146,3 @@
     top: var(--y-pad);
   }
 </style>
-
-<aside 
-  transition:scale={{duration: 200, start: .98, opacity: 0}}
-  style={style} class="radius-sm notification-{level} 
-    {location !== undefined ? `notification-floating notification-floating-${location}` : ''}">
-  <div class="icon centered">
-    <slot name="icon" />
-  </div>
-  <div class="body centered">
-    <slot name="body" />
-  </div>
-  <div class="cta centered">
-    <slot name="cta" />
-  </div>
-</aside>
