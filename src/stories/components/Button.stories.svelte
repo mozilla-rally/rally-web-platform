@@ -1,6 +1,7 @@
 <script>
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Button from "../../lib/components/Button.svelte";
+  import "./css/RallyCard.css";
 </script>
 
 <Meta
@@ -25,7 +26,9 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <Button {...args}>{args.label}</Button>
+  <div class="container">
+    <Button {...args}>{args.label}</Button>
+  </div>
 </Template>
 
 <!-- 👇 Each story then reuses that template -->
@@ -49,3 +52,10 @@
     customControl: true,
   }}
 />
+
+<style>
+  .container {
+    display: flex;
+    justify-content: center; 
+  }
+</style>

@@ -40,8 +40,4 @@
   .mzp-c-call-out-title {
     margin-bottom: 12px;
   }
-  .how-it-works {
-    margin-top: 24px;
-    text-align: center;
-  }
 </style>

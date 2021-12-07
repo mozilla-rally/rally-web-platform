@@ -2,21 +2,9 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, createEventDispatcher } from "svelte";
-  import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "./Auth.css";
+  import "../../../lib/components/auth-cards/Auth.css";
 
-  const dispatch = createEventDispatcher();
-
-  export let title;
-  export let cta1;
-  export let width;
-  export let topPadding;
-  export let fontSize;
-  export let custom;
-
-  let titleEl;
   let textWidth;
   let btnDisabled = true;
   let password;
@@ -29,20 +17,7 @@
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
-  onMount(async () => {
-    if (titleEl) {
-      await titleEl;
-      textWidth = titleEl.clientWidth;
-    }
-  });
-
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-
-  const handleTrigger = (type) => {
-    dispatch("type", {
-      text: type,
-    });
-  };
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
@@ -93,19 +68,14 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize} {custom}>
-  <div class="title-wrapper" slot="card-title">
-    <div style={cssVarStyles} class="title-highlight" />
-    <div bind:this={titleEl} class="title-text">{title}</div>
-  </div>
-
-  <div class="card-body-content" slot="card-body">
+<div class="reset-wrapper">
+  <div class="card-body-content">
     <form method="post">
       <fieldset class="mzp-c-field-set">
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Choose a new password</label
+              >Enter your old password</label
             >
           </div>
 
@@ -147,8 +117,51 @@
             {/if}
           </div>
 
+          <div class="label-wrapper">
+            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+              >Enter your new password</label
+            >
+          </div>
+          <div class="input-wrapper">
+            <input
+              class="mzp-c-field-control"
+              bind:value={password}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_pw"
+              name="id_user_pw"
+              type="password"
+              {pattern}
+              min={minPasswordLength}
+              width="100%"
+              required
+            />
+            {#if passwordVisible}
+              <img
+                src="img/eye-slash.svg"
+                alt="Eye with slash across it"
+                class="fas fa-eye-slash togglePassword"
+                id="hide-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {:else}
+              <img
+                src="img/eye-open.svg"
+                alt="Open eye"
+                class="togglePassword"
+                id="show-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {/if}
+          </div>
+
           <p class="info-msg-active-reset">
-            Your password should be unique, and must contain:
+            Your password should be unique and must contain:
           </p>
           <ul class="info-rules">
             <li bind:this={length} id="length" class="invalid">
@@ -164,39 +177,74 @@
               At least 1 number
             </li>
           </ul>
+
+          <div class="label-wrapper">
+            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+              >Confirm your new password</label
+            >
+          </div>
+          <div class="input-wrapper">
+            <input
+              class="mzp-c-field-control"
+              bind:value={password}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_pw"
+              name="id_user_pw"
+              type="password"
+              {pattern}
+              min={minPasswordLength}
+              width="100%"
+              required
+            />
+            {#if passwordVisible}
+              <img
+                src="img/eye-slash.svg"
+                alt="Eye with slash across it"
+                class="fas fa-eye-slash togglePassword"
+                id="hide-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {:else}
+              <img
+                src="img/eye-open.svg"
+                alt="Open eye"
+                class="togglePassword"
+                id="show-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {/if}
+          </div>
         </div>
       </fieldset>
     </form>
-    <Button
-      on:click={() => {
-        handleTrigger("welcome");
-      }}
-      disabled={btnDisabled}
-      size="xl"
-      custom="card-button create"
-    >
-      <div class="button-text">{cta1}</div></Button
+    <Button disabled={btnDisabled} size="xl" custom="card-button create">
+      <div class="button-text">Update passsord</div></Button
     >
   </div>
-</Card>
+</div>
 
 <style>
-  .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-  }
   form {
     height: auto;
+  }
+
+  .input-wrapper {
+    margin-bottom: 15px;
   }
 
   .info-msg-active-reset {
     text-align: left;
     font-size: 12px;
     color: gray;
-    padding-top: 10px;
+  }
+
+  .info-rules {
+    margin-bottom: 15px;
   }
 </style>

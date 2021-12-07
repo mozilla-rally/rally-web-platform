@@ -32,8 +32,9 @@
   let fireBaseErr = null;
   const minPasswordLength = 8;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
   });
@@ -41,7 +42,7 @@
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: fireBaseErr ? (signInErr = true) : (signInErr = false);
 
-  const handleChange = (e) => {
+  const handleChange = () => {
     if (emailEl && passwordEl) {
       passwordEl.value.length >= minPasswordLength && emailEl.value.length > 0
         ? (btnDisabled = false)
@@ -212,7 +213,7 @@
 
 <style>
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

@@ -1,0 +1,156 @@
+<script>
+  /* This Source Code Form is subject to the terms of the Mozilla Public
+   * License, v. 2.0. If a copy of the MPL was not distributed with this
+   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
+  import Card from "../../lib/components/Card.svelte";
+  import UpdatePassword from "./account/UpdatePassword.svelte";
+  import UpdateEmail from "./account/UpdateEmail.svelte";
+  import LeaveRally from "./account/LeaveRally.svelte";
+  import TwoFactAuth from "./account/TwoFactAuth.svelte"
+  import { onMount } from "svelte";
+  import "../../lib/components/auth-cards/Auth.css";
+  import "./css/RallySettings.css";
+
+  let titleEl;
+  let textWidth;
+
+  onMount(async () => {
+    if (titleEl) {
+      await titleEl;
+      textWidth = titleEl.clientWidth;
+    }
+  });
+
+  $: cssVarStyles = `--titleWidth:${textWidth}px`;
+</script>
+
+<Meta
+  title="Components/Cards/Settings"
+  component={Card}
+  argTypes={{
+    title: { control: "text" },
+    body: { control: "text" },
+    width: { control: "text" },
+    height: { control: "text" },
+    minHeight: { control: "text" },
+    topPadding: { control: "text" },
+    fontSize: { control: "text" },
+    isEmail: { control: "boolean" },
+    isPW: { control: "boolean" },
+    is2FA: { control: "boolean" },
+    isLeaveRally: { control: "boolean" },
+  }}
+/>
+
+<Template let:args>
+  <div class="container">
+    <Card {...args}>
+      <div class="title-wrapper" slot="card-title">
+        <div style={cssVarStyles} class="title-highlight" />
+        <div bind:this={titleEl} class="title-text">{args.title}</div>
+      </div>
+      <div class="card-body-content" slot="card-body">
+        <!-- update email -->
+        {#if args.isEmail}
+          <UpdateEmail />
+        {/if}
+
+        <!-- update password -->
+        {#if args.isPW}
+          <UpdatePassword />
+        {/if}
+
+           <!-- enable 2FA -->
+           {#if args.isLeaveRally}
+           <LeaveRally />
+         {/if}
+
+        <!-- leave Rally -->
+        {#if args.is2FA}
+          <TwoFactAuth />
+        {/if}
+      </div>
+    </Card>
+  </div>
+</Template>
+
+<Story
+  name="Settings - Update email"
+  args={{
+    width: "calc((576px * .75) + 408px)",
+    height: "600px",
+    minHeight: "600px",
+    topPadding: "calc(10vh - 20px)",
+    fontSize: "38px",
+    title: "Account settings",
+    isEmail: true,
+    custom: "settings",
+  }}
+/>
+
+<Story
+  name="Settings - Update password"
+  args={{
+    width: "calc((576px * .75) + 408px)",
+    height: "auto",
+    minHeight: "600px",
+    topPadding: "calc(10vh - 20px)",
+    fontSize: "38px",
+    title: "Account settings",
+    isPW: true,
+    custom: "settings",
+  }}
+/>
+
+<Story
+  name="Settings - Enable 2FA"
+  args={{
+    width: "calc((576px * .75) + 408px)",
+    height: "600px",
+    minHeight: "600px",
+    topPadding: "calc(10vh - 20px)",
+    fontSize: "38px",
+    title: "Account settings",
+    is2FA: true,
+    custom: "settings medium-w",
+  }}
+/>
+
+<Story
+  name="Settings - Leave Rally"
+  args={{
+    width: "calc((576px * .75) + 408px)",
+    height: "auto",
+    minHeight: "600px",
+    topPadding: "calc(10vh - 20px)",
+    fontSize: "38px",
+    title: "Account settings",
+    isLeaveRally: true,
+    custom: "settings large-w",
+  }}
+/>
+
+<style>
+  .container {
+    backface-visibility: hidden;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 40px;
+    width: 800px;
+    max-width: 800px;
+    padding-bottom: 48px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+  .title-highlight {
+    background-color: var(--color-yellow-35);
+    border-radius: 4px;
+    position: absolute;
+    height: 1.375rem;
+    width: calc(var(--titleWidth) + 15px);
+    margin-top: 24px;
+  }
+</style>

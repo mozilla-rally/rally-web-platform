@@ -1,0 +1,35 @@
+.card-container {
+  margin: auto;
+}
+
+.sider-container {
+  margin: auto;
+}
+
+.settings {
+  width: 50%;
+}
+
+.settings.large-w {
+  width: 80%;
+}
+
+.settings.medium-w {
+  width: 65%;
+}
+
+.twoFA {
+  background: var(--color-green-60);
+  border-color: var(--color-green-60);
+}
+
+.twoFA:hover {
+  background: var(--color-green-60);
+  border-color: var(--color-green-60);
+  opacity: 0.7;
+}
+
+.inactive .twoFA {
+  background-color: var(--color-red-60);
+  border-color: var(--color-red-60);
+}
