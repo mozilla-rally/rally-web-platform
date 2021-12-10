@@ -2,13 +2,13 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { signInWithEmailLink } from "@firebase/auth";
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
 
   export let width;
   export let fontSize = "38px";
   export let custom = "";
-  export let listTextArr;
+  export let listArr;
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
@@ -21,6 +21,25 @@
     if (values.length === 0) return undefined;
     return values.join("; ");
   }
+
+  const handleSelect = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+
+    handleHighlight(type);
+  };
+
+  const handleHighlight = (type) => {
+    listArr.forEach((siderItem, index) => {
+      if (siderItem.type === type) {
+        siderItem.highlight = true;
+      } else {
+        siderItem.highlight = false;
+      }
+    });
+    listArr = listArr;
+  };
 
   $: styles = addStyleVariables({
     width,
@@ -38,14 +57,18 @@
   <div class="sider-container radius-sm mzp-t-mozilla" style={styles}>
     <div class={classSet}>
       <ul class="sider-list">
-        {#each listTextArr as name}
-          <li class="sider-list-item">
-            <a href={`#${name}`} class="list-item-link">{name}</a>
+        {#each listArr as item}
+          <li
+            on:click={() => {
+              handleSelect(item.type);
+            }}
+            class={`sider-list-item ${item.class} ${
+              item.highlight ? "highlight" : ""
+            }`}
+          >
+            <a href={`#${item.text}`} class="list-item-link">{item.text}</a>
           </li>
         {/each}
-        <li class="sider-list-item leave-btn">
-          <button class="list-item-link">Leave Rally</button>
-        </li>
       </ul>
     </div>
   </div>
@@ -70,12 +93,12 @@
     text-decoration: none;
   }
 
-  .sider-list-item a, .sider-list-item button {
+  .sider-list-item a,
+  .sider-list-item button {
     text-decoration: none;
     padding: 16px 0 16px 16px;
     position: relative;
     display: block;
-    text-align: center;
     border-bottom: 1px solid rgba(143, 143, 158, 0.15);
     border-top: 1px solid rgba(143, 143, 158, 0.15);
     line-height: 1.75;
@@ -84,20 +107,29 @@
     cursor: pointer;
   }
 
-  .sider-list-item a:hover{
+  .sider-list-item a:hover {
     background-color: var(--color-light-gray-20);
   }
-  .leave-btn button{
+  .leave a {
     background-color: transparent;
     border-left: none;
     border-right: none;
     border-bottom: 1px solid rgba(143, 143, 158, 0.15);
-    text-align: center;
     width: 100%;
+    text-align: left;
   }
 
-  .leave-btn button:hover{
-    background-color: var(--color-red-60); 
-    color: white; 
+  .highlight {
+    background-color: var(--color-light-gray-20);
+  }
+
+  .leave.highlight a {
+    background-color: var(--color-red-60);
+    color: #fff !important;
+  }
+
+  .leave a:hover {
+    background-color: var(--color-red-60);
+    color: #fff;
   }
 </style>

@@ -28,12 +28,13 @@
 </script>
 
 <div class="two-factor-wrapper">
-  <h5>Two-factor authentication</h5>
+
+  <h5 class="settings-title">Two-factor authentication</h5>
   <div
     class="two-factor-content"
     style="margin-bottom: 24px; box-sizing: content-box;"
   >
-    <div style="width: 368px;">
+    <div class="lead-wrapper">
       <p class="lead" style="padding-top: 20px;">
         Enable SMS verification to sign in using a one time passcode sent as a
         SMS to your mobile phone.
@@ -41,12 +42,14 @@
     </div>
 
     <div class={is2FA ? "factor-btn" : "factor-btn inactive"}>
-      <Button custom="twoFA" on:click={handleAuthToggle} size="lg">{is2FA ? "Turn on" : "Turn off"}</Button>
+      <Button custom="twoFA" on:click={handleAuthToggle} size="lg"
+        >{is2FA ? "Turn on" : "Turn off"}</Button
+      >
     </div>
   </div>
 
   <form method="post">
-    <fieldset class="mzp-c-field-set">
+    <fieldset class="mzp-c-field-set field-set-settings">
       <div class="mzp-c-field field-pw">
         <div class="label-wrapper">
           <label class="mzp-c-field-label enter-pw" for="id_user_pw"
@@ -111,11 +114,15 @@
           />
         </div>
       </div>
-      <Button disabled={is2FA && isBlank} size="xl" custom="card-button create">
-        <div class="button-text">Confirm</div></Button
-      >
     </fieldset>
   </form>
+  <Button
+    disabled={is2FA && isBlank}
+    size="xl"
+    custom="card-button create btn-settings"
+  >
+    <div class="button-text">Confirm</div></Button
+  >
 </div>
 
 <style>
@@ -124,6 +131,12 @@
     align-content: center;
     align-items: center;
     justify-content: space-between;
+    width: 80%;
+    margin:auto;
+  }
+
+  .lead-wrapper{
+    width: 71%; 
   }
   .lead {
     padding-bottom: 10px;

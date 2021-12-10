@@ -11,9 +11,11 @@
   let createErr = false;
   let emailErrText = null;
   let fireBaseErr = null;
-  let formHeight = "auto";
 
-  $: formStyles = `--formHeight:${formHeight}`;
+  let password;
+  let passwordEl;
+  let passwordVisible = false;
+
   $: fireBaseErr === null ? (createErr = false) : (createErr = true);
 
   //   const handleNextState = () => {
@@ -39,12 +41,67 @@
 
     localStorage.removeItem("createErr");
   };
+
+  const handleChange = () => {
+    console.log("test");
+  };
+
+  const handleToggle = () => {
+    passwordVisible = !passwordVisible;
+    const type =
+      passwordEl.getAttribute("type") === "password" ? "text" : "password";
+    passwordEl.setAttribute("type", type);
+  };
 </script>
 
 <div class="email-wrapper">
   <div class="card-body-content">
-    <form method="post" style={formStyles}>
-      <fieldset class="mzp-c-field-set">
+    <form method="post">
+      <fieldset class="mzp-c-field-set field-set-settings">
+        <div class="mzp-c-field field-pw">
+          <div class="label-wrapper">
+            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+              >Enter your password</label
+            >
+          </div>
+
+          <div class="input-wrapper input-first">
+            <input
+              class="mzp-c-field-control"
+              bind:value={password}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_pw"
+              name="id_user_pw"
+              type="password"
+              width="100%"
+              required
+            />
+            {#if passwordVisible}
+              <img
+                src="img/eye-slash.svg"
+                alt="Eye with slash across it"
+                class="fas fa-eye-slash togglePassword"
+                id="hide-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {:else}
+              <img
+                src="img/eye-open.svg"
+                alt="Open eye"
+                class="togglePassword"
+                id="show-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {/if}
+          </div>
+        </div>
+
         <label class="mzp-c-field-label enter-pw" for="id_user_pw"
           >Update your email address on your account</label
         >
@@ -69,8 +126,11 @@
         {/if}
       </fieldset>
     </form>
-
-    <Button disabled={btnDisabled} size="xl" custom="card-button create">
+    <Button
+      disabled={btnDisabled}
+      size="xl"
+      custom="card-button create btn-settings"
+    >
       <div class="button-text">Send verification</div></Button
     >
   </div>
@@ -78,10 +138,7 @@
 
 <style>
   .email-wrapper {
-    margin-top: 15px; 
-  }
-  form {
-    height: var(--formHeight);
+    margin-top: 15px;
   }
 
   .invalid-email {

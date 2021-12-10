@@ -15,6 +15,13 @@
   let titleEl;
   let textWidth;
 
+  let cardArgs = {
+    width: "700px",
+    height: "auto",
+    minHeight: "600px",
+    fontSize: "38px"
+  }
+
   onMount(async () => {
     if (titleEl) {
       await titleEl;
@@ -34,7 +41,6 @@
     width: { control: "text" },
     height: { control: "text" },
     minHeight: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     isEmail: { control: "boolean" },
     isPW: { control: "boolean" },
@@ -78,73 +84,45 @@
 <Story
   name="Settings - Update email"
   args={{
-    width: "calc((576px * .75) + 408px)",
-    height: "600px",
-    minHeight: "600px",
-    topPadding: "calc(10vh - 20px)",
-    fontSize: "38px",
+    ...cardArgs,
     title: "Account settings",
     isEmail: true,
-    custom: "settings",
+    custom: "settings"
   }}
 />
 
 <Story
   name="Settings - Update password"
   args={{
-    width: "calc((576px * .75) + 408px)",
-    height: "auto",
-    minHeight: "600px",
-    topPadding: "calc(10vh - 20px)",
-    fontSize: "38px",
+     ...cardArgs,
     title: "Account settings",
     isPW: true,
-    custom: "settings",
+    custom: "settings"
   }}
 />
 
 <Story
   name="Settings - Enable 2FA"
   args={{
-    width: "calc((576px * .75) + 408px)",
-    height: "600px",
-    minHeight: "600px",
-    topPadding: "calc(10vh - 20px)",
-    fontSize: "38px",
+    ...cardArgs,
     title: "Account settings",
     is2FA: true,
-    custom: "settings medium-w",
+    custom: "settings extra-padding"
   }}
 />
 
 <Story
   name="Settings - Leave Rally"
   args={{
-    width: "calc((576px * .75) + 408px)",
-    height: "auto",
-    minHeight: "600px",
-    topPadding: "calc(10vh - 20px)",
-    fontSize: "38px",
+     ...cardArgs,
     title: "Account settings",
     isLeaveRally: true,
-    custom: "settings large-w",
+    custom: "settings extra-padding"
   }}
 />
 
 <style>
-  .container {
-    backface-visibility: hidden;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 40px;
-    width: 800px;
-    max-width: 800px;
-    padding-bottom: 48px;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-  }
+  
   .title-highlight {
     background-color: var(--color-yellow-35);
     border-radius: 4px;

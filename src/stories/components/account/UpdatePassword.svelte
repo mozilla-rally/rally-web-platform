@@ -5,7 +5,7 @@
   import Button from "../../../lib/components/Button.svelte";
   import "../../../lib/components/auth-cards/Auth.css";
 
-  let textWidth;
+ 
   let btnDisabled = true;
   let password;
   let passwordEl;
@@ -17,7 +17,7 @@
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
-  $: cssVarStyles = `--titleWidth:${textWidth}px`;
+
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
@@ -71,7 +71,7 @@
 <div class="reset-wrapper">
   <div class="card-body-content">
     <form method="post">
-      <fieldset class="mzp-c-field-set">
+      <fieldset class="mzp-c-field-set field-set-settings">
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
@@ -223,7 +223,7 @@
         </div>
       </fieldset>
     </form>
-    <Button disabled={btnDisabled} size="xl" custom="card-button create">
+    <Button disabled={btnDisabled} size="xl" custom="card-button create btn-settings">
       <div class="button-text">Update passsord</div></Button
     >
   </div>

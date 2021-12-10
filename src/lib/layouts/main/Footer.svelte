@@ -132,7 +132,6 @@
     color: #fff;
     position: absolute;
     width: 100%;
-    bottom: 0;
   }
 
   footer a {

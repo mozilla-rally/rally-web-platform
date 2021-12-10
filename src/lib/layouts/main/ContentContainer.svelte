@@ -7,13 +7,13 @@
 </script>
 
 <main class="mzp-t-mozilla">
-  <div style={`--pad: ${pad ? "2rem 2.5rem" : "0"};`}>
+  <div class="content-container" style={`--pad: ${pad ? "2rem 2.5rem 6rem" : "0"};`}>
     <slot />
   </div>
 </main>
 
 <style>
-  div {
+  .content-container {
     display: grid;
     grid-template-columns: var(--content-width);
     background-size: 100% 100%;

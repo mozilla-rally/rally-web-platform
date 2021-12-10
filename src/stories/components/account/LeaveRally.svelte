@@ -7,7 +7,7 @@
 </script>
 
 <div class="leave-rally-wrapper">
-  <h5>Before You Go…</h5>
+  <h5 class="setting-title">Before You Go…</h5>
   <div
     class="split-content-modal"
     style="margin-bottom: 24px; box-sizing: content-box;"
@@ -49,8 +49,8 @@
     />
   </div>
   <div class="modal-call-flow">
-    <Button size="lg" product leave>Leave Rally</Button>
-    <Button size="lg" product secondary>Cancel</Button>
+    <Button custom="btn-settings" size="lg" product leave>Leave Rally</Button>
+    <Button custom="btn-settings" size="lg" product secondary>Cancel</Button>
   </div>
 </div>
 
