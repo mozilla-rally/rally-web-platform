@@ -66,7 +66,7 @@
               item.highlight ? "highlight" : ""
             }`}
           >
-            <a href={`#${item.text}`} class="list-item-link">{item.text}</a>
+            <div class="list-item-link">{item.text}</div>
           </li>
         {/each}
       </ul>
@@ -93,8 +93,7 @@
     text-decoration: none;
   }
 
-  .sider-list-item a,
-  .sider-list-item button {
+  .sider-list-item  {
     text-decoration: none;
     padding: 16px 0 16px 16px;
     position: relative;
@@ -107,10 +106,10 @@
     cursor: pointer;
   }
 
-  .sider-list-item a:hover {
+  .sider-list-item:hover {
     background-color: var(--color-light-gray-20);
   }
-  .leave a {
+  .leave{
     background-color: transparent;
     border-left: none;
     border-right: none;
@@ -123,12 +122,12 @@
     background-color: var(--color-light-gray-20);
   }
 
-  .leave.highlight a {
+  .leave.highlight{
     background-color: var(--color-red-60);
     color: #fff !important;
   }
 
-  .leave a:hover {
+  .leave:hover {
     background-color: var(--color-red-60);
     color: #fff;
   }
