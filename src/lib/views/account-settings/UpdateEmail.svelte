@@ -2,18 +2,36 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { createEventDispatcher } from "svelte";
+  import { getContext } from "svelte";
+  import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
+  import type { NotificationStore } from "$lib/components/notifications";
   import "../../../lib/components/auth-cards/Auth.css";
 
+  const dispatch = createEventDispatcher();
+  const store: AppStore = getContext("rally:store");
+  const notifications: NotificationStore = getContext("rally:notifications");
+
   //create account states
-  let email;
+  let newEmail;
   let btnDisabled = true;
   let password;
   let passwordEl;
   let passwordVisible = false;
 
   const handleChange = () => {
-    console.log("test");
+    if (newEmail && password) {
+      password.length > 0 && newEmail.length > 0
+        ? (btnDisabled = false)
+        : (btnDisabled = true);
+    }
+  };
+
+  const handleSelect = (type) => {
+    dispatch("type", {
+      text: type,
+    });
   };
 
   const handleToggle = () => {
@@ -21,6 +39,14 @@
     const type =
       passwordEl.getAttribute("type") === "password" ? "text" : "password";
     passwordEl.setAttribute("type", type);
+  };
+
+  const clearFields = () => {
+    newEmail = "";
+    password = "";
+    btnDisabled = true;
+    handleSelect("read-only");
+    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
   };
 </script>
 
@@ -36,7 +62,7 @@
         <div class="mzp-c-field input-wrapper">
           <input
             class="mzp-c-field-control "
-            bind:value={email}
+            bind:value={newEmail}
             id="id_user_email"
             name="id_user_email"
             type="email"
@@ -94,6 +120,10 @@
       disabled={btnDisabled}
       size="xl"
       custom="card-button create btn-settings"
+      on:click={async () => {
+        await store.changeEmail(newEmail, password);
+        clearFields();
+      }}
     >
       <div class="button-text">Send verification</div></Button
     >
@@ -104,14 +134,9 @@
   .email-wrapper {
     margin-top: 15px;
   }
-  .card-description{
-    padding-bottom: 20px; 
+  .card-description {
+    padding-bottom: 20px;
     width: 80%;
     font-size: 18px;
-  }
-
-  .invalid-email {
-    margin-top: -19px;
-    padding-bottom: 10px;
   }
 </style>

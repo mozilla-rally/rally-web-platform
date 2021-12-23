@@ -3,10 +3,11 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import Card from "../../../lib/components/Card.svelte";
-  import UpdatePassword from "../account/UpdatePassword.svelte";
-  import UpdateEmail from "../account/UpdateEmail.svelte";
-  import LeaveRally from "../account/LeaveRally.svelte";
-  import TwoFactAuth from "../account/TwoFactAuth.svelte";
+  import UpdatePassword from "./UpdatePassword.svelte";
+  import UpdateEmail from "./UpdateEmail.svelte";
+  import LeaveRally from "./LeaveRally.svelte";
+  import TwoFactAuth from "./TwoFactAuth.svelte";
+  import SettingsReadOnly from "./SettingsReadOnly.svelte";
   import { onMount } from "svelte";
   import "../../../lib/components/auth-cards/Auth.css";
   import "../css/RallySettings.css";
@@ -18,7 +19,9 @@
   export let isPW;
   export let is2FA;
   export let isLeaveRally;
+  export let isReadOnly;
   export let cardArgs;
+  export let settingsTitle = "Account settings";
 
   onMount(async () => {
     if (titleEl) {
@@ -28,14 +31,26 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: if (settingsTitle) {
+    setTimeout(() => {
+      if (titleEl) {
+        textWidth = titleEl.clientWidth;
+      }
+    }, 50);
+  }
 </script>
 
 <Card {...cardArgs}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
-    <div bind:this={titleEl} class="title-text">{cardArgs.title}</div>
+    <div bind:this={titleEl} class="title-text">{settingsTitle}</div>
   </div>
   <div class="card-body-content" slot="card-body">
+    <!-- readonly -->
+    {#if isReadOnly}
+      <SettingsReadOnly />
+    {/if}
+
     <!-- update email -->
     {#if isEmail}
       <UpdateEmail />
@@ -66,5 +81,6 @@
     height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
+    transition: width 0.2s ease-in;
   }
 </style>

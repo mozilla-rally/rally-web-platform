@@ -29,6 +29,7 @@
       await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    localStorage.removeItem("signInErr");
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;

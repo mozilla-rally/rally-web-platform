@@ -1,6 +1,4 @@
-
-
-.settings-container {
+.container {
   backface-visibility: hidden;
   padding-left: 0;
   padding-right: 0;
@@ -19,13 +17,12 @@
   justify-items: center;
   width: 100%;
   height: auto;
- 
 }
 
 .content-container.account-settings {
   margin: auto;
-  margin-right: 0;  
-  width: auto; 
+  margin-right: 0;
+  width: auto;
   grid-template-rows: auto;
   grid-template-columns: 214px 30px auto !important;
   grid-template-areas: "sider . main";
@@ -43,8 +40,8 @@
   margin: auto;
 }
 
-.extra-padding{
-  padding: 20px; 
+.extra-padding {
+  padding: 20px;
 }
 
 .sider-container {
@@ -53,6 +50,7 @@
 
 .settings {
   width: 100%;
+  padding-bottom: 20px;
 }
 
 .settings.large-w {
@@ -90,6 +88,13 @@
   border-color: var(--color-red-60);
 }
 
-footer{
+.error-msg-active {
+  position: inherit;
+  color: red;
+  padding-top: 5px;
+  top: 0px;
+}
+
+footer {
   bottom: auto;
 }

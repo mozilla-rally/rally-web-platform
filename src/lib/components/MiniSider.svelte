@@ -31,14 +31,18 @@
   };
 
   const handleHighlight = (type) => {
-    listArr.forEach((siderItem, index) => {
-      if (siderItem.type === type) {
-        siderItem.highlight = true;
-      } else {
-        siderItem.highlight = false;
-      }
-    });
-    listArr = listArr;
+    try {
+      listArr.forEach((siderItem, index) => {
+        if (siderItem.type === type) {
+          siderItem.highlight = true;
+        } else {
+          siderItem.highlight = false;
+        }
+      });
+      listArr = listArr;
+    } catch (error) {
+      console.error("ERROR:", error)
+    }
   };
 
   $: styles = addStyleVariables({
@@ -51,6 +55,7 @@
     Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15)
   }`;
+
 </script>
 
 <div id={key}>
@@ -93,7 +98,7 @@
     text-decoration: none;
   }
 
-  .sider-list-item  {
+  .sider-list-item {
     text-decoration: none;
     padding: 16px 0 16px 16px;
     position: relative;
@@ -109,7 +114,7 @@
   .sider-list-item:hover {
     background-color: var(--color-light-gray-20);
   }
-  .leave{
+  .leave {
     background-color: transparent;
     border-left: none;
     border-right: none;
@@ -120,11 +125,6 @@
 
   .highlight {
     background-color: var(--color-light-gray-20);
-  }
-
-  .leave.highlight{
-    background-color: var(--color-red-60);
-    color: #fff !important;
   }
 
   .leave:hover {

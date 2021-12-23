@@ -1,60 +1,79 @@
-<script>
+<script lang="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { createEventDispatcher } from "svelte";
+  import { getContext } from "svelte";
+  import type { NotificationStore } from "$lib/components/notifications";
+  import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
   import "../../../lib/components/auth-cards/Auth.css";
+  const dispatch = createEventDispatcher();
+  const store: AppStore = getContext("rally:store");
+  const notifications: NotificationStore = getContext("rally:notifications");
 
- 
   let btnDisabled = true;
-  let password;
-  let passwordEl;
-  let password2;
-  let passwordEl2;
-  let password3;
-  let passwordEl3;
+  let oldPasswordEl;
+  let newPasswordEl;
+  let newPasswordEl2;
   let capital;
   let number;
   let length;
   let letter;
-  let passwordVisible = false;
+  let passwordVisible1 = false;
+  let passwordVisible2 = false;
+  let passwordVisible3 = false;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
+  let pwErr = false;
+  let pwErrText;
 
+  console.log("store", store)
+
+  const handleCheckPW = async () => {
+    if (newPasswordEl.value === newPasswordEl2.value) {
+      await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
+      handleSelect("read-only")
+      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
+    } else {
+      pwErr = true;
+      pwErrText = "Passwords do not match.";
+    }
+  };
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    if (passwordEl2) {
+    if (newPasswordEl) {
       // Validate lowercase letters
       let lowerCaseLetters = /[a-z]/g;
-      passwordEl2.value.match(lowerCaseLetters)
+      newPasswordEl.value.match(lowerCaseLetters)
         ? letter.classList.add("valid")
         : letter.classList.remove("valid");
 
       // Validate uppercase letters
       let upperCaseLetters = /[A-Z]/g;
-      passwordEl2.value.match(upperCaseLetters)
+      newPasswordEl.value.match(upperCaseLetters)
         ? capital.classList.add("valid")
         : capital.classList.remove("valid");
 
       // Validate numbers
       let numbers = /[0-9]/g;
-      passwordEl2.value.match(numbers)
+      newPasswordEl.value.match(numbers)
         ? number.classList.add("valid")
         : number.classList.remove("valid");
 
       // Validate length
-      passwordEl2.value.length >= 8
+      newPasswordEl.value.length >= minPasswordLength
         ? length.classList.add("valid")
         : length.classList.remove("valid");
 
       if (name === "id_user_pw") {
         if (
-          password2.length >= minPasswordLength &&
-          passwordEl2.value.match(numbers) &&
-          passwordEl2.value.match(lowerCaseLetters) &&
-          passwordEl2.value.match(upperCaseLetters)
+          newPasswordEl.value.length >= minPasswordLength &&
+          newPasswordEl.value.match(numbers) &&
+          newPasswordEl.value.match(lowerCaseLetters) &&
+          newPasswordEl.value.match(upperCaseLetters)
         ) {
           btnDisabled = false;
         } else {
@@ -64,11 +83,43 @@
     }
   };
 
-  const handleToggle = () => {
-    passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
+  const handleSelect = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
+
+  const handleToggle = (el) => {
+    let type;
+    switch (el) {
+      case "type1":
+        passwordVisible1 = !passwordVisible1;
+        type =
+          oldPasswordEl.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        oldPasswordEl.setAttribute("type", type);
+        break;
+      case "type2":
+        passwordVisible2 = !passwordVisible2;
+        type =
+          newPasswordEl.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        newPasswordEl.setAttribute("type", type);
+
+        break;
+      case "type3":
+        passwordVisible3 = !passwordVisible3;
+        type =
+          newPasswordEl2.getAttribute("type") === "password"
+            ? "text"
+            : "password";
+        newPasswordEl2.setAttribute("type", type);
+        break;
+      default:
+        break;
+    }
   };
 </script>
 
@@ -87,8 +138,7 @@
           <div class="input-wrapper">
             <input
               class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
+              bind:this={oldPasswordEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw"
@@ -99,7 +149,7 @@
               width="100%"
               required
             />
-            {#if passwordVisible}
+            {#if passwordVisible1}
               <img
                 src="img/eye-slash.svg"
                 alt="Eye with slash across it"
@@ -107,7 +157,7 @@
                 id="hide-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type1")}
               />
             {:else}
               <img
@@ -117,7 +167,7 @@
                 id="show-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type1")}
               />
             {/if}
           </div>
@@ -130,8 +180,7 @@
           <div class="input-wrapper">
             <input
               class="mzp-c-field-control"
-              bind:value={password2}
-              bind:this={passwordEl2}
+              bind:this={newPasswordEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw"
@@ -142,7 +191,7 @@
               width="100%"
               required
             />
-            {#if passwordVisible}
+            {#if passwordVisible2}
               <img
                 src="img/eye-slash.svg"
                 alt="Eye with slash across it"
@@ -150,7 +199,7 @@
                 id="hide-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type2")}
               />
             {:else}
               <img
@@ -160,7 +209,7 @@
                 id="show-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type2")}
               />
             {/if}
           </div>
@@ -191,8 +240,7 @@
           <div class="input-wrapper">
             <input
               class="mzp-c-field-control"
-              bind:value={password3}
-              bind:this={passwordEl3}
+              bind:this={newPasswordEl2}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw"
@@ -203,7 +251,7 @@
               width="100%"
               required
             />
-            {#if passwordVisible}
+            {#if passwordVisible3}
               <img
                 src="img/eye-slash.svg"
                 alt="Eye with slash across it"
@@ -211,7 +259,7 @@
                 id="hide-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type3")}
               />
             {:else}
               <img
@@ -221,14 +269,25 @@
                 id="show-eye"
                 width="24px"
                 height="24px"
-                on:click|preventDefault={handleToggle}
+                on:click|preventDefault={() => handleToggle("type3")}
               />
             {/if}
           </div>
+          {#if pwErr}
+            <p class="error-msg-active">
+              {pwErrText}
+            </p>
+          {/if}
         </div>
       </fieldset>
     </form>
-    <Button disabled={btnDisabled} size="xl" custom="card-button create btn-settings">
+
+    <Button
+      disabled={btnDisabled}
+      size="xl"
+      custom="card-button create btn-settings"
+      on:click={handleCheckPW}
+    >
       <div class="button-text">Update passsord</div></Button
     >
   </div>
@@ -242,8 +301,8 @@
   .input-wrapper {
     margin-bottom: 15px;
   }
-  .card-description{
-    padding-bottom: 20px; 
+  .card-description {
+    padding-bottom: 20px;
     width: 80%;
     font-size: 18px;
   }

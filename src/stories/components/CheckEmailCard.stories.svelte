@@ -42,7 +42,7 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="container">
+  <div class="story-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />

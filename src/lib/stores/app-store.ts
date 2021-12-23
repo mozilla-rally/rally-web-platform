@@ -36,6 +36,18 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async sendUserPasswordResetEmail(email) {
       return api.sendUserPasswordResetEmail(email);
     },
+    async resetUserPassword(newPassword, oldPassword){
+      return api.resetUserPassword(newPassword, oldPassword)
+    },
+    async changeEmail(email, password){
+      return api.changeEmail(email, password)
+    },
+    async isUserVerified(){
+      return api.isUserVerified()
+    },
+    async getUserEmail(){
+      return api.getUserEmail()
+    },
     async updateOnboardedStatus(onboardingOrNot) {
       return api.updateOnboardedStatus(onboardingOrNot);
     },

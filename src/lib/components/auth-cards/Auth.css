@@ -44,10 +44,6 @@ input {
   height: 50px;
 }
 
-input[required]:invalid:focus {
-  border: 2px solid red;
-}
-
 .label-wrapper {
   display: flex;
   justify-content: space-between;

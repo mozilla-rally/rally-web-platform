@@ -1,13 +1,6 @@
 /* vendored font faces not included in Protocol */
 /* Inter SemiBold 3.15 (https://github.com/rsms/inter/releases/download/v3.15/Inter-3.15.zip) */
 
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing: border-box; 
-}
-
 @font-face {
   font-display: swap;
   font-family: Inter;

@@ -140,19 +140,11 @@
     padding-bottom: 10px;
   }
 
-  button {
-    background-color: var(--color-green-50);
-  }
-
   .number{
     padding-bottom: 15px; 
   }
 
   .input-first {
     margin-bottom: 15px;
-  }
-
-  .inactive button {
-    background-color: var(--color-red-60) !important;
   }
 </style>

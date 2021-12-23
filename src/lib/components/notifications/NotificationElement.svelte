@@ -80,6 +80,12 @@
     background-color: var(--color-red-60);
   }
 
+  .notification-alert,
+  .notification-alert > * {
+    color: var(--color-orange-80);
+    background-color: var(--color-yellow-30);
+  }
+
   .icon {
     font-size: 24px;
     height: 24px;

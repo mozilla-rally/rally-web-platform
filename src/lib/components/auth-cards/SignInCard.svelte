@@ -37,6 +37,7 @@
       await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    // localStorage.removeItem("signInErr");
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
@@ -53,8 +54,10 @@
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
     let wrongPW = "auth/wrong-password";
+    let notVerified = "Email account not verified"
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
+    let isNotVerified = fireBaseErr.indexOf(notVerified)
 
     if (isNotFoundErr > -1) {
       signInErrText = "User not found. Please try again.";
@@ -64,7 +67,11 @@
       signInErrText = "Wrong password. Please try again.";
     }
 
-    localStorage.removeItem("signInError");
+    if (isNotVerified > -1) {
+      signInErrText = "Email account not verified.";
+    }
+
+    localStorage.removeItem("signInErr");
   };
 
   const handleNextState = () => {

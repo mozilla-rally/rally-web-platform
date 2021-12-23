@@ -50,7 +50,7 @@
 />
 
 <Template let:args>
-  <div class="container">
+  <div class="settings-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
