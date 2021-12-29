@@ -61,7 +61,7 @@
 <style>
   .card-container {
     width: calc(var(--width, var(--content-width)) - 40px);
-    height: calc(var(--height, auto));
+    height: var(--height);
     min-width: calc(var(--width, var(--content-width)) - 40px);
     min-height: var(--min-height);
     background-color: var(--color-white);

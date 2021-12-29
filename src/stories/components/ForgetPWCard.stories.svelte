@@ -96,14 +96,13 @@
   name="Forgot Password"
   args={{
     width: "460px",
-    height: "339px",
+    height: "300px",
     topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Forgot your password?",
     cta1: "Request password reset",
     bodyText: "We'll send you a link to reset your password",
     custom: "reset-pw",
-    minHeight: "339px",
   }}
 />
 

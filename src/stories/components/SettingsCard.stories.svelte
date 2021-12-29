@@ -18,7 +18,7 @@
   let cardArgs = {
     width: "700px",
     height: "auto",
-    minHeight: "600px",
+    minHeight: "420px",
     fontSize: "38px"
   }
 

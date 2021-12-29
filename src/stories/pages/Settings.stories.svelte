@@ -116,6 +116,7 @@
   argTypes={{
     width: { control: "text" },
     fontSize: { control: "text" },
+    custom: {control : "text"}
   }}
 />
 
@@ -131,6 +132,7 @@
           fontSize="1rem"
         />
       </div>
+
       <div class="settings-main">
         <TestSettingsCard
           {isEmail}
@@ -152,5 +154,6 @@
   args={{
     width: "214px",
     fontSize: "1rem",
+    custom:"account-settings"
   }}
 />

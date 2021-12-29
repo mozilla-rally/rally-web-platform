@@ -80,7 +80,7 @@
   name="Reset Password Email"
   args={{
     width: "460px",
-    height: "300px",
+    height: "276px",
     topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Check your email",
@@ -89,7 +89,6 @@
     bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-dialog",
-    minHeight: "300px",
   }}
 />
 
