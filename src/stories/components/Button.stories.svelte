@@ -26,7 +26,7 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="container">
+  <div class="btn-container">
     <Button {...args}>{args.label}</Button>
   </div>
 </Template>
@@ -54,7 +54,7 @@
 />
 
 <style>
-  .container {
+  .btn-container {
     display: flex;
     justify-content: center; 
   }

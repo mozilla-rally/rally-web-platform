@@ -8,16 +8,13 @@
 
 <div class="leave-rally-wrapper">
   <h5 class="setting-title">Before You Go…</h5>
-  <div
-    class="split-content-modal"
-    style="margin-bottom: 24px; box-sizing: content-box;"
-  >
-    <div style="width: 368px;">
-      <p class="lead" style="padding-top: 20px;">
+  <div class="split-content-modal">
+    <div class="leave-rally-content">
+      <p class="lead">
         Thanks for helping make the internet just a little bit better. For your
         reference, leaving Rally means that:
       </p>
-      <ul class="mzp-u-list-styled bigger-gap" style="padding-right: 36px;">
+      <ul class="mzp-u-list-styled bigger-gap">
         <li>
           We will <b>no longer collect any data</b> for our platform or studies
         </li>
@@ -43,9 +40,9 @@
       </ul>
     </div>
     <img
-      style="width: 270px; padding-top: 40px; transform: translateX(-24px);"
       src="img/before-you-go.png"
       alt="person walking through exit door"
+      class="leave-rally-img"
     />
   </div>
   <div class="modal-call-flow">
@@ -54,7 +51,26 @@
 </div>
 
 <style>
-    .lead{
-        padding-bottom: 10px;
-    }
+  .split-content-modal {
+    margin-bottom: 24px;
+    box-sizing: content-box;
+  }
+
+  .leave-rally-content {
+    width: 368px;
+  }
+  .lead {
+    padding-bottom: 10px;
+    padding-top: 20px;
+  }
+
+  .bigger-gap {
+    padding-right: 36px;
+  }
+
+  .leave-rally-img {
+    width: 270px;
+    padding-top: 40px;
+    transform: translateX(-24px);
+  }
 </style>

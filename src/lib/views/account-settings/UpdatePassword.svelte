@@ -26,8 +26,8 @@
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
-  let pwErr = false;
-  let pwErrText;
+  let passwordErr = false;
+  let passwordErrText;
 
   console.log("store", store)
 
@@ -37,8 +37,8 @@
       handleSelect("read-only")
       notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
     } else {
-      pwErr = true;
-      pwErrText = "Passwords do not match.";
+      passwordErr = true;
+      passwordErrText = "Passwords do not match.";
     }
   };
 
@@ -273,9 +273,9 @@
               />
             {/if}
           </div>
-          {#if pwErr}
+          {#if passwordErr}
             <p class="error-msg-active">
-              {pwErrText}
+              {passwordErrText}
             </p>
           {/if}
         </div>
