@@ -219,6 +219,10 @@
 </Card>
 
 <style>
+  .title-wrapper{
+    padding-bottom: 25px; 
+  }
+  
   .title-highlight {
     background-color: var(--color-yellow-35);
     border-radius: 4px;
