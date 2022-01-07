@@ -29,8 +29,9 @@
   let titleEl;
   let textWidth;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
   });
@@ -85,7 +86,7 @@
         <div class="mzp-c-field">
           <div class="input-wrapper">
             <input
-              class="mzp-c-field-control "
+              class="mzp-c-field-control"
               bind:value={email}
               bind:this={emailEl}
               on:change={handleChange}
@@ -129,8 +130,12 @@
 </Card>
 
 <style>
+  .title-wrapper{
+    padding-bottom: 35px;
+  }
+  
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

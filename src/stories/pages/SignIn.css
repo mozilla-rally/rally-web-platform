@@ -12,7 +12,3 @@ body {
   align-items: center;
 }
 
-footer {
-  background-color: var(--color-light-gray-20);
-  flex: 1;
-}

@@ -6,10 +6,13 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  reauthenticateWithCredential,
   signOut,
   sendEmailVerification,
   sendPasswordResetEmail,
   updatePassword,
+  updateEmail,
+  EmailAuthProvider,
 } from "firebase/auth";
 import {
   doc,
@@ -299,6 +302,7 @@ export default {
       window.dispatchEvent(new CustomEvent("rally-sdk.web-check", {}));
     } else {
       console.warn("Email account not verified, sending verification email");
+      localStorage.setItem("signInErr", "Email account not verified");
       await sendEmailVerification(userCredential.user);
     }
   },
@@ -331,14 +335,56 @@ export default {
     }
   },
 
-  async resetUserPassword(newPassword) {
+  async resetUserPassword(newPassword, oldPassword) {
+    this.reauthenticateUser(oldPassword);
     try {
-      let user = auth.currentUser;
+      const user = auth.currentUser;
       await updatePassword(user, newPassword);
       console.info("reset password");
     } catch (err) {
       console.error("there was an error", err);
       return;
+    }
+  },
+
+  async changeEmail(email, password) {
+    const user = auth.currentUser;
+    this.reauthenticateUser(password);
+    try {
+      await updateEmail(auth.currentUser, email);
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+      }
+      console.info("email changed!");
+    } catch (err) {
+      console.error("there was an error", err);
+      return;
+    }
+  },
+
+  async reauthenticateUser(password) {
+    const user = auth.currentUser;
+    const userCredential = EmailAuthProvider.credential(user.email, password);
+    await reauthenticateWithCredential(user, userCredential);
+  },
+
+  async isUserVerified() {
+    const user = await auth.currentUser;
+    try {
+      if (user.emailVerified) {
+        return true;
+      } else return false;
+    } catch (err) {
+      console.error("there was an error", err);
+    }
+  },
+
+  async getUserEmail() {
+    const user = await auth.currentUser;
+    try {
+      return user.email;
+    } catch (err) {
+      console.error("there was an error", err);
     }
   },
 

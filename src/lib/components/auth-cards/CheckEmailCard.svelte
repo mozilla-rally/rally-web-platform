@@ -23,8 +23,9 @@
   let textWidth;
   let resetPWText = `An email has been sent to ${userEmail} to reset your password.`;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
   });
@@ -45,7 +46,7 @@
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="modal-body-content" slot="card-body">
+  <div class="card-body-content" slot="card-body">
     <p class="body-text-info">{body}</p>
     <p class="body-text-action">
       Ready to sign in?<button
@@ -59,7 +60,7 @@
 
 <style>
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

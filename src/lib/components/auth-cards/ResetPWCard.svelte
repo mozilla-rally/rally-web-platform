@@ -29,8 +29,9 @@
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
   });
@@ -181,7 +182,7 @@
 
 <style>
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

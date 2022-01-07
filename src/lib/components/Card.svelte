@@ -5,7 +5,6 @@
 
   export let width;
   export let height;
-  export let topPadding;
   export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
@@ -16,7 +15,6 @@
   function addStyleVariables({
     width,
     height,
-    topPadding,
     fontSize,
     minHeight,
   }) {
@@ -24,7 +22,6 @@
       toVariable("--width", width),
       toVariable("--height", height),
       toVariable("--fontSize", fontSize),
-      toVariable("--top-padding", topPadding),
       toVariable("--min-height", minHeight),
     ].filter((d) => d !== undefined);
     if (values.length === 0) return undefined;
@@ -34,7 +31,6 @@
   $: styles = addStyleVariables({
     width,
     height,
-    topPadding,
     fontSize,
     minHeight,
   });
@@ -65,7 +61,7 @@
 <style>
   .card-container {
     width: calc(var(--width, var(--content-width)) - 40px);
-    height: calc(var(--height, auto));
+    height: var(--height);
     min-width: calc(var(--width, var(--content-width)) - 40px);
     min-height: var(--min-height);
     background-color: var(--color-white);
