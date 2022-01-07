@@ -32,16 +32,18 @@
   let fireBaseErr = null;
   const minPasswordLength = 8;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    // localStorage.removeItem("signInErr");
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: fireBaseErr ? (signInErr = true) : (signInErr = false);
 
-  const handleChange = (e) => {
+  const handleChange = () => {
     if (emailEl && passwordEl) {
       passwordEl.value.length >= minPasswordLength && emailEl.value.length > 0
         ? (btnDisabled = false)
@@ -52,8 +54,10 @@
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
     let wrongPW = "auth/wrong-password";
+    let notVerified = "Email account not verified"
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
+    let isNotVerified = fireBaseErr.indexOf(notVerified)
 
     if (isNotFoundErr > -1) {
       signInErrText = "User not found. Please try again.";
@@ -63,7 +67,11 @@
       signInErrText = "Wrong password. Please try again.";
     }
 
-    localStorage.removeItem("signInError");
+    if (isNotVerified > -1) {
+      signInErrText = "Email account not verified.";
+    }
+
+    localStorage.removeItem("signInErr");
   };
 
   const handleNextState = () => {
@@ -211,8 +219,12 @@
 </Card>
 
 <style>
+  .title-wrapper{
+    padding-bottom: 25px; 
+  }
+  
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

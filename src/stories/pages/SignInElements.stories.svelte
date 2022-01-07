@@ -13,12 +13,9 @@
   import ResetPwCard from "../../lib/components/auth-cards/ResetPWCard.svelte";
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
-  // import isMounted from "../../lib/is-mounted";
   import "./SignIn.css";
-  import "../components/RallyNavbar.css";
+  import "../components/css/RallyNavbar.css";
   import "../../lib/components/auth-cards/Auth.css";
-
-  // const mounted = isMounted();
 
   let {
     cardArgs,
@@ -167,5 +164,9 @@
 <style>
   .cards-wrapper {
     position: relative;
+  }
+
+  .how-it-works{
+    margin-top: 45px; 
   }
 </style>

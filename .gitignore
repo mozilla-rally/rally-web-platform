@@ -137,3 +137,5 @@ static/firebase.config.json
 *~
 #Local Netlify folder
 .netlify 
+# Local Netlify folder
+.netlify

@@ -24,10 +24,12 @@
   let textWidth;
   let startState;
 
-  onMount(() => {
+  onMount(async () => {
     if (titleEl) {
+      await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    localStorage.removeItem("signInErr");
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
@@ -38,14 +40,14 @@
       if (titleEl) {
         textWidth = titleEl.clientWidth;
       }
-    }, 100);
+    }, 50);
   }
   $: if (!welcomeCard) {
     setTimeout(() => {
       if (titleEl) {
         textWidth = titleEl.clientWidth;
       }
-    }, 100);
+    }, 50);
   }
 
   const handleTrigger = (type) => {
@@ -58,7 +60,7 @@
 <Card {width} {topPadding} {fontSize}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
-    <div {title} bind:this={titleEl} class="title-text">
+    <div bind:this={titleEl} class="title-text">
       {title}
     </div>
   </div>
@@ -122,7 +124,7 @@
 
 <style>
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

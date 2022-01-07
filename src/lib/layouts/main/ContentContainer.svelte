@@ -4,16 +4,17 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
   export let pad = true;
+  export let custom = ""
 </script>
 
 <main class="mzp-t-mozilla">
-  <div style={`--pad: ${pad ? "2rem 2.5rem" : "0"};`}>
+  <div class={`content-container ${custom}`} style={`--pad: ${pad ? "2rem 2.5rem 6rem" : "0"};`}>
     <slot />
   </div>
 </main>
 
 <style>
-  div {
+  .content-container {
     display: grid;
     grid-template-columns: var(--content-width);
     background-size: 100% 100%;

@@ -40,7 +40,6 @@
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   let checkEmail = false;
-
   let formHeight = "auto";
 
   onMount(() => {
@@ -166,7 +165,7 @@
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label" for="id_user_pw"
-              >Choose a Password</label
+              >Choose a password</label
             >
           </div>
 
@@ -272,8 +271,12 @@
 </Card>
 
 <style>
+
+  .title-wrapper{
+    padding-bottom:25px; 
+  }
   .title-highlight {
-    background-color: #f9cd34;
+    background-color: var(--color-yellow-35);
     border-radius: 4px;
     position: absolute;
     height: 1.375rem;

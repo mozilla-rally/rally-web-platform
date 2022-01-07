@@ -84,7 +84,6 @@
     bodyText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-Card",
-    minHeight: "200px",
     checkPW: true,
   };
 
@@ -97,7 +96,6 @@
     bodyText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-Card",
-    minHeight: "300px",
     checkPW: false,
   };
 
