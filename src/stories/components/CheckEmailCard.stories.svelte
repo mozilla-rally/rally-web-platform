@@ -5,8 +5,6 @@
   import { onMount } from "svelte";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css"
 
   let titleEl;
   let textWidth;
@@ -93,7 +91,6 @@
 />
 
 <style>
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;

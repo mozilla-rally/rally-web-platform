@@ -5,7 +5,6 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +13,6 @@
   export let custom;
   export let bodyText;
   export let width;
-  export let topPadding;
   export let fontSize;
   export let minHeight;
   export let store;
@@ -62,6 +60,7 @@
       text: type,
     });
   };
+
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
@@ -74,7 +73,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize} {minHeight} {custom}>
+<Card {width} {fontSize} {minHeight} {custom}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>

@@ -16,14 +16,12 @@
   export const argTypes = {
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
   };
 
   export let cardArgs = {
     width: "460px",
     fontSize: "38px",
-    topPadding: "calc(10vh - 20px)",
   };
 
   export let welcomeArgs = {

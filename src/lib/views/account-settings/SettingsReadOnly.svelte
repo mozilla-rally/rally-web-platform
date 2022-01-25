@@ -5,7 +5,7 @@
   import Button from "../../../lib/components/Button.svelte";
   import { getContext, onMount } from "svelte";
   import type { AppStore } from "$lib/stores/types";
-  import "../../../lib/components/auth-cards/Auth.css";
+  
 
   const store: AppStore = getContext("rally:store");
 

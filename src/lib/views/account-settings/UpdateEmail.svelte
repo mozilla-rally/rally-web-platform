@@ -7,7 +7,7 @@
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
   import type { NotificationStore } from "$lib/components/notifications";
-  import "../../../lib/components/auth-cards/Auth.css";
+
 
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
@@ -117,7 +117,7 @@
       </fieldset>
     </form>
     <Button
-      disabled={btnDisabled}
+      btnDisabled={btnDisabled}
       size="xl"
       custom="card-button create btn-settings"
       on:click={async () => {

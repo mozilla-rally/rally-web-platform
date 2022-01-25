@@ -5,7 +5,6 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "./Auth.css";
 
   const dispatch = createEventDispatcher();
 
@@ -50,6 +49,12 @@
     }, 50);
   }
 
+  const handleShowSpinner = (item) => {
+    dispatch("item", {
+      item,
+    });
+  };
+
   const handleTrigger = (type) => {
     dispatch("type", {
       text: type,
@@ -57,7 +62,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize}>
+<Card {width} {fontSize}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">
@@ -74,8 +79,11 @@
         background="transparent !important"
         borderColor="#000000"
         custom="card-button"
-        on:click={async () => {
-          await store.loginWithGoogle();
+        on:click={() => {
+          handleShowSpinner(true)
+          setTimeout(() => {
+            store.loginWithGoogle();
+          }, 1000);
         }}
       >
         <img

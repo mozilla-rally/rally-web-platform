@@ -7,7 +7,6 @@
   import type { NotificationStore } from "$lib/components/notifications";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../../lib/components/auth-cards/Auth.css";
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");

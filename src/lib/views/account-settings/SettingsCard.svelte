@@ -9,7 +9,6 @@
   import LeaveRally from "./LeaveRally.svelte";
   import TwoFactAuth from "./TwoFactAuth.svelte";
   import SettingsReadOnly from "./SettingsReadOnly.svelte";
-  import "$lib/components/auth-cards/Auth.css";
   import "./RallySettings.css";
 
   const dispatch = createEventDispatcher();

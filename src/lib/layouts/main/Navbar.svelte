@@ -4,19 +4,19 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 </script>
 
-<div class="navbar">
+<header class="header">
   <slot name="logo-nav" />
   <slot name="user-icon" />
-</div>
+</header>
 
 <style>
-  .navbar {
+  .header {
     align-items: center;
     display: flex;
     justify-content: space-between;
     margin-left: auto;
     margin-right: auto;
     flex-wrap: wrap;
-    overflow: hidden; 
+    overflow: hidden;
   }
 </style>

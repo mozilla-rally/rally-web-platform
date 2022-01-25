@@ -9,7 +9,6 @@
   import TwoFactAuth from "./TwoFactAuth.svelte";
   import SettingsReadOnly from "./SettingsReadOnly.svelte";
   import { onMount } from "svelte";
-  import "../../../lib/components/auth-cards/Auth.css";
   import "../css/RallySettings.css";
 
   let titleEl;

@@ -6,8 +6,6 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css"
 
   let titleEl;
   let textWidth;

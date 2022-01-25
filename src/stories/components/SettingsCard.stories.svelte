@@ -9,7 +9,6 @@
   import LeaveRally from "./account/LeaveRally.svelte";
   import TwoFactAuth from "./account/TwoFactAuth.svelte"
   import { onMount } from "svelte";
-  import "../../lib/components/auth-cards/Auth.css";
   import "./css/RallySettings.css";
 
   let titleEl;

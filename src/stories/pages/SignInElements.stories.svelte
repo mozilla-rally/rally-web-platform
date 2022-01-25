@@ -14,8 +14,6 @@
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
   import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
   import "./SignIn.css";
-  import "../components/css/RallyNavbar.css";
-  import "../../lib/components/auth-cards/Auth.css";
 
   let {
     cardArgs,

@@ -12,12 +12,7 @@
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({
-    width,
-    height,
-    fontSize,
-    minHeight,
-  }) {
+  function addStyleVariables({ width, height, fontSize, minHeight }) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),

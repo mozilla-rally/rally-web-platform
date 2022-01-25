@@ -5,7 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import "./Auth.css";
+
 
   const dispatch = createEventDispatcher();
 
@@ -14,7 +14,6 @@
   export let bodyText;
   export let linkText;
   export let width;
-  export let topPadding;
   export let fontSize;
   export let height;
   export let custom;
@@ -132,7 +131,7 @@
   };
 </script>
 
-<Card {width} {topPadding} {fontSize} {height} {custom}>
+<Card {width} {fontSize} {height} {custom} minHeight="unset">
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
