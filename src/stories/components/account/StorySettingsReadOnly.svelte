@@ -4,34 +4,22 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import Button from "../../../lib/components/Button.svelte";
   import ReadOnlyCard from "./StoryReadOnlyCard.svelte";
-  import { getContext, onMount, createEventDispatcher } from "svelte";
-  // import type { AppStore } from "$lib/stores/types";
+  import { onMount, createEventDispatcher } from "svelte";
   import isMounted from "../../../lib/is-mounted";
 
   const dispatch = createEventDispatcher();
-  // const store: AppStore = getContext("rally:store");
 
-  export let listArr;
+  export let settingsList;
   let leaveModal = false;
   let Dialog;
-  let isUserVerified;
   let userEmail = "test@example.com";
-  let isNotVerifiedStyle = "not-verified";
-  let emailMsg = "(confirm your email)";
-  let warningStyle = "not-verified";
-
   onMount(async () => {
-    // userEmail = await store.getUserEmail();
-    // isUserVerified = await store.isUserVerified();
     Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
-
-    console.log("list array", listArr);
   });
 
   const mounted = isMounted();
 
   const handleSelect = (type) => {
-    console.log("type", type);
     dispatch("type", {
       text: type,
     });
@@ -49,7 +37,7 @@
     <div
       class="readonly-email"
       on:click={() => {
-        handleSelect(listArr[0]);
+        handleSelect(settingsList["email"]);
       }}
     >
       <ReadOnlyCard title="Email Address" content={userEmail} />
@@ -61,23 +49,10 @@
     <div
       class="readonly-pw"
       on:click={() => {
-        handleSelect(listArr[1]);
+        handleSelect(settingsList["password"]);
       }}
     >
       <ReadOnlyCard title="Password" content="*************" />
-    </div>
-
-    <div
-      class="readonly-2fa"
-      on:click={() => {
-        handleSelect(listArr[2]);
-      }}
-    >
-      <ReadOnlyCard
-        title="Two-factor-authentication"
-        content="Not currently set up"
-        custom="twoFA"
-      />
     </div>
   </div>
 
@@ -168,4 +143,3 @@
     </Dialog>
   {/if}
 </di>
-

@@ -28,8 +28,6 @@
   let passwordErr = false;
   let passwordErrText;
 
-  console.log("store", store);
-
   const handleCheckPW = async () => {
     if (newPasswordEl.value === newPasswordEl2.value) {
       await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
@@ -311,6 +309,10 @@
 <style>
   form {
     height: auto;
+  }
+
+  .input-wrapper{
+    margin-bottom: 30px;
   }
 
   .info-msg-active-reset {

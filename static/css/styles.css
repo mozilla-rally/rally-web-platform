@@ -1874,9 +1874,6 @@ p a {
   background-color: #2b2a33;
   border-color: #2b2a33;
 }
-.settings-wrapper--password .input-wrapper--current {
-  margin-bottom: 30px;
-}
 
 story-container {
   backface-visibility: hidden;

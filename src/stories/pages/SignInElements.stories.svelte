@@ -68,7 +68,7 @@
   };
 
   const triggerCard = (event) => {
-    console.log("TRIGGER", event.detail.text);
+
     switch (event.detail.text) {
       case "join":
         welcomeCard = false;

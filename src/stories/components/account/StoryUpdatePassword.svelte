@@ -239,9 +239,10 @@
     height: auto;
   }
 
-  .input-wrapper {
-    margin-bottom: 15px;
+  .input-wrapper{
+    margin-bottom: 30px;
   }
+  
   .card-description{
     padding-bottom: 20px; 
     width: 80%;

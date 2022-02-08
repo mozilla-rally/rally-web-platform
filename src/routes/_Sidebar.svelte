@@ -102,11 +102,6 @@
           sveltekit:prefetch>Account Settings</a
         >
       </li>
-      <!-- <li in:fly={{ duration: 800, delay: 400, x: -15 }}>
-        <button on:click={() => dispatch("leave-rally")}
-          >Leave Mozilla Rally</button
-        >
-      </li> -->
     {/if}
   </ul>
 </SidebarContainer>

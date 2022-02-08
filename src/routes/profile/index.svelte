@@ -25,10 +25,6 @@
   );
   const notifications: NotificationStore = getContext("rally:notifications");
 
-  // $: if ($isAuthenticated === false) {
-  //   goto("/signup");
-  // }
-
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");

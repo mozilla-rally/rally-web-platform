@@ -79,10 +79,8 @@
         borderColor="#000000"
         custom="card-button"
         on:click={() => {
-          handleShowSpinner(true)
-          setTimeout(() => {
-            store.loginWithGoogle();
-          }, 1000);
+          handleShowSpinner(true);
+          store.loginWithGoogle();
         }}
       >
         <img

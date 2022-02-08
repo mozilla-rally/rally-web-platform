@@ -64,7 +64,7 @@
     text-transform: uppercase;
     opacity: 0.6;
     padding-bottom: 5px;
-    font-family:  Inter, X-LocaleSpecific, sans-serif;
+    font-family: Inter, X-LocaleSpecific, sans-serif;
   }
 
   .twoFA {
@@ -73,7 +73,7 @@
 
   .card-body__content {
     font-weight: 700;
-    color: #000; 
+    color: #000;
   }
 
   .read-only-card--right {
@@ -86,8 +86,6 @@
     }
   }
 }
-
-//update email page
 .settings-wrapper {
   .btn-group {
     display: flex;
@@ -121,9 +119,6 @@
     border-color: $color-dark-gray-60;
   }
 
-  &--password {
-    .input-wrapper--current {
-      margin-bottom: 30px;
-    }
-  }
 }
+
+

@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import Layout from "$lib/layouts/main/Layout.svelte";
   import Button from "$lib/components/Button.svelte";
-  import Footer from './_Footer.svelte'
+  import Footer from "./_Footer.svelte";
   import Sidebar from "./_Sidebar.svelte";
   import Navbar from "./_Navbar.svelte";
   import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
@@ -34,13 +34,6 @@
 {#if $isAuthenticated && $store?.user?.enrolled}
   <Navbar />
   <Layout>
-    <!-- <Sidebar
-      on:change-view
-      on:leave-rally={() => {
-        leaveModal = true;
-      }}
-    /> -->
-
     <svelte:component
       this={$page.path === "/studies" ? StudyBackgroundElement : EmptySlot}
     >
@@ -51,8 +44,7 @@
       </ContentContainer>
     </svelte:component>
   </Layout>
-  <Footer/>
- 
+  <Footer />
 {:else}
   <slot />
 {/if}

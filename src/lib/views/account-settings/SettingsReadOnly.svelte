@@ -11,25 +11,19 @@
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
 
-  export let listArr;
+  export let settingsList;
   let leaveModal = false;
   let Dialog;
-  let isUserVerified;
   let userEmail;
-  let isNotVerifiedStyle = "not-verified";
-  let emailMsg = "(confirm your email)";
-  let warningStyle = "not-verified";
 
   onMount(async () => {
     userEmail = await store.getUserEmail();
-    isUserVerified = await store.isUserVerified();
     Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
   });
 
   const mounted = isMounted();
 
   const handleSelect = (type) => {
-    console.log("type", type);
     dispatch("type", {
       text: type,
     });
@@ -47,7 +41,7 @@
     <div
       class="readonly-email"
       on:click={() => {
-        handleSelect(listArr[0]);
+        handleSelect(settingsList["email"]);
       }}
     >
       <ReadOnlyCard title="Email Address" content={userEmail} />
@@ -59,23 +53,10 @@
     <div
       class="readonly-pw"
       on:click={() => {
-        handleSelect(listArr[1]);
+        handleSelect(settingsList["password"]);
       }}
     >
       <ReadOnlyCard title="Password" content="*************" />
-    </div>
-
-    <div
-      class="readonly-2fa"
-      on:click={() => {
-        handleSelect(listArr[2]);
-      }}
-    >
-      <ReadOnlyCard
-        title="Two-factor-authentication"
-        content="Not currently set up"
-        custom="twoFA"
-      />
     </div>
   </div>
 

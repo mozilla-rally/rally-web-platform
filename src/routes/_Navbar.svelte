@@ -3,30 +3,30 @@
   import { fly } from "svelte/transition";
   import RallyNavbar from "$lib/layouts/main/Navbar.svelte";
   import isMounted from "$lib/is-mounted";
-  import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   import type { AppStore } from "$lib/stores/types";
 
   const store: AppStore = getContext("rally:store");
   const mounted = isMounted();
-  let browser
-
-  onMount(async () => {
-    if(window){
-      browser = window.location
-    }
-  });
-
+  let browser;
+  let userEmail;
   let dropdownList;
   let isFocused = false;
+
+  onMount(async () => {
+    userEmail = await store.getUserEmail();
+    if (window) {
+      browser = window.location;
+    }
+  });
 
   const showDropdown = () => (dropdownList.style.display = "block");
   const hideDropdown = () => (dropdownList.style.display = "none");
   const onFocus = () => (isFocused = true);
 
-  const handleLogOut = async() => {
-    await store.signOutUser()
-    browser.reload()
-  }
+  const handleLogOut = async () => {
+    await store.signOutUser();
+    browser.reload();
+  };
 </script>
 
 <RallyNavbar>
@@ -83,7 +83,7 @@
       <li class="dropdown-list__item">
         <div class="list-item--info">
           <p>Signed in as</p>
-          <p class="text-bold">example@example.com</p>
+          <p class="text-bold">{userEmail}</p>
         </div>
       </li>
       <hr />
