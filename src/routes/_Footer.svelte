@@ -18,10 +18,14 @@
           >
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
+              <a class="footer-sublist-link" href="/terms">Privacy Notice</a>
+            </li>
+
+            <li class="footer-sublist-item">
               <a
                 class="footer-sublist-link"
-                href="__BASE_SITE__/how-rally-works/data-and-privacy/"
-                target="_blank">Data & Privacy</a
+                href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
+                target="_blank">Support</a
               >
             </li>
             <li class="footer-sublist-item">
@@ -29,6 +33,13 @@
                 class="footer-sublist-link"
                 href="__BASE_SITE__/how-rally-works/faqs/"
                 target="_blank">FAQs</a
+              >
+            </li>
+            <li class="footer-sublist-item">
+              <a
+                class="footer-sublist-link"
+                href="__BASE_SITE__/how-rally-works/data-and-privacy/"
+                target="_blank">Data & Privacy</a
               >
             </li>
           </ul>
@@ -51,14 +62,36 @@
 
       <ul class="footer-list">
         <li class="footer-item">
-          <a class="footer-item-link" href="#studies">Current Studies</a>
+          <a
+            class="footer-item-link"
+            target="_blank"
+            href="__BASE_SITE__/current-studies">Current Studies</a
+          >
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
-              <a href="#beyondthepaywall" class="footer-sublist-link">Beyond the Paywall</a>
+              <a
+                target="_blank"
+                href="__BASE_SITE__/current-studies/beyond-the-paywall/"
+                class="footer-sublist-link">Beyond the Paywall</a
+              >
             </li>
             <li class="footer-sublist-item">
-              <a href="#covidnews" class="footer-sublist-link"
-                >Political and Covid-19 News</a
+              <a
+                href="__BASE_SITE__/current-studies/facebook-pixel-hunt/"
+                class="footer-sublist-link">Facebook Pixel Hunt</a
+              >
+            </li>
+            <li class="footer-sublist-item">
+              <a
+                href="__BASE_SITE__/current-studies/political-and-covid-19-news-v3/"
+                class="footer-sublist-link">Political and Covid-19 News</a
+              >
+            </li>
+            <li class="footer-sublist-item">
+              <a
+                href="__BASE_SITE__/current-studies/search-engine-usage/"
+                class="footer-sublist-link"
+                >Search Engine Usage and Reslt Quality</a
               >
             </li>
           </ul>
@@ -67,11 +100,14 @@
           <a href="#careers" class="footer-item-link">Careers</a>
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
-              <a href="#apply" class="footer-sublist-link">Apply</a>
+              <a href="__BASE_SITE__/careers/apply/" class="footer-sublist-link"
+                >Apply</a
+              >
             </li>
             <li class="footer-sublist-item">
-              <a href="#fullstack" class="footer-sublist-link"
-                >Full-Stack Software Engineer</a
+              <a
+                href="__BASE_SITE__/careers/fullstack-software-engineer/"
+                class="footer-sublist-link">Full-Stack Software Engineer</a
               >
             </li>
           </ul>
@@ -80,10 +116,15 @@
 
       <ul class="footer-list">
         <li class="footer-item">
-          <a href="" class="footer-item-link"> Past Studies</a>
+          <a href="__BASE_SITE__/past-studies/" class="footer-item-link">
+            Past Studies</a
+          >
           <ul class="footer-sublist">
             <li class="footer-sublist-link">
-              <a href="" class="footer-sublist-link">
+              <a
+                href="__BASE_SITE__/past-studies/your-time-online-and-doomscrolling/"
+                class="footer-sublist-link"
+              >
                 Your Time Online and "Doomscrolling"</a
               >
             </li>
@@ -122,8 +163,9 @@
   footer {
     background-color: #000;
     color: #fff;
-    position: absolute;
     width: 100%;
+    /* grid-row-start: 2; */
+    grid-row-start: 3;
   }
 
   footer a {
@@ -169,8 +211,8 @@
     padding-top: 2rem;
   }
 
-  .footer-bottom .footer-social{
-      order: 2;
+  .footer-bottom .footer-social {
+    order: 2;
   }
 
   .footer-copyright {
@@ -183,11 +225,11 @@
   .footer-social {
     display: flex;
     align-items: center;
-    width: 23px; 
+    width: 23px;
   }
 
-  .footer-social-item{
-      width: 100%;
+  .footer-social-item {
+    width: 100%;
   }
 
   .footer-legal {
@@ -206,5 +248,4 @@
     text-decoration: underline;
     white-space: nowrap;
   }
-
 </style>

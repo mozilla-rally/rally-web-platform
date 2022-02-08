@@ -3,13 +3,11 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { createEventDispatcher } from "svelte";
-  import Card from "$lib/components/Card.svelte";
+  import Card from "../../../lib/components/Card.svelte";
   import UpdatePassword from "./UpdatePassword.svelte";
   import UpdateEmail from "./UpdateEmail.svelte";
-  import LeaveRally from "./LeaveRally.svelte";
   import TwoFactAuth from "./TwoFactAuth.svelte";
-  import SettingsReadOnly from "./SettingsReadOnly.svelte";
-
+  import "../css/RallySettings.css";
 
   const dispatch = createEventDispatcher();
 
@@ -35,7 +33,7 @@
 
     <!-- enable 2FA -->
     {#if is2FA}
-      <TwoFactAuth on:type={displayCard}  />
+      <TwoFactAuth />
     {/if}
   </div>
 </Card>

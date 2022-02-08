@@ -21,13 +21,11 @@
     store.updateStudyEnrollment(studyId, false);
     notifications.send({ code: "SUCCESSFULLY_LEFT_STUDY" });
   }
-
-  $: if ($isAuthenticated === false) {
-    goto("/signup");
-  }
+  
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");
+   
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
     }
@@ -38,21 +36,25 @@
   <title>Studies | Mozilla Rally</title>
 </svelte:head>
 
-{#if $store._initialized}
+{#if $store._initialized && $isAuthenticated === true}
   {#if $store.studies}
-    <StudiesContent
-      sidebarOffset
-      studies={$store.studies}
-      userStudies={$store.userStudies || {}}
-      on:cta-clicked={() => {
-        notifications.clear();
-      }}
-      on:join-study={(evt) => {
-        joinStudy(evt.detail);
-      }}
-      on:leave-study={(evt) => {
-        leaveStudy(evt.detail);
-      }}
-    />
+    <section>
+      <div class="main-container studies-container">
+        <StudiesContent
+          sidebarOffset
+          studies={$store.studies}
+          userStudies={$store.userStudies || {}}
+          on:cta-clicked={() => {
+            notifications.clear();
+          }}
+          on:join-study={(evt) => {
+            joinStudy(evt.detail);
+          }}
+          on:leave-study={(evt) => {
+            leaveStudy(evt.detail);
+          }}
+        />
+      </div>
+    </section>
   {/if}
 {/if}

@@ -1,35 +1,24 @@
 <script>
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import ContentContainer from "../../lib/layouts/main/ContentContainer.svelte";
-  import TestNavbar from "../components/account/TestNavbar.svelte";
+  import StoryNavbar from "../components/account/StoryNavbar.svelte";
   import Footer from "../../lib/layouts/main/Footer.svelte";
-  import MiniSider from "../../lib/components/MiniSider.svelte";
-  import TestSettingsCard from "../components/account/TestSettingsCard.svelte";
-  import "../components/css/RallySettings.css";
+  import StorySettingsCard from "../components/account/StorySettingsCard.svelte";
+  import StorySettingsReadOnly from "../components/account/StorySettingsReadOnly.svelte";
+  // import "../components/css/RallySettings.css";
 
-  const listArr = [
-    { text: "Update email", highlight: false, class: "", type: "update-email" },
-    { text: "Update password", highlight: false, class: "", type: "update-pw" },
-    { text: "Enable 2FA", highlight: false, class: "", type: "enable-2FA" },
-    {
-      text: "Leave Rally",
-      highlight: false,
-      class: "",
-      type: "leave-rally",
-    },
-  ];
+  const listArr = ["update-email", "update-pw", "enable-2FA", "leave-rally"];
 
   let isEmail = false;
   let isPW = false;
   let is2FA = false;
   let isLeaveRally = false;
   let isReadOnly = true;
-  let settingsTitle;
+  let settingsTitle = "Account Settings";
 
   let cardArgs = {
     width: "700px",
     height: "auto",
-    minHeight: "600px",
     fontSize: "38px",
   };
 
@@ -58,6 +47,72 @@
     custom: "settings extra-padding is-read-only",
   };
 
+  //   function joinStudy(studyId) {
+  //     store.updateStudyEnrollment(studyId, true);
+  //     notifications.send({ code: "SUCCESSFULLY_JOINED_STUDY" });
+  //   }
+  //   function leaveStudy(studyId) {
+  //     store.updateStudyEnrollment(studyId, false);
+  //     notifications.send({ code: "SUCCESSFULLY_LEFT_STUDY" });
+  //   }
+
+  const displayCard = (event) => {
+    console.log("event", event.detail.text);
+    switch (event.detail.text) {
+      case "update-email":
+        isEmail = true;
+        isPW = false;
+        is2FA = false;
+        isLeaveRally = false;
+        isReadOnly = false;
+        settingsTitle = "Update email";
+        break;
+      case "update-pw":
+        isPW = true;
+        isEmail = false;
+        is2FA = false;
+        isLeaveRally = false;
+        settingsTitle = "Update password";
+        isReadOnly = false;
+        break;
+      case "enable-2FA":
+        is2FA = true;
+        isEmail = false;
+        isPW = false;
+        isLeaveRally = false;
+        isReadOnly = false;
+        settingsTitle = "Two-factor authentication";
+        break;
+      case "leave-rally":
+        isLeaveRally = true;
+        isEmail = false;
+        isPW = false;
+        is2FA = false;
+        isReadOnly = false;
+        settingsTitle = "Leave Rally";
+        break;
+      case "read-only":
+        isReadOnly = true;
+        isLeaveRally = false;
+        isEmail = false;
+        isPW = false;
+        is2FA = false;
+        settingsTitle = "Account Settings";
+        break;
+      default:
+        break;
+    }
+  };
+
+  const showReadOnly = () => {
+    isReadOnly = true;
+    isLeaveRally = false;
+    isEmail = false;
+    isPW = false;
+    is2FA = false;
+    settingsTitle = "Account Settings";
+  };
+
   $: if (isReadOnly) {
     cardArgs = isReadOnlyArgs;
   } else if (isEmail) {
@@ -69,91 +124,69 @@
   } else if (isLeaveRally) {
     cardArgs = leaveRallyArgs;
   }
-
-  const displayCard = (event) => {
-    switch (event.detail.text) {
-      case "update-email":
-        isEmail = true;
-        isPW = false;
-        is2FA = false;
-        isLeaveRally = false;
-        isReadOnly = false
-        settingsTitle = "Update email";
-        break;
-      case "update-pw":
-        isPW = true;
-        isEmail = false;
-        is2FA = false;
-        isLeaveRally = false;
-        settingsTitle = "Update password";
-        isReadOnly = false
-        break;
-      case "enable-2FA":
-        is2FA = true;
-        isEmail = false;
-        isPW = false;
-        isLeaveRally = false;
-        isReadOnly = false
-        settingsTitle = "Two-factor authentication";
-        break;
-      case "leave-rally":
-        isLeaveRally = true;
-        isEmail = false;
-        isPW = false;
-        is2FA = false;
-        isReadOnly = false
-        settingsTitle = "Leave Rally";
-        break;
-      default:
-        break;
-    }
-  };
 </script>
-
+<!--
+  until new designs for account is up, will comment this out as a placeholder  
 <Meta
-  title="Pages/Settings"
+  title="Pages/Account"
   component={ContentContainer}
   argTypes={{
     width: { control: "text" },
     fontSize: { control: "text" },
-    custom: {control : "text"}
+    custom: { control: "text" },
   }}
 />
 
 <Template let:args>
-  <TestNavbar />
-  <div class="settings-page-container">
-    <ContentContainer {...args}>
-      <div class="settings-sider">
-        <MiniSider
-          on:type={displayCard}
-          {listArr}
-          width="214px"
-          fontSize="1rem"
-        />
-      </div>
+  <StoryNavbar />
+  <div class="account-settings-container">
+    <div class="title-wrapper">
+      {#if !isReadOnly}
+        <button class="arrow-btn" on:click={showReadOnly}>
+          <img class="back-arrow" alt="back arrow" src="/img/Back.svg" />
+        </button>
+      {/if}
+      <h2 class="section-header">{settingsTitle}</h2>
+    </div>
 
-      <div class="settings-main">
-        <TestSettingsCard
+    {#if isReadOnly}
+      <p class="description">
+        Manage your info, privacy, and security to make Rally work better for
+        you.
+      </p>
+    {/if}
+    <hr />
+    <div class="account-settings-main">
+      {#if isReadOnly}
+        <StorySettingsReadOnly on:type={displayCard} {listArr} />
+      {/if}
+
+      {#if !isReadOnly}
+        <StorySettingsCard
           {isEmail}
           {isPW}
           {is2FA}
-          {isLeaveRally}
-          {isReadOnly}
           {cardArgs}
-          {settingsTitle}
+          {displayCard}
+          on:type={displayCard}
         />
-      </div>
-    </ContentContainer>
+      {/if}
+    </div>
   </div>
-  <Footer />
 </Template>
 
 <Story
-  name="Settings"
+  name="Account"
   args={{
     width: "214px",
     fontSize: "1rem",
-    custom:"account-settings"
+    custom: "account-settings",
   }}
 />
+
+<style>
+  .title-wrapper h2{
+    font-size: 38px; 
+    font-family: "Zilla Slab", Inter, X-LocaleSpecific, sans-serif;
+  }
+</style> -->

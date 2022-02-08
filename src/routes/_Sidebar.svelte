@@ -102,11 +102,11 @@
           sveltekit:prefetch>Account Settings</a
         >
       </li>
-      <li in:fly={{ duration: 800, delay: 400, x: -15 }}>
+      <!-- <li in:fly={{ duration: 800, delay: 400, x: -15 }}>
         <button on:click={() => dispatch("leave-rally")}
           >Leave Mozilla Rally</button
         >
-      </li>
+      </li> -->
     {/if}
   </ul>
 </SidebarContainer>
@@ -115,48 +115,7 @@
   h1 {
     align-self: start;
   }
-  a,
-  button {
-    background-color: none;
-    padding: 0;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    color: var(--color-dark-gray-10);
-    font-weight: 700;
-    text-decoration: none;
-    display: block;
-    width: max-content;
-    position: relative;
-    transition: color 0.15s;
-  }
 
-  a:hover,
-  ul button:hover {
-    color: var(--color-dark-gray-90);
-  }
-
-  a::before,
-  ul button::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -2px;
-    left: 0%;
-    background-color: var(--color-dark-gray-10);
-    visibility: hidden;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: all 0.15s ease-in-out 0s;
-  }
-
-  a:hover::before,
-  ul button:hover::before {
-    visibility: visible;
-    opacity: 0.4;
-    transform: scaleX(1);
-  }
   ul a.active::before,
   ul a.active:hover::before {
     visibility: visible;
@@ -177,11 +136,6 @@
   .app-controls {
     align-self: end;
   }
-
-  .app-controls button {
-    font-size: 14px;
-  }
-
   /* reset the header link anchor tag to have no mouseover effect */
   .header-link::before,
   .header-link:hover::before {

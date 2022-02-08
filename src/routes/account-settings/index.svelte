@@ -1,37 +1,32 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { goto } from "$app/navigation";
-  import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
+  import { fly } from "svelte/transition";
+
+  import SettingsReadOnly from "$lib/views/account-settings/SettingsReadOnly.svelte";
   import SettingsCard from "$lib/views/account-settings/SettingsCard.svelte";
-  import MiniSider from "$lib/components/MiniSider.svelte";
 
   import type { Readable } from "svelte/store";
   import type { AppStore } from "$lib/stores/types";
   import type { NotificationStore } from "$lib/components/notifications";
 
   const store: AppStore = getContext("rally:store");
+
   const isAuthenticated: Readable<boolean> = getContext(
     "rally:isAuthenticated"
   );
   const notifications: NotificationStore = getContext("rally:notifications");
 
-  const listArr = [
-    { text: "Update email", highlight: false, class: "", type: "update-email" },
-    { text: "Update password", highlight: false, class: "", type: "update-pw" },
-    { text: "Enable 2FA", highlight: false, class: "", type: "enable-2FA" },
-    {
-      text: "Leave Rally",
-      highlight: false,
-      class: "",
-      type: "leave-rally",
-    },
-  ];
+  const listArr = ["update-email", "update-pw", "enable-2FA", "leave-rally"];
+
   let isEmail = false;
   let isPW = false;
   let is2FA = false;
   let isLeaveRally = false;
   let isReadOnly = true;
-  let settingsTitle = "read-only";
+  let settingsTitle = "Account Settings";
+  let settingsDecription =
+    "Manage your info, privacy, and security to make Rally work better for you.";
 
   let cardArgs = {
     width: "700px",
@@ -74,22 +69,24 @@
   //   }
 
   const displayCard = (event) => {
+    console.log("event", event.detail.text);
     switch (event.detail.text) {
-  
       case "update-email":
         isEmail = true;
         isPW = false;
         is2FA = false;
         isLeaveRally = false;
         isReadOnly = false;
-        settingsTitle = "Update email";
+        settingsTitle = "Change your email address";
+        settingsDecription = "Change your current email with a new one.";
         break;
       case "update-pw":
         isPW = true;
         isEmail = false;
         is2FA = false;
         isLeaveRally = false;
-        settingsTitle = "Update password";
+        settingsTitle = "Change your password";
+        settingsDecription = "Change your current password.";
         isReadOnly = false;
         break;
       case "enable-2FA":
@@ -98,15 +95,9 @@
         isPW = false;
         isLeaveRally = false;
         isReadOnly = false;
-        settingsTitle = "Two-factor authentication";
-        break;
-      case "leave-rally":
-        isLeaveRally = true;
-        isEmail = false;
-        isPW = false;
-        is2FA = false;
-        isReadOnly = false;
-        settingsTitle = "Leave Rally";
+        settingsTitle = "Two factor authentication";
+        settingsDecription =
+          "Enable SMS verification to sign in using a one time passcode sent as a SMS to your mobile phone.";
         break;
       case "read-only":
         isReadOnly = true;
@@ -114,20 +105,28 @@
         isEmail = false;
         isPW = false;
         is2FA = false;
-        settingsTitle = "read-only"
+        settingsTitle = "Account Settings";
+        settingsDecription =
+          "Manage your info, privacy, and security to make Rally work better for you.";
         break;
       default:
         break;
     }
-  
   };
 
-  $: if ($isAuthenticated === false) {
-    goto("/signup");
-  }
+  const showReadOnly = () => {
+    isReadOnly = true;
+    isLeaveRally = false;
+    isEmail = false;
+    isPW = false;
+    is2FA = false;
+    settingsTitle = "Account Settings";
+  };
+
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");
+   
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
     }
@@ -149,35 +148,61 @@
   <title>Account Settings | Mozilla Rally</title>
 </svelte:head>
 
-{#if $store._initialized}
+{#if $store._initialized  && $isAuthenticated === true}
   <section>
-    <h2 class="section-header">Account Settings</h2>
-    <p class="description">
-      Manage your info, privacy, and security to make Rally work better for you
-    </p>
-    <hr />
-    <ContentContainer custom="account-settings">
-      <div class="settings-sider">
-        <MiniSider
-          on:type={displayCard}
-          {listArr}
-          width="214px"
-          fontSize="1rem"
-        />
+    <div
+      in:fly={{ duration: 800, y: 5 }}
+      class="account-settings-container"
+    >
+      <div class="title-wrapper">
+        {#if !isReadOnly}
+          <button class="arrow-btn" on:click={showReadOnly}>
+            <img class="back-arrow" alt="back arrow" src="/img/Back.svg" />
+          </button>
+        {/if}
+        <h2 class="section-header">{settingsTitle}</h2>
       </div>
-      <div class="settings-main">
-        <SettingsCard
-          {isEmail}
-          {isPW}
-          {is2FA}
-          {isLeaveRally}
-          {isReadOnly}
-          {cardArgs}
-          {settingsTitle}
-          {displayCard}
-          on:type={displayCard}
-        />
+
+      <p class="description">
+        {settingsDecription}
+      </p>
+
+      <hr />
+      <div class="account-settings-main">
+        {#if isReadOnly}
+          <SettingsReadOnly on:type={displayCard} {listArr} />
+        {/if}
+
+        {#if !isReadOnly}
+          <SettingsCard
+            {isEmail}
+            {isPW}
+            {is2FA}
+            {cardArgs}
+            {displayCard}
+            on:type={displayCard}
+          />
+        {/if}
       </div>
-    </ContentContainer>
+    </div>
   </section>
 {/if}
+
+<style>
+  .title-wrapper {
+    display: flex;
+  }
+  .arrow-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .back-arrow {
+    padding-right: 10px;
+    cursor: pointer;
+  }
+  .back-arrow:hover {
+    transform: translateX(-4px);
+    transition: ease-in;
+  }
+</style>

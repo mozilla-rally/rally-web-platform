@@ -15,7 +15,6 @@
   export let linkText;
   export let welcomeCard;
   export let width;
-  export let topPadding;
   export let fontSize;
   export let store;
 

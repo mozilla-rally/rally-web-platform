@@ -1122,6 +1122,14 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  overflow-x: hidden;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
 main h2 {
   font-size: 38px;
 }
@@ -1141,6 +1149,7 @@ main h4 {
 }
 main hr {
   border-top: 1px dashed #000000;
+  margin: 22px 0;
   margin-bottom: 2rem;
 }
 main .section-header {
@@ -1161,6 +1170,11 @@ p,
 ul,
 ol {
   color: #5e5e72;
+}
+
+#rally {
+  display: grid;
+  grid-template-rows: 1fr auto 527px;
 }
 
 .radius-sm {
@@ -1339,6 +1353,9 @@ ol {
 .noise-background {
   background: url("img/noise-texture-top.png"), url("img/noise-texture.png");
   background-blend-mode: screen;
+  padding-bottom: 2.5rem;
+  grid-row-start: 2;
+  justify-self: center;
 }
 
 .header {
@@ -1374,7 +1391,7 @@ ol {
 .header__nav .nav-list {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 .header__nav .nav-list__item {
   max-width: 8.75rem;
@@ -1496,6 +1513,137 @@ ol {
   width: var(--content-width);
 }
 
+.mzp-c-call-out {
+  backface-visibility: hidden;
+  background-color: transparent;
+  min-height: calc(100vh - 2.5rem);
+  padding: 0;
+}
+.mzp-c-call-out .mzp-l-content {
+  padding-left: 0;
+  padding-right: 0;
+  /* this is Main + required padding to meet 120px */
+  padding-top: 80px;
+}
+.mzp-c-call-out .mzp-l-content .mzp-c-call-out-title {
+  animation: moveInLeft 1s ease-out;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.mzp-c-call-out .mzp-l-content .mzp-c-call-out-desc {
+  color: #5e5e72;
+}
+.mzp-c-call-out .mzp-l-content .cards-wrapper {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+.mzp-c-call-out .mzp-l-content .cards-wrapper .spinner {
+  -webkit-animation: rotator 1.4s linear infinite;
+  animation: rotator 1.4s linear infinite;
+  height: 400px;
+}
+.mzp-c-call-out .mzp-l-content .cards-wrapper .path {
+  stroke-dasharray: 187;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  -webkit-animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+  animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+}
+.mzp-c-call-out .mzp-l-content .how-it-works {
+  margin-top: 24px;
+  text-align: center;
+}
+
+@keyframes moveInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  80% {
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+@-webkit-keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+@-webkit-keyframes colors {
+  0% {
+    stroke: #4285f4;
+  }
+  25% {
+    stroke: #de3e35;
+  }
+  50% {
+    stroke: #f7c223;
+  }
+  75% {
+    stroke: #1b9a59;
+  }
+  100% {
+    stroke: #4285f4;
+  }
+}
+@keyframes colors {
+  0% {
+    stroke: #4285f4;
+  }
+  25% {
+    stroke: #de3e35;
+  }
+  50% {
+    stroke: #f7c223;
+  }
+  75% {
+    stroke: #1b9a59;
+  }
+  100% {
+    stroke: #4285f4;
+  }
+}
+@-webkit-keyframes dash {
+  0% {
+    stroke-dashoffset: 187;
+  }
+  50% {
+    stroke-dashoffset: 46.75;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 187;
+    transform: rotate(450deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 187;
+  }
+  50% {
+    stroke-dashoffset: 46.75;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 187;
+    transform: rotate(450deg);
+  }
+}
 /* form styles start */
 .input-wrapper {
   display: flex;
@@ -1624,6 +1772,110 @@ p a {
   padding: 10px 0 0 23px;
   text-align: left;
   margin: 0;
+}
+
+.account-settings-container {
+  backface-visibility: hidden;
+}
+.account-settings-container hr {
+  border-top: 1px dashed #000000;
+  margin: 22px 0;
+  margin-bottom: 2rem;
+}
+.account-settings-container .card-container {
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.account-settings-container .card-container .card-body {
+  width: 400px;
+  justify-self: flex-start;
+}
+.account-settings-container .card-container .card-body .card-description {
+  margin: 0 !important;
+}
+.account-settings-container .card-container .card-body .field-set-settings {
+  margin: 0 !important;
+}
+.account-settings-container .card-container .card-body button {
+  margin: 0 !important;
+}
+
+.settings-readonly--first {
+  margin-bottom: 40px;
+}
+.settings-readonly--leave {
+  margin-top: 45px;
+  text-align: center;
+}
+.settings-readonly .readonly-title {
+  margin-bottom: 23px;
+  font-size: 24px;
+  font-family: "Zilla Slab", Inter, X-LocaleSpecific, sans-serif;
+}
+
+.read-only-card-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 660px;
+  height: 60px;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 24px 38px 3px rgba(29, 17, 51, 0.04), 0 10px 48px 8px rgba(9, 32, 77, 0.12), 0 12px 16px -6px rgba(29, 17, 51, 0.12);
+  font-size: 14px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.read-only-card-container header {
+  text-transform: uppercase;
+  opacity: 0.6;
+  padding-bottom: 5px;
+  font-family: Inter, X-LocaleSpecific, sans-serif;
+}
+.read-only-card-container .twoFA {
+  font-style: italic;
+}
+.read-only-card-container .card-body__content {
+  font-weight: 700;
+  color: #000;
+}
+.read-only-card-container .read-only-card--right {
+  cursor: pointer;
+}
+.read-only-card-container .read-only-card--right .read-only__arrow:hover {
+  transform: translateX(6px);
+  transition: ease-in;
+}
+
+.settings-wrapper .btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 285px;
+}
+.settings-wrapper .btn-group .card-button {
+  width: auto;
+}
+.settings-wrapper .btn-group--two-factor {
+  width: 262px;
+}
+.settings-wrapper .two-factor-content {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  width: 575px;
+  margin-bottom: 40px;
+}
+.settings-wrapper .two-factor-content .two-factor__text {
+  width: 400px;
+}
+.settings-wrapper .active .twoFA {
+  background-color: #2b2a33;
+  border-color: #2b2a33;
+}
+.settings-wrapper--password .input-wrapper--current {
+  margin-bottom: 30px;
 }
 
 story-container {

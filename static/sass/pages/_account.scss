@@ -1,0 +1,129 @@
+.account-settings-container {
+  backface-visibility: hidden;
+  hr {
+    border-top: 1px dashed #000000;
+    margin: 22px 0;
+    margin-bottom: 2rem;
+  }
+
+  .card-container {
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    .card-body {
+      width: 400px;
+      justify-self: flex-start;
+      .card-description {
+        margin: 0 !important;
+      }
+
+      .field-set-settings {
+        margin: 0 !important;
+      }
+
+      button {
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+//read only container
+.settings-readonly {
+  &--first {
+    margin-bottom: 40px;
+  }
+
+  &--leave {
+    margin-top: 45px;
+    text-align: center;
+  }
+
+  .readonly-title {
+    margin-bottom: 23px;
+    font-size: 24px;
+    font-family: "Zilla Slab", Inter, X-LocaleSpecific, sans-serif;
+  }
+}
+
+.read-only-card-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 660px;
+  height: 60px;
+  background-color: $color-white;
+  padding: 20px;
+  box-shadow: $box-shadow-lg;
+  font-size: 14px;
+  margin-bottom: 20px;
+  cursor: pointer;
+
+  header {
+    text-transform: uppercase;
+    opacity: 0.6;
+    padding-bottom: 5px;
+    font-family:  Inter, X-LocaleSpecific, sans-serif;
+  }
+
+  .twoFA {
+    font-style: italic;
+  }
+
+  .card-body__content {
+    font-weight: 700;
+    color: #000; 
+  }
+
+  .read-only-card--right {
+    cursor: pointer;
+    .read-only__arrow {
+      &:hover {
+        transform: translateX(6px);
+        transition: ease-in;
+      }
+    }
+  }
+}
+
+//update email page
+.settings-wrapper {
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+    width: 285px;
+
+    .card-button {
+      width: auto;
+    }
+
+    &--two-factor {
+      width: 262px;
+    }
+  }
+
+  .two-factor-content {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    width: 575px;
+    margin-bottom: 40px;
+
+    .two-factor__text {
+      width: 400px;
+    }
+  }
+
+  .active .twoFA {
+    background-color: $color-dark-gray-60;
+    border-color: $color-dark-gray-60;
+  }
+
+  &--password {
+    .input-wrapper--current {
+      margin-bottom: 30px;
+    }
+  }
+}

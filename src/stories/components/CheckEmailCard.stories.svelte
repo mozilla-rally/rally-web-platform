@@ -30,7 +30,6 @@
     cta2: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     linkText: { control: "text" },
     custom: { control: "text" },
@@ -63,7 +62,6 @@
   args={{
     width: "460px",
     height: "276px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Check your email",
     body:
@@ -79,7 +77,6 @@
   args={{
     width: "460px",
     height: "276px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Check your email",
     body:

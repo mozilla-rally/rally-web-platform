@@ -3,7 +3,9 @@
   import { page } from "$app/stores";
   import Layout from "$lib/layouts/main/Layout.svelte";
   import Button from "$lib/components/Button.svelte";
+  import Footer from './_Footer.svelte'
   import Sidebar from "./_Sidebar.svelte";
+  import Navbar from "./_Navbar.svelte";
   import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
   import NotificationCenter from "$lib/components/notifications/NotificationCenter.svelte";
   import { store, isAuthenticated } from "$lib/stores/app-store";
@@ -30,13 +32,15 @@
 </script>
 
 {#if $isAuthenticated && $store?.user?.enrolled}
+  <Navbar />
   <Layout>
-    <Sidebar
+    <!-- <Sidebar
       on:change-view
       on:leave-rally={() => {
         leaveModal = true;
       }}
-    />
+    /> -->
+
     <svelte:component
       this={$page.path === "/studies" ? StudyBackgroundElement : EmptySlot}
     >
@@ -47,6 +51,8 @@
       </ContentContainer>
     </svelte:component>
   </Layout>
+  <Footer/>
+ 
 {:else}
   <slot />
 {/if}

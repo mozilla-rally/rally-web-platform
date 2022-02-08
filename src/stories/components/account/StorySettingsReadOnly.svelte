@@ -2,28 +2,30 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import Button from "$lib/components/Button.svelte";
-  import ReadOnlyCard from "./ReadOnlyCard.svelte";
+  import Button from "../../../lib/components/Button.svelte";
+  import ReadOnlyCard from "./StoryReadOnlyCard.svelte";
   import { getContext, onMount, createEventDispatcher } from "svelte";
-  import type { AppStore } from "$lib/stores/types";
-  import isMounted from "$lib/is-mounted";
+  // import type { AppStore } from "$lib/stores/types";
+  import isMounted from "../../../lib/is-mounted";
 
   const dispatch = createEventDispatcher();
-  const store: AppStore = getContext("rally:store");
+  // const store: AppStore = getContext("rally:store");
 
   export let listArr;
   let leaveModal = false;
   let Dialog;
   let isUserVerified;
-  let userEmail;
+  let userEmail = "test@example.com";
   let isNotVerifiedStyle = "not-verified";
   let emailMsg = "(confirm your email)";
   let warningStyle = "not-verified";
 
   onMount(async () => {
-    userEmail = await store.getUserEmail();
-    isUserVerified = await store.isUserVerified();
+    // userEmail = await store.getUserEmail();
+    // isUserVerified = await store.isUserVerified();
     Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
+
+    console.log("list array", listArr);
   });
 
   const mounted = isMounted();
@@ -166,3 +168,4 @@
     </Dialog>
   {/if}
 </di>
+

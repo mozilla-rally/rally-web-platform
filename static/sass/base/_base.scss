@@ -1,9 +1,17 @@
 html {
-  background-color: $bg-default; 
+  background-color: $bg-default;
   color: $c-default;
-  height: 100%; 
-  overflow: visible; 
-  scroll-behavior: smooth; 
+  height: 100%;
+  overflow: visible;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+footer {
+  flex-shrink: 0;
 }
 
 main {
@@ -32,6 +40,7 @@ main {
 
   hr {
     border-top: 1px dashed $color-black;
+    margin: 22px 0;
     margin-bottom: 2rem;
   }
 
@@ -54,4 +63,9 @@ p,
 ul,
 ol {
   color: $color-marketing-gray-70;
+}
+
+#rally {
+  display: grid;
+  grid-template-rows: 1fr auto 527px;
 }

@@ -8,7 +8,6 @@
   import Button from "../../../lib/components/Button.svelte";
   import type { NotificationStore } from "$lib/components/notifications";
 
-
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");
@@ -50,8 +49,7 @@
   };
 </script>
 
-<div class="email-wrapper">
-  <p class="card-description">Change your current email with a new one.</p>
+<div class="settings-wrapper settings-wrapper--email">
   <div class="card-body-content">
     <form method="post">
       <fieldset class="mzp-c-field-set field-set-settings">
@@ -116,27 +114,35 @@
         </div>
       </fieldset>
     </form>
-    <Button
-      btnDisabled={btnDisabled}
-      size="xl"
-      custom="card-button create btn-settings"
-      on:click={async () => {
-        await store.changeEmail(newEmail, password);
-        clearFields();
-      }}
-    >
-      <div class="button-text">Send verification</div></Button
-    >
+    <div class="btn-group btn-group--email">
+      <Button
+        {btnDisabled}
+        size="xl"
+        custom="card-button create"
+        product
+        on:click={async () => {
+          await store.changeEmail(newEmail, password);
+          clearFields();
+        }}
+      >
+        <div class="button-text">Save changes</div></Button
+      >
+
+      <Button
+      {btnDisabled}
+        size="xl"
+        custom="card-button create"
+        customControl={true}
+        textColor="#0060df"
+        background="transparent"
+        borderColor="#0060df"
+        on:click={() => {
+          handleSelect("read-only");
+        }}
+      >
+        <div class="button-text">Cancel</div></Button
+      >
+    </div>
   </div>
 </div>
 
-<style>
-  .email-wrapper {
-    margin-top: 15px;
-  }
-  .card-description {
-    padding-bottom: 20px;
-    width: 80%;
-    font-size: 18px;
-  }
-</style>

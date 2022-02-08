@@ -12,7 +12,6 @@
   export let title;
   export let cta1;
   export let width;
-  export let topPadding;
   export let fontSize;
   export let custom;
 

@@ -6,6 +6,7 @@
   // This component is used in the "Main View" of the Rally Add-On.
   import { getContext } from "svelte";
   import { goto } from "$app/navigation";
+  import { fly } from "svelte/transition";
 
   import ProfileContent from "$lib/views/profile/Content.svelte";
 
@@ -24,8 +25,17 @@
   );
   const notifications: NotificationStore = getContext("rally:notifications");
 
-  $: if ($isAuthenticated === false) {
-    goto("/signup");
+  // $: if ($isAuthenticated === false) {
+  //   goto("/signup");
+  // }
+
+  $: if ($store._initialized) {
+    if (!$store?.user?.uid) {
+      goto("/signup");
+   
+    } else if (!$store?.user?.enrolled) {
+      goto("/welcome/terms");
+    }
   }
 
   // Create a deep copy of $store.demographicsData for the "manage profile" view.
@@ -48,47 +58,49 @@
   <title>Manage Your Profile | Mozilla Rally</title>
 </svelte:head>
 
-{#if $store._initialized}
-  <ProfileContent results={intermediateResults}>
-    <span slot="title">Manage Profile</span>
-    <p slot="description">
-      Here's what you've shared with us so far. You can update, add, or rescind
-      your answers as you see fit. Just a reminder, this info helps us better
-      understand the representitivity of our study participants, and we'll
-      always ask before we share this data with a research collaborator.
-    </p>
-    <!-- note -->
-    <div slot="call-to-action" let:formattedResults let:validated>
-      <hr />
-      <div
-        style="display: grid; grid-auto-flow: column; grid-column-gap: 12px; width: max-content;"
-      >
-        <Button
-          size="lg"
-          product
-          leave={!validated}
-          disabled={!validated}
-          on:click={() => {
-            store.updateDemographicSurvey(formattedResults);
-            goto("/studies");
-            notifications.send({ code: "SUCCESSFULLY_UPDATED_PROFILE" });
-          }}>Save Changes</Button
+{#if $store._initialized && $isAuthenticated === true}
+  <section in:fly={{ duration: 800, y: 5 }}>
+    <ProfileContent results={intermediateResults}>
+      <span slot="title">Manage Profile</span>
+      <p slot="description">
+        Here's what you've shared with us so far. You can update, add, or
+        rescind your answers as you see fit. Just a reminder, this info helps us
+        better understand the representitivity of our study participants, and
+        we'll always ask before we share this data with a research collaborator.
+      </p>
+      <!-- note -->
+      <div slot="call-to-action" let:formattedResults let:validated>
+        <hr />
+        <div
+          style="display: grid; grid-auto-flow: column; grid-column-gap: 12px; width: max-content;"
         >
-        <Button
-          size="lg"
-          product
-          disabled={!validated}
-          secondary
-          on:click={() => {
-            intermediateResults = formatAnswersForDisplay(
-              schema,
-              { ...$store.user.demographicsData },
-              inputFormatters
-            );
-            goto("/studies");
-          }}>Cancel</Button
-        >
+          <Button
+            size="lg"
+            product
+            leave={!validated}
+            disabled={!validated}
+            on:click={() => {
+              store.updateDemographicSurvey(formattedResults);
+              goto("/studies");
+              notifications.send({ code: "SUCCESSFULLY_UPDATED_PROFILE" });
+            }}>Save Changes</Button
+          >
+          <Button
+            size="lg"
+            product
+            disabled={!validated}
+            secondary
+            on:click={() => {
+              intermediateResults = formatAnswersForDisplay(
+                schema,
+                { ...$store.user.demographicsData },
+                inputFormatters
+              );
+              goto("/studies");
+            }}>Cancel</Button
+          >
+        </div>
       </div>
-    </div>
-  </ProfileContent>
+    </ProfileContent>
+  </section>
 {/if}

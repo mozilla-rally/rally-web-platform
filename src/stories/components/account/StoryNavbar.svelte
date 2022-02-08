@@ -18,7 +18,7 @@
 <RallyNavbar>
   <div class="header__logo" slot="logo-nav">
     <!-- rally logo -->
-    <a class="header__logo-link" href="/" alt="">
+    <a class="header__logo-link" href="#home" alt="">
       {#if $mounted}
         <img
           in:fly={{ duration: 800, x: -15 }}
@@ -31,15 +31,15 @@
     <!-- main nav -->
     <nav class="header__nav" id="nav" aria-label="Primary navigation">
       <ul class="nav-list">
-        <li class="nav-list__item">
+        <li class="nav-list__item external">
           {#if $mounted}
             <a
               in:fly={{ duration: 800, delay: 200, x: -15 }}
               class="nav-list__link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
-              >Current Studies
+              href="#aboutrally"
+              sveltekit:prefetch
+            >
+              About Rally <ExternalLink />
             </a>
           {/if}
         </li>
@@ -49,7 +49,7 @@
             <a
               in:fly={{ duration: 800, delay: 200, x: -15 }}
               class="nav-list__link"
-              href="/studies"
+              href="#support"
               sveltekit:prefetch
             >
               Support <ExternalLink />
@@ -64,7 +64,7 @@
               class="nav-list__link"
               target="_blank"
               rel="noopener noreferrer"
-              href="__BASE_SITE__/how-rally-works/faqs/"
+              href="#how-rally-works/faqs/"
               >FAQs <ExternalLink />
             </a>
           {/if}
@@ -92,20 +92,26 @@
       class="dropdown-list"
     >
       <li class="dropdown-list__item">
-        <a class="list-item--info" href="#">
+        <div class="list-item--info">
           <p>Signed in as</p>
           <p class="text-bold">example@example.com</p>
-        </a>
+        </div>
       </li>
       <hr />
       <li class="dropdown-list__item">
-        <a class="list-item list-item--profile" href="#">
+        <a class="list-item list-item--profile" href="#profile">
           <img src="img/user-138.svg" alt="settings icon" />
           <div class="list-item__text">Manage Profile</div>
         </a>
       </li>
       <li class="dropdown-list__item">
-        <a class="list-item list-item--settings" href="#">
+        <a class="list-item list-item--studies" href="#studies">
+          <img src="img/reader-mode.svg" alt="settings icon" />
+          <div class="list-item__text">Studies</div>
+        </a>
+      </li>
+      <li class="dropdown-list__item">
+        <a class="list-item list-item--settings" href="#account">
           <img src="img/settings.svg" alt="settings icon" />
           <div class="list-item__text">Account Settings</div></a
         >

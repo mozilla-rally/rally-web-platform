@@ -33,6 +33,9 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async signupWithEmailAndPassword(email, password) {
       return api.signupWithEmailAndPassword(email, password);
     },
+    async signOutUser() {
+      return api.signOutUser();
+    },
     async sendUserPasswordResetEmail(email) {
       return api.sendUserPasswordResetEmail(email);
     },

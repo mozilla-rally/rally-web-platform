@@ -74,16 +74,6 @@
   margin: auto;
 }
 
-.twoFA {
-  background: var(--color-green-60);
-  border-color: var(--color-green-60);
-}
-
-.twoFA:hover {
-  background: var(--color-green-60);
-  border-color: var(--color-green-60);
-  opacity: 0.7;
-}
 
 .inactive .twoFA {
   background-color: var(--color-red-60);

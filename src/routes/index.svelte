@@ -10,12 +10,16 @@
     "rally:isAuthenticated"
   );
 
-  $: if ($isAuthenticated !== undefined && $store._initialized) {
-    if ($isAuthenticated === false) {
+  isAuthenticated.subscribe((state) => {
+    if (state === false) {
       goto("/signup");
-    } else if ($store?.user?.enrolled) {
-      goto("/studies");
-    } else {
+    }
+  });
+
+  $: if ($isAuthenticated !== undefined && $store._initialized) {
+    if (!$store?.user?.uid) {
+      goto("/signup");
+    } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
     }
   }

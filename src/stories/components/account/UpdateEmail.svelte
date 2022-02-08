@@ -95,7 +95,7 @@
       size="xl"
       custom="card-button create btn-settings"
     >
-      <div class="button-text">Send verification</div></Button
+      <div class="button-text">Save Changes</div></Button
     >
   </div>
 </div>

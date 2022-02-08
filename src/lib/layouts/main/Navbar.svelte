@@ -14,9 +14,9 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-    margin-left: auto;
-    margin-right: auto;
     flex-wrap: wrap;
     overflow: hidden;
+    grid-row-start: 1;
+    z-index: 100;
   }
 </style>

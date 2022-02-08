@@ -13,9 +13,10 @@
   import CheckEmailCard from "$lib/components/auth-cards/CheckEmailCard.svelte";
   import ResetPwCard from "$lib/components/auth-cards/ResetPWCard.svelte";
   import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
-
   import type { AppStore } from "$lib/stores/types";
+
   const store: AppStore = getContext("rally:store");
+
   let isLoading = false;
   let showCardsWrapper = true;
   let loadingItem = null;
@@ -25,7 +26,7 @@
   });
 
   let userEmail;
-
+  
   let {
     cardArgs,
     welcomeArgs,
@@ -49,11 +50,14 @@
     resetPWCard,
   } = state.card;
 
-  $: if ($store._initialized && $store?.user?.uid) {
-    if (!$store?.user?.enrolled) {
+
+  $: if ($store._initialized) {
+    if (!$store?.user?.uid) {
+      goto("/signup");
+    } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
-    } else {
-      goto("/studies");
+    }else{
+      goto("/studies")
     }
   }
 
@@ -144,24 +148,21 @@
   };
 </script>
 
-<section class="mzp-c-call-out">
-  <div class="mzp-l-content sign-in-container">
+<section class="mzp-c-call-out sign-in-container">
+  <div class="mzp-l-content">
     <h2 class="mzp-c-call-out-title mzp-has-zap-1">
       <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
     </h2>
 
-    <p
-      class="mzp-c-call-out-desc"
-      style="color: var(--color-marketing-gray-70);"
-    >
+    <p class="mzp-c-call-out-desc">
       This is a feasibility spike exploring a web-based Rally user experience.
     </p>
     <div class="cards-wrapper">
       {#if isLoading}
         <svg
           class="spinner"
-          width="65px"
-          height="65px"
+          width="100px"
+          height="100px"
           viewBox="0 0 66 66"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -209,7 +210,7 @@
         {/if}
 
         {#if resetPWCard && !checkEmailPWCard}
-          <ResetPwCard {...cardArgs} {store} on:type={triggerCard} />
+          <ResetPwCard {...cardArgs} on:type={triggerCard} />
         {/if}
       {/if}
     </div>
@@ -226,148 +227,3 @@
     </div>
   </div>
 </section>
-
-<style>
-  .sign-in-container {
-    backface-visibility: hidden;
-  }
-  .mzp-c-call-out-title {
-    animation: moveInLeft 1s ease-out;
-  }
-
-  .mzp-c-call-out {
-    background-color: transparent;
-    min-height: calc(100vh - 2.5rem);
-    padding: 0;
-  }
-
-  .mzp-l-content {
-    padding-left: 0;
-    padding-right: 0;
-    /* this is Main + required padding to meet 120px */
-    padding-top: 80px;
-  }
-
-  .mzp-c-call-out-title {
-    margin-bottom: 12px;
-  }
-
-  .cards-wrapper {
-    margin-top: 40px;
-  }
-
-  .how-it-works {
-    margin-top: 24px;
-    text-align: center;
-  }
-
-  @keyframes moveInLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
-
-    80% {
-      transform: translateX(10px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translate(0);
-    }
-  }
-
-  .spinner {
-    -webkit-animation: rotator 1.4s linear infinite;
-    animation: rotator 1.4s linear infinite;
-    height: 400px;
-  }
-
-  @-webkit-keyframes rotator {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(270deg);
-    }
-  }
-
-  @keyframes rotator {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(270deg);
-    }
-  }
-  .path {
-    stroke-dasharray: 187;
-    stroke-dashoffset: 0;
-    transform-origin: center;
-    -webkit-animation: dash 1.4s ease-in-out infinite,
-      colors 5.6s ease-in-out infinite;
-    animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
-  }
-
-  @-webkit-keyframes colors {
-    0% {
-      stroke: #4285f4;
-    }
-    25% {
-      stroke: #de3e35;
-    }
-    50% {
-      stroke: #f7c223;
-    }
-    75% {
-      stroke: #1b9a59;
-    }
-    100% {
-      stroke: #4285f4;
-    }
-  }
-
-  @keyframes colors {
-    0% {
-      stroke: #4285f4;
-    }
-    25% {
-      stroke: #de3e35;
-    }
-    50% {
-      stroke: #f7c223;
-    }
-    75% {
-      stroke: #1b9a59;
-    }
-    100% {
-      stroke: #4285f4;
-    }
-  }
-  @-webkit-keyframes dash {
-    0% {
-      stroke-dashoffset: 187;
-    }
-    50% {
-      stroke-dashoffset: 46.75;
-      transform: rotate(135deg);
-    }
-    100% {
-      stroke-dashoffset: 187;
-      transform: rotate(450deg);
-    }
-  }
-  @keyframes dash {
-    0% {
-      stroke-dashoffset: 187;
-    }
-    50% {
-      stroke-dashoffset: 46.75;
-      transform: rotate(135deg);
-    }
-    100% {
-      stroke-dashoffset: 187;
-      transform: rotate(450deg);
-    }
-  }
-</style>
