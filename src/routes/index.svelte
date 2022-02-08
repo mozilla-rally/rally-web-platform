@@ -21,6 +21,8 @@
       goto("/signup");
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
+    }else{
+      goto ("/studies")
     }
   }
 </script>
