@@ -78,7 +78,7 @@
     "svelte": "^3.38.2",
     "svelte-check": "^2.0.0",
     "svelte-loader": "^3.1.2",
-    "svelte-preprocess": "^4.0.0",
+    "svelte-preprocess": "^4.10.3",
     "tidy-jsdoc": "^1.4.0",
     "ts-jest": "^27.0.5",
     "tslib": "^2.3.1",
