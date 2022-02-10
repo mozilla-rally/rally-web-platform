@@ -1,0 +1,29 @@
+.card-container {
+  margin-bottom: 4rem;
+  width: 100%;
+
+  .title-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.563rem;
+
+    .title-text {
+      z-index: 1;
+      white-space: nowrap;
+      display: inline-block;
+    }
+  }
+  .card-body {
+    justify-self: center;
+    .card-body-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    &-create {
+      width: 80%;
+    }
+  }
+}
+
+

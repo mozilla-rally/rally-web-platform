@@ -3,8 +3,6 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css"
 
   let titleEl;
   let textWidth;
@@ -90,7 +88,6 @@
     cta2: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
@@ -206,7 +203,6 @@
   args={{
     width: "460px",
     fontSize: "38px",
-    topPadding: "calc(10vh - 20px)",
     height: "auto",
     title: "Create account",
     cta1: "Continue",

@@ -1,6 +1,6 @@
 <script context="module">
   //launch card states
-  export let card = {
+  export const card = {
     welcomeCard: true,
     joinCard: false,
     createAcctCard: false,
@@ -20,13 +20,12 @@
     fontSize: { control: "text" },
   };
 
-  export let cardArgs = {
+  export const cardArgs = {
     width: "460px",
     fontSize: "38px",
-    topPadding: "calc(10vh - 20px)",
   };
 
-  export let welcomeArgs = {
+  export const welcomeArgs = {
     ...cardArgs,
     title: "Welcome back",
     cta1: "Continue with Google",
@@ -35,8 +34,7 @@
     linkText: "Create account",
     welcomeCard: card.welcomeCard,
   };
-
-  export let joinArgs = {
+  export const joinArgs = {
     ...cardArgs,
     title: "Join Rally",
     cta1: "Sign up with Google",
@@ -44,8 +42,7 @@
     bodyText: "Already have an account?",
     linkText: "Sign in",
   };
-
-  export let createArgs = {
+  export const createArgs = {
     ...cardArgs,
     custom: "card-body-create",
     height: card.cardHeight,
@@ -54,8 +51,7 @@
     bodyText: "Already have an account?",
     linkText: "Sign in",
   };
-
-  export let signinArgs = {
+  export const signinArgs = {
     ...cardArgs,
     title: "Welcome back",
     cta1: "Sign in",
@@ -64,8 +60,7 @@
     sigininCard: card.signinCard,
     cardHeight: card.cardHeight,
   };
-
-  export let forgetPWArgs = {
+  export const forgetPWArgs = {
     ...cardArgs,
     height: "339px",
     title: "Forgot your password?",
@@ -74,8 +69,7 @@
     minHeight: "339px",
     custom: "reset-pw",
   };
-
-  export let checkEmailPWArgs = {
+  export const checkEmailPWArgs = {
     ...cardArgs,
     height: "200px",
     title: "Check your email",
@@ -86,8 +80,7 @@
     custom: "info-Card",
     checkPW: true,
   };
-
-  export let checkEmailArgs = {
+  export const checkEmailArgs = {
     ...cardArgs,
     height: "276px",
     title: "Check your email",
@@ -98,8 +91,7 @@
     custom: "info-Card",
     checkPW: false,
   };
-
-  export let resetPWArgs = {
+  export const resetPWArgs = {
     ...cardArgs,
     height: "276px",
     title: "Reset your password",
@@ -107,4 +99,10 @@
     minHeight: "400px",
     custom: "reset-pw",
   };
-</script>
+
+
+</script> 
+
+
+ 
+

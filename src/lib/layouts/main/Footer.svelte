@@ -51,35 +51,27 @@
 
       <ul class="footer-list">
         <li class="footer-item">
-          <a class="footer-item-link" href="">Current Studies</a>
+          <a class="footer-item-link" href="#studies">Current Studies</a>
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link">Beyond the Paywall</a>
+              <a href="#beyondthepaywall" class="footer-sublist-link">Beyond the Paywall</a>
             </li>
             <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link"
+              <a href="#covidnews" class="footer-sublist-link"
                 >Political and Covid-19 News</a
               >
             </li>
           </ul>
         </li>
         <li class="footer-list">
-          <a href="" class="footer-item-link">Careers</a>
+          <a href="#careers" class="footer-item-link">Careers</a>
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link">Apply</a>
+              <a href="#apply" class="footer-sublist-link">Apply</a>
             </li>
             <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link"
+              <a href="#fullstack" class="footer-sublist-link"
                 >Full-Stack Software Engineer</a
-              >
-            </li>
-            <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link">Staff Product Designer</a>
-            </li>
-            <li class="footer-sublist-item">
-              <a href="" class="footer-sublist-link">
-                Staff User Experience Researcher</a
               >
             </li>
           </ul>
@@ -102,7 +94,7 @@
 
     <div class="footer-bottom">
       <p class="footer-copyright">
-        © Mozilla 2021. We’re Building a Better Internet
+        © Mozilla 2022. We’re Building a Better Internet
       </p>
       <ul class="footer-social">
         <li class="footer-social-item">

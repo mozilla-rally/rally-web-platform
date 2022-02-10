@@ -8,16 +8,12 @@
   export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
+  
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({
-    width,
-    height,
-    fontSize,
-    minHeight,
-  }) {
+  function addStyleVariables({ width, height, fontSize, minHeight }) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
@@ -43,10 +39,10 @@
 </script>
 
 <div id={key}>
-  <div class="card-container radius-sm mzp-t-mozilla" style={styles}>
+  <div class="card-container radius-sm" style={styles}>
     <header class="container-header">
-      <h2 class="mzp-t-mozilla">
-        <slot name="card-title">Title.</slot>
+      <h2>
+        <slot name="card-title"></slot>
       </h2>
     </header>
 

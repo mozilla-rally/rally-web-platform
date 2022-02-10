@@ -6,8 +6,6 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css"
 
   let titleEl;
   let textWidth;
@@ -31,7 +29,6 @@
     cta2: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
@@ -102,7 +99,6 @@
   name="Welcome back"
   args={{
     width: "460px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Welcome Back",
     cta1: "Continue with Google",
@@ -116,7 +112,6 @@
   name="Join Rally"
   args={{
     width: "460px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Join Rally",
     cta1: "Sign up with Google",

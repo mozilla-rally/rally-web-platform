@@ -80,7 +80,7 @@
   style={cssVarStyles}
   use:forwardAll
   class={classSet}
-  {disabled}><slot /></button
+  disabled={disabled}><slot /></button
 >
 
 <style>
