@@ -24,7 +24,7 @@
       if (saveData) {
         await store.updateDemographicSurvey(formattedResults);
       }
-      await await store.updateOnboardedStatus(true);
+      await store.updateOnboardedStatus(true);
       goto("/studies");
     };
   }

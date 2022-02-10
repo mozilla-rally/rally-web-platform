@@ -7,7 +7,6 @@
   import type { NotificationStore } from "$lib/components/notifications";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
-  import "../../../lib/components/auth-cards/Auth.css";
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");
@@ -29,12 +28,10 @@
   let passwordErr = false;
   let passwordErrText;
 
-  console.log("store", store)
-
   const handleCheckPW = async () => {
     if (newPasswordEl.value === newPasswordEl2.value) {
       await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
-      handleSelect("read-only")
+      handleSelect("read-only");
       notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
     } else {
       passwordErr = true;
@@ -123,19 +120,18 @@
   };
 </script>
 
-<div class="reset-wrapper">
-  <p class="card-description">Change your current password.</p>
+<div class="settings-wrapper settings-wrapper--password">
   <div class="card-body-content">
     <form method="post">
       <fieldset class="mzp-c-field-set field-set-settings">
         <div class="mzp-c-field field-pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Enter your old password</label
+              >Current password</label
             >
           </div>
 
-          <div class="input-wrapper">
+          <div class="input-wrapper input-wrapper--curent">
             <input
               class="mzp-c-field-control"
               bind:this={oldPasswordEl}
@@ -174,7 +170,7 @@
 
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Enter your new password</label
+              >New password</label
             >
           </div>
           <div class="input-wrapper">
@@ -213,24 +209,6 @@
               />
             {/if}
           </div>
-
-          <p class="info-msg-active-reset">
-            Your password should be unique and must contain:
-          </p>
-          <ul class="info-rules">
-            <li bind:this={length} id="length" class="invalid">
-              At least 8 characters
-            </li>
-            <li bind:this={letter} id="letter" class="invalid">
-              At least 1 lowercase letter
-            </li>
-            <li bind:this={capital} id="capital">
-              At least 1 uppercase letter
-            </li>
-            <li bind:this={number} id="number" class="invalid">
-              At least 1 number
-            </li>
-          </ul>
 
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
@@ -278,18 +256,53 @@
               {passwordErrText}
             </p>
           {/if}
+
+          <p class="info-msg-active-reset">
+            Your password should be unique and must contain:
+          </p>
+          <ul class="info-rules">
+            <li bind:this={length} id="length" class="invalid">
+              At least 8 characters
+            </li>
+            <li bind:this={letter} id="letter" class="invalid">
+              At least 1 lowercase letter
+            </li>
+            <li bind:this={capital} id="capital">
+              At least 1 uppercase letter
+            </li>
+            <li bind:this={number} id="number" class="invalid">
+              At least 1 number
+            </li>
+          </ul>
         </div>
       </fieldset>
     </form>
+    <div class="btn-group btn-group--password">
+      <Button
+        disabled={btnDisabled}
+        size="xl"
+        product
+        custom="card-button create"
+        on:click={handleCheckPW}
+      >
+        <div class="button-text">Save changes</div></Button
+      >
 
-    <Button
-      disabled={btnDisabled}
-      size="xl"
-      custom="card-button create btn-settings"
-      on:click={handleCheckPW}
-    >
-      <div class="button-text">Update passsord</div></Button
-    >
+      <Button
+        {btnDisabled}
+        size="xl"
+        custom="card-button create"
+        customControl={true}
+        textColor="#0060df"
+        background="transparent"
+        borderColor="#0060df"
+        on:click={() => {
+          handleSelect("read-only");
+        }}
+      >
+        <div class="button-text">Cancel</div></Button
+      >
+    </div>
   </div>
 </div>
 
@@ -298,13 +311,8 @@
     height: auto;
   }
 
-  .input-wrapper {
-    margin-bottom: 15px;
-  }
-  .card-description {
-    padding-bottom: 20px;
-    width: 80%;
-    font-size: 18px;
+  .input-wrapper{
+    margin-bottom: 30px;
   }
 
   .info-msg-active-reset {

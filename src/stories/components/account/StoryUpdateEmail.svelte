@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import Button from "../../../lib/components/Button.svelte";
-  import "../../../lib/components/auth-cards/Auth.css";
+
 
   //create account states
   let email;
@@ -95,7 +95,7 @@
       size="xl"
       custom="card-button create btn-settings"
     >
-      <div class="button-text">Send verification</div></Button
+      <div class="button-text">Save Changes</div></Button
     >
   </div>
 </div>

@@ -5,8 +5,6 @@
   import { onMount } from "svelte";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css"
 
   let titleEl;
   let textWidth;
@@ -32,7 +30,6 @@
     cta2: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     linkText: { control: "text" },
     custom: { control: "text" },
@@ -65,7 +62,6 @@
   args={{
     width: "460px",
     height: "276px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Check your email",
     body:
@@ -81,7 +77,6 @@
   args={{
     width: "460px",
     height: "276px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Check your email",
     body:
@@ -93,7 +88,6 @@
 />
 
 <style>
-
   .title-highlight {
     background-color: #f9cd34;
     border-radius: 4px;

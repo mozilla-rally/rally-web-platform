@@ -7,7 +7,7 @@
   export let custom = ""
 </script>
 
-<main class="mzp-t-mozilla">
+<main class="mzp-t-mozilla main-container">
   <div class={`content-container ${custom}`} style={`--pad: ${pad ? "2rem 2.5rem 6rem" : "0"};`}>
     <slot />
   </div>

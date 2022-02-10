@@ -1,0 +1,20 @@
+.gafc {
+    display: grid;
+    align-items: center;
+    grid-auto-flow: column;
+  }
+  
+  .shortcut-callout {
+    font-size: 14px;
+    justify-self: end;
+    font-style: italic;
+    color: $color-blue-50;
+  }
+  
+  .call-flow {
+    display: grid;
+    grid-gap: 1rem;
+    align-items: center;
+    position: absolute;
+    width: var(--content-width);
+  }

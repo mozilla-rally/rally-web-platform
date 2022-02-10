@@ -2,88 +2,148 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import Button from "../../../lib/components/Button.svelte";
-  import { getContext, onMount } from "svelte";
+  import Button from "$lib/components/Button.svelte";
+  import ReadOnlyCard from "./ReadOnlyCard.svelte";
+  import { getContext, onMount, createEventDispatcher } from "svelte";
   import type { AppStore } from "$lib/stores/types";
-  import "../../../lib/components/auth-cards/Auth.css";
+  import isMounted from "$lib/is-mounted";
 
+  const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
 
-  let isUserVerified;
+  export let settingsList;
+  let leaveModal = false;
+  let Dialog;
   let userEmail;
-  let isNotVerifiedStyle = "not-verified";
-  let emailMsg = "(confirm your email)";
-  let warningStyle = "not-verified";
 
   onMount(async () => {
     userEmail = await store.getUserEmail();
-    isUserVerified = await store.isUserVerified();
+    Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
   });
+
+  const mounted = isMounted();
+
+  const handleSelect = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
 </script>
 
-<div class="leave-rally-wrapper">
-  <div
-    class="split-content-modal"
-    style="margin-bottom: 24px; box-sizing: content-box;"
-  >
-    <div>
-      <ul class="read-only" style="padding-right: 36px;">
-        <li class="read-only-list-item">
-          <h5 class="list-title">Email address</h5>
-
-          <p class={!isUserVerified ? warningStyle : ""}>
-            {userEmail} <i>{!isUserVerified ? emailMsg : ""}</i>
-          </p>
-        </li>
-        <li class="read-only-list-item">
-          <h5 class="list-title">Update password</h5>
-          <p>Change your current password.</p>
-        </li>
-        <li class="read-only-list-item">
-          <h5 class="list-title">Two-factor authentication</h5>
-          <p>
-            Enable SMS verification to sign in using a one time passcode sent to
-            your mobile phone as a SMS
-          </p>
-        </li>
-        <li class="read-only-list-item">
-          <h5 class="list-title">Leave Rally</h5>
-          <p>Delete your Rally account.</p>
-        </li>
-      </ul>
+<di
+  on:leave-rally={() => {
+    leaveModal = true;
+  }}
+  class="settings-readonly"
+>
+  <div class="settings-readonly--first">
+    <h3 class="readonly-title">Contact Info</h3>
+    <div
+      class="readonly-email"
+      on:click={() => {
+        handleSelect(settingsList["email"]);
+      }}
+    >
+      <ReadOnlyCard title="Email Address" content={userEmail} />
     </div>
   </div>
-</div>
 
-<style>
-  .lead {
-    padding-bottom: 10px;
-    font-size: 18px;
-  }
-  .read-only {
-    text-decoration: none;
-    list-style: none;
-  }
-  .read-only-list-item {
-    padding: 20px;
-    border-bottom: 1px solid rgba(143, 143, 158, 0.15);
-    border-top: 1px solid rgba(143, 143, 158, 0.15);
-  }
+  <div class="settings-readonly--second">
+    <h3 class="readonly-title">Account Security</h3>
+    <div
+      class="readonly-pw"
+      on:click={() => {
+        handleSelect(settingsList["password"]);
+      }}
+    >
+      <ReadOnlyCard title="Password" content="*************" />
+    </div>
+  </div>
 
-  .not-verified {
-    color: var(--color-orange-80);
-  }
+  <div class="settings-readonly--leave">
+    <Button
+      on:click={() => {
+        leaveModal = true;
+      }}
+      size="lg"
+      customControl={true}
+      textColor="#c50042"
+      background="transparent"
+      borderColor="#c50042">Leave Mozilla Rally</Button
+    >
+  </div>
 
-  .lead-text {
-    border-bottom: none;
-    border-top: none;
-  }
-  .read-only-list-item p {
-    font-size: 16px;
-  }
-
-  .list-title {
-    font-size: 22px;
-    padding-bottom: 5px;
-  }
-</style>
+  {#if leaveModal && $mounted && Dialog}
+    <Dialog
+      on:dismiss={() => {
+        leaveModal = false;
+      }}
+    >
+      <div slot="title">Before You Go…</div>
+      <div
+        class="split-content-modal"
+        slot="body"
+        style="margin-bottom: 24px; box-sizing: content-box;"
+      >
+        <div style="width: 368px;">
+          <p style="padding-top: 20px;">
+            Thanks for helping make the internet just a little bit better. For
+            your reference, leaving Rally means that:
+          </p>
+          <ul class="mzp-u-list-styled bigger-gap" style="padding-right: 36px;">
+            <li>
+              We will <b>no longer collect any data</b> for our platform or studies
+            </li>
+            <li>
+              You will be <b>removed from any studies</b> you're currently participating
+              in
+            </li>
+            <li>
+              We will <b>delete any demographic information</b> you've shared with
+              us
+            </li>
+            <li>
+              If you are currently enrolled in an open study, we will <b
+                >delete all data</b
+              >
+              we've collected through that study to date. However, researchers may
+              still retain access to data you've contributed to
+              <b>completed studies</b>.
+            </li>
+            <li>
+              We will <b>uninstall and remove the Rally add-on</b>, and any
+              associated study add-ons that you may have installed.
+            </li>
+          </ul>
+        </div>
+        <img
+          style="width: 270px; padding-top: 40px; transform: translateX(-24px);"
+          src="img/before-you-go.png"
+          alt="person walking through exit door"
+        />
+      </div>
+      <div class="modal-call-flow" slot="cta">
+        <Button
+          size="lg"
+          product
+          leave
+          on:click={() => {
+            leaveModal = false;
+          }}
+        >
+          Leave Rally
+        </Button>
+        <Button
+          size="lg"
+          product
+          secondary
+          on:click={() => {
+            leaveModal = false;
+          }}
+        >
+          Cancel
+        </Button>
+      </div>
+    </Dialog>
+  {/if}
+</di>

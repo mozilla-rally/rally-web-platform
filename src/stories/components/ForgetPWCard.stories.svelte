@@ -6,8 +6,6 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
-  import "../../lib/components/auth-cards/Auth.css";
-  import "./css/RallyCard.css";
 
   let email;
   let emailEl;
@@ -39,7 +37,6 @@
     cta1: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    topPadding: { control: "text" },
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     minHeight: { control: "text" },
@@ -97,7 +94,6 @@
   args={{
     width: "460px",
     height: "300px",
-    topPadding: "calc(10vh - 20px)",
     fontSize: "38px",
     title: "Forgot your password?",
     cta1: "Request password reset",

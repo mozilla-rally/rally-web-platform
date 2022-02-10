@@ -12,10 +12,7 @@
   import CheckEmailCard from "../../lib/components/auth-cards/CheckEmailCard.svelte";
   import ResetPwCard from "../../lib/components/auth-cards/ResetPWCard.svelte";
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
-  import TestSignIn from "../../lib/layouts/main/TestSignIn.svelte";
-  import "./SignIn.css";
-  import "../components/css/RallyNavbar.css";
-  import "../../lib/components/auth-cards/Auth.css";
+  import { fly } from "svelte/transition";
 
   let {
     cardArgs,
@@ -71,7 +68,7 @@
   };
 
   const triggerCard = (event) => {
-    console.log("TRIGGER", event.detail.text);
+
     switch (event.detail.text) {
       case "join":
         welcomeCard = false;
@@ -117,56 +114,61 @@
 <Meta title="Pages/SignIn" component={Card} argTypes={state.card.argTypes} />
 
 <Template let:args>
-  <div class="sign-in-container">
-    <TestSignIn />
-
-    <div class="cards-wrapper">
-      {#if welcomeCard || joinCard}
-        <LaunchCard {...cardArgs} on:type={triggerCard} />
-      {/if}
-
-      {#if signinCard && !welcomeCard && !joinCard}
-        <SignInCard {...cardArgs} test={true} on:type={triggerCard} />
-      {/if}
-
-      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
-        <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
-      {/if}
-
-      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard {...cardArgs} on:type={triggerCard} />
-      {/if}
-
-      {#if forgetPWCard && !welcomeCard && !signinCard}
-        <ForgetPwCard {...cardArgs} on:type={triggerCard} />
-      {/if}
-
-      {#if resetPWCard && !checkEmailPWCard}
-        <ResetPwCard {...cardArgs} on:type={triggerCard} />
-      {/if}
-    </div>
-
-    <div class="how-it-works">
-      <a
-        class="external-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="__BASE_SITE__/how-rally-works/"
-        >Wait – how does it work again?
-        <ExternalLink /></a
+  <section class="mzp-c-call-out sign-in-container">
+    <div class="mzp-l-content">
+      <h2
+        class="mzp-c-call-out-title mzp-has-zap-1"
+        in:fly={{ duration: 800, y: 5 }}
       >
+        <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
+      </h2>
+
+      <p
+        class="mzp-c-call-out-desc"
+        style="color: var(--color-marketing-gray-70);
+"
+      >
+        This is a feasibility spike exploring a web-based Rally user experience.
+      </p>
+
+      <div class="cards-wrapper">
+        {#if welcomeCard || joinCard}
+          <LaunchCard {...cardArgs} on:type={triggerCard} />
+        {/if}
+
+        {#if signinCard && !welcomeCard && !joinCard}
+          <SignInCard {...cardArgs} test={true} on:type={triggerCard} />
+        {/if}
+
+        {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
+          <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
+        {/if}
+
+        {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+          <CheckEmailCard {...cardArgs} on:type={triggerCard} />
+        {/if}
+
+        {#if forgetPWCard && !welcomeCard && !signinCard}
+          <ForgetPwCard {...cardArgs} on:type={triggerCard} />
+        {/if}
+
+        {#if resetPWCard && !checkEmailPWCard}
+          <ResetPwCard {...cardArgs} on:type={triggerCard} />
+        {/if}
+      </div>
+
+      <div class="how-it-works">
+        <a
+          class="external-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="__BASE_SITE__/how-rally-works/"
+          >Wait – how does it work again?
+          <ExternalLink /></a
+        >
+      </div>
     </div>
-  </div>
+  </section>
 </Template>
 
 <Story name="SignIn" args={cardArgs} />
-
-<style>
-  .cards-wrapper {
-    position: relative;
-  }
-
-  .how-it-works{
-    margin-top: 45px; 
-  }
-</style>

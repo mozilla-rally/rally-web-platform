@@ -4,6 +4,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   loginWithGoogle: Function;
   signupWithEmailAndPassword: Function;
   loginWithEmailAndPassword: Function;
+  signOutUser: Function;
   sendUserPasswordResetEmail: Function;
   resetUserPassword: Function;
   changeEmail: Function;
@@ -40,4 +41,4 @@ export interface UserStudy {
 }
 
 // FIXME: this should be well-defined and probably should live elsewhere.
-export interface StudyMetadata {}
+export interface StudyMetadata { }

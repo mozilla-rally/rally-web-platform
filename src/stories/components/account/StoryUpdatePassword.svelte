@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import Button from "../../../lib/components/Button.svelte";
-  import "../../../lib/components/auth-cards/Auth.css";
+
 
  
   let btnDisabled = true;
@@ -239,9 +239,10 @@
     height: auto;
   }
 
-  .input-wrapper {
-    margin-bottom: 15px;
+  .input-wrapper{
+    margin-bottom: 30px;
   }
+  
   .card-description{
     padding-bottom: 20px; 
     width: 80%;

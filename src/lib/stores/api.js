@@ -7,12 +7,12 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   reauthenticateWithCredential,
-  signOut,
   sendEmailVerification,
   sendPasswordResetEmail,
   updatePassword,
   updateEmail,
   EmailAuthProvider,
+  signOut,
 } from "firebase/auth";
 import {
   doc,
@@ -322,6 +322,16 @@ export default {
     }
     console.info("Sending verification email");
     await sendEmailVerification(userCredential.user);
+  },
+
+  async signOutUser() {
+    try {
+      signOut(auth);
+      console.info("Signing out");
+    } catch (err) {
+      console.error("there was an error", err);
+      return;
+    }
   },
 
   async sendUserPasswordResetEmail(email) {
