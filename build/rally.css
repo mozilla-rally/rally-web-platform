@@ -118,7 +118,7 @@ to ensure access to the background images. */
     calc(15rem + var(--content-width) * 0.85) var(--data2, 0),
     calc(15rem + var(--content-width) * 0.85) var(--card1, 0),
     calc(15rem + var(--content-width) * 0.85) var(--card2, 0);
-  background-attachment: fixed;
+  background-attachment: fixed; 
 }
 
 .radius-sm {
