@@ -88,7 +88,7 @@
     "webextension-polyfill-ts": "^0.26.0"
   },
   "dependencies": {
-    "@storybook/svelte": "^6.4.9",
+    "@storybook/svelte": "^6.4.19",
     "fs": "^0.0.1-security",
     "npm": "^8.5.1",
     "sal.js": "^0.8.5",
