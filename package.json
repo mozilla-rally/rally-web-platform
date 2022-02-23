@@ -63,7 +63,7 @@
     "firebase-tools": "^9.17.0",
     "geckodriver": "^1.22.3",
     "immer": "^9.0.3",
-    "jest": "^27.0.6",
+    "jest": "^27.5.1",
     "jest-transform-stub": "^2.0.0",
     "jest-webextension-mock": "^3.7.6",
     "jsdoc": "^3.6.6",
@@ -78,7 +78,7 @@
     "svelte": "^3.38.2",
     "svelte-check": "^2.0.0",
     "svelte-loader": "^3.1.2",
-    "svelte-preprocess": "^4.0.0",
+    "svelte-preprocess": "^4.10.3",
     "tidy-jsdoc": "^1.4.0",
     "ts-jest": "^27.0.5",
     "tslib": "^2.3.1",
@@ -88,7 +88,7 @@
     "webextension-polyfill-ts": "^0.26.0"
   },
   "dependencies": {
-    "@storybook/svelte": "^6.4.9",
+    "@storybook/svelte": "^6.4.19",
     "fs": "^0.0.1-security",
     "npm": "^8.5.1",
     "sal.js": "^0.8.5",
