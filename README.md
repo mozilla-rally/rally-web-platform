@@ -30,7 +30,7 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 ## Quickstart
 
 1. Clone this repository.
-2. Run `npm run install`
+2. Run `npm install`
 3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
 4. Run `npm run build` to build the app; the results will be in `/build`
 
