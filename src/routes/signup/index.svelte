@@ -154,9 +154,6 @@
       <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
     </h2>
 
-    <p class="mzp-c-call-out-desc">
-      This is a feasibility spike exploring a web-based Rally user experience.
-    </p>
     <div class="cards-wrapper">
       {#if isLoading}
         <svg
