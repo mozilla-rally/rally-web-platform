@@ -1,0 +1,2 @@
+GCLOUD_PROJECT="demo-rally"
+FIRESTORE_EMULATOR_HOST="localhost:8080"

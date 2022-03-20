@@ -68,39 +68,47 @@ async function generateToken(idToken: string, studyId: string) {
   return rallyToken;
 }
 
+export const addRallyStudyToFirestoreImpl = async (
+  user: admin.auth.UserRecord
+): Promise<boolean> => {
+  functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
+    user,
+  });
+  if (user.providerData.length == 0) {
+    functions.logger.info("Extension users do not get user docs.");
+    return false;
+  }
+
+  const newRallyId = uuidv4();
+  const extensionUserDoc = { rallyId: newRallyId };
+
+  await admin
+    .firestore()
+    .collection("extensionUsers")
+    .doc(user.uid)
+    .set(extensionUserDoc, { merge: true });
+
+  const userDoc = {
+    createdOn: new Date(),
+    uid: user.uid,
+  };
+
+  await admin
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .set(userDoc, { merge: true });
+
+  return true;
+};
+
 exports.addRallyUserToFirestore = functions.auth
   .user()
-  .onCreate(async (user) => {
-    functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
-      user,
-    });
-    if (user.providerData.length == 0) {
-      functions.logger.info("Extension users do not get user docs.");
-      return;
-    }
+  .onCreate(addRallyStudyToFirestoreImpl);
 
-    const newRallyId = uuidv4();
-    const extensionUserDoc = { rallyId: newRallyId };
-    admin
-      .firestore()
-      .collection("extensionUsers")
-      .doc(user.uid)
-      .set(extensionUserDoc, { merge: true });
-
-    const userDoc = {
-      createdOn: new Date(),
-      uid: user.uid,
-    };
-    admin
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .set(userDoc, { merge: true });
-
-    return true;
-  });
-
-exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
+export const deleteRallyUserImpl = async function (
+  user: admin.auth.UserRecord
+): Promise<boolean> {
   functions.logger.info("deleteRallyUser fired for user:", user);
 
   // Delete the extension user document.
@@ -134,29 +142,31 @@ exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
   await admin.firestore().collection("users").doc(user.uid).delete();
 
   return true;
-});
+};
+
+exports.deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
 
 /**
  *
- * @param {string} index The firestore key.
+ * @param {string} studyKey The firestore key.
  * @param {object} study The study object.
  */
-function addRallyStudyToFirestore(
-  index: string,
+async function addRallyStudyToFirestore(
+  studyKey: string,
   study: Record<string, unknown>
 ) {
-  admin
+  await admin
     .firestore()
     .collection("studies")
-    .doc(index)
+    .doc(studyKey)
     .set(study, { merge: true });
 }
 
 export const loadFirestore = functions.https.onRequest(
   async (request, response) => {
-    for (const [index, study] of Object.entries(studies)) {
-      console.info(`Loading study ${index} into Firestore`);
-      addRallyStudyToFirestore(index, study);
+    for (const [studyKey, study] of Object.entries(studies)) {
+      console.info(`Loading study ${studyKey} into Firestore`);
+      await addRallyStudyToFirestore(studyKey, study);
     }
     response.status(200).send();
   }
