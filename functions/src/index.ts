@@ -138,25 +138,25 @@ exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
 
 /**
  *
- * @param {string} index The firestore key.
+ * @param {string} studyKey The firestore key.
  * @param {object} study The study object.
  */
 function addRallyStudyToFirestore(
-  index: string,
+  studyKey: string,
   study: Record<string, unknown>
 ) {
   admin
     .firestore()
     .collection("studies")
-    .doc(index)
+    .doc(studyKey)
     .set(study, { merge: true });
 }
 
 export const loadFirestore = functions.https.onRequest(
   async (request, response) => {
-    for (const [index, study] of Object.entries(studies)) {
-      console.info(`Loading study ${index} into Firestore`);
-      addRallyStudyToFirestore(index, study);
+    for (const [studyKey, study] of Object.entries(studies)) {
+      console.info(`Loading study ${studyKey} into Firestore`);
+      addRallyStudyToFirestore(studyKey, study);
     }
     response.status(200).send();
   }
