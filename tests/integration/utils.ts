@@ -145,7 +145,7 @@ export async function getChromeDriver(
   const chromeOptions = new chrome.Options();
 
   if (headlessMode && loadExtension) {
-    throw new Error("Chrome Headless does not support extensionss");
+    throw new Error("Chrome Headless does not support extensions");
   }
 
   const loggingPrefs = new logging.Preferences();
