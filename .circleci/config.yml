@@ -50,10 +50,15 @@ jobs:
           name: Download and install official Google Chrome package
           command: wget 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb' && sudo dpkg -i google-chrome-stable_current_amd64.deb
       - run:
-          name: Run tests
+          name: Run integration tests
           command: npm run test:integration
+      - run:
+          name: Run cloud function tests
+          command: npm run test:functions
       - store_artifacts:
           path: ./screenshots
+      - store_artifacts:
+          path: ./functions/coverage
   # This pushes our deployable assets to a branch, for SRE to use in deploying to stage and prod.
   deploy-branch-update:
     docker:
