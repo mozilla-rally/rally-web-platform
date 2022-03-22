@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadFirestore = exports.rallytoken = void 0;
+exports.loadFirestore = exports.deleteRallyUserImpl = exports.addRallyStudyToFirestoreImpl = exports.rallytoken = void 0;
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const studies_1 = require("./studies");
@@ -63,19 +63,17 @@ async function generateToken(idToken, studyId) {
         .createCustomToken(uid, { firebaseUid: decodedToken.uid, studyId });
     return rallyToken;
 }
-exports.addRallyUserToFirestore = functions.auth
-    .user()
-    .onCreate(async (user) => {
+exports.addRallyStudyToFirestoreImpl = async (user) => {
     functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
         user,
     });
     if (user.providerData.length == 0) {
         functions.logger.info("Extension users do not get user docs.");
-        return;
+        return false;
     }
     const newRallyId = uuid_1.v4();
     const extensionUserDoc = { rallyId: newRallyId };
-    admin
+    await admin
         .firestore()
         .collection("extensionUsers")
         .doc(user.uid)
@@ -84,14 +82,17 @@ exports.addRallyUserToFirestore = functions.auth
         createdOn: new Date(),
         uid: user.uid,
     };
-    admin
+    await admin
         .firestore()
         .collection("users")
         .doc(user.uid)
         .set(userDoc, { merge: true });
     return true;
-});
-exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
+};
+exports.addRallyUserToFirestore = functions.auth
+    .user()
+    .onCreate(exports.addRallyStudyToFirestoreImpl);
+exports.deleteRallyUserImpl = async function (user) {
     functions.logger.info("deleteRallyUser fired for user:", user);
     // Delete the extension user document.
     await admin.firestore().collection("extensionUsers").doc(user.uid).delete();
@@ -118,14 +119,15 @@ exports.deleteRallyUser = functions.auth.user().onDelete(async (user) => {
     // Finally, delete the user document.
     await admin.firestore().collection("users").doc(user.uid).delete();
     return true;
-});
+};
+exports.deleteRallyUser = functions.auth.user().onDelete(exports.deleteRallyUserImpl);
 /**
  *
  * @param {string} studyKey The firestore key.
  * @param {object} study The study object.
  */
-function addRallyStudyToFirestore(studyKey, study) {
-    admin
+async function addRallyStudyToFirestore(studyKey, study) {
+    await admin
         .firestore()
         .collection("studies")
         .doc(studyKey)
@@ -134,7 +136,7 @@ function addRallyStudyToFirestore(studyKey, study) {
 exports.loadFirestore = functions.https.onRequest(async (request, response) => {
     for (const [studyKey, study] of Object.entries(studies_1.studies)) {
         console.info(`Loading study ${studyKey} into Firestore`);
-        addRallyStudyToFirestore(studyKey, study);
+        await addRallyStudyToFirestore(studyKey, study);
     }
     response.status(200).send();
 });
