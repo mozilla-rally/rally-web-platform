@@ -1,29 +1,56 @@
 .card-container {
   margin-bottom: 4rem;
   width: 100%;
+  padding: 48px;
+  @media (max-width: $MD-screen) {
+    padding: 48px 0;
+  }
 
   .title-wrapper {
     display: flex;
     justify-content: center;
-    padding-bottom: 1.563rem;
-
-    .title-text {
-      z-index: 1;
-      white-space: nowrap;
-      display: inline-block;
+    // padding-bottom: 2.5rem;
+    &--launch {
+      display: flex;
+      justify-content: center;
     }
   }
+
+  .title-highlight {
+    background-color: $color-yellow-35;
+    border-radius: 4px;
+    position: absolute;
+    height: 2.2rem;
+    margin-top: 24px;
+  }
+
+  .title-text {
+    z-index: 1;
+    text-align: center;
+    display: inline-block;
+    font-weight: bold;
+  }
+
   .card-body {
-    justify-self: center;
-    .card-body-content {
+  
+    &-content {
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    &-create {
-      width: 80%;
+    .button-wrapper{
+      max-width: 368px;
+      padding: 48px 20px;
+    }
+
+    .form-wrapper {
+      padding: 0rem 1rem 4.8rem;
+    }
+
+    &--light-border-btn {
+      button {
+        border: 2px solid $color-marketing-gray-30;
+      }
     }
   }
 }
-
-

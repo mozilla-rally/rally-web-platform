@@ -21,8 +21,9 @@
   };
 
   export const cardArgs = {
-    width: "460px",
+    width: "456px",
     fontSize: "38px",
+  
   };
 
   export const welcomeArgs = {
@@ -47,7 +48,7 @@
     custom: "card-body-create",
     height: card.cardHeight,
     title: "Create account",
-    cta1: "Continue",
+    cta1: "Sign up",
     bodyText: "Already have an account?",
     linkText: "Sign in",
   };
@@ -67,7 +68,6 @@
     cta1: "Request password reset",
     bodyText: "We'll send you a link to reset your password",
     minHeight: "339px",
-    custom: "reset-pw",
   };
   export const checkEmailPWArgs = {
     ...cardArgs,

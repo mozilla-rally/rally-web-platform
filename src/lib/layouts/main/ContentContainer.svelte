@@ -7,8 +7,8 @@
   export let custom = ""
 </script>
 
-<main class="mzp-t-mozilla main-container">
-  <div class={`content-container ${custom}`} style={`--pad: ${pad ? "2rem 2.5rem 6rem" : "0"};`}>
+<main class="mzp-t-mozilla md-container default">
+  <div class={`content-container ${custom}`}>
     <slot />
   </div>
 </main>
@@ -16,7 +16,8 @@
 <style>
   .content-container {
     display: grid;
-    grid-template-columns: var(--content-width);
+    grid-template-columns: auto;
+    justify-content: center;
     background-size: 100% 100%;
     background-attachment: fixed;
     margin: var(--pad, 0);

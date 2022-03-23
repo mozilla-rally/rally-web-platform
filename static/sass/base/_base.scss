@@ -1,13 +1,30 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: initial;
+}
+
 html {
   background-color: $bg-default;
+  box-sizing: border-box;
   color: $c-default;
   height: 100%;
   overflow: visible;
   scroll-behavior: smooth;
+  font-size: 62.5%;
 }
 
 body {
   overflow-x: hidden;
+  line-height: 1.6;
+  height: 100%;
+  font-size: 1.6rem; 
+}
+
+header {
+  flex-shrink: 0;
 }
 
 footer {
@@ -16,17 +33,17 @@ footer {
 
 main {
   h2 {
-    font-size: 38px;
+    font-size: 3.8rem;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 2rem;
     margin-bottom: 2em;
     margin-top: 2em;
   }
 
   h4 {
-    font-size: 16px;
+    font-size: 1.6rem;
     margin-bottom: 0;
     margin-top: 2em;
   }
@@ -65,7 +82,16 @@ ol {
   color: $color-marketing-gray-70;
 }
 
-#rally {
-  display: grid;
-  grid-template-rows: 1fr auto 527px;
+input{
+  font-size: 1.6rem; 
 }
+
+button{
+  font-size: 1.6rem; 
+}
+
+// #rally {
+//   display: grid;
+//   grid-template-rows: 1fr auto 527px;
+
+// }

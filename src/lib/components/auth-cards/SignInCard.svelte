@@ -6,7 +6,6 @@
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
 
-
   const dispatch = createEventDispatcher();
 
   export let title;
@@ -53,10 +52,10 @@
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
     let wrongPW = "auth/wrong-password";
-    let notVerified = "Email account not verified"
+    let notVerified = "Email account not verified";
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
-    let isNotVerified = fireBaseErr.indexOf(notVerified)
+    let isNotVerified = fireBaseErr.indexOf(notVerified);
 
     if (isNotFoundErr > -1) {
       signInErrText = "User not found. Please try again.";
@@ -98,43 +97,43 @@
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="card-body-content signin-card" slot="card-body">
-    <form method="post">
-      <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field">
-          <div class="label-wrapper">
-            <label class="mzp-c-field-label enter-pw" for="id_user_email"
-              >Enter your email</label
-            >
+  <div class="card-body-content card-body-content--form" slot="card-body">
+    <div class="form-wrapper">
+      <form method="post">
+        <fieldset class="mzp-c-field-set">
+          <div class="mzp-c-field">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label enter-pw" for="id_user_email"
+                >Enter your email</label
+              >
+            </div>
+            <input
+              class="mzp-c-field-control"
+              bind:value={email}
+              bind:this={emailEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_email"
+              name="id_user_email"
+              type="email"
+              width="100%"
+              required
+            />
           </div>
-          <input
-            class="mzp-c-field-control "
-            bind:value={email}
-            bind:this={emailEl}
-            on:change={handleChange}
-            on:keyup={handleChange}
-            id="id_user_email"
-            name="id_user_email"
-            type="email"
-            width="100%"
-            required
-          />
-        </div>
-        <div class="mzp-c-field">
-          <div class="label-wrapper">
-            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Enter your password</label
-            >
-            <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
-              <button
-                on:click={() => {
-                  handleTrigger("forget");
-                }}>Forgot password</button
-              ></label
-            >
-          </div>
+          <div class="mzp-c-field">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+                >Enter your password</label
+              >
+              <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+                <button
+                  on:click={() => {
+                    handleTrigger("forget");
+                  }}>Forgot password</button
+                ></label
+              >
+            </div>
 
-          <div class="input-wrapper">
             <input
               class="mzp-c-field-control"
               bind:value={password}
@@ -169,66 +168,60 @@
                 on:click|preventDefault={handleToggle}
               />
             {/if}
+
+            <!-- ERROR MESSAGE -->
+            {#if signInErr}
+              <p class="error-msg-active">
+                {signInErrText}
+              </p>
+            {/if}
           </div>
+        </fieldset>
+      </form>
 
-          <!-- ERROR MESSAGE -->
-          {#if signInErr}
-            <p class="error-msg-active">
-              {signInErrText}
-            </p>
-          {/if}
-        </div>
-      </fieldset>
-    </form>
+      {#if !test}
+        <Button
+          on:click={async () => {
+            await store.loginWithEmailAndPassword(email, password);
+            handleNextState();
+          }}
+          disabled={btnDisabled}
+          size="xl"
+          custom="card-button signin"
+          btnID="signin-btn"
+        >
+          <div class="button-text--signin">
+            {cta1}
+          </div></Button
+        >
+      {/if}
 
-    {#if !test}
-      <Button
-        on:click={async () => {
-          await store.loginWithEmailAndPassword(email, password);
-          handleNextState();
-        }}
-        disabled={btnDisabled}
-        size="xl"
-        custom="card-button signin"
-        btnID="signin-btn"
-      >
-        <div class="button-text">
-          {cta1}
-        </div></Button
-      >
-    {/if}
-
-    {#if test}
-      <Button disabled={btnDisabled} size="xl" custom="card-button signin">
-        <div class="button-text">
-          {cta1}
-        </div></Button
-      >
-    {/if}
-
-    <p class="body-text-action">
-      {bodyText}
-      <button
-        on:click={() => {
-          handleTrigger("join");
-        }}>{linkText}</button
-      >
-    </p>
+      {#if test}
+        <Button disabled={btnDisabled} size="xl" custom="card-button signin">
+          <div class="button-text--signin">
+            {cta1}
+          </div></Button
+        >
+      {/if}
+      <p class="body-text-privacy">
+        By proceeding, you agree to our <a href="/">privacy notice</a>
+      </p>
+    </div>
   </div>
+
+  <p slot="cta" class="body-text-action">
+    {bodyText}
+    <button
+      on:click={() => {
+        handleTrigger("join");
+      }}>{linkText}</button
+    >
+  </p>
 </Card>
 
 <style>
-  .title-wrapper{
-    padding-bottom: 25px; 
-  }
-  
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
     transition: width 0.2s ease-in;
   }
 

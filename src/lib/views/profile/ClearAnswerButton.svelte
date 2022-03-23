@@ -32,7 +32,7 @@
     padding-right: 7px;
     padding-top: 5.5px;
     padding-bottom: 5.5px;
-    font-size: 10px;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1;
     margin-left: 12px;

@@ -1,3 +1,107 @@
+.signin {
+  &__logo {
+    text-align: center;
+  }
+  .card-container {
+    margin: auto;
+    .card-header {
+      h2 {
+        font-weight: bold;
+        font-size: 38px;
+        line-height: 44px;
+      }
+    }
+    .card-body-content {
+      &--form {
+        padding-top: 48px;
+      }
+    }
+  }
+
+  &__content {
+    width: 100%;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    height: 50rem;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
+  &__cards {
+    margin-top: 3rem;
+
+    .spinner {
+      -webkit-animation: rotator 1.4s linear infinite;
+      animation: rotator 1.4s linear infinite;
+      height: 40rem;
+    }
+
+    .path {
+      stroke-dasharray: 187;
+      stroke-dashoffset: 0;
+      transform-origin: center;
+      -webkit-animation: dash 1.4s ease-in-out infinite,
+        colors 5.6s ease-in-out infinite;
+      animation: dash 1.4s ease-in-out infinite,
+        colors 5.6s ease-in-out infinite;
+    }
+  }
+
+  .form-wrapper {
+    display: grid;
+    margin-bottom: 0;
+    @media only screen and (min-width: $MD-screen) {
+      max-width: 368px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(4, auto);
+      column-gap: 34px;
+    }
+
+    form {
+      img {
+        margin: 0.2rem 0 0 -3.5rem;
+        cursor: pointer;
+      }
+    }
+
+    .card-body-info,
+    form,
+    button,
+    .body-text-privacy, .body-text-action {
+      grid-column: 1/13;
+      @media only screen and (min-width: $MD-screen) {
+        max-width: 368px;
+      }
+    }
+  }
+
+  .card-body-info{
+    max-width: 368px;
+  }
+
+  input {
+    width: 100%;
+    height: 48px;
+    font-size: 14px;
+    border: 2px solid $color-marketing-gray-50;
+  }
+
+  .button-text {
+    text-align: left;
+    font-size: 16px;
+    width: 170px;
+    opacity: 0.6;
+  }
+
+  .how-it-works {
+    text-align: center;
+    margin-top: 40px;
+  }
+}
+
+.mzp-c-call-out-desc {
+  display: none;
+}
+
 .mzp-c-call-out {
   backface-visibility: hidden;
   background-color: transparent;
@@ -8,40 +112,22 @@
     padding-left: 0;
     padding-right: 0;
     /* this is Main + required padding to meet 120px */
-    padding-top: 80px;
+    padding-top: 8rem;
 
     .mzp-c-call-out-title {
+      display: flex;
+      justify-content: center;
       animation: moveInLeft 1s ease-out;
-      margin-bottom: 12px;
-      text-align: center;
+      margin-bottom: 1.2rem;
     }
 
     .mzp-c-call-out-desc {
       color: $color-marketing-gray-70;
+      font-size: 1.6rem;
     }
 
-    .cards-wrapper {
-      margin-top: 40px;
-      display: flex;
-      justify-content: center;
-      .spinner {
-        -webkit-animation: rotator 1.4s linear infinite;
-        animation: rotator 1.4s linear infinite;
-        height: 400px;
-      }
-
-      .path {
-        stroke-dasharray: 187;
-        stroke-dashoffset: 0;
-        transform-origin: center;
-        -webkit-animation: dash 1.4s ease-in-out infinite,
-          colors 5.6s ease-in-out infinite;
-        animation: dash 1.4s ease-in-out infinite,
-          colors 5.6s ease-in-out infinite;
-      }
-    }
     .how-it-works {
-      margin-top: 24px;
+      margin-top: 2.4rem;
       text-align: center;
     }
   }
@@ -148,11 +234,6 @@
   display: flex;
 }
 
-input {
-  width: 100%;
-  height: 50px;
-}
-
 .label-wrapper {
   display: flex;
   justify-content: space-between;
@@ -160,31 +241,23 @@ input {
 
 .mzp-c-field-label {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: #818282;
-}
-
-form img {
-  margin: 2px 0 0 -35px;
-  cursor: pointer;
 }
 
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 12px;
+  font-size: 1.2rem;
   color: gray;
   padding: 0;
-  position: absolute;
-  left: 0;
-  top: 87px;
 }
 
 .error-msg-active {
   position: inherit;
   color: red;
-  padding-top: 5px;
-  top: 0px;
+  padding-top: 0.5rem;
+  top: 0;
 }
 
 .valid {
@@ -195,30 +268,16 @@ form img {
   display: none;
 }
 
-/* button styles */
-.button-wrapper {
-  width: 244px;
-  margin: auto;
-}
-
 .card-button {
-  display: flex;
-  margin-top: 15px;
+  margin-bottom: 15px;
   width: 100%;
-  align-items: center;
   padding: 6px 20px !important;
-}
-
-.button-text {
-  margin-left: 10px;
-  font-size: 16px;
 }
 
 .card-button.signin,
 .card-button.create {
-  justify-content: center;
   margin-top: 0;
-  height: 50px;
+  height: 48px;
 }
 
 .reset-pw {
@@ -227,12 +286,12 @@ form img {
 
 .body-text-privacy {
   font-size: 12px;
-  padding-top: 20px;
+  margin: auto;
+  text-align: center;
 }
 
 .body-text-action {
   font-size: 16px;
-  padding-top: 40px;
   color: #000000;
   text-align: center;
 }
@@ -254,21 +313,21 @@ form img {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-p {
-  margin: auto;
-}
+  p {
+    margin: auto;
+  }
 
-p a {
-  color: #000000;
+  p a {
+    color: #000000;
+  }
 }
 
 .info-rules {
   list-style: disc;
   font-size: 12px;
   color: gray;
-  padding: 10px 0 0 23px;
+  padding-left: 10px;
   text-align: left;
   margin: 0;
 }

@@ -39,7 +39,7 @@
 {#if $store._initialized && $isAuthenticated === true}
   {#if $store.studies}
     <section>
-      <div class="main-container studies-container">
+      <div class="section-content section-content--studies">
         <StudiesContent
           sidebarOffset
           studies={$store.studies}

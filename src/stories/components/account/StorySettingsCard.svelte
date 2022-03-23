@@ -4,7 +4,7 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import Card from "../../../lib/components/Card.svelte";
   import UpdatePassword from "./StoryUpdatePassword.svelte";
-  import UpdateEmail from "./StoryUpdateEmail.svelte";
+  import UpdateEmail from "./UpdateEmail.svelte";
   import "../css/RallySettings.css";
 
   export let isEmail;

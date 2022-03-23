@@ -52,10 +52,6 @@
 </OnboardingCallToActionContainer>
 
 <style>
-  .call-flow {
-    grid-template-columns: max-content max-content auto 0;
-  }
-
   .arrow {
     width: 0;
     height: 0;

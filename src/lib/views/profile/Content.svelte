@@ -30,22 +30,16 @@
   );
 </script>
 
-<div in:fly|local={{ duration: 800, y: 5 }}>
-  <h2 class="section-header">
-    <slot name="title">
-      <span>Tell Us About Yourself</span>
-    </slot>
-  </h2>
+<div class="profile md-container">
+  <h2 class="section-header profile__header">Tell Us About Yourself</h2>
 
-  <slot name="description">
-    <p>
-      Each question is completely optional, and can be updated at any time by
-      clicking Manage Profile. The answers you give will help us understand the
-      composition and representivity of the Rally community. Additionally,
-      collaborators will combine your answers with the data collected in the
-      studies you join to enrich their findings and answer research questions.
-    </p>
-  </slot>
+  <p class="profile__description">
+    Each question is completely optional, and can be updated at any time by
+    clicking Manage Profile. The answers you give will help us understand the
+    composition and representivity of the Rally community. Additionally,
+    collaborators will combine your answers with the data collected in the
+    studies you join to enrich their findings and answer research questions.
+  </p>
 
   <hr />
 
@@ -106,7 +100,9 @@
                 value={workingResults[question]}
               />
               <span style="min-height: 24px; display: block;">
-                {#if inputFormatters.showErrors(question) && inputFormatters.hasValidator(question) && inputFormatters[question].isInvalid(workingResults[question])} // show errors if blurred // show errors if there's a validator for this question
+                {#if inputFormatters.showErrors(question) && inputFormatters.hasValidator(question) && inputFormatters[question].isInvalid(workingResults[question])}
+                  // show errors if blurred // show errors if there's a
+                  validator for this question
                   <span
                     class="mzp-c-fieldnote"
                     transition:fly|local={{ duration: 300, y: 5 }}
@@ -161,16 +157,32 @@
 </div>
 
 <style>
+  h2 {
+    color: var(--color-ink-50);
+    padding: 1rem;
+  }
+
+  p,
+  form {
+    color: var(--color-marketing-gray-70);
+    padding: 1rem;
+  }
+
+  p,
+  div {
+    letter-spacing: -0.01em;
+  }
+
   /* this selects only checkbox or radio */
   [class="mzp-c-choice"] {
     display: flex;
     align-items: center;
     cursor: pointer;
-    gap: 1rem;
+    gap: 1.6rem;
   }
 
   .mzp-c-choice-text {
-    min-height: 1rem;
+    min-height: 1.6rem;
   }
 
   .mzp-c-field-set-text {
@@ -187,7 +199,8 @@
 
   .mzp-c-choice-label {
     font-weight: normal;
-    font-size: 1rem;
+    font-size: 1.6rem;
+    padding-top: 0rem;
   }
 
   label,
@@ -198,8 +211,8 @@
   input[type="text"] {
     cursor: auto;
     border: 2px solid #cdcdd4;
-    width: 140px;
-    min-width: 140px;
+    width: 14rem;
+    min-width: 14rem;
     transition: border-color 200ms;
   }
 
@@ -226,25 +239,30 @@
 
   /* correct for Protocol's radio and checkbox misalignments */
   .mzp-c-choice-control[type="radio"] + label::before {
-    transform: translateY(0.25rem);
+    transform: translateY(0.4rem);
   }
 
   .mzp-c-choice-control[type="checkbox"] + label::before {
-    transform: translateY(0.25rem);
+    transform: translateY(0.4rem);
   }
 
   .mzp-c-choice-control[type="checkbox"]:checked + label::after {
-    transform: translateY(0.215rem) rotate(45deg);
+    transform: translateY(0.344rem) rotate(45deg);
+  }
+
+  .mzp-c-choice-control[type="radio"] {
+    height: 2.2rem;
+    width: 2.2rem;
   }
 
   legend {
     color: var(--color-ink-50);
-    font-size: 1rem;
+    font-size: 1.6rem;
   }
 
   fieldset {
     /* position: inherit; */
-    padding-bottom: 60px;
+    padding-bottom: 6rem;
   }
 
   fieldset:last-child {
@@ -254,16 +272,15 @@
   .mzp-c-choices {
     width: 100%;
     padding-bottom: 0;
-    padding-left: 1rem;
+    padding-left: 1.6rem;
   }
 
   .two-columns {
     display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: max-content max-content;
+    grid-template-columns: repeat(auto-fit, 173px);
     grid-template-rows: repeat(var(--rows, 3), max-content);
     justify-content: start;
-    width: max-content;
-    grid-column-gap: 4rem;
+    grid-column-gap: 6.4rem;
+    width: 80%;
   }
 </style>

@@ -38,6 +38,7 @@
     grid-gap: 20px;
     margin-bottom: 20px;
     grid-template-columns: var(--study-card-header-columns);
+    grid-template-rows: max-content;
   }
 
   .study-card-header-info {
@@ -49,6 +50,10 @@
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
       "Segoe UI Symbol";
     color: var(--color-marketing-gray-70);
+  }
+
+  .text-body-sm{
+    font-size: 1.4rem; 
   }
 
   h3 {

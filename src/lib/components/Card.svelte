@@ -8,7 +8,6 @@
   export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
-  
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
@@ -38,11 +37,11 @@
   }`;
 </script>
 
-<div id={key}>
+<section id={key}>
   <div class="card-container radius-sm" style={styles}>
-    <header class="container-header">
+    <header class="card-header">
       <h2>
-        <slot name="card-title"></slot>
+        <slot name="card-title" />
       </h2>
     </header>
 
@@ -51,29 +50,20 @@
         <p>I am a Card</p>
       </slot>
     </div>
+
+    <slot name="cta" />
   </div>
-</div>
+</section>
 
 <style>
   .card-container {
-    width: calc(var(--width, var(--content-width)) - 40px);
+    max-width: var(--width);
     height: var(--height);
-    min-width: calc(var(--width, var(--content-width)) - 40px);
     min-height: var(--min-height);
     background-color: var(--color-white);
-    padding: 20px;
-    box-shadow: var(--box-shadow-lg);
+    border: 1px solid #cdcdd4;
     display: grid;
-    grid-template-rows: max-content auto max-content;
-    font-size: 14px;
-  }
-
-  header {
-    display: grid;
-    grid-template-columns: auto max-content;
-  }
-
-  h2 {
-    font-size: var(--fontSize);
+    justify-content: center;
+    font-size: 1.4rem;
   }
 </style>

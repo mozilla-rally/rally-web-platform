@@ -167,3 +167,13 @@ $main-notification-offset: calc(
 $study-card-image-size: 60px;
 $study-card-header-columns: var($study-card-image-size) auto max-content;
 $study-card-header-areas: "image title cta";
+
+
+//media queries
+$default-screen: 1440px;
+$XL-screen: 1152px;
+$LG-screen: 982px; 
+$MD-screen2: 768px; 
+$MD-screen: 688px; 
+$SM-screen: 432px; 
+$XM-screen: 360px; 

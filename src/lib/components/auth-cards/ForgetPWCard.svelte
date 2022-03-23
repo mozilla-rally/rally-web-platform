@@ -10,11 +10,9 @@
 
   export let title;
   export let cta1;
-  export let custom;
   export let bodyText;
   export let width;
   export let fontSize;
-  export let minHeight;
   export let store;
   export let sendUserInfo;
 
@@ -73,17 +71,25 @@
   };
 </script>
 
-<Card {width} {fontSize} {minHeight} {custom}>
+<Card {width} {fontSize}>
   <div class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="card-body-content" slot="card-body">
-    <form method="post">
-      <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field">
-          <div class="input-wrapper">
+  <div class="card-body-content card-body-content--form" slot="card-body">
+    <div class="form-wrapper">
+      <p class="card-body-info">
+        Enter your email and we'll send you a link to reset your password
+      </p>
+      <form method="post">
+        <fieldset class="mzp-c-field-set">
+          <div class="mzp-c-field">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label enter-pw" for="id_user_email"
+                >Email</label
+              >
+            </div>
             <input
               class="mzp-c-field-control"
               bind:value={email}
@@ -98,48 +104,47 @@
               required
             />
           </div>
-        </div>
-        <!-- ERROR MESSAGE -->
-        {#if requestErr}
-          <p class="info-msg-err-reset">
-            {requestErrText}
-          </p>
-        {/if}
-      </fieldset>
-    </form>
-    <Button
-      on:click={handleForgetPassword}
-      disabled={btnDisabled}
-      size="xl"
-      custom="card-button create"
-    >
-      <div class="button-text">{cta1}</div></Button
-    >
-    <p class="body-text-action">
-      {bodyText}
-    </p>
-    <p class="body-text-action">
-      Nevermind,<button
-        on:click={() => {
-          handleTrigger("signin");
-        }}><a href="/">go back</a></button
+
+          <!-- ERROR MESSAGE -->
+          {#if requestErr}
+            <p class="info-msg-err-reset">
+              {requestErrText}
+            </p>
+          {/if}
+        </fieldset>
+      </form>
+
+      <Button
+        on:click={handleForgetPassword}
+        disabled={btnDisabled}
+        size="xl"
+        custom="card-button create"
       >
-    </p>
+        <div class="button-text--signin">{cta1}</div></Button
+      >
+
+      <p class="body-text-action">
+        {bodyText}
+      </p>
+      <p class="body-text-action">
+        Nevermind,<button
+          on:click={() => {
+            handleTrigger("signin");
+          }}><a href="/">go back</a></button
+        >
+      </p>
+    </div>
   </div>
 </Card>
 
 <style>
-  .title-wrapper{
-    padding-bottom: 35px;
+
+  .card-body-content{
+    padding-left: 10px;
+    padding-right: 10px; 
   }
-  
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
     transition: width 0.2s ease-in;
   }
   .info-msg-err-reset {
@@ -151,7 +156,7 @@
   }
 
   .body-text-action {
-    text-align: left;
+    text-align: center;
     font-size: 12px;
     color: gray;
     padding-top: 10px;
@@ -159,5 +164,13 @@
 
   .body-text-action button {
     font-size: 14px;
+  }
+
+  @media (max-width: 488px) {
+    .title-highlight {
+      width: 250px;
+      transition: width 0.2s ease-in;
+      margin-top: 70px; 
+    }
   }
 </style>

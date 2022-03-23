@@ -1,15 +1,28 @@
-<script>
+<script type="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext,  onMount } from "svelte";
+  import { goto } from "$app/navigation";
   import { fade, fly } from "svelte/transition";
   import Arrow01 from "$lib/components/Arrow01.svelte";
   import Button from "$lib/components/Button.svelte";
   import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
+  import type { AppStore } from "$lib/stores/types";
+
+  const store: AppStore = getContext("rally:store");
 
   const dispatch = createEventDispatcher();
+
+  let browser;
+
+  onMount(async () => {
+  
+    if (window) {
+      browser = window.location;
+    }
+  });
 
   let scrollY = 0;
 
@@ -21,6 +34,13 @@
   }
 
   let intro = false;
+
+  const handleLogOut = async () => {
+    await store.signOutUser();
+    goto("/signup");
+    browser.reload();
+  };
+
 </script>
 
 <svelte:window bind:scrollY />
@@ -37,8 +57,8 @@
     <Button size="xl" product on:click={() => dispatch("accept")}>
       Accept & Enroll
     </Button>
-    <Button size="xl" product secondary on:click={() => dispatch("cancel")}>
-      Cancel
+    <Button size="xl" product secondary on:click={()=>{handleLogOut()}}>
+      Decline
     </Button>
     {#if showArrow && intro}
       <div
@@ -56,10 +76,6 @@
 </CallToActionContainer>
 
 <style>
-  .call-flow {
-    grid-template-columns: max-content max-content auto 0;
-  }
-
   .arrow {
     width: 0;
     height: 0;

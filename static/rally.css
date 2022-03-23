@@ -6,8 +6,7 @@
   font-family: Inter;
   font-style: normal;
   font-weight: 600;
-  src: url("./fonts/Inter-SemiBold.woff2") format("woff2"),
-    url("./fonts/Inter-SemiBold.woff") format("woff");
+  src: url("./fonts/inter/inter-600.woff") format("woff")
 }
 
 :root {
@@ -39,17 +38,6 @@
   color: var(--color-blue-50);
 }
 
-.call-flow {
-  display: grid;
-  grid-gap: 1rem;
-  align-items: center;
-  position: absolute;
-  width: var(--content-width);
-}
-
-main h2 {
-  font-size: 38px;
-}
 
 h2.section-header {
   margin-bottom: 12px;
@@ -103,7 +91,6 @@ main hr {
 /* place the styling in src/routes/current-studies/Background.svelte in the stylesheet
 to ensure access to the background images. */
 .study-background {
-  padding: 2rem 2.5rem;
   background-image: linear-gradient(
       to left,
       rgba(248, 248, 250, var(--o1, 1)),

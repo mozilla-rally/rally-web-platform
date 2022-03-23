@@ -58,13 +58,7 @@
 
 <style>
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-    transition: width 0.2s ease-in;
   }
 
   .body-text-info {

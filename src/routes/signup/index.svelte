@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { getContext } from "svelte";
-  import { onMount } from "svelte";
+  import type { Readable } from "svelte/store";
   import { goto } from "$app/navigation";
   import * as state from "$lib/components/auth-cards/state.svelte";
   import SignInCard from "$lib/components/auth-cards/SignInCard.svelte";
@@ -21,12 +21,8 @@
   let showCardsWrapper = true;
   let loadingItem = null;
 
-  onMount(() => {
-    localStorage.removeItem("loading");
-  });
-
   let userEmail;
-  
+
   let {
     cardArgs,
     welcomeArgs,
@@ -50,14 +46,13 @@
     resetPWCard,
   } = state.card;
 
-
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
-    }else{
-      goto("/studies")
+    } else {
+      goto("/studies");
     }
   }
 
@@ -148,82 +143,91 @@
   };
 </script>
 
-<section class="mzp-c-call-out sign-in-container">
-  <div class="mzp-l-content">
-    <h2 class="mzp-c-call-out-title mzp-has-zap-1">
-      <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
-    </h2>
+<section class="signin md-container-signin">
+  <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
+    <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
+  </h2>
 
-    <p class="mzp-c-call-out-desc">
-      This is a feasibility spike exploring a web-based Rally user experience.
-    </p>
-    <div class="cards-wrapper">
-      {#if isLoading}
-        <svg
-          class="spinner"
-          width="100px"
-          height="100px"
-          viewBox="0 0 66 66"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            class="path"
-            fill="none"
-            stroke-width="6"
-            stroke-linecap="round"
-            cx="33"
-            cy="33"
-            r="30"
-          />
-        </svg>
+  <p class="mzp-c-call-out-desc">
+    This is a feasibility spike exploring a web-based Rally user experience.
+  </p>
+  <div class="cards-wrapper signin__cards">
+    {#if isLoading}
+
+    <div class="spinner-wrapper">
+      <svg
+      class="spinner"
+      width="100px"
+      height="100px"
+      viewBox="0 0 66 66"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        class="path"
+        fill="none"
+        stroke-width="6"
+        stroke-linecap="round"
+        cx="33"
+        cy="33"
+        r="30"
+      />
+    </svg>
+    </div>
+    
+    {/if}
+
+    {#if showCardsWrapper}
+      {#if welcomeCard || joinCard}
+        <LaunchCard
+          {...cardArgs}
+          {store}
+          on:type={triggerCard}
+          on:item={showSpinner}
+        />
       {/if}
 
-      {#if showCardsWrapper}
-        {#if welcomeCard || joinCard}
-          <LaunchCard
-            {...cardArgs}
-            {store}
-            on:type={triggerCard}
-            on:item={showSpinner}
-          />
-        {/if}
-
-        {#if signinCard && !welcomeCard && !joinCard}
-          <SignInCard {...cardArgs} {store} on:type={triggerCard} />
-        {/if}
-
-        {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
-          <CreateCard {...cardArgs} {store} on:type={triggerCard} />
-        {/if}
-
-        {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-          <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
-        {/if}
-
-        {#if forgetPWCard && !welcomeCard && !joinCard && !signinCard && !createAcctCard && !checkEmailCard}
-          <ForgetPwCard
-            {...cardArgs}
-            {sendUserInfo}
-            {store}
-            on:type={triggerCard}
-          />
-        {/if}
-
-        {#if resetPWCard && !checkEmailPWCard}
-          <ResetPwCard {...cardArgs} on:type={triggerCard} />
-        {/if}
+      {#if signinCard && !welcomeCard && !joinCard}
+        <SignInCard {...cardArgs} {store} on:type={triggerCard} />
       {/if}
-    </div>
 
-    <div class="how-it-works">
-      <a
-        class="external-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="__BASE_SITE__/how-rally-works/"
-        >Wait – how does it work again?
-        <ExternalLink /></a
-      >
-    </div>
+      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
+        <CreateCard {...cardArgs} {store} on:type={triggerCard} />
+      {/if}
+
+      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+        <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
+      {/if}
+
+      {#if forgetPWCard && !welcomeCard && !joinCard && !signinCard && !createAcctCard && !checkEmailCard}
+        <ForgetPwCard
+          {...cardArgs}
+          {sendUserInfo}
+          {store}
+          on:type={triggerCard}
+        />
+      {/if}
+
+      {#if resetPWCard && !checkEmailPWCard}
+        <ResetPwCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+    {/if}
+  </div>
+
+  <div class="how-it-works">
+    <a
+      class="external-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      href="__BASE_SITE__/how-rally-works/"
+      >Wait – how does it work again?
+      <ExternalLink /></a
+    >
   </div>
 </section>
+
+
+<style>
+  .spinner-wrapper{
+    text-align: center;
+  }
+</style>
