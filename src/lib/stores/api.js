@@ -1,29 +1,13 @@
-import { produce } from "immer/dist/immer.esm";
-
 import {
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  reauthenticateWithCredential,
+  createUserWithEmailAndPassword, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithCredential,
   sendEmailVerification,
-  sendPasswordResetEmail,
-  updatePassword,
-  updateEmail,
-  EmailAuthProvider,
-  signOut,
+  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword
 } from "firebase/auth";
 import {
-  doc,
-  getDoc,
-  setDoc,
-  getDocs,
-  updateDoc,
-  collection,
-  onSnapshot,
+  collection, doc,
+  getDoc, getDocs, onSnapshot, setDoc, updateDoc
 } from "firebase/firestore";
-
+import { produce } from "immer/dist/immer.esm";
 import initializeFirebase from "./initialize-firebase";
 
 let auth;
@@ -175,10 +159,10 @@ export default {
             });
 
             const idToken = await authenticatedUser.getIdToken();
-            const body = JSON.stringify({ studyId, idToken });
+            const body = JSON.stringify({ studyId });
             const result = await fetch(`${functionsHost}/rallytoken`, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
               body,
             });
             const rallyToken = (await result.json()).rallyToken;
