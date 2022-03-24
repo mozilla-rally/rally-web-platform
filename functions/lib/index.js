@@ -1,38 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadFirestore = exports.deleteRallyUserImpl = exports.addRallyStudyToFirestoreImpl = exports.rallytoken = void 0;
-const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const studies_1 = require("./studies");
+const functions = require("firebase-functions");
 const uuid_1 = require("uuid");
+const authentication_1 = require("./authentication");
+const cors_1 = require("./cors");
+const studies_1 = require("./studies");
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
 });
-exports.rallytoken = functions.https.onRequest(async (request, response) => {
-    response.set("Access-Control-Allow-Origin", "*");
-    response.set("Access-Control-Allow-Headers", "Content-Type");
-    if (request.method === "OPTIONS") {
-        response.set("Access-Control-Allow-Methods", "POST");
-        response.set("Access-Control-Allow-Headers", "Bearer, Content-Type");
-        response.status(204).send("");
-    }
-    else if (request.method === "POST") {
+exports.rallytoken = functions.https.onRequest(async (request, response) => cors_1.useCors(request, response, async () => {
+    await authentication_1.useAuthentication(request, response, async (decodedToken) => {
+        if (request.method !== "POST") {
+            response.status(500).send("Only POST and OPTIONS methods are allowed.");
+            return;
+        }
         functions.logger.info(`body type: ${typeof request.body}`, {
             payload: request.body,
         });
         try {
-            let idToken;
             let studyId;
             if (typeof request.body === "string") {
                 const body = JSON.parse(request.body);
-                idToken = body.idToken;
                 studyId = body.studyId;
             }
             else {
-                idToken = request.body.idToken;
                 studyId = request.body.studyId;
             }
-            const rallyToken = await generateToken(idToken, studyId);
+            const rallyToken = await generateToken(decodedToken, studyId);
             functions.logger.info("OK");
             response.status(200).send({ rallyToken });
         }
@@ -40,21 +36,17 @@ exports.rallytoken = functions.https.onRequest(async (request, response) => {
             functions.logger.error(ex);
             response.status(500).send();
         }
-    }
-    else {
-        response.status(500).send("Only POST and OPTIONS methods are allowed.");
-    }
-});
+    });
+}));
 /**
  * Takes a Firebase IDToken for a Rally user, and returns a Rally Token
  * for a restricted-access account (for use with studies).
  *
- * @param {string} idToken Firebase IDToken.
+ * @param {string} decodedToken Decoded Firebase IDToken.
  * @param {string} studyId Rally study ID.
  * @return {Promise<string>} rallyToken
  */
-async function generateToken(idToken, studyId) {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
+async function generateToken(decodedToken, studyId) {
     // Firebase will create this account if it does not exist,
     // when the token is first used to sign-in.
     const uid = `${studyId}:${decodedToken.uid}`;
