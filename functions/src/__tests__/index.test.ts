@@ -1,4 +1,7 @@
+jest.mock("../cors");
+
 import * as admin from "firebase-admin";
+import { useCors } from "../cors";
 import * as functions from "firebase-functions";
 import {
   addRallyStudyToFirestoreImpl,
@@ -141,6 +144,20 @@ describe("rallytoken tests", () => {
   let send: jest.Mock<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   let response: functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+  const uid = "fake-uid";
+  const customToken = "fake-custom-token";
+
+  const fakeAuth = {
+    verifyIdToken: jest.fn(),
+    createCustomToken: jest.fn(),
+  };
+
+  Object.defineProperty(admin, "auth", {
+    get: function () {
+      return () => fakeAuth;
+    },
+  });
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -149,26 +166,29 @@ describe("rallytoken tests", () => {
       set: jest.fn(),
       status: jest.fn().mockReturnValue({ send }),
     } as unknown) as functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    fakeAuth.verifyIdToken.mockReturnValue({ uid });
+    fakeAuth.createCustomToken.mockReturnValue(customToken);
+
+    (useCors as jest.Mock).mockImplementation(
+      async (req, res, fn) => await fn(req, res)
+    );
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  function verifyCoreResponseHeaders() {
-    expect(response.set).toHaveBeenCalledWith(
-      "Access-Control-Allow-Origin",
-      "*"
-    );
-    expect(response.set).toHaveBeenCalledWith(
-      "Access-Control-Allow-Headers",
-      "Content-Type"
-    );
-  }
-
   it("fails for invalid http verb", async () => {
-    await rallytoken({ method: "PUT" } as functions.Request<any>, response); // eslint-disable-line @typescript-eslint/no-explicit-any
-    verifyCoreResponseHeaders();
+    await rallytoken(
+      {
+        method: "PUT",
+        headers: {
+          authorization: "Bearer 123",
+        },
+      } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+      response
+    ); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     expect(response.status).toHaveBeenCalledWith(500);
     expect(send).toHaveBeenCalledWith(
@@ -176,49 +196,22 @@ describe("rallytoken tests", () => {
     );
   });
 
-  it("returns allowed headers and methods when called with options verb", async () => {
-    await rallytoken({ method: "OPTIONS" } as functions.Request<any>, response); // eslint-disable-line @typescript-eslint/no-explicit-any
-    verifyCoreResponseHeaders();
-
-    expect(response.set).toHaveBeenCalledWith(
-      "Access-Control-Allow-Methods",
-      "POST"
-    );
-
-    expect(response.set).toHaveBeenCalledWith(
-      "Access-Control-Allow-Headers",
-      "Bearer, Content-Type"
-    );
-
-    expect(response.status).toHaveBeenCalledWith(204);
-    expect(send).toHaveBeenCalledWith("");
-  });
-
   it("fails when POST is invoked with invalid payload", async () => {
-    await rallytoken({ method: "POST" } as functions.Request<any>, response); // eslint-disable-line @typescript-eslint/no-explicit-any
-    verifyCoreResponseHeaders();
+    await rallytoken(
+      {
+        method: "POST",
+        headers: {
+          authorization: "Bearer 123",
+        },
+      } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+      response
+    ); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     expect(response.status).toHaveBeenCalledWith(500);
     expect(send).toHaveBeenCalled();
   });
 
   it("handles payload in POST request", async () => {
-    const uid = "fake-uid";
-    const customToken = "fake-custom-token";
-
-    const fakeAuth = {
-      verifyIdToken: jest.fn().mockReturnValue({ uid }),
-      createCustomToken: jest.fn().mockReturnValue(customToken),
-    };
-
-    const fakeAuthRef = jest.fn().mockReturnValue(fakeAuth);
-
-    Object.defineProperty(admin, "auth", {
-      get: function () {
-        return fakeAuthRef;
-      },
-    });
-
     const idToken = "idToken";
     const studyId = "study1";
 
@@ -240,6 +233,9 @@ describe("rallytoken tests", () => {
     await rallytoken(
       {
         method: "POST",
+        headers: {
+          authorization: `Bearer ${idToken}`,
+        },
         body: JSON.stringify({ idToken, studyId }),
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
@@ -255,6 +251,9 @@ describe("rallytoken tests", () => {
     await rallytoken(
       {
         method: "POST",
+        headers: {
+          authorization: `Bearer ${idToken}`,
+        },
         body: { idToken, studyId },
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
