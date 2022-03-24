@@ -128,7 +128,6 @@
         style="color: var(--color-marketing-gray-70);
 "
       >
-        This is a feasibility spike exploring a web-based Rally user experience.
       </p>
 
       <div class="cards-wrapper">

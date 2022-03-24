@@ -1,20 +1,20 @@
 import admin from "firebase-admin";
 
-import { studies } from "../data/studies";
+import { studies } from "../functions/src/studies";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-function addStudyToFirebase(index, study) {
+function addStudyToFirebase(studyId, study) {
   admin
     .firestore()
     .collection("studies")
-    .doc(index)
+    .doc(studyId)
     .set(study, { merge: true });
 }
 
-for (const [index, study] of Object.entries(studies)) {
-  console.info(`Loading study ${index} into Firestore`);
-  addStudyToFirebase(index, study);
+for (const [studyId, study] of Object.entries(studies)) {
+  console.info(`Loading study ${studyId} into Firestore`);
+  addStudyToFirebase(studyId, study);
 }
