@@ -64,6 +64,10 @@
     border: 1px solid #cdcdd4;
     display: grid;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 0.875rem;
+  }
+
+  header{
+    margin-bottom: 5px;
   }
 </style>

@@ -52,10 +52,6 @@
     color: var(--color-marketing-gray-70);
   }
 
-  .text-body-sm{
-    font-size: 1.4rem; 
-  }
-
   h3 {
     margin: 0;
     grid-area: title;

@@ -13,14 +13,13 @@ html {
   height: 100%;
   overflow: visible;
   scroll-behavior: smooth;
-  font-size: 62.5%;
 }
 
 body {
   overflow-x: hidden;
   line-height: 1.6;
   height: 100%;
-  font-size: 1.6rem; 
+  font-size: 1rem; 
 }
 
 header {
@@ -33,17 +32,17 @@ footer {
 
 main {
   h2 {
-    font-size: 3.8rem;
+    font-size: 2.375rem;
   }
 
   h3 {
-    font-size: 2rem;
+    font-size: 1.25rem;
     margin-bottom: 2em;
     margin-top: 2em;
   }
 
   h4 {
-    font-size: 1.6rem;
+    font-size: 1rem;
     margin-bottom: 0;
     margin-top: 2em;
   }
@@ -82,13 +81,6 @@ ol {
   color: $color-marketing-gray-70;
 }
 
-input{
-  font-size: 1.6rem; 
-}
-
-button{
-  font-size: 1.6rem; 
-}
 
 // #rally {
 //   display: grid;

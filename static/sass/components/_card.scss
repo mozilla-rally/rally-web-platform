@@ -9,19 +9,11 @@
   .title-wrapper {
     display: flex;
     justify-content: center;
-    // padding-bottom: 2.5rem;
+
     &--launch {
       display: flex;
       justify-content: center;
     }
-  }
-
-  .title-highlight {
-    background-color: $color-yellow-35;
-    border-radius: 4px;
-    position: absolute;
-    height: 2.2rem;
-    margin-top: 24px;
   }
 
   .title-text {
@@ -37,19 +29,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-    }
-    .button-wrapper{
-      max-width: 368px;
+      max-width: 360px;
       padding: 48px 20px;
     }
 
-    .form-wrapper {
-      padding: 0rem 1rem 4.8rem;
-    }
-
-    &--light-border-btn {
-      button {
-        border: 2px solid $color-marketing-gray-30;
+    .card-button{
+      padding: 12px 24px;
+      @media (max-width: $MD-screen) {
+        padding: 10px;
       }
     }
   }

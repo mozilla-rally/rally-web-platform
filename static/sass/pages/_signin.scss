@@ -7,8 +7,21 @@
     .card-header {
       h2 {
         font-weight: bold;
-        font-size: 38px;
+        font-size: 2.375rem;
         line-height: 44px;
+      }
+
+      .title-highlight {
+        background-color: $color-yellow-35;
+        border-radius: 4px;
+        position: absolute;
+        height: 1.375rem;
+        margin-top: 24px;
+        @media (max-width: 320px) {
+          width: 150px;
+          transition: width 0.2s ease-in;
+          margin-top: 70px;
+        }
       }
     }
     .card-body-content {
@@ -50,7 +63,7 @@
     display: grid;
     margin-bottom: 0;
     @media only screen and (min-width: $MD-screen) {
-      max-width: 368px;
+      max-width: 360px;
       grid-template-columns: repeat(12, 1fr);
       grid-template-rows: repeat(4, auto);
       column-gap: 34px;
@@ -58,7 +71,7 @@
 
     form {
       img {
-        margin: 0.2rem 0 0 -3.5rem;
+        margin: 0.2rem 0 -0.3rem -3.5rem;
         cursor: pointer;
       }
     }
@@ -66,30 +79,34 @@
     .card-body-info,
     form,
     button,
-    .body-text-privacy, .body-text-action {
+    .body-text-privacy,
+    .body-text-action {
       grid-column: 1/13;
       @media only screen and (min-width: $MD-screen) {
-        max-width: 368px;
+        max-width: 360px;
       }
     }
   }
 
-  .card-body-info{
+  .card-body-info {
     max-width: 368px;
   }
 
   input {
     width: 100%;
     height: 48px;
-    font-size: 14px;
+    font-size: 0.875rem;
     border: 2px solid $color-marketing-gray-50;
   }
 
   .button-text {
-    text-align: left;
-    font-size: 16px;
-    width: 170px;
+    text-align: center;
+    font-size: 1rem;
     opacity: 0.6;
+    @media only screen and (min-width: $MD-screen) {
+      width: 181px;
+      text-align: left;
+    }
   }
 
   .how-it-works {
@@ -230,9 +247,6 @@
 }
 
 /* form styles start */
-.input-wrapper {
-  display: flex;
-}
 
 .label-wrapper {
   display: flex;
@@ -241,8 +255,8 @@
 
 .mzp-c-field-label {
   font-weight: 600;
-  font-size: 1.2rem;
   color: #818282;
+  font-size: 0.875rem;
 }
 
 .error-msg-active,
@@ -271,7 +285,6 @@
 .card-button {
   margin-bottom: 15px;
   width: 100%;
-  padding: 6px 20px !important;
 }
 
 .card-button.signin,
@@ -325,9 +338,9 @@
 
 .info-rules {
   list-style: disc;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: gray;
-  padding-left: 10px;
+  padding: 10px;
   text-align: left;
   margin: 0;
 }

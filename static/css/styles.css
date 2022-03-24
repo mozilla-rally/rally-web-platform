@@ -1129,14 +1129,13 @@ html {
   height: 100%;
   overflow: visible;
   scroll-behavior: smooth;
-  font-size: 62.5%;
 }
 
 body {
   overflow-x: hidden;
   line-height: 1.6;
   height: 100%;
-  font-size: 1.6rem;
+  font-size: 1rem;
 }
 
 header {
@@ -1148,15 +1147,15 @@ footer {
 }
 
 main h2 {
-  font-size: 3.8rem;
+  font-size: 2.375rem;
 }
 main h3 {
-  font-size: 2rem;
+  font-size: 1.25rem;
   margin-bottom: 2em;
   margin-top: 2em;
 }
 main h4 {
-  font-size: 1.6rem;
+  font-size: 1rem;
   margin-bottom: 0;
   margin-top: 2em;
 }
@@ -1189,14 +1188,6 @@ ol {
   color: #5e5e72;
 }
 
-input {
-  font-size: 1.6rem;
-}
-
-button {
-  font-size: 1.6rem;
-}
-
 .radius-sm {
   border-radius: 4px;
 }
@@ -1220,7 +1211,7 @@ button {
 }
 
 .text-body-sm {
-  font-size: 1.4rem;
+  font-size: 0.875rem;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -1232,13 +1223,13 @@ button {
 }
 
 .text-body-lg {
-  font-size: 1.76rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   font-weight: 400;
 }
 
 .text-display-xxs {
-  font-size: 1.6rem;
+  font-size: 1rem;
   line-height: 1.1;
 }
 
@@ -1299,7 +1290,7 @@ button {
 .header__logo {
   float: left;
   width: 100%;
-  max-width: 14rem;
+  max-width: 8.75rem;
   margin: 24px 48px 24px 0;
 }
 @media (min-width: 688px) {
@@ -1315,7 +1306,7 @@ button {
 }
 .header__logo-link img {
   display: block;
-  height: 3rem;
+  height: 1.875rem;
 }
 .header__mobile-menu {
   background-color: #fff;
@@ -1354,7 +1345,7 @@ button {
   cursor: pointer;
   flex-shrink: 0;
   font-weight: 400;
-  height: 2.5rem;
+  height: 1.5rem;
   letter-spacing: 0;
   line-height: normal;
   margin: 0 0 0 auto;
@@ -1362,7 +1353,7 @@ button {
   text-align: left;
   text-shadow: none;
   text-transform: none;
-  width: 3rem;
+  width: 1.875rem;
 }
 .header__nav-toggle[aria-expanded=true] {
   background-color: transparent;
@@ -1542,9 +1533,9 @@ button {
   text-decoration: none;
   text-align: left;
   border-top: 1px solid #e7e5e2;
-  font-size: 1.6rem;
-  padding-bottom: 1.6rem;
-  padding-top: 1.6rem;
+  font-size: 1rem;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
 }
 .header .nav-mobile .dropdown-list__content .list-item__text {
   padding-left: 10px;
@@ -1566,7 +1557,7 @@ button {
 .md-container {
   max-width: 688px;
   margin: 0 auto;
-  padding: 4.8rem 10%;
+  padding: 2.3rem 10%;
 }
 
 .md-container-signin {
@@ -1586,7 +1577,7 @@ button {
   width: 80%;
   text-align: left;
 }
-@media (max-width: 360px) {
+@media (max-width: 432px) {
   .btn-content--sm {
     width: 100%;
     justify-content: space-around;
@@ -1594,15 +1585,11 @@ button {
 }
 
 .mzp-c-button.mzp-t-md {
-  font-size: 1.4rem;
+  font-size: 14px;
 }
 
 .mzp-c-button {
-  font-size: 1.6rem;
-}
-
-.mzp-c-button.mzp-t-xl {
-  font-size: 1.6rem;
+  font-size: 1rem;
 }
 
 /* extended button states */
@@ -1695,13 +1682,6 @@ button {
   display: flex;
   justify-content: center;
 }
-.card-container .title-highlight {
-  background-color: #f9cd34;
-  border-radius: 4px;
-  position: absolute;
-  height: 2.2rem;
-  margin-top: 24px;
-}
 .card-container .title-text {
   z-index: 1;
   text-align: center;
@@ -1712,16 +1692,16 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.card-container .card-body .button-wrapper {
-  max-width: 368px;
+  max-width: 360px;
   padding: 48px 20px;
 }
-.card-container .card-body .form-wrapper {
-  padding: 0rem 1rem 4.8rem;
+.card-container .card-body .card-button {
+  padding: 12px 24px;
 }
-.card-container .card-body--light-border-btn button {
-  border: 2px solid #cdcdd4;
+@media (max-width: 688px) {
+  .card-container .card-body .card-button {
+    padding: 10px;
+  }
 }
 
 .call-flow {
@@ -1842,8 +1822,22 @@ button {
 }
 .signin .card-container .card-header h2 {
   font-weight: bold;
-  font-size: 38px;
+  font-size: 2.375rem;
   line-height: 44px;
+}
+.signin .card-container .card-header .title-highlight {
+  background-color: #f9cd34;
+  border-radius: 4px;
+  position: absolute;
+  height: 1.375rem;
+  margin-top: 24px;
+}
+@media (max-width: 320px) {
+  .signin .card-container .card-header .title-highlight {
+    width: 150px;
+    transition: width 0.2s ease-in;
+    margin-top: 70px;
+  }
 }
 .signin .card-container .card-body-content--form {
   padding-top: 48px;
@@ -1877,28 +1871,30 @@ button {
 }
 @media only screen and (min-width: 688px) {
   .signin .form-wrapper {
-    max-width: 368px;
+    max-width: 360px;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(4, auto);
     column-gap: 34px;
   }
 }
 .signin .form-wrapper form img {
-  margin: 0.2rem 0 0 -3.5rem;
+  margin: 0.2rem 0 -0.3rem -3.5rem;
   cursor: pointer;
 }
 .signin .form-wrapper .card-body-info,
 .signin .form-wrapper form,
 .signin .form-wrapper button,
-.signin .form-wrapper .body-text-privacy, .signin .form-wrapper .body-text-action {
+.signin .form-wrapper .body-text-privacy,
+.signin .form-wrapper .body-text-action {
   grid-column: 1/13;
 }
 @media only screen and (min-width: 688px) {
   .signin .form-wrapper .card-body-info,
 .signin .form-wrapper form,
 .signin .form-wrapper button,
-.signin .form-wrapper .body-text-privacy, .signin .form-wrapper .body-text-action {
-    max-width: 368px;
+.signin .form-wrapper .body-text-privacy,
+.signin .form-wrapper .body-text-action {
+    max-width: 360px;
   }
 }
 .signin .card-body-info {
@@ -1907,14 +1903,19 @@ button {
 .signin input {
   width: 100%;
   height: 48px;
-  font-size: 14px;
+  font-size: 0.875rem;
   border: 2px solid #9595a2;
 }
 .signin .button-text {
-  text-align: left;
-  font-size: 16px;
-  width: 170px;
+  text-align: center;
+  font-size: 1rem;
   opacity: 0.6;
+}
+@media only screen and (min-width: 688px) {
+  .signin .button-text {
+    width: 181px;
+    text-align: left;
+  }
 }
 .signin .how-it-works {
   text-align: center;
@@ -2042,10 +2043,6 @@ button {
   }
 }
 /* form styles start */
-.input-wrapper {
-  display: flex;
-}
-
 .label-wrapper {
   display: flex;
   justify-content: space-between;
@@ -2053,8 +2050,8 @@ button {
 
 .mzp-c-field-label {
   font-weight: 600;
-  font-size: 1.2rem;
   color: #818282;
+  font-size: 0.875rem;
 }
 
 .error-msg-active,
@@ -2083,7 +2080,6 @@ button {
 .card-button {
   margin-bottom: 15px;
   width: 100%;
-  padding: 6px 20px !important;
 }
 
 .card-button.signin,
@@ -2135,9 +2131,9 @@ button {
 
 .info-rules {
   list-style: disc;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: gray;
-  padding-left: 10px;
+  padding: 10px;
   text-align: left;
   margin: 0;
 }

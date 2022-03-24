@@ -18,7 +18,7 @@
   &__logo {
     float: left;
     width: 100%;
-    max-width: 14rem;
+    max-width: 8.75rem;
     margin: 24px 48px 24px 0;
 
     @media (min-width: $MD-screen) {
@@ -33,7 +33,7 @@
 
       img {
         display: block;
-        height: 3.0rem;
+        height: 1.875rem;
       }
     }
   }
@@ -76,7 +76,7 @@
     cursor: pointer;
     flex-shrink: 0;
     font-weight: 400;
-    height: 2.5rem;
+    height: 1.5rem;
     letter-spacing: 0;
     line-height: normal;
     margin: 0 0 0 auto;
@@ -84,7 +84,7 @@
     text-align: left;
     text-shadow: none;
     text-transform: none;
-    width: 3rem;
+    width: 1.875rem;
 
     &[aria-expanded="true"] {
       background-color: transparent;
@@ -250,9 +250,9 @@
       &__content {
         @include nav-list-item;
         border-top: 1px solid #e7e5e2;
-        font-size: 1.6rem;
-        padding-bottom: 1.6rem;
-        padding-top: 1.6rem;
+        font-size: 1rem;
+        padding-bottom: 1rem;
+        padding-top: 1rem;
         .list-item__text {
           padding-left: 10px;
         }

@@ -149,7 +149,7 @@
   }
   .info-msg-err-reset {
     text-align: left;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: red;
     padding: 10px 0px;
     margin-top: -20px;
@@ -157,13 +157,13 @@
 
   .body-text-action {
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: gray;
     padding-top: 10px;
   }
 
   .body-text-action button {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   @media (max-width: 488px) {

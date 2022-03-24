@@ -128,17 +128,16 @@
         By proceeding, you agree to our <a href="/">privacy notice</a>
       </p>
     </div>
-
-  
-    <p class="body-text-action">
-      {bodyText}
-      <button
-        on:click={() => {
-          handleTrigger(startState);
-        }}>{linkText}</button
-      >
-    </p>
   </div>
+
+  <p slot="cta" class="body-text-action">
+    {bodyText}
+    <button
+      on:click={() => {
+        handleTrigger(startState);
+      }}>{linkText}</button
+    >
+  </p>
 </Card>
 
 <style>

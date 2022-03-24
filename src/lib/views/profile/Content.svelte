@@ -159,13 +159,13 @@
 <style>
   h2 {
     color: var(--color-ink-50);
-    padding: 1rem;
+    padding: 0.625rem;
   }
 
   p,
   form {
     color: var(--color-marketing-gray-70);
-    padding: 1rem;
+    padding: 0.625rem;
   }
 
   p,
@@ -178,11 +178,11 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    gap: 1.6rem;
+    gap: 1rem;
   }
 
   .mzp-c-choice-text {
-    min-height: 1.6rem;
+    min-height: 1rem;
   }
 
   .mzp-c-field-set-text {
@@ -199,8 +199,7 @@
 
   .mzp-c-choice-label {
     font-weight: normal;
-    font-size: 1.6rem;
-    padding-top: 0rem;
+    font-size: 1rem;
   }
 
   label,
@@ -239,30 +238,25 @@
 
   /* correct for Protocol's radio and checkbox misalignments */
   .mzp-c-choice-control[type="radio"] + label::before {
-    transform: translateY(0.4rem);
+    transform: translateY(0.25rem);
   }
 
   .mzp-c-choice-control[type="checkbox"] + label::before {
-    transform: translateY(0.4rem);
+    transform: translateY(0.25rem);
   }
 
   .mzp-c-choice-control[type="checkbox"]:checked + label::after {
-    transform: translateY(0.344rem) rotate(45deg);
-  }
-
-  .mzp-c-choice-control[type="radio"] {
-    height: 2.2rem;
-    width: 2.2rem;
+    transform: translateY(0.215rem) rotate(45deg);
   }
 
   legend {
     color: var(--color-ink-50);
-    font-size: 1.6rem;
+    font-size: 1rem;
   }
 
   fieldset {
     /* position: inherit; */
-    padding-bottom: 6rem;
+    padding-bottom: 3.75rem;
   }
 
   fieldset:last-child {
@@ -272,7 +266,7 @@
   .mzp-c-choices {
     width: 100%;
     padding-bottom: 0;
-    padding-left: 1.6rem;
+    padding-left: 1rem;
   }
 
   .two-columns {
@@ -280,7 +274,7 @@
     grid-template-columns: repeat(auto-fit, 173px);
     grid-template-rows: repeat(var(--rows, 3), max-content);
     justify-content: start;
-    grid-column-gap: 6.4rem;
+    grid-column-gap: 4rem;
     width: 80%;
   }
 </style>

@@ -126,7 +126,7 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     await findAndAct(driver, By.id("autogen-button"), (e) => e.click());
-    await findAndAct(driver, By.id("sign-in"), (e) => e.click());
+    await findAndAct(driver, By.id("signin"), (e) => e.click());
 
     // Google sign-in prompt should close.
     await driver.wait(async () => {

@@ -140,7 +140,10 @@
     <div class="form-wrapper">
       <form method="post" style={formStyles}>
         <fieldset class="mzp-c-field-set">
-          <div class="mzp-c-field input-wrapper">
+          <div class="mzp-c-field">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label" for="id_user_pw">Email</label>
+            </div>
             <input
               class="mzp-c-field-control"
               bind:value={email}
@@ -161,51 +164,45 @@
             </p>
           {/if}
 
-          <div class="mzp-c-field field-pw">
+          <div class="mzp-c-field">
             <div class="label-wrapper">
-              <label class="mzp-c-field-label" for="id_user_pw"
-                >Choose a password</label
-              >
+              <label class="mzp-c-field-label" for="id_user_pw">Password</label>
             </div>
-
-            <div class="mzp-c-field input-wrapper">
-              <input
-                class="mzp-c-field-control"
-                bind:value={password}
-                bind:this={passwordEl}
-                on:change={handleChange}
-                on:keyup={handleChange}
-                id="id_user_pw"
-                name="id_user_pw"
-                type="password"
-                {pattern}
-                width="100%"
-                required
+            <input
+              class="mzp-c-field-control"
+              bind:value={password}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_pw"
+              name="id_user_pw"
+              type="password"
+              {pattern}
+              width="100%"
+              required
+            />
+            {#if passwordVisible}
+              <img
+                src="img/eye-slash.svg"
+                alt="Eye with slash across it"
+                class="fas fa-eye-slash togglePassword"
+                id="hide-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
               />
-              {#if passwordVisible}
-                <img
-                  src="img/eye-slash.svg"
-                  alt="Eye with slash across it"
-                  class="fas fa-eye-slash togglePassword"
-                  id="hide-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {:else}
-                <img
-                  src="img/eye-open.svg"
-                  alt="Open eye"
-                  class="togglePassword"
-                  id="show-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {/if}
-            </div>
+            {:else}
+              <img
+                src="img/eye-open.svg"
+                alt="Open eye"
+                class="togglePassword"
+                id="show-eye"
+                width="24px"
+                height="24px"
+                on:click|preventDefault={handleToggle}
+              />
+            {/if}
 
-          
             <ul class="info-rules">
               <li bind:this={length} id="length">Use at least 8 characters</li>
               <li bind:this={letter} id="letter">
@@ -276,16 +273,12 @@
     transition: width 0.2s ease-in;
   }
 
-  input {
-    font-size: 1.6rem;
-  }
-
   form {
     height: var(--formHeight);
   }
 
-  fieldset{
-    margin-bottom: 0; 
+  fieldset {
+    margin-bottom: 0;
   }
 
   .invalid-email {
