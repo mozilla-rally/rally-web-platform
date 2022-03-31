@@ -66,7 +66,7 @@ async function generateToken(
   return rallyToken;
 }
 
-export const addRallyStudyToFirestoreImpl = async (
+export const addRallyUserToFirestoreImpl = async (
   user: admin.auth.UserRecord
 ): Promise<boolean> => {
   functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
@@ -102,7 +102,7 @@ export const addRallyStudyToFirestoreImpl = async (
 
 exports.addRallyUserToFirestore = functions.auth
   .user()
-  .onCreate(addRallyStudyToFirestoreImpl);
+  .onCreate(addRallyUserToFirestoreImpl);
 
 export const deleteRallyUserImpl = async function (
   user: admin.auth.UserRecord
@@ -179,6 +179,15 @@ export const handleUserChangesImpl = async function (
   context: EventContext
 ): Promise<Boolean> {
   const userID = context.params.userID;
+  const rallyID = await getRallyIdForUser(userID);
+  if (!rallyID) {
+    // Without Rally ID, we can't make any Glean pings
+    // This is bad and should be flagged for inspection
+    throw new Error(
+      `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+    );
+  }
+
   // Get an object with the current document value.
   // If the document does not exist, it has been deleted.
   const newUser = change.after.exists ? change.after.data() : null;
@@ -229,6 +238,15 @@ export const handleUserStudyChangesImpl = async function (
   context: EventContext
 ): Promise<Boolean> {
   const userID = context.params.userID;
+  const rallyID = await getRallyIdForUser(userID);
+  if (!rallyID) {
+    // Without Rally ID, we can't make any Glean pings
+    // This is bad and should be flagged for inspection
+    throw new Error(
+      `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+    );
+  }
+
   const studyID = context.params.studyID;
   // Get an object with the current document value.
   // If the document does not exist, it has been deleted.
@@ -264,3 +282,19 @@ export const handleUserStudyChangesImpl = async function (
 exports.handleUserStudyChanges = functions.firestore
   .document("users/{userID}/studies/{studyID}")
   .onWrite(handleUserStudyChangesImpl);
+
+async function getRallyIdForUser(userID: string) {
+  let extensionUserDoc = await admin
+    .firestore()
+    .collection("extensionUsers")
+    .doc(userID)
+    .get();
+
+  const data = extensionUserDoc.data();
+
+  if (data) {
+    return data.rallyId;
+  } else {
+    return null;
+  }
+}
