@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import { useCors } from "../cors";
 import * as functions from "firebase-functions";
 import {
-  addRallyStudyToFirestoreImpl,
+  addRallyUserToFirestoreImpl,
   deleteRallyUserImpl,
   loadFirestore,
   rallytoken,
@@ -82,7 +82,7 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
 
   it("empty provider data does not register extension users", async () => {
     await expect(
-      addRallyStudyToFirestoreImpl({ ...user, providerData: [] })
+      addRallyUserToFirestoreImpl({ ...user, providerData: [] })
     ).resolves.toBeFalsy();
 
     const userRecords = await getUserRecords();
@@ -93,7 +93,7 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
 
   async function createAndValidateUserRecords() {
     await expect(
-      addRallyStudyToFirestoreImpl({
+      addRallyUserToFirestoreImpl({
         ...user,
         providerData: [{ uid: user.uid } as admin.auth.UserInfo],
       })
