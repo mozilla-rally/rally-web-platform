@@ -8,54 +8,174 @@ This means you might have to go searching through the dependency tree to get a f
 
 # Pings
 
-- [rs01-event](#rs01-event)
+- [deletion-request](#deletion-request)
+- [demographics](#demographics)
+- [enrollment](#enrollment)
+- [events](#events)
+- [study-enrollment](#study-enrollment)
+- [study-unenrollment](#study-unenrollment)
+- [unenrollment](#unenrollment)
 
-## rs01-event
+## deletion-request
 
-A ping representing an event sent by the study.
-See the `reasons` documentation for additional
-information.
+This is a built-in ping that is assembled out of the box by the Glean SDK.
 
-**Data reviews for this ping:**
-
-- <https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2>
-
-**Bugs related to this ping:**
-
-- <https://github.com/mozilla-rally/rally-study-01/issues/106>
-
-**Reasons this ping may be sent:**
-
-- `attention`: An attention event is an instance where the user
-  was actively using the browser in an active tab
-  in an active window.
-
-- `audio`: An audio event tells us when an active browser
-  tab has audio playing. We use this as a proxy
-  for a user passively consuming audio and video.
+See the Glean SDK documentation for the [`deletion-request` ping](https://mozilla.github.io/glean/book/user/pings/deletion-request.html).
 
 All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
 
 In addition to those built-in metrics, the following metrics are added to the ping:
 
-| Name                                     | Type                                                                        | Description                                                                                                                                                                                                                                                                                                                                                                           | Data reviews                                                           | Extras                             | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
-| ---------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------- | ---------- | -------------------------------------------------------------------- |
-| event.duration                           | [timespan](https://mozilla.github.io/glean/book/user/metrics/timespan.html) | How long the event occurred.                                                                                                                                                                                                                                                                                                                                                          | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| event.start                              | [datetime](https://mozilla.github.io/glean/book/user/metrics/datetime.html) | Noting when the event started. If sent in a ping with reason `attention`, this field notes when an inactive tab with a page loaded in it has been given active focus or a new page loads in an already-active tab. If otherwise sent in a ping with reason `audio`, this field notes when an unmuted audio element began playing in the active tab.                                   | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| event.stop                               | [datetime](https://mozilla.github.io/glean/book/user/metrics/datetime.html) | Noting when the event ended. If sent in a ping with reason `attention`, this field notes when a user closed the active tab, switched or closed the active window, or loaded a new page into the active tab which ends the current attention event. If otherwise sent in a ping with reason `audio`, this field notes when an unmuted audio element stopped playing in the active tab. | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| event.termination_reason                 | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The reason the user’s attention switched to the current attention event (e.g. changed a tab, loaded a new URL in the currently-active tab, closed a tab, closed a window, created a new tab, created a new window, stopped playing audio).                                                                                                                                            | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.attention.max_pixel_scroll_depth    | [quantity](https://mozilla.github.io/glean/book/user/metrics/quantity.html) | The largest scroll pixel depth reached on the page.                                                                                                                                                                                                                                                                                                                                   | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) | <ul><li>unit: pixels</li></ul>     | never      |                                                                      |
-| page.attention.max_relative_scroll_depth | [quantity](https://mozilla.github.io/glean/book/user/metrics/quantity.html) | The largest depth reach on the page, as a proportion of the total page height.                                                                                                                                                                                                                                                                                                        | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) | <ul><li>unit: percentage</li></ul> | never      |                                                                      |
-| page.attention.scroll_height             | [quantity](https://mozilla.github.io/glean/book/user/metrics/quantity.html) | The total scroll height of the page, taken from `document.documentElement.scrollHeight` at the same interval as the other scroll fields.                                                                                                                                                                                                                                              | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) | <ul><li>unit: pixels</li></ul>     | never      |                                                                      |
-| page.id                                  | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | A unique ID associated with a page visit. Each page ID is 128-bit value, randomly generated with the Web Crypto API and stored as a hexadecimal string.                                                                                                                                                                                                                               | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.og_description                      | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The `og:description` meta tag contents (e.g. `<meta type="og:description" contents="..." />`). If this isn't supplied, then attempts to look at the meta description contents (e.g. `<meta name="description" content="...">`).                                                                                                                                                       | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.og_type                             | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The `og:type` meta tag contents (e.g. `<meta type="og:type" contents="article" />`).                                                                                                                                                                                                                                                                                                  | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.origin                              | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The origin of the URL associated with the page visit. Calculated by applying `new URL(url).origin`. See the documentation for [url.origin](https://developer.mozilla.org/en-US/docs/Web/API/URL/origin).                                                                                                                                                                              | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.referrer_origin                     | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The origin of the referrer URL for the page loading in the tab.                                                                                                                                                                                                                                                                                                                       | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.title                               | [string](https://mozilla.github.io/glean/book/user/metrics/string.html)     | The contents of the title element in the head of the page.                                                                                                                                                                                                                                                                                                                            | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.visit.start                         | [datetime](https://mozilla.github.io/glean/book/user/metrics/datetime.html) | When did the page visit start.                                                                                                                                                                                                                                                                                                                                                        | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
-| page.visit.stop                          | [datetime](https://mozilla.github.io/glean/book/user/metrics/datetime.html) | When did the page visit stop.                                                                                                                                                                                                                                                                                                                                                         | [Bug 1703279](https://bugzilla.mozilla.org/show_bug.cgi?id=1703279#c2) |                                    | never      |                                                                      |
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+
+## demographics
+
+After a user joins the platform they are asked to fill a
+demographic survey, in order to help researchers parse the
+data. The survey is optional and can be partially filled: this
+ping is submitted right after the survey is filled.
+
+
+This ping is sent if empty.
+
+**Data reviews for this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232>
+
+**Bugs related to this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/issues/545>
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+| user.age |[labeled_boolean](https://mozilla.github.io/glean/book/user/metrics/labeled_booleans.html) |The user age.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)|<ul><li>band_19_24</li><li>band_25_34</li><li>band_35_44</li><li>band_45_54</li><li>band_55_64</li><li>band_over_65</li></ul>|never | |
+| user.exact_income |[quantity](https://mozilla.github.io/glean/book/user/metrics/quantity.html) |The user household's combined annual income during the past 12 months. This field replaces the previous income field.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232), [mozilla-rally/rally-core-addon#624](https://github.com/mozilla-rally/rally-core-addon/pull/624#issuecomment-850479051)|<ul><li>unit: US Dollars</li></ul>|never | |
+| user.gender |[labeled_boolean](https://mozilla.github.io/glean/book/user/metrics/labeled_booleans.html) |The user gender.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)|<ul><li>male</li><li>female</li><li>neither</li><li>decline</li></ul>|never | |
+| user.origin |[labeled_boolean](https://mozilla.github.io/glean/book/user/metrics/labeled_booleans.html) |The user origin: Hispanic, Latinx, Spanish or other.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)|<ul><li>hispanic_latinx_spanish</li><li>other</li></ul>|never | |
+| user.races |[labeled_boolean](https://mozilla.github.io/glean/book/user/metrics/labeled_booleans.html) |The user race / ethnicity.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)|<ul><li>am_indian_or_alaska_native</li><li>asian_indian</li><li>black_or_african_american</li><li>chamorro</li><li>chinese</li><li>filipino</li><li>japanese</li><li>korean</li><li>native_hawaiian</li><li>samoan</li><li>vietnamese</li><li>white</li><li>other_asian</li><li>other_pacific_islander</li><li>some_other_race</li></ul>|never | |
+| user.school |[labeled_boolean](https://mozilla.github.io/glean/book/user/metrics/labeled_booleans.html) |The highest level of school user has completed.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)|<ul><li>less_than_high_school</li><li>some_high_school</li><li>high_school_grad_or_eq</li><li>college_degree_in_progress</li><li>associates_degree</li><li>bachelors_degree</li><li>graduate_degree</li></ul>|never | |
+| user.zipcode |[string](https://mozilla.github.io/glean/book/user/metrics/string.html) |The user zip code.  |[mozilla-rally/rally-core-addon#139](https://github.com/mozilla-rally/rally-core-addon/pull/139#issuecomment-736024232)||never | |
+
+## enrollment
+
+This ping is sent at the end of the user onboarding process,
+when and if the user joins the platform.
+
+
+This ping is sent if empty.
+
+**Data reviews for this ping:**
+
+- <https://bugzilla.mozilla.org/show_bug.cgi?id=1663857#c5>
+
+**Bugs related to this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/issues/117>
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+
+## events
+
+This is a built-in ping that is assembled out of the box by the Glean SDK.
+
+See the Glean SDK documentation for the [`events` ping](https://mozilla.github.io/glean/book/user/pings/events.html).
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+
+## study-enrollment
+
+This ping is sent when user clicks the Join button for a study
+and accepts the study policy.
+
+
+This ping is sent if empty.
+
+**Data reviews for this ping:**
+
+- <https://bugzilla.mozilla.org/show_bug.cgi?id=1663857#c5>
+
+**Bugs related to this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/issues/117>
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| enrollment.schema_namespace |[string](https://mozilla.github.io/glean/book/user/metrics/string.html) |The schema namespace for the study the user has joined.  |[Bug 1663857](https://bugzilla.mozilla.org/show_bug.cgi?id=1663857#c5)||never | |
+| enrollment.study_id |[string](https://mozilla.github.io/glean/book/user/metrics/string.html) |The id of the study user has joined.  |[Bug 1663857](https://bugzilla.mozilla.org/show_bug.cgi?id=1663857#c5)||never | |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+
+## study-unenrollment
+
+This ping is sent when user leaves a study.
+
+
+This ping is sent if empty.
+
+**Data reviews for this ping:**
+
+- <https://bugzilla.mozilla.org/show_bug.cgi?id=1646151#c32>
+
+**Bugs related to this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/issues/545>
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
+| unenrollment.schema_namespace |[string](https://mozilla.github.io/glean/book/user/metrics/string.html) |The schema namespace for the study the user has left.  |[Bug 1646151](https://bugzilla.mozilla.org/show_bug.cgi?id=1646151#c32)||never | |
+| unenrollment.study_id |[string](https://mozilla.github.io/glean/book/user/metrics/string.html) |The id of the study user has left.  |[Bug 1646151](https://bugzilla.mozilla.org/show_bug.cgi?id=1646151#c32)||never | |
+
+## unenrollment
+
+This ping is sent when and if the user chooses to leave the platform.
+
+
+This ping is sent if empty.
+
+**Data reviews for this ping:**
+
+- <https://bugzilla.mozilla.org/show_bug.cgi?id=1663857#c5>
+
+**Bugs related to this ping:**
+
+- <https://github.com/mozilla-rally/rally-core-addon/issues/117>
+
+All Glean pings contain built-in metrics in the [`ping_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-ping_info-section) and [`client_info`](https://mozilla.github.io/glean/book/user/pings/index.html#the-client_info-section) sections.
+
+In addition to those built-in metrics, the following metrics are added to the ping:
+
+| Name | Type | Description | Data reviews | Extras | Expiration | [Data Sensitivity](https://wiki.mozilla.org/Firefox/Data_Collection) |
+| --- | --- | --- | --- | --- | --- | --- |
+| rally.id |[uuid](https://mozilla.github.io/glean/book/user/metrics/uuid.html) |The id of the Rally client.  |[mozilla-rally/rally-core-addon#505](https://github.com/mozilla-rally/rally-core-addon/pull/505#issuecomment-815826426)||never | |
 
 Data categories are [defined here](https://wiki.mozilla.org/Firefox/Data_Collection).
 
 <!-- AUTOGENERATED BY glean_parser. DO NOT EDIT. -->
+
