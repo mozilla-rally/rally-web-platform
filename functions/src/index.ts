@@ -1,9 +1,12 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import { Change, EventContext } from "firebase-functions";
+import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthentication } from "./authentication";
 import { useCors } from "./cors";
 import { studies } from "./studies";
+import { isDeepStrictEqual } from "util";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -166,3 +169,98 @@ export const loadFirestore = functions.https.onRequest(
     response.status(200).send();
   }
 );
+
+/*
+ * Listen for changes to the User document
+ * and initiate the appropriate Glean ping(s)
+ */
+export const handleUserChangesImpl = async function (
+  change: Change<DocumentSnapshot>,
+  context: EventContext
+): Promise<Boolean> {
+  const userID = context.params.userID;
+  // Get an object with the current document value.
+  // If the document does not exist, it has been deleted.
+  const newUser = change.after.exists ? change.after.data() : null;
+
+  // Get the old document, to compare the enrollment state.
+  const oldUser = change.before.exists ? change.before.data() : null;
+
+  if (!newUser || (oldUser && oldUser.enrolled === true && !newUser.enrolled)) {
+    // User document has been deleted
+    functions.logger.info(
+      `Sending deletion and unenrollment pings for user ID ${userID}`
+    );
+    // TODO send Glean pings
+    return true;
+  }
+
+  if ((!oldUser || !oldUser.enrolled) && newUser.enrolled === true) {
+    // User just enrolled
+    functions.logger.info(`Sending enrollment ping for user ID ${userID}`);
+    // TODO send Glean ping
+  }
+
+  if (
+    ((!oldUser || !oldUser.demographicsData) && newUser.demographicsData) ||
+    (oldUser && oldUser.demographicsData && !newUser.demographicsData) ||
+    (oldUser &&
+      newUser &&
+      !isDeepStrictEqual(oldUser.demographicsData, newUser.demographicsData))
+  ) {
+    // User updated demographicsData
+    functions.logger.info(`Sending demographics ping for user ID ${userID}`);
+    // TODO send Glean ping
+  }
+
+  return true;
+};
+
+exports.handleUserChanges = functions.firestore
+  .document("users/{userID}")
+  .onWrite(handleUserChangesImpl);
+
+/*
+ * Listen for changes to the Study document
+ * and initiate the appropriate Glean ping(s)
+ */
+export const handleUserStudyChangesImpl = async function (
+  change: Change<DocumentSnapshot>,
+  context: EventContext
+): Promise<Boolean> {
+  const userID = context.params.userID;
+  const studyID = context.params.studyID;
+  // Get an object with the current document value.
+  // If the document does not exist, it has been deleted.
+  const newStudy = change.after.exists ? change.after.data() : null;
+
+  // Get the old document, to compare the enrollment state.
+  const oldStudy = change.before.exists ? change.before.data() : null;
+
+  if (
+    !newStudy ||
+    (oldStudy && oldStudy.enrolled === true && !newStudy.enrolled)
+  ) {
+    // User unenrolled from study
+    functions.logger.info(
+      `Sending deletion and unenrollment pings for study with user ID ${userID} with study ID ${studyID}`
+    );
+    // TODO send Glean pings
+    return true;
+  }
+
+  if ((!oldStudy || !oldStudy.enrolled) && newStudy.enrolled === true) {
+    // User just enrolled in this study
+    functions.logger.info(
+      `Sending enrollment ping for study with user ID ${userID} with study ID ${studyID}`
+    );
+    // TODO send Glean ping
+    return true;
+  }
+
+  return true;
+};
+
+exports.handleUserStudyChanges = functions.firestore
+  .document("users/{userID}/studies/{studyID}")
+  .onWrite(handleUserStudyChangesImpl);
