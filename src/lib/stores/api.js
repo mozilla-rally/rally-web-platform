@@ -8,6 +8,7 @@ import {
   getDoc, getDocs, onSnapshot, setDoc, updateDoc
 } from "firebase/firestore";
 import { produce } from "immer/dist/immer.esm";
+import { getAllStudiesForBrowser } from "../../studies";
 import initializeFirebase from "./initialize-firebase";
 
 let auth;
@@ -33,6 +34,7 @@ let __STATE__ = {
   user: undefined,
   userStudies: undefined,
   onboarded: false,
+  studies: getAllStudiesForBrowser()
 };
 
 let userRef;
@@ -92,18 +94,6 @@ async function listenForUserStudiesChanges(user) {
 
     _updateLocalState((draft) => {
       draft.userStudies = nextState;
-    });
-  });
-}
-
-function listenForStudyChanges() {
-  onSnapshot(collection(db, "studies"), (querySnapshot) => {
-    const studies = [];
-    querySnapshot.forEach(function (doc) {
-      studies.push(doc.data());
-    });
-    _updateLocalState((draft) => {
-      draft.studies = studies;
     });
   });
 }
@@ -223,8 +213,6 @@ export default {
 
     // fetch the initial studies.
     let initialStudyState = await getStudies();
-
-    listenForStudyChanges();
 
     initialState._initialized = true;
 
