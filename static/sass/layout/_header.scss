@@ -91,7 +91,7 @@
     }
 
     &-icon {
-      @include toggle-nav;
+      @extend %toggle-nav;
       display: inline-block;
       margin-bottom: 10px;
       margin-top: 10px;
@@ -104,7 +104,7 @@
 
       &::before,
       &::after {
-        @include toggle-nav;
+        @extend %toggle-nav;
         left: 0;
         content: "";
         position: absolute;
@@ -174,7 +174,7 @@
 
       .list-item {
         padding: 12px 16px;
-        @include nav-list-item;
+        @extend %nav-list-item;
 
         &__text {
           padding-left: 10px;
@@ -207,7 +207,7 @@
       }
 
       .list-item--quit {
-        @include list-item-quit;
+        @extend %list-item-quit;
       }
 
       &::after {
@@ -248,7 +248,7 @@
       }
 
       &__content {
-        @include nav-list-item;
+        @extend %nav-list-item;
         border-top: 1px solid #e7e5e2;
         font-size: 1rem;
         padding-bottom: 1rem;
@@ -269,7 +269,7 @@
       }
 
       &--quit {
-        @include list-item-quit;
+        @extend %list-item-quit;
         border-top: 1px solid #e7e5e2;
       }
     }

@@ -68,7 +68,6 @@
   };
 
   const triggerCard = (event) => {
-
     switch (event.detail.text) {
       case "join":
         welcomeCard = false;
@@ -114,58 +113,49 @@
 <Meta title="Pages/SignIn" component={Card} argTypes={state.card.argTypes} />
 
 <Template let:args>
-  <section class="mzp-c-call-out sign-in-container">
-    <div class="mzp-l-content">
-      <h2
-        class="mzp-c-call-out-title mzp-has-zap-1"
-        in:fly={{ duration: 800, y: 5 }}
+  <section class="signin md-container-signin">
+    <h2
+      class="mzp-c-call-out-title mzp-has-zap-1 signin__logo"
+      in:fly={{ duration: 800, y: 5 }}
+    >
+      <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
+    </h2>
+
+    <div class="cards-wrapper signin__cards">
+      {#if welcomeCard || joinCard}
+        <LaunchCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if signinCard && !welcomeCard && !joinCard}
+        <SignInCard {...cardArgs} test={true} on:type={triggerCard} />
+      {/if}
+
+      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
+        <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
+      {/if}
+
+      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+        <CheckEmailCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if forgetPWCard && !welcomeCard && !signinCard}
+        <ForgetPwCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+
+      {#if resetPWCard && !checkEmailPWCard}
+        <ResetPwCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+    </div>
+
+    <div class="how-it-works signin__howitworks">
+      <a
+        class="external-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        href="__BASE_SITE__/how-rally-works/"
+        >Wait – how does it work again?
+        <ExternalLink /></a
       >
-        <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
-      </h2>
-
-      <p
-        class="mzp-c-call-out-desc"
-        style="color: var(--color-marketing-gray-70);
-"
-      >
-      </p>
-
-      <div class="cards-wrapper">
-        {#if welcomeCard || joinCard}
-          <LaunchCard {...cardArgs} on:type={triggerCard} />
-        {/if}
-
-        {#if signinCard && !welcomeCard && !joinCard}
-          <SignInCard {...cardArgs} test={true} on:type={triggerCard} />
-        {/if}
-
-        {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
-          <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
-        {/if}
-
-        {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-          <CheckEmailCard {...cardArgs} on:type={triggerCard} />
-        {/if}
-
-        {#if forgetPWCard && !welcomeCard && !signinCard}
-          <ForgetPwCard {...cardArgs} on:type={triggerCard} />
-        {/if}
-
-        {#if resetPWCard && !checkEmailPWCard}
-          <ResetPwCard {...cardArgs} on:type={triggerCard} />
-        {/if}
-      </div>
-
-      <div class="how-it-works">
-        <a
-          class="external-link"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="__BASE_SITE__/how-rally-works/"
-          >Wait – how does it work again?
-          <ExternalLink /></a
-        >
-      </div>
     </div>
   </section>
 </Template>

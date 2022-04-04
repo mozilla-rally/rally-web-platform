@@ -21,7 +21,7 @@
   };
 
   export const cardArgs = {
-    width: "456px",
+    width: "464px",
     fontSize: "38px",
   
   };
@@ -65,17 +65,15 @@
     ...cardArgs,
     height: "339px",
     title: "Forgot your password?",
-    cta1: "Request password reset",
-    bodyText: "We'll send you a link to reset your password",
+    cta1: "Reset password",
+    bodyText: "We'll send you a link to reset your password.",
     minHeight: "339px",
   };
   export const checkEmailPWArgs = {
     ...cardArgs,
-    height: "200px",
+    height: "262px",
     title: "Check your email",
-    body:
-      "An email has been sent to [example@workmail.com] to reset your password.",
-    bodyText: "Need additional help?",
+    ctaText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-Card",
     checkPW: true,
@@ -84,9 +82,7 @@
     ...cardArgs,
     height: "276px",
     title: "Check your email",
-    body:
-      "To finish creating your account with Rally, you will need to verify your email address.",
-    bodyText: "Need additional help?",
+    ctaText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-Card",
     checkPW: false,

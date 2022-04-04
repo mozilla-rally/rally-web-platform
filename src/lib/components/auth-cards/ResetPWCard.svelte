@@ -6,7 +6,6 @@
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
 
-
   const dispatch = createEventDispatcher();
 
   export let title;
@@ -98,84 +97,85 @@
     <div bind:this={titleEl} class="title-text">{title}</div>
   </div>
 
-  <div class="card-body-content" slot="card-body">
-    <form method="post">
-      <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field field-pw">
-          <div class="label-wrapper">
-            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Choose a new password</label
-            >
-          </div>
+  <div class="card-body-content card-body-content--form" slot="card-body">
+    <div class="form-wrapper">
+      <form method="post">
+        <fieldset class="mzp-c-field-set">
+          <div class="mzp-c-field field-pw">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+                >Choose a new password</label
+              >
+            </div>
 
-          <div class="input-wrapper">
-            <input
-              class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
-              on:change={handleChange}
-              on:keyup={handleChange}
-              id="id_user_pw"
-              name="id_user_pw"
-              type="password"
-              {pattern}
-              min={minPasswordLength}
-              width="100%"
-              required
-            />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
+            <div class="input-wrapper">
+              <input
+                class="mzp-c-field-control"
+                bind:value={password}
+                bind:this={passwordEl}
+                on:change={handleChange}
+                on:keyup={handleChange}
+                id="id_user_pw"
+                name="id_user_pw"
+                type="password"
+                {pattern}
+                min={minPasswordLength}
+                width="100%"
+                required
               />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
-          </div>
+              {#if passwordVisible}
+                <img
+                  src="img/eye-slash.svg"
+                  alt="Eye with slash across it"
+                  class="fas fa-eye-slash togglePassword"
+                  id="hide-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {:else}
+                <img
+                  src="img/eye-open.svg"
+                  alt="Open eye"
+                  class="togglePassword"
+                  id="show-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {/if}
+            </div>
 
-          <p class="info-msg-active-reset">
-            Your password should be unique, and must contain:
-          </p>
-          <ul class="info-rules">
-            <li bind:this={length} id="length" class="invalid">
-              At least 8 characters
-            </li>
-            <li bind:this={letter} id="letter" class="invalid">
-              At least 1 lowercase letter
-            </li>
-            <li bind:this={capital} id="capital">
-              At least 1 uppercase letter
-            </li>
-            <li bind:this={number} id="number" class="invalid">
-              At least 1 number
-            </li>
-          </ul>
-        </div>
-      </fieldset>
-    </form>
-    <Button
-      on:click={() => {
-        handleTrigger("welcome");
-      }}
-      disabled={btnDisabled}
-      size="xl"
-      custom="card-button create"
-    >
-      <div class="button-text">{cta1}</div></Button
-    >
+           
+            <ul class="info-rules">
+              <li bind:this={length} id="length" class="invalid">
+                Use least 8 characters
+              </li>
+              <li bind:this={letter} id="letter" class="invalid">
+                Use least 1 lowercase letter
+              </li>
+              <li bind:this={capital} id="capital">
+                Use least 1 uppercase letter
+              </li>
+              <li bind:this={number} id="number" class="invalid">
+                Use least 1 number
+              </li>
+            </ul>
+          </div>
+        </fieldset>
+      </form>
+
+      <Button
+        on:click={() => {
+          handleTrigger("welcome");
+        }}
+        disabled={btnDisabled}
+        size="xl"
+        custom="card-button create"
+      >
+        <div class="button-text">{cta1}</div></Button
+      >
+    </div>
   </div>
 </Card>
 

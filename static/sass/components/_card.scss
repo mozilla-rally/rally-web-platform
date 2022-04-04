@@ -3,8 +3,13 @@
   width: 100%;
   padding: 48px;
   @media (max-width: $MD-screen) {
-    padding: 48px 0;
+    padding: 25px 0px; 
   }
+
+  @media (max-width: $SM-screen) {
+    height: auto !important;
+  }
+
 
   .title-wrapper {
     display: flex;
@@ -21,6 +26,11 @@
     text-align: center;
     display: inline-block;
     font-weight: bold;
+    max-width: 450px;
+    @media (max-width: $SM-screen) {
+      max-width: 200px;
+    }
+
   }
 
   .card-body {
@@ -32,6 +42,12 @@
       max-width: 360px;
       padding: 48px 20px;
     }
+
+    &-check{
+      padding: 20px;
+    }
+
+
 
     .card-button{
       padding: 12px 24px;

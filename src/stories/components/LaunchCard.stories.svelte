@@ -37,9 +37,9 @@
 
 <!--We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
-      <div class="title-wrapper" slot="card-title">
+      <div class="title-wrapper--launch" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
       </div>
@@ -51,45 +51,47 @@
             customControl={true}
             textColor="#000000"
             background="transparent !important"
-            borderColor="#000000"
+            borderColor="#CDCDD4"
             custom="card-button"
           >
-            <img
-              width="20px"
-              height="20px"
-              src="img/google-logo.svg"
-              alt="Google logo in color"
-            />
-            <div class="button-text">{args.cta1}</div></Button
-          >
-        </div>
+            <div class="btn-content--sm">
+              <img
+                width="20px"
+                height="20px"
+                src="img/google-logo.svg"
+                alt="Google logo in color"
+              />
+              <div class="button-text">{args.cta1}</div>
+            </div>
+          </Button>
 
-        <div class="button-wrapper">
           <Button
             size="lg"
             customControl={true}
             textColor="#000000"
             background="transparent"
-            borderColor="#000000"
+            borderColor="#CDCDD4"
             custom="card-button"
           >
-            <img
-              width="24px"
-              height="24px"
-              src="img/email.svg"
-              alt="Email icon"
-            />
-            <div class="button-text">{args.cta2}</div></Button
-          >
+            <div class="btn-content--sm">
+              <img
+                width="24px"
+                height="24px"
+                src="img/email.svg"
+                alt="Email icon"
+              />
+              <div class="button-text">{args.cta2}</div>
+            </div>
+          </Button>
+          <p class="body-text-privacy">
+            By proceeding, you agree to our <a href="/">privacy notice</a>
+          </p>
         </div>
-
-        <p class="body-text-privacy">
-          By proceeding, you agree to our <a href="/">Privacy Notice</a>
-        </p>
-        <p class="body-text-action">
-          {args.bodyText} <a href="/">{args.linkText}</a>
-        </p>
       </div>
+
+      <p class="body-text-action">
+        {args.bodyText} <a href="/">{args.linkText}</a>
+      </p>
     </Card>
   </div>
 </Template>
@@ -122,12 +124,10 @@
 />
 
 <style>
+  .sb-container {
+    padding: 2rem 1rem;
+  }
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
   }
 </style>

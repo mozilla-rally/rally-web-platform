@@ -103,7 +103,7 @@
         <fieldset class="mzp-c-field-set">
           <div class="mzp-c-field">
             <div class="label-wrapper">
-              <label class="mzp-c-field-label enter-pw" for="id_user_email"
+              <label class="mzp-c-field-label" for="id_user_email"
                 >Enter your email</label
               >
             </div>
@@ -134,40 +134,42 @@
               >
             </div>
 
-            <input
-              class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
-              on:change={handleChange}
-              on:keyup={handleChange}
-              id="id_user_pw"
-              name="id_user_pw"
-              type="password"
-              min={minPasswordLength}
-              width="100%"
-              required
-            />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
+            <div class="input-wrapper">
+              <input
+                class="mzp-c-field-control"
+                bind:value={password}
+                bind:this={passwordEl}
+                on:change={handleChange}
+                on:keyup={handleChange}
+                id="id_user_pw"
+                name="id_user_pw"
+                type="password"
+                min={minPasswordLength}
+                width="100%"
+                required
               />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
+              {#if passwordVisible}
+                <img
+                  src="img/eye-slash.svg"
+                  alt="Eye with slash across it"
+                  class="fas fa-eye-slash togglePassword"
+                  id="hide-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {:else}
+                <img
+                  src="img/eye-open.svg"
+                  alt="Open eye"
+                  class="togglePassword"
+                  id="show-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {/if}
+            </div>
 
             <!-- ERROR MESSAGE -->
             {#if signInErr}
@@ -187,7 +189,7 @@
           }}
           disabled={btnDisabled}
           size="xl"
-          custom="card-button signin"
+          custom="card-button signin__btn"
           btnID="signin-btn"
         >
           <div class="button-text--signin">
@@ -197,7 +199,7 @@
       {/if}
 
       {#if test}
-        <Button disabled={btnDisabled} size="xl" custom="card-button signin">
+        <Button disabled={btnDisabled} size="xl" custom="card-button">
           <div class="button-text--signin">
             {cta1}
           </div></Button

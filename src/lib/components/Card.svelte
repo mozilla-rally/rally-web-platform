@@ -37,23 +37,21 @@
   }`;
 </script>
 
-<section id={key}>
-  <div class="card-container radius-sm" style={styles}>
-    <header class="card-header">
-      <h2>
-        <slot name="card-title" />
-      </h2>
-    </header>
+<div id={key} class="card-container radius-sm" style={styles}>
+  <header class="card-header">
+    <h2>
+      <slot name="card-title" />
+    </h2>
+  </header>
 
-    <div class={classSet}>
-      <slot name="card-body">
-        <p>I am a Card</p>
-      </slot>
-    </div>
-
-    <slot name="cta" />
+  <div class={classSet}>
+    <slot name="card-body">
+      <p>I am a Card</p>
+    </slot>
   </div>
-</section>
+
+  <slot name="cta" />
+</div>
 
 <style>
   .card-container {
@@ -67,7 +65,7 @@
     font-size: 0.875rem;
   }
 
-  header{
+  header {
     margin-bottom: 5px;
   }
 </style>

@@ -78,10 +78,10 @@
   </div>
 
   <div class="card-body-content card-body-content--form" slot="card-body">
+    <p class="card-body-info">
+      Enter your email and we'll send you a link to reset your password
+    </p>
     <div class="form-wrapper">
-      <p class="card-body-info">
-        Enter your email and we'll send you a link to reset your password
-      </p>
       <form method="post">
         <fieldset class="mzp-c-field-set">
           <div class="mzp-c-field">
@@ -130,7 +130,7 @@
         Nevermind,<button
           on:click={() => {
             handleTrigger("signin");
-          }}><a href="/">go back</a></button
+          }}><a href="/signup">go back</a></button
         >
       </p>
     </div>
@@ -138,10 +138,9 @@
 </Card>
 
 <style>
-
-  .card-body-content{
+  .card-body-content {
     padding-left: 10px;
-    padding-right: 10px; 
+    padding-right: 10px;
   }
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
@@ -170,7 +169,7 @@
     .title-highlight {
       width: 250px;
       transition: width 0.2s ease-in;
-      margin-top: 70px; 
+      margin-top: 70px;
     }
   }
 </style>

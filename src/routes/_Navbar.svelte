@@ -43,7 +43,14 @@
     checkOpacity();
   };
 
+  const closeNavIcon = () => {
+    ariaExpanded = false;
+    ariaHidden = true;
+  }
+
   $: cssVarStyles = `--nav-opacity:${navOpacity}`;
+  // if ariaExpanded is true hide the dropdown 
+  //fix signout hover
 </script>
 
 <RallyNavbar>
@@ -59,8 +66,6 @@
       {/if}
     </a>
   </div>
-
-  
 
   <!-- Mobile nav toggle-->
   <button
@@ -81,9 +86,10 @@
   <div
     on:focus={onFocus}
     on:mouseover={showDropdown}
+    on:mouseleave={hideDropdown}
+    on:click={closeNavIcon}
     class="header__dropdown"
-    slot="user-icon"
-  >
+    slot="user-icon">
     <div class="dropdown__user-icon">
       <img src="img/user-solid.svg" alt="user icon" />
     </div>
@@ -137,7 +143,7 @@
     aria-hidden={ariaHidden}
     style={cssVarStyles}
     slot="mobile-nav"
-  >
+    >
     <nav class="nav-mobile" aria-label="Primary navigation">
       <ul class="dropdown-list">
         <li class="dropdown-list__item info">

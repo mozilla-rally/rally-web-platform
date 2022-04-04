@@ -39,19 +39,19 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
       </div>
 
-      <div class="card-body-content" slot="card-body">
+      <div class="card-body-content card-body-check" slot="card-body">
         <p class="body-text-info">{args.body}</p>
-        <p class="body-text-action">
-          {args.bodyText} <a href="/">{args.linkText}</a>
-        </p>
       </div>
+      <p slot="cta" class="body-text-action">
+        {args.bodyText} <a href="/">{args.linkText}</a>
+      </p>
     </Card>
   </div>
 </Template>
@@ -61,11 +61,11 @@
   name="Confirm Email"
   args={{
     width: "460px",
-    height: "276px",
+    height: "262px",
     fontSize: "38px",
     title: "Check your email",
     body:
-      "To finish creating your account with Rally, you will need to verify your email address.",
+      "To finish creating your account with Rally, please check your email inbox and verify your email address",
     bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-dialog",
@@ -80,7 +80,7 @@
     fontSize: "38px",
     title: "Check your email",
     body:
-      "An email has been sent to [example@workmail.com] to reset your password",
+      "Instructions to reset your password have been sent to [example@workmail.com]",
     bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-dialog",
@@ -88,22 +88,15 @@
 />
 
 <style>
+  .sb-container {
+    padding: 2rem 1rem;
+  }
   .title-highlight {
-    background-color: #f9cd34;
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
   }
 
   .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
+    padding: 0px 30px;
     text-align: center;
   }
 </style>

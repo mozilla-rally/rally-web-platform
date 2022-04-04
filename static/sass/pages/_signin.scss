@@ -1,34 +1,9 @@
 .signin {
+  @extend %XL-12-Col-account-creation;
+  
   &__logo {
+    grid-column: 4/10;
     text-align: center;
-  }
-  .card-container {
-    margin: auto;
-    .card-header {
-      h2 {
-        font-weight: bold;
-        font-size: 2.375rem;
-        line-height: 44px;
-      }
-
-      .title-highlight {
-        background-color: $color-yellow-35;
-        border-radius: 4px;
-        position: absolute;
-        height: 1.375rem;
-        margin-top: 24px;
-        @media (max-width: 320px) {
-          width: 150px;
-          transition: width 0.2s ease-in;
-          margin-top: 70px;
-        }
-      }
-    }
-    .card-body-content {
-      &--form {
-        padding-top: 48px;
-      }
-    }
   }
 
   &__content {
@@ -40,7 +15,7 @@
     grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
   }
   &__cards {
-    margin-top: 3rem;
+    grid-column: 2/12;
 
     .spinner {
       -webkit-animation: rotator 1.4s linear infinite;
@@ -59,59 +34,120 @@
     }
   }
 
-  .form-wrapper {
-    display: grid;
-    margin-bottom: 0;
-    @media only screen and (min-width: $MD-screen) {
-      max-width: 360px;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: repeat(4, auto);
-      column-gap: 34px;
-    }
-
-    form {
-      img {
-        margin: 0.2rem 0 -0.3rem -3.5rem;
-        cursor: pointer;
-      }
-    }
-
-    .card-body-info,
-    form,
-    button,
-    .body-text-privacy,
-    .body-text-action {
-      grid-column: 1/13;
-      @media only screen and (min-width: $MD-screen) {
-        max-width: 360px;
-      }
-    }
-  }
-
-  .card-body-info {
-    max-width: 368px;
-  }
-
-  input {
-    width: 100%;
-    height: 48px;
-    font-size: 0.875rem;
-    border: 2px solid $color-marketing-gray-50;
-  }
-
-  .button-text {
-    text-align: center;
-    font-size: 1rem;
-    opacity: 0.6;
-    @media only screen and (min-width: $MD-screen) {
-      width: 181px;
-      text-align: left;
-    }
-  }
-
-  .how-it-works {
+  &__howitworks {
+    grid-column: 4/10;
+    align-self: center;
     text-align: center;
     margin-top: 40px;
+  }
+}
+
+.card-container {
+  margin: auto;
+  .card-header {
+    h2 {
+      font-weight: bold;
+      font-size: 2.375rem;
+      line-height: 44px;
+    }
+
+    .title-highlight {
+      display: block;
+      background-color: $color-yellow-35;
+      border-radius: 4px;
+      position: absolute;
+      height: 1.375rem;
+      margin-top: 24px;
+      @media (max-width: $SM-screen) {
+        display: none;
+      }
+    }
+  }
+  .card-body-content {
+    &--form {
+      padding-top: 48px;
+    }
+
+    .button-text {
+      text-align: center;
+      font-size: 1rem;
+      opacity: 0.6;
+     
+      @media only screen and (max-width: $XS-screen) {
+       font-size: 12px; 
+      }
+    }
+    .form-wrapper {
+      display: grid;
+      margin-bottom: 0;
+      @media only screen and (min-width: $MD-screen) {
+        max-width: 360px;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(4, auto);
+        column-gap: 34px;
+      }
+
+      form {
+        input {
+          width: 100%;
+          height: 48px;
+          font-size: 0.875rem;
+          border: 2px solid $color-marketing-gray-50;
+        }
+      }
+
+      .card-body-info,
+      form,
+      button,
+      .body-text-privacy,
+      .body-text-action {
+        grid-column: 1/13;
+
+        @media only screen and (min-width: $MD-screen) {
+          max-width: 360px;
+        }
+      }
+    }
+
+    .input-wrapper{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      input{
+        grid-column:1/-1 ;
+        grid-row: 1/2; 
+        z-index: 1;
+      }
+      img{
+        grid-column: 2/3;
+        grid-row: 1/2; 
+        justify-self: end;
+        z-index: 2;
+        margin: 10px; 
+      }
+    }
+    .card-body-info {
+      max-width: 368px;
+      text-align: center;
+    }
+  }
+
+  .body-text-action {
+    padding: 0px 28px;
+    font-size: 16px;
+    color: #000000;
+    text-align: center;
+
+    button {
+      border-color: transparent;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    a {
+      font-weight: 700;
+    }
   }
 }
 
@@ -141,11 +177,6 @@
     .mzp-c-call-out-desc {
       color: $color-marketing-gray-70;
       font-size: 1.6rem;
-    }
-
-    .how-it-works {
-      margin-top: 2.4rem;
-      text-align: center;
     }
   }
 }
@@ -292,33 +323,10 @@
   margin-top: 0;
   height: 48px;
 }
-
-.reset-pw {
-  width: 85%;
-}
-
 .body-text-privacy {
   font-size: 12px;
   margin: auto;
   text-align: center;
-}
-
-.body-text-action {
-  font-size: 16px;
-  color: #000000;
-  text-align: center;
-}
-
-.body-text-action button {
-  border-color: transparent;
-  background: transparent;
-  cursor: pointer;
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-.body-text-action a {
-  font-weight: 700;
 }
 
 /* storybook styles */

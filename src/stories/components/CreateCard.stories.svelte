@@ -96,39 +96,43 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
       </div>
 
-      <div class="card-body-content" slot="card-body">
-        <form method="post" style={formStyles}>
-          <fieldset class="mzp-c-field-set">
-            <div class="mzp-c-field input-wrapper">
-              <input
-                class="mzp-c-field-control "
-                bind:value={email}
-                on:change={handleChange}
-                on:keyup={handleChange}
-                id="id_user_email"
-                name="id_user_email"
-                type="email"
-                width="100%"
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
-
-            <div class="mzp-c-field field-pw">
-              <div class="label-wrapper">
-                <label class="mzp-c-field-label" for="id_user_pw"
-                  >Choose a password</label
-                >
+      <div class="card-body-content card-body-content--form" slot="card-body">
+        <div class="form-wrapper">
+          <form method="post" style={formStyles}>
+            <fieldset class="mzp-c-field-set">
+              <div class="mzp-c-field">
+                <div class="label-wrapper">
+                  <label class="mzp-c-field-label" for="id_user_pw">Email</label
+                  >
+                </div>
+                <input
+                  class="mzp-c-field-control"
+                  bind:value={email}
+                  on:change={handleChange}
+                  on:keyup={handleChange}
+                  id="id_user_email"
+                  name="id_user_email"
+                  type="email"
+                  width="100%"
+                  placeholder="Enter your email address"
+                  required
+                />
               </div>
 
-              <div class="mzp-c-field input-wrapper">
+              <div class="mzp-c-field">
+                <div class="label-wrapper">
+                  <label class="mzp-c-field-label" for="id_user_pw"
+                    >Choose a password</label
+                  >
+                </div>
+
                 <input
                   class="mzp-c-field-control"
                   bind:value={password}
@@ -163,35 +167,33 @@
                     on:click|preventDefault={handleToggle}
                   />
                 {/if}
+
+                <ul class="info-rules">
+                  <li bind:this={length} id="length">
+                    Use at least 8 characters
+                  </li>
+                  <li bind:this={capital} id="capital">
+                    Use at least 1 uppercase letter
+                  </li>
+                  <li bind:this={letter} id="letter">
+                    Use at least 1 lowercase letter
+                  </li>
+                  <li bind:this={number} id="number">Use at least 1 number</li>
+                </ul>
               </div>
-
-              <p class="info-msg-active">
-                Your password should be unique, and must contain:
-              </p>
-              <ul class="info-rules">
-                <li bind:this={length} id="length">At least 8 characters</li>
-                <li bind:this={capital} id="capital">
-                  At least 1 uppercase letter
-                </li>
-                <li bind:this={letter} id="letter">
-                  At least 1 lowercase letter
-                </li>
-                <li bind:this={number} id="number">At least 1 number</li>
-              </ul>
-            </div>
-          </fieldset>
-        </form>
-        <Button disabled={btnDisabled} size="xl" custom="card-button create">
-          <div class="button-text">{args.cta1}</div></Button
-        >
-        <p class="body-text-privacy">
-          By proceeding, you agree to our <a href="/">Privacy Notice</a>
-        </p>
-
-        <p class="body-text-action">
-          {args.bodyText} <a href="/">{args.linkText}</a>
-        </p>
+            </fieldset>
+          </form>
+          <Button disabled={btnDisabled} size="xl" custom="card-button create">
+            <div class="button-text--signin">{args.cta1}</div></Button
+          >
+          <p class="body-text-privacy">
+            By proceeding, you agree to our <a href="/">Privacy Notice</a>
+          </p>
+        </div>
       </div>
+      <p slot="cta" class="body-text-action">
+        {args.bodyText} <a href="/">{args.linkText}</a>
+      </p>
     </Card>
   </div>
 </Template>
@@ -213,6 +215,9 @@
 />
 
 <style>
+  .sb-container {
+    padding: 2rem 1rem;
+  }
   .title-highlight {
     background-color: var(--color-yellow-35);
     border-radius: 4px;
@@ -220,13 +225,5 @@
     height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
     margin-top: 24px;
-  }
-
-  form {
-    height: var(--formHeight);
-  }
-
-  .field-pw {
-    position: relative;
   }
 </style>

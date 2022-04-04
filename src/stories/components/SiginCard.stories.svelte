@@ -7,7 +7,6 @@
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
 
-
   let email;
   let password;
   let emailEl;
@@ -62,46 +61,46 @@
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
       </div>
 
-      <div class="card-body-content sigin-card" slot="card-body">
-        <form method="post">
-          <fieldset class="mzp-c-field-set">
-            <div class="mzp-c-field">
-              <div class="label-wrapper">
-                <label for="" class="mzp-c-field-label">
-                  Enter your email
-                </label>
+      <div class="card-body-content card-body-content--form" slot="card-body">
+        <div class="form-wrapper">
+          <form method="post">
+            <fieldset class="mzp-c-field-set">
+              <div class="mzp-c-field">
+                <div class="label-wrapper">
+                  <label for="id_user_email" class="mzp-c-field-label">
+                    Enter your email
+                  </label>
+                </div>
+                <input
+                  class="mzp-c-field-control"
+                  bind:value={email}
+                  bind:this={emailEl}
+                  on:change={handleChange}
+                  on:keyup={handleChange}
+                  id="id_user_email"
+                  name="id_user_email"
+                  type="email"
+                  width="100%"
+                  required
+                />
               </div>
-              <input
-                class="mzp-c-field-control "
-                bind:value={email}
-                bind:this={emailEl}
-                on:change={handleChange}
-                on:keyup={handleChange}
-                id="id_user_email"
-                name="id_user_email"
-                type="email"
-                width="100%"
-                required
-              />
-            </div>
-            <div class="mzp-c-field ">
-              <div class="label-wrapper">
-                <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-                  >Enter your Password</label
-                >
-                <label class="mzp-c-field-label forgot-pw" for="id_user_pw"
-                  ><a href="/">Forgot password?</a></label
-                >
-              </div>
+              <div class="mzp-c-field ">
+                <div class="label-wrapper">
+                  <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+                    >Enter your Password</label
+                  >
+                  <label class="mzp-c-field-label forgot-pw" for="id_user_pw"
+                    ><a href="/">Forgot password?</a></label
+                  >
+                </div>
 
-              <div class="input-wrapper">
                 <input
                   class="mzp-c-field-control"
                   bind:value={password}
@@ -137,19 +136,24 @@
                   />
                 {/if}
               </div>
-            </div>
-          </fieldset>
-        </form>
-        <Button disabled={btnDisabled} size="xl" custom="card-button signin">
-          <div class="button-text">
-            {args.cta1}
-          </div></Button
-        >
-
-        <p class="body-text-action">
-          {args.bodyText} <a href="/">{args.linkText}</a>
-        </p>
+            </fieldset>
+          </form>
+          <Button
+            disabled={btnDisabled}
+            size="xl"
+            custom="card-button signin__btn"
+            btnID="signin-btn"
+          >
+            <div class="button-text--signin">
+              {args.cta1}
+            </div></Button
+          >
+        </div>
       </div>
+
+      <p slot="cta" class="body-text-action">
+        {args.bodyText} <a href="/">{args.linkText}</a>
+      </p>
     </Card>
   </div>
 </Template>
@@ -158,7 +162,7 @@
 <Story
   name="Sign in"
   args={{
-    width: "460px",
+    width: "464px",
     fontSize: "38px",
     title: "Welcome Back",
     body: "Text",
@@ -169,13 +173,11 @@
 />
 
 <style>
+  .sb-container {
+    padding: 2rem 1rem;
+  }
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
     transition: width 0.2s ease-in;
   }
 </style>

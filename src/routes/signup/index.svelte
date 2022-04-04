@@ -3,7 +3,6 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { getContext } from "svelte";
-  import type { Readable } from "svelte/store";
   import { goto } from "$app/navigation";
   import * as state from "$lib/components/auth-cards/state.svelte";
   import SignInCard from "$lib/components/auth-cards/SignInCard.svelte";
@@ -211,9 +210,9 @@
     {/if}
   </div>
 
-  <div class="how-it-works">
+  <div class="how-it-works signin__howitworks">
     <a
-      class="external-link"
+      class="signin-external-link"
       target="_blank"
       rel="noopener noreferrer"
       href="__BASE_SITE__/how-rally-works/"
