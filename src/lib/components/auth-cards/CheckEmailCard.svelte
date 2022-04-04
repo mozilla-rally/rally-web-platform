@@ -5,6 +5,8 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
 
+  const dispatch = createEventDispatcher();
+
   export let title;
   export let width;
   export let fontSize;
@@ -29,6 +31,12 @@
     }
   });
 
+  const handleTrigger = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
+
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: checkPW ? (body = resetPWText) : (body = checkEmailText);
 </script>
@@ -42,9 +50,18 @@
   <div class="card-body-content card-body-check" slot="card-body">
     <p class="body-text-info">{body}</p>
   </div>
-  <p slot="cta" class="body-text-action">
-    {ctaText} <a href="/">{linkText}</a>
-  </p>
+  
+  <div slot="cta" class="body-text-action">
+    Ready to sign in? <button
+      on:click={() => {
+        handleTrigger("welcome");
+      }}>Sign in</button
+    >
+
+    <p class="body-text-action">
+      {ctaText} <a href="/">{linkText}</a>
+    </p>
+  </div>
 </Card>
 
 <style>

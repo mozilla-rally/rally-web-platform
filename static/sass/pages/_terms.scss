@@ -18,3 +18,12 @@
   align-items: center;
   justify-content: center;
 }
+
+.cta-wrapper{
+  display: flex;
+  justify-content: center;
+
+  button{
+    margin-left: 20px; 
+  }
+}

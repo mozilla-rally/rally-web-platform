@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   updatePassword,
   updateEmail,
   signOut,

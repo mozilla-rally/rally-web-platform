@@ -2176,6 +2176,14 @@ ol {
   justify-content: center;
 }
 
+.cta-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.cta-wrapper button {
+  margin-left: 20px;
+}
+
 story-container {
   backface-visibility: hidden;
   padding-left: 0;

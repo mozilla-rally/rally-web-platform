@@ -44,3 +44,9 @@
     <slot />
   </div>
 </div>
+
+<style>
+  .onboarding-cta-container{
+    margin-bottom: 40px;
+  }
+</style>

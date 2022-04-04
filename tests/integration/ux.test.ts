@@ -107,39 +107,19 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
     await findAndAct(driver, By.css("button"), (e) => e.click());
-
-    // Google sign-in prompt should open
-    await driver.wait(async () => {
-      return (await driver.getAllWindowHandles()).length === 2;
-    }, WAIT_FOR_PROPERTY);
-
-    await driver.switchTo().window((await driver.getAllWindowHandles())[1]);
-
-    await driver.wait(
-      until.titleIs("Auth Emulator IDP Login Widget"),
-      WAIT_FOR_PROPERTY
-    );
-
-    // FIXME this emulator auth pop-up isn't ready on the default "loaded" event, the window will close anyway so retry until it responds.
-    await driver.executeScript(
-      `window.setInterval(() => document.querySelector(".mdc-button").click(), 1000)`
-    );
-
+    await findAndAct(driver, By.id("add-account-button"), (e) => e.click());
     await findAndAct(driver, By.id("autogen-button"), (e) => e.click());
-    await findAndAct(driver, By.id("signin"), (e) => e.click());
-
-    // Google sign-in prompt should close.
-    await driver.wait(async () => {
-      return (await driver.getAllWindowHandles()).length === 1;
-    }, WAIT_FOR_PROPERTY);
-
-    // Switch back to original window.
-    await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
+    await findAndAct(driver, By.id("sign-in"), (e) => e.click());
 
     await driver.wait(
       until.titleIs("Privacy Policy | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
+
+    //scroll to page bottom
+    await driver.executeScript("window.scrollBy(0, document.body.scrollHeight);")
+    //find firebase warning and click it to make sure we're at bottom of page 
+    await findAndAct(driver, By.css(".firebase-emulator-warning"), (e) => e.click());
 
     // TODO add Cancel button test, not implemented by site yet.
     await findAndAct(
@@ -147,6 +127,13 @@ describe("Rally Web Platform UX flows", function () {
       By.xpath('//button[text()="Accept & Enroll"]'),
       (e) => e.click()
     );
+
+    //scroll to page bottom
+    await driver.executeScript("window.scrollBy(0, document.body.scrollHeight);")
+    //find firebase warning and click it to make sure we're at bottom of page 
+    await findAndAct(driver, By.css(".firebase-emulator-warning"), (e) => e.click());
+
+
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), (e) =>
       e.click()
     );
@@ -155,6 +142,8 @@ describe("Rally Web Platform UX flows", function () {
       until.titleIs("Studies | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
+
+
 
     // Start to join study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), (e) =>

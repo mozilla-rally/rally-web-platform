@@ -49,9 +49,13 @@
       <div class="card-body-content card-body-check" slot="card-body">
         <p class="body-text-info">{args.body}</p>
       </div>
-      <p slot="cta" class="body-text-action">
-        {args.bodyText} <a href="/">{args.linkText}</a>
-      </p>
+
+      <div slot="cta" class="body-text-action">
+        Ready to sign in? <button>Sign in</button>
+        <p class="body-text-action">
+          {args.bodyText} <a href="/">{args.linkText}</a>
+        </p>
+      </div>
     </Card>
   </div>
 </Template>
