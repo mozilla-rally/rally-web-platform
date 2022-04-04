@@ -92,6 +92,7 @@
   },
   "dependencies": {
     "@storybook/svelte": "^6.4.19",
+    "assert": "^2.0.0",
     "fs": "^0.0.1-security",
     "npm": "^8.5.1",
     "sal.js": "^0.8.5",
