@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017",
+    "allowJs": true,
+    "checkJs": true,
+    "target": "es2019",
     "typeRoots": ["node_modules/@types"]
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src"],
 }

@@ -1,12 +1,19 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import admin from "firebase-admin";
+import functions from "firebase-functions";
 import { Change, EventContext } from "firebase-functions";
 import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { useAuthentication } from "./authentication";
-import { useCors } from "./cors";
-import { studies } from "./studies";
+import { useAuthentication } from "./authentication.js";
+import { useCors } from "./cors.js";
+import { studies } from "./studies.js";
 import { isDeepStrictEqual } from "util";
+import {
+  platformEnrollment,
+  platformUnenrollment,
+  studyEnrollment,
+  studyUnenrollment,
+  demographics
+} from "./glean.js";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -100,7 +107,7 @@ export const addRallyUserToFirestoreImpl = async (
   return true;
 };
 
-exports.addRallyUserToFirestore = functions.auth
+export const addRallyUserToFirestore = functions.auth
   .user()
   .onCreate(addRallyUserToFirestoreImpl);
 
@@ -142,7 +149,9 @@ export const deleteRallyUserImpl = async function (
   return true;
 };
 
-exports.deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
+export const deleteRallyUser = functions.auth
+  .user()
+  .onDelete(deleteRallyUserImpl);
 
 /**
  *
@@ -200,14 +209,14 @@ export const handleUserChangesImpl = async function (
     functions.logger.info(
       `Sending deletion and unenrollment pings for user ID ${userID}`
     );
-    // TODO send Glean pings
+    await platformUnenrollment(rallyID);
     return true;
   }
 
   if ((!oldUser || !oldUser.enrolled) && newUser.enrolled === true) {
     // User just enrolled
     functions.logger.info(`Sending enrollment ping for user ID ${userID}`);
-    // TODO send Glean ping
+    await platformEnrollment(rallyID);
   }
 
   if (
@@ -219,13 +228,13 @@ export const handleUserChangesImpl = async function (
   ) {
     // User updated demographicsData
     functions.logger.info(`Sending demographics ping for user ID ${userID}`);
-    // TODO send Glean ping
+    await demographics(rallyID, newUser.demographicsData);
   }
 
   return true;
 };
 
-exports.handleUserChanges = functions.firestore
+export const handleUserChanges = functions.firestore
   .document("users/{userID}")
   .onWrite(handleUserChangesImpl);
 
@@ -238,6 +247,7 @@ export const handleUserStudyChangesImpl = async function (
   context: EventContext
 ): Promise<Boolean> {
   const userID = context.params.userID;
+  const firebaseStudyID = context.params.studyID;
   const rallyID = await getRallyIdForUser(userID);
   if (!rallyID) {
     // Without Rally ID, we can't make any Glean pings
@@ -247,13 +257,23 @@ export const handleUserStudyChangesImpl = async function (
     );
   }
 
-  const studyID = context.params.studyID;
   // Get an object with the current document value.
   // If the document does not exist, it has been deleted.
   const newStudy = change.after.exists ? change.after.data() : null;
 
   // Get the old document, to compare the enrollment state.
   const oldStudy = change.before.exists ? change.before.data() : null;
+
+  const studyID =
+    (newStudy ? newStudy.studyId : null) ||
+    (oldStudy ? oldStudy.studyId : null);
+  if (!studyID) {
+    // Without Study ID, we can't construct study-related Glean pings
+    // This is bad and should be flagged for inspection
+    throw new Error(
+      `Couldn't find Glean Study ID for user ID ${userID} and Firebase study ID ${firebaseStudyID}. Aborting Glean ping process.`
+    );
+  }
 
   if (
     !newStudy ||
@@ -263,7 +283,7 @@ export const handleUserStudyChangesImpl = async function (
     functions.logger.info(
       `Sending deletion and unenrollment pings for study with user ID ${userID} with study ID ${studyID}`
     );
-    // TODO send Glean pings
+    await studyUnenrollment(rallyID, studyID);
     return true;
   }
 
@@ -272,14 +292,14 @@ export const handleUserStudyChangesImpl = async function (
     functions.logger.info(
       `Sending enrollment ping for study with user ID ${userID} with study ID ${studyID}`
     );
-    // TODO send Glean ping
+    await studyEnrollment(rallyID, studyID);
     return true;
   }
 
   return true;
 };
 
-exports.handleUserStudyChanges = functions.firestore
+export const handleUserStudyChanges = functions.firestore
   .document("users/{userID}/studies/{studyID}")
   .onWrite(handleUserStudyChangesImpl);
 

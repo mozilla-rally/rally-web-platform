@@ -10,7 +10,7 @@
     "build": "npm run pre-build && npm run build:functions && svelte-kit build && npm run compile:sass",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
     "build:web:emulator": "npm run pre-build && npm run config:web:demo && svelte-kit build -- --config-emulator-mode",
-    "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src > /dev/null",
+    "watch:functions": "watch 'npm run build:functions && sleep 1 && npm run load:data' ./functions/src --ignoreDirectoryPattern='/generated/g' > /dev/null",
     "watch:web": "svelte-kit dev -- --config-emulator-mode",
     "load:data": "curl -s http://localhost:5001/demo-rally/us-central1/loadFirestore",
     "preview": "svelte-kit preview",

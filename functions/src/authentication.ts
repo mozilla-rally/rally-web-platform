@@ -1,6 +1,6 @@
-import * as assert from "assert";
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import assert from "assert";
+import admin from "firebase-admin";
+import functions from "firebase-functions";
 
 export type AuthenticatedFunction = (
   decodedToken: admin.auth.DecodedIdToken
