@@ -116,23 +116,23 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
+    await driver.manage().window().maximize();
     //scroll to page bottom
-    await driver.executeScript("window.scrollBy(0, document.body.scrollHeight);")
-    //find firebase warning and click it to make sure we're at bottom of page 
-    await findAndAct(driver, By.css(".firebase-emulator-warning"), (e) => e.click());
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
+    //hide firebase emulator warning
+    let fb = driver.findElement(By.css(".firebase-emulator-warning"))
+    await driver.executeScript("arguments[0].id = 'fb'", fb);
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'")
 
-    // TODO add Cancel button test, not implemented by site yet.
     await findAndAct(
       driver,
       By.xpath('//button[text()="Accept & Enroll"]'),
       (e) => e.click()
     );
 
-    //scroll to page bottom
-    await driver.executeScript("window.scrollBy(0, document.body.scrollHeight);")
-    //find firebase warning and click it to make sure we're at bottom of page 
-    await findAndAct(driver, By.css(".firebase-emulator-warning"), (e) => e.click());
-
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
+    await driver.executeScript("arguments[0].id = 'fb'", fb);
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'")
 
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), (e) =>
       e.click()
@@ -142,8 +142,6 @@ describe("Rally Web Platform UX flows", function () {
       until.titleIs("Studies | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
-
-
 
     // Start to join study, but cancel.
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), (e) =>

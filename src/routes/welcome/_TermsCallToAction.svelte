@@ -44,13 +44,14 @@
 <svelte:window bind:scrollY />
 
 <div class="cta-wrapper">
-  <Button size="xl" product on:click={() => dispatch("accept")}>
+  <Button btnID="accept" size="xl" product on:click={() => dispatch("accept")}>
     Accept & Enroll
   </Button>
   <Button
     size="xl"
     product
     secondary
+    btnID="decline"
     on:click={() => {
       handleLogOut();
     }}

@@ -112,6 +112,7 @@
                   <label class="mzp-c-field-label" for="id_user_pw">Email</label
                   >
                 </div>
+              
                 <input
                   class="mzp-c-field-control"
                   bind:value={email}
@@ -133,7 +134,8 @@
                   >
                 </div>
 
-                <input
+                <div class="input-wrapper">
+                  <input
                   class="mzp-c-field-control"
                   bind:value={password}
                   bind:this={passwordEl}
@@ -167,6 +169,10 @@
                     on:click|preventDefault={handleToggle}
                   />
                 {/if}
+                  
+                </div>
+
+                
 
                 <ul class="info-rules">
                   <li bind:this={length} id="length">

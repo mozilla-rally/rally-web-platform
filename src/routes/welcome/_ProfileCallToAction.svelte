@@ -23,10 +23,10 @@
 <svelte:window bind:scrollY />
 
 <div class="cta-wrapper">
-  <Button size="xl" product on:click={() => dispatch("save")}>
+  <Button btnID= "save" size="xl" product on:click={() => dispatch("save")}>
     Save & Continue
   </Button>
-  <Button size="xl" product secondary on:click={() => dispatch("skip")}>
+  <Button btnID= "skip"  size="xl" product secondary on:click={() => dispatch("skip")}>
     Skip for Now
   </Button>
   {#if showArrow && intro}
