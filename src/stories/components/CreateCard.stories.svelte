@@ -98,21 +98,21 @@
 <Template let:args>
   <div class="sb-container">
     <Card {...args}>
-      <div class="title-wrapper" slot="card-title">
+      <h2 class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
-      </div>
+      </h2>
 
-      <div class="card-body-content card-body-content--form" slot="card-body">
+      <div class="card-content card-content--form" slot="card-content">
         <div class="form-wrapper">
           <form method="post" style={formStyles}>
-            <fieldset class="mzp-c-field-set">
-              <div class="mzp-c-field">
+            <fieldset class="mzp-c-field-set field-set">
+              <div class="mzp-c-field field field--email">
                 <div class="label-wrapper">
                   <label class="mzp-c-field-label" for="id_user_pw">Email</label
                   >
                 </div>
-              
+
                 <input
                   class="mzp-c-field-control"
                   bind:value={email}
@@ -127,52 +127,50 @@
                 />
               </div>
 
-              <div class="mzp-c-field">
+              <!-- PASSWORD -->
+              <div class="mzp-c-field field field--pw">
                 <div class="label-wrapper">
                   <label class="mzp-c-field-label" for="id_user_pw"
-                    >Choose a password</label
+                    >Password</label
                   >
                 </div>
 
                 <div class="input-wrapper">
                   <input
-                  class="mzp-c-field-control"
-                  bind:value={password}
-                  bind:this={passwordEl}
-                  on:change={handleChange}
-                  on:keyup={handleChange}
-                  id="id_user_pw"
-                  name="id_user_pw"
-                  type="password"
-                  {pattern}
-                  width="100%"
-                  required
-                />
-                {#if passwordVisible}
-                  <img
-                    src="img/eye-slash.svg"
-                    alt="Eye with slash across it"
-                    class="fas fa-eye-slash togglePassword"
-                    id="hide-eye"
-                    width="24px"
-                    height="24px"
-                    on:click|preventDefault={handleToggle}
+                    class="mzp-c-field-control"
+                    bind:value={password}
+                    bind:this={passwordEl}
+                    on:change={handleChange}
+                    on:keyup={handleChange}
+                    id="id_user_pw"
+                    name="id_user_pw"
+                    type="password"
+                    {pattern}
+                    width="100%"
+                    required
                   />
-                {:else}
-                  <img
-                    src="img/eye-open.svg"
-                    alt="Open eye"
-                    class="togglePassword"
-                    id="show-eye"
-                    width="24px"
-                    height="24px"
-                    on:click|preventDefault={handleToggle}
-                  />
-                {/if}
-                  
+                  {#if passwordVisible}
+                    <img
+                      src="img/eye-slash.svg"
+                      alt="Eye with slash across it"
+                      class="fas fa-eye-slash togglePassword"
+                      id="hide-eye"
+                      width="24px"
+                      height="24px"
+                      on:click|preventDefault={handleToggle}
+                    />
+                  {:else}
+                    <img
+                      src="img/eye-open.svg"
+                      alt="Open eye"
+                      class="togglePassword"
+                      id="show-eye"
+                      width="24px"
+                      height="24px"
+                      on:click|preventDefault={handleToggle}
+                    />
+                  {/if}
                 </div>
-
-                
 
                 <ul class="info-rules">
                   <li bind:this={length} id="length">
@@ -189,7 +187,7 @@
               </div>
             </fieldset>
           </form>
-          <Button disabled={btnDisabled} size="xl" custom="card-button create">
+          <Button disabled={btnDisabled} size="xl" custom="card-button card-button--create">
             <div class="button-text--signin">{args.cta1}</div></Button
           >
           <p class="body-text-privacy">
@@ -209,7 +207,7 @@
 <Story
   name="Create Account"
   args={{
-    width: "460px",
+    width: "370px",
     fontSize: "38px",
     height: "auto",
     title: "Create account",

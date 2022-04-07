@@ -48,19 +48,22 @@
 <Template let:args>
   <div class="sb-container">
     <Card {...args}>
-      <div class="title-wrapper" slot="card-title">
+      <h2 class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
-      </div>
+      </h2>
 
-      <div class="card-body-content card-body-content--form" slot="card-body">
+      <div
+        class="card-body-content card-body-content--forgetpw"
+        slot="card-content"
+      >
         <p class="card-body-info">
-          Enter your email and we'll send you a link to reset your password
+          Enter your email and we'll send you a link to reset your password.
         </p>
-        <div class="form-wrapper">
+        <div class="form-wrapper form-wrapper--forgetpw">
           <form method="post">
-            <fieldset class="mzp-c-field-set">
-              <div class="mzp-c-field">
+            <fieldset class="mzp-c-field-set field-set">
+              <div class="mzp-c-field field field--email">
                 <div class="input-wrapper">
                   <input
                     class="mzp-c-field-control"
@@ -80,13 +83,13 @@
             </fieldset>
           </form>
           <Button disabled={btnDisabled} size="xl" custom="modal-button create">
-            <div class="button-text">{args.cta1}</div></Button
+            <div class="button-text--signin">{args.cta1}</div></Button
           >
+          <p class="body-text-action">
+            {args.bodyText}
+          </p>
         </div>
       </div>
-      <p class="body-text-action">
-        {args.bodyText}
-      </p>
     </Card>
   </div>
 </Template>
@@ -96,13 +99,12 @@
 <Story
   name="Forgot Password"
   args={{
-    width: "460px",
-    height: "300px",
+    width: "391px",
+    height: "auto",
     fontSize: "38px",
     title: "Forgot your password?",
     cta1: "Reset password",
     bodyText: "We'll send you a link to reset your password.",
-    custom: "reset-pw",
   }}
 />
 
@@ -111,7 +113,7 @@
     padding: 2rem 1rem;
   }
   .title-highlight {
-    background-color: var(--color-yellow-35);
+    width: calc(var(--titleWidth) + 15px);
     transition: width 0.2s ease-in;
   }
 </style>

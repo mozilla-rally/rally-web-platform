@@ -1,15 +1,20 @@
-.card-container {
+.card {
+  border: 1px solid #cdcdd4;
   margin-bottom: 4rem;
-  width: 100%;
+
   padding: 48px;
   @media (max-width: $MD-screen) {
-    padding: 25px 0px; 
+    padding: 25px;
   }
 
   @media (max-width: $SM-screen) {
+    border: none;
     height: auto !important;
   }
 
+  &__inner {
+    padding: 0;
+  }
 
   .title-wrapper {
     display: flex;
@@ -26,30 +31,25 @@
     text-align: center;
     display: inline-block;
     font-weight: bold;
-    max-width: 450px;
-    @media (max-width: $SM-screen) {
+
+    @media (max-width: $XS-screen) {
       max-width: 200px;
     }
-
   }
 
-  .card-body {
-  
-    &-content {
+  &__body {
+    .card-content {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      max-width: 360px;
-      padding: 48px 20px;
+      max-width: 368px;
+      width: 368px;
+      @media (max-width: $MD-screen) {
+        width: 100%;
+      }
     }
 
-    &-check{
-      padding: 20px;
-    }
-
-
-
-    .card-button{
+    .card-button {
       padding: 12px 24px;
       @media (max-width: $MD-screen) {
         padding: 10px;

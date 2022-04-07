@@ -13,12 +13,14 @@
   isAuthenticated.subscribe((state) => {
     if (state === false) {
       goto("/signup");
+      localStorage.removeItem("isLoading");
     }
   });
 
   $: if ($isAuthenticated !== undefined && $store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");
+      localStorage.removeItem("isLoading");
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
     }else{

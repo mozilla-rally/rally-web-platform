@@ -5,19 +5,15 @@
 
   export let width;
   export let height;
-  export let minHeight;
-  export let fontSize = "38px";
   export let custom = "";
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({ width, height, fontSize, minHeight }) {
+  function addStyleVariables({ width, height}) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
-      toVariable("--fontSize", fontSize),
-      toVariable("--min-height", minHeight),
     ].filter((d) => d !== undefined);
     if (values.length === 0) return undefined;
     return values.join("; ");
@@ -25,11 +21,9 @@
 
   $: styles = addStyleVariables({
     width,
-    height,
-    fontSize,
-    minHeight,
+    height
   });
-  $: classSet = ["card-body", custom].filter((t) => t).join(" ");
+  $: classSet = [custom].filter((t) => t).join(" ");
 
   const key = `card-${
     Math.random().toString(36).substring(2, 15) +
@@ -37,35 +31,34 @@
   }`;
 </script>
 
-<div id={key} class="card-container radius-sm" style={styles}>
-  <header class="card-header">
-    <h2>
+<div id={key} class="card radius-sm" style={styles}>
+  <div class="card__inner">
+    <header class={`card-header card-header--${custom}` }>
       <slot name="card-title" />
-    </h2>
-  </header>
+    </header>
 
-  <div class={classSet}>
-    <slot name="card-body">
-      <p>I am a Card</p>
-    </slot>
+    <div class={`card__body card__body--${classSet}`}>
+      <slot name="card-content">
+        <p>I am a Card</p>
+      </slot>
+    </div>
+
+    <div class="card__cta">
+      <slot name="cta" />
+    </div>
   </div>
-
-  <slot name="cta" />
 </div>
 
 <style>
-  .card-container {
+  .card {
     max-width: var(--width);
     height: var(--height);
-    min-height: var(--min-height);
-    background-color: var(--color-white);
-    border: 1px solid #cdcdd4;
+    background-color: #fff;
     display: grid;
     justify-content: center;
-    font-size: 0.875rem;
   }
 
   header {
-    margin-bottom: 5px;
+    max-width: var(--width);
   }
 </style>

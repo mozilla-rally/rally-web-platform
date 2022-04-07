@@ -181,8 +181,8 @@
 </Template>
 
 <!-- 👇 Each story then reuses that template -->
-
-<Story
+<!-- Will show when this flow is active -->
+<!-- <Story
   name="Reset Password"
   args={{
     width: "460px",
@@ -193,7 +193,7 @@
     cta1: "Reset password",
     minHeight: "400px"
   }}
-/>
+/> -->
 
 <style>
   .sb-container {

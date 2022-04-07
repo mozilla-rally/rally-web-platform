@@ -13,7 +13,6 @@
   export let bodyText;
   export let linkText;
   export let width;
-  export let fontSize;
   export let height;
   export let custom;
   export let store;
@@ -130,17 +129,17 @@
   };
 </script>
 
-<Card {width} {fontSize} {height} {custom} minHeight="unset">
-  <div class="title-wrapper" slot="card-title">
+<Card {width} {height} {custom}>
+  <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
-  </div>
+  </h2>
 
-  <div class="card-body-content card-body-content--form" slot="card-body">
+  <div class="card-content card-content--form" slot="card-content">
     <div class="form-wrapper">
       <form method="post" style={formStyles}>
-        <fieldset class="mzp-c-field-set">
-          <div class="mzp-c-field">
+        <fieldset class="mzp-c-field-set field-set">
+          <div class="mzp-c-field field field--email">
             <div class="label-wrapper">
               <label class="mzp-c-field-label" for="id_user_pw">Email</label>
             </div>
@@ -164,7 +163,8 @@
             </p>
           {/if}
 
-          <div class="mzp-c-field">
+          <!-- PASSWORD -->
+          <div class="mzp-c-field field field--pw">
             <div class="label-wrapper">
               <label class="mzp-c-field-label" for="id_user_pw">Password</label>
             </div>
@@ -220,7 +220,11 @@
       </form>
 
       {#if !checkEmail}
-        <Button disabled={btnDisabled} size="xl" custom="card-button create">
+        <Button
+          disabled={btnDisabled}
+          size="xl"
+          custom="card-button card-button--create"
+        >
           <div class="button-text">{cta1}</div></Button
         >
       {/if}
@@ -233,7 +237,7 @@
           }}
           disabled={btnDisabled}
           size="xl"
-          custom="card-button create"
+          custom="card-button card-button--create"
           btnID="continue"
         >
           <div class="button-text--signin">{cta1}</div></Button
@@ -247,14 +251,17 @@
           }}
           disabled={btnDisabled}
           size="xl"
-          custom="card-button create"
+          custom="card-button card-button--create"
           btnID="continue"
         >
-          <div class="button-text--signin">{cta1}</div></Button
+          <div class="button-text--create">{cta1}</div></Button
         >
       {/if}
       <p class="body-text-privacy">
-        By proceeding, you agree to our <a href="/">privacy notice</a>
+        By joining, you agree to our <a
+          href="__BASE_SITE__/how-rally-works/data-and-privacy/"
+          >privacy notice</a
+        >
       </p>
     </div>
   </div>
@@ -279,16 +286,8 @@
     height: var(--formHeight);
   }
 
-  fieldset {
-    margin-bottom: 0;
-  }
-
   .invalid-email {
     margin-top: -19px;
     padding-bottom: 10px;
-  }
-
-  .field-pw {
-    position: relative;
   }
 </style>

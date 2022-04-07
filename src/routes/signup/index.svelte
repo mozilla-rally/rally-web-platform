@@ -2,10 +2,9 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { getContext } from "svelte";
+  import { onMount, getContext } from "svelte";
   import { goto } from "$app/navigation";
   import * as state from "$lib/components/auth-cards/state.svelte";
-  import SignInCard from "$lib/components/auth-cards/SignInCard.svelte";
   import LaunchCard from "$lib/components/auth-cards/LaunchCard.svelte";
   import CreateCard from "$lib/components/auth-cards/CreateCard.svelte";
   import ForgetPwCard from "$lib/components/auth-cards/ForgetPWCard.svelte";
@@ -17,17 +16,18 @@
   const store: AppStore = getContext("rally:store");
 
   let isLoading = false;
-  let showCardsWrapper = true;
-  let loadingItem = null;
-
+  let loadingText = localStorage.getItem('isLoading')
   let userEmail;
+
+  onMount(() => {
+    localStorage.removeItem("isLoading");
+  });
 
   let {
     cardArgs,
     welcomeArgs,
     joinArgs,
     createArgs,
-    signinArgs,
     forgetPWArgs,
     checkEmailPWArgs,
     checkEmailArgs,
@@ -38,7 +38,6 @@
     welcomeCard,
     joinCard,
     createAcctCard,
-    signinCard,
     forgetPWCard,
     checkEmailCard,
     checkEmailPWCard,
@@ -61,8 +60,6 @@
     cardArgs = joinArgs;
   } else if (createAcctCard) {
     cardArgs = createArgs;
-  } else if (signinCard) {
-    cardArgs = signinArgs;
   } else if (forgetPWCard) {
     cardArgs = forgetPWArgs;
   } else if (checkEmailPWCard) {
@@ -73,19 +70,13 @@
     cardArgs = resetPWArgs;
   }
 
-  const showSpinner = (event) => {
-    loadingItem = event.detail.item;
-    if (loadingItem) {
-      isLoading = true;
-      showCardsWrapper = false;
-    }
-  };
+  $: if(loadingText === 'loading') isLoading = true 
 
   const resetState = () => {
+    isLoading = false;
     welcomeCard = true;
     joinCard = false;
     createAcctCard = false;
-    signinCard = false;
     forgetPWCard = false;
     resetPWCard = false;
     checkEmailCard = false;
@@ -105,18 +96,10 @@
         break;
       case "create":
         joinCard = false;
-        signinCard = false;
         createAcctCard = true;
-        break;
-      case "signin":
-        welcomeCard = false;
-        joinCard = false;
-        createAcctCard = false;
-        signinCard = true;
         break;
       case "forget":
         welcomeCard = false;
-        signinCard = false;
         forgetPWCard = true;
         break;
       case "reset":
@@ -142,52 +125,46 @@
   };
 </script>
 
+
+
 <section class="signin md-container-signin">
   <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
     <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
   </h2>
 
- 
   <div class="cards-wrapper signin__cards">
     {#if isLoading}
-
-    <div class="spinner-wrapper">
-      <svg
-      class="spinner"
-      width="100px"
-      height="100px"
-      viewBox="0 0 66 66"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle
-        class="path"
-        fill="none"
-        stroke-width="6"
-        stroke-linecap="round"
-        cx="33"
-        cy="33"
-        r="30"
-      />
-    </svg>
-    </div>
-    
+      <div class="spinner-wrapper">
+        <svg
+          class="spinner"
+          width="100px"
+          height="100px"
+          viewBox="0 0 66 66"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            class="path"
+            fill="none"
+            stroke-width="6"
+            stroke-linecap="round"
+            cx="33"
+            cy="33"
+            r="30"
+          />
+        </svg>  
+      </div>
     {/if}
 
-    {#if showCardsWrapper}
+    {#if !isLoading}
       {#if welcomeCard || joinCard}
         <LaunchCard
           {...cardArgs}
           {store}
           on:type={triggerCard}
-          on:item={showSpinner}
         />
       {/if}
 
-      {#if signinCard && !welcomeCard && !joinCard}
-        <SignInCard {...cardArgs} {store} on:type={triggerCard} />
-      {/if}
-
-      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
+      {#if createAcctCard && !welcomeCard && !joinCard}
         <CreateCard {...cardArgs} {store} on:type={triggerCard} />
       {/if}
 
@@ -195,7 +172,7 @@
         <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
       {/if}
 
-      {#if forgetPWCard && !welcomeCard && !joinCard && !signinCard && !createAcctCard && !checkEmailCard}
+      {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
         <ForgetPwCard
           {...cardArgs}
           {sendUserInfo}
@@ -212,7 +189,7 @@
 
   <div class="how-it-works signin__howitworks">
     <a
-      class="signin-external-link"
+      class="sign external-link"
       target="_blank"
       rel="noopener noreferrer"
       href="__BASE_SITE__/how-rally-works/"
@@ -222,9 +199,8 @@
   </div>
 </section>
 
-
 <style>
-  .spinner-wrapper{
+  .spinner-wrapper {
     text-align: center;
   }
 </style>

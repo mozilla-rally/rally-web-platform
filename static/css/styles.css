@@ -1562,7 +1562,7 @@ ol {
 .md-container-signin {
   max-width: 688px;
   margin: auto;
-  padding: 8.8rem 2.4rem;
+  padding: 3.8rem 2.4rem;
 }
 @media (max-width: 432px) {
   .md-container-signin {
@@ -1578,7 +1578,6 @@ ol {
 }
 @media (max-width: 432px) {
   .btn-content--sm {
-    width: 100%;
     justify-content: space-around;
   }
 }
@@ -1663,56 +1662,61 @@ ol {
   border-color: #bfbfc9;
 }
 
-.card-container {
+.card {
+  border: 1px solid #cdcdd4;
   margin-bottom: 4rem;
-  width: 100%;
   padding: 48px;
 }
 @media (max-width: 688px) {
-  .card-container {
-    padding: 25px 0px;
+  .card {
+    padding: 25px;
   }
 }
 @media (max-width: 432px) {
-  .card-container {
+  .card {
+    border: none;
     height: auto !important;
   }
 }
-.card-container .title-wrapper {
+.card__inner {
+  padding: 0;
+}
+.card .title-wrapper {
   display: flex;
   justify-content: center;
 }
-.card-container .title-wrapper--launch {
+.card .title-wrapper--launch {
   display: flex;
   justify-content: center;
 }
-.card-container .title-text {
+.card .title-text {
   z-index: 1;
   text-align: center;
   display: inline-block;
   font-weight: bold;
-  max-width: 450px;
 }
-@media (max-width: 432px) {
-  .card-container .title-text {
+@media (max-width: 360px) {
+  .card .title-text {
     max-width: 200px;
   }
 }
-.card-container .card-body-content {
+.card__body .card-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 360px;
-  padding: 48px 20px;
+  max-width: 368px;
+  width: 368px;
 }
-.card-container .card-body-check {
-  padding: 20px;
+@media (max-width: 688px) {
+  .card__body .card-content {
+    width: 100%;
+  }
 }
-.card-container .card-body .card-button {
+.card__body .card-button {
   padding: 12px 24px;
 }
 @media (max-width: 688px) {
-  .card-container .card-body .card-button {
+  .card__body .card-button {
     padding: 10px;
   }
 }
@@ -1861,15 +1865,18 @@ ol {
   margin-top: 40px;
 }
 
-.card-container {
+.card {
   margin: auto;
 }
-.card-container .card-header h2 {
-  font-weight: bold;
-  font-size: 2.375rem;
-  line-height: 44px;
+.card .card-header {
+  padding-bottom: 48px;
 }
-.card-container .card-header .title-highlight {
+.card .card-header h2 {
+  font-weight: bold;
+  line-height: 44px;
+  font-size: 38px;
+}
+.card .card-header .title-highlight {
   display: block;
   background-color: #f9cd34;
   border-radius: 4px;
@@ -1878,92 +1885,143 @@ ol {
   margin-top: 24px;
 }
 @media (max-width: 432px) {
-  .card-container .card-header .title-highlight {
+  .card .card-header .title-highlight {
     display: none;
   }
 }
-.card-container .card-body-content--form {
-  padding-top: 48px;
+.card .card-header--info-card {
+  padding-bottom: 32px;
 }
-.card-container .card-body-content .button-text {
+.card .card-content .button-text {
   text-align: center;
   font-size: 1rem;
   opacity: 0.6;
 }
 @media only screen and (max-width: 360px) {
-  .card-container .card-body-content .button-text {
+  .card .card-content .button-text {
     font-size: 12px;
   }
 }
-.card-container .card-body-content .form-wrapper {
+.card .card-content .card-body-info {
+  max-width: 368px;
+  text-align: left;
+}
+.card .card-content__text {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.card .card-button {
+  width: 100%;
+}
+.card .card-button--signup {
+  margin: 16px 0px;
+}
+.card .card-button--create {
+  margin-bottom: 20px;
+}
+.card .line-break {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+}
+.card .line-break hr {
+  width: 46%;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #cdcdd4;
+}
+.card .line-break__text {
+  color: #cdcdd4;
+}
+.card .form-wrapper {
   display: grid;
   margin-bottom: 0;
 }
 @media only screen and (min-width: 688px) {
-  .card-container .card-body-content .form-wrapper {
+  .card .form-wrapper {
     max-width: 360px;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(4, auto);
     column-gap: 34px;
   }
 }
-.card-container .card-body-content .form-wrapper form input {
+.card .form-wrapper form input {
   width: 100%;
   height: 48px;
   font-size: 0.875rem;
   border: 2px solid #9595a2;
 }
-.card-container .card-body-content .form-wrapper .card-body-info,
-.card-container .card-body-content .form-wrapper form,
-.card-container .card-body-content .form-wrapper button,
-.card-container .card-body-content .form-wrapper .body-text-privacy,
-.card-container .card-body-content .form-wrapper .body-text-action {
+.card .form-wrapper form,
+.card .form-wrapper button,
+.card .form-wrapper .body-text-privacy {
   grid-column: 1/13;
 }
 @media only screen and (min-width: 688px) {
-  .card-container .card-body-content .form-wrapper .card-body-info,
-.card-container .card-body-content .form-wrapper form,
-.card-container .card-body-content .form-wrapper button,
-.card-container .card-body-content .form-wrapper .body-text-privacy,
-.card-container .card-body-content .form-wrapper .body-text-action {
+  .card .form-wrapper form,
+.card .form-wrapper button,
+.card .form-wrapper .body-text-privacy {
     max-width: 360px;
   }
 }
-.card-container .card-body-content .input-wrapper {
+.card .form-wrapper--forgetpw {
+  max-width: 391px;
+}
+.card .field-set {
+  margin-bottom: 0;
+}
+.card .field--email {
+  padding-bottom: 24px;
+}
+.card .field--pw {
+  padding-bottom: 16px;
+}
+.card .input-wrapper {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.card-container .card-body-content .input-wrapper input {
+.card .input-wrapper input {
   grid-column: 1/-1;
   grid-row: 1/2;
   z-index: 1;
 }
-.card-container .card-body-content .input-wrapper img {
+.card .input-wrapper img {
   grid-column: 2/3;
   grid-row: 1/2;
   justify-self: end;
   z-index: 2;
   margin: 10px;
 }
-.card-container .card-body-content .card-body-info {
-  max-width: 368px;
-  text-align: center;
-}
-.card-container .body-text-action {
-  padding: 0px 28px;
+.card .body-text-action {
+  padding-top: 48px;
+  margin: 0;
   font-size: 16px;
   color: #000000;
   text-align: center;
+  grid-column: 1/13;
 }
-.card-container .body-text-action button {
+@media only screen and (min-width: 688px) {
+  .card .body-text-action {
+    max-width: 360px;
+  }
+}
+.card .body-text-action button {
   border-color: transparent;
   background: transparent;
   cursor: pointer;
   font-weight: 700;
   text-decoration: underline;
 }
-.card-container .body-text-action a {
+.card .body-text-action a {
   font-weight: 700;
+}
+.card .body-text-action--info {
+  padding-top: 32px;
+}
+.card .body-text-action--info .contact-text {
+  padding-top: 32px;
+  margin: 0;
 }
 
 .mzp-c-call-out-desc {
@@ -2097,7 +2155,7 @@ ol {
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 1.2rem;
+  font-size: 12px;
   color: gray;
   padding: 0;
 }
@@ -2110,28 +2168,26 @@ ol {
 }
 
 .valid {
-  color: var(--color-green-70) !important;
+  text-decoration: line-through !important;
 }
 
 .hide-error-msg {
   display: none;
 }
 
-.card-button {
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-.card-button.signin,
-.card-button.create {
-  margin-top: 0;
-  height: 48px;
-}
-
 .body-text-privacy {
   font-size: 12px;
   margin: auto;
   text-align: center;
+}
+
+.info-rules {
+  list-style: disc;
+  font-size: 0.875rem;
+  color: gray;
+  padding: 16px 24px 0px;
+  text-align: left;
+  margin: 0;
 }
 
 /* storybook styles */
@@ -2145,15 +2201,6 @@ ol {
 }
 .sign-in-container p a {
   color: #000000;
-}
-
-.info-rules {
-  list-style: disc;
-  font-size: 0.875rem;
-  color: gray;
-  padding: 10px;
-  text-align: left;
-  margin: 0;
 }
 
 .gafc {

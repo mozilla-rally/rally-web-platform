@@ -12,7 +12,7 @@
   export let cta1;
   export let bodyText;
   export let width;
-  export let fontSize;
+  export let height;
   export let store;
   export let sendUserInfo;
 
@@ -24,6 +24,7 @@
   let requestErrText = "";
   let titleEl;
   let textWidth;
+  let custom = ""
 
   onMount(async () => {
     if (titleEl) {
@@ -71,20 +72,20 @@
   };
 </script>
 
-<Card {width} {fontSize}>
-  <div class="title-wrapper" slot="card-title">
+<Card {width} {custom} {height}>
+  <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
-  </div>
+  </h2>
 
-  <div class="card-body-content card-body-content--form" slot="card-body">
+  <div class="card-content card-content--forgetpw" slot="card-content">
     <p class="card-body-info">
-      Enter your email and we'll send you a link to reset your password
+      Enter your email and we'll send you a link to reset your password.
     </p>
-    <div class="form-wrapper">
+    <div class="form-wrapper form-wrapper--forgetpw">
       <form method="post">
-        <fieldset class="mzp-c-field-set">
-          <div class="mzp-c-field">
+        <fieldset class="mzp-c-field-set field-set">
+          <div class="mzp-c-field field field--email">
             <div class="label-wrapper">
               <label class="mzp-c-field-label enter-pw" for="id_user_email"
                 >Email</label
@@ -100,7 +101,6 @@
               name="id_user_email"
               type="email"
               width="100%"
-              placeholder="enter your email address"
               required
             />
           </div>
@@ -129,7 +129,7 @@
       <p class="body-text-action">
         Nevermind,<button
           on:click={() => {
-            handleTrigger("signin");
+            handleTrigger("welcome");
           }}><a href="/signup">go back</a></button
         >
       </p>
@@ -138,38 +138,8 @@
 </Card>
 
 <style>
-  .card-body-content {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
     transition: width 0.2s ease-in;
-  }
-  .info-msg-err-reset {
-    text-align: left;
-    font-size: 0.75rem;
-    color: red;
-    padding: 10px 0px;
-    margin-top: -20px;
-  }
-
-  .body-text-action {
-    text-align: center;
-    font-size: 0.75rem;
-    color: gray;
-    padding-top: 10px;
-  }
-
-  .body-text-action button {
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 488px) {
-    .title-highlight {
-      width: 250px;
-      transition: width 0.2s ease-in;
-      margin-top: 70px;
-    }
   }
 </style>

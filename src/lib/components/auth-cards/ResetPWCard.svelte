@@ -11,8 +11,8 @@
   export let title;
   export let cta1;
   export let width;
-  export let fontSize;
   export let custom;
+  export let height;
 
   let titleEl;
   let textWidth;
@@ -91,17 +91,17 @@
   };
 </script>
 
-<Card {width} {fontSize} {custom}>
-  <div class="title-wrapper" slot="card-title">
+<Card {width} {custom} {height}>
+  <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
-  </div>
+  </h2>
 
-  <div class="card-body-content card-body-content--form" slot="card-body">
+  <div class="card-content card-content--resetpw" slot="card-content">
     <div class="form-wrapper">
       <form method="post">
-        <fieldset class="mzp-c-field-set">
-          <div class="mzp-c-field field-pw">
+        <fieldset class="mzp-c-field-set field-set">
+          <div class="mzp-c-field field field--pw">
             <div class="label-wrapper">
               <label class="mzp-c-field-label enter-pw" for="id_user_pw"
                 >Choose a new password</label
@@ -171,7 +171,7 @@
         }}
         disabled={btnDisabled}
         size="xl"
-        custom="card-button create"
+        custom="card-button card-button--create"
       >
         <div class="button-text">{cta1}</div></Button
       >
@@ -182,15 +182,5 @@
 <style>
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
-  }
-  form {
-    height: auto;
-  }
-
-  .info-msg-active-reset {
-    text-align: left;
-    font-size: 12px;
-    color: gray;
-    padding-top: 10px;
   }
 </style>

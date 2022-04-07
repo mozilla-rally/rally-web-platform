@@ -41,18 +41,18 @@
 <Template let:args>
   <div class="sb-container">
     <Card {...args}>
-      <div class="title-wrapper" slot="card-title">
+      <h2 class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
+      </h2>
+
+      <div class="card-content card-content--info" slot="card-content">
+        <p class="card-content__text">{args.body}</p>
       </div>
 
-      <div class="card-body-content card-body-check" slot="card-body">
-        <p class="body-text-info">{args.body}</p>
-      </div>
-
-      <div slot="cta" class="body-text-action">
+      <div slot="cta" class="body-text-action body-text-action--info">
         Ready to sign in? <button>Sign in</button>
-        <p class="body-text-action">
+        <p class="contact-text">
           {args.bodyText} <a href="/">{args.linkText}</a>
         </p>
       </div>
@@ -64,30 +64,30 @@
 <Story
   name="Confirm Email"
   args={{
-    width: "460px",
-    height: "262px",
+    width: "368px",
+    height: "auto",
     fontSize: "38px",
     title: "Check your email",
     body:
-      "To finish creating your account with Rally, please check your email inbox and verify your email address",
-    bodyText: "Need additional help?",
+      "To finish creating your account with Rally, please check your email inbox and verify your email address.",
+    bodyText: "Need help?",
     linkText: "Contact Us",
-    custom: "info-dialog",
+    custom: "info-card",
   }}
 />
 
 <Story
   name="Reset Password Email"
   args={{
-    width: "460px",
-    height: "276px",
+    width: "368px",
+    height: "auto",
     fontSize: "38px",
     title: "Check your email",
     body:
       "Instructions to reset your password have been sent to [example@workmail.com]",
-    bodyText: "Need additional help?",
+    bodyText: "Need help?",
     linkText: "Contact Us",
-    custom: "info-dialog",
+    custom: "info-card",
   }}
 />
 
@@ -97,10 +97,5 @@
   }
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
-  }
-
-  .body-text-info {
-    padding: 0px 30px;
-    text-align: center;
   }
 </style>
