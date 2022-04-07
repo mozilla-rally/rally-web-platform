@@ -117,11 +117,13 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     //scroll to page bottom
-    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
     //hide firebase emulator warning
-    let fb = driver.findElement(By.css(".firebase-emulator-warning"))
+    let fb = driver.findElement(By.css(".firebase-emulator-warning"));
     await driver.executeScript("arguments[0].id = 'fb'", fb);
-    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'")
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'");
+    await driver.executeScript("document.getElementById('accept').style.position='relative'");
+    await driver.executeScript("document.getElementById('accept').style.top='-5rem'");
 
     await findAndAct(
       driver,
@@ -324,7 +326,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Sign in again, need to get a new token that has email_verified as a claim.
     await driver.get("http://localhost:5000/signup");
-  
+
     await driver
       .findElement(By.id("id_user_email"))
       .sendKeys("test@example.com");
