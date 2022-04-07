@@ -16,7 +16,7 @@
 
 <style>
   main {
-    width: var(--content-width);
+    width: auto;
     margin: auto;
     padding: 0;
     padding-top: 2.5rem;

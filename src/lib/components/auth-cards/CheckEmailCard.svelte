@@ -1,4 +1,4 @@
-<script>
+<script type="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -8,17 +8,18 @@
   const dispatch = createEventDispatcher();
 
   export let title;
-  export let body;
   export let width;
-  export let fontSize;
-  export let minHeight;
   export let height;
   export let custom;
   export let checkPW;
   export let userEmail;
+  export let ctaText;
+  export let linkText;
 
+  let body;
   let titleEl;
   let textWidth;
+  let checkEmailText = `To finish creating your account with Rally, please check your email inbox and verify your email address.`;
   let resetPWText = `An email has been sent to ${userEmail} to reset your password.`;
 
   onMount(async () => {
@@ -28,52 +29,41 @@
     }
   });
 
-  $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: checkPW ? (body = resetPWText) : (body = body);
-
   const handleTrigger = (type) => {
     dispatch("type", {
       text: type,
     });
   };
+
+  $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: checkPW ? (body = resetPWText) : (body = checkEmailText);
 </script>
 
-<Card {width} {fontSize} {minHeight} {custom} {height}>
-  <div class="title-wrapper" slot="card-title">
+<Card {width} {custom} {height}>
+  <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
+  </h2>
+
+  <div class="card-content card-content--info" slot="card-content">
+    <p class="card-content__text">{body}</p>
   </div>
 
-  <div class="card-body-content" slot="card-body">
-    <p class="body-text-info">{body}</p>
-    <p class="body-text-action">
-      Ready to sign in?<button
-        on:click={() => {
-          handleTrigger("welcome");
-        }}>Sign in</button
-      >
+  <div slot="cta" class="body-text-action body-text-action--info">
+    Ready to sign in? <button
+      on:click={() => {
+        handleTrigger("welcome");
+      }}>Sign in</button
+    >
+
+    <p class="contact-text">
+      {ctaText} <a href="/">{linkText}</a>
     </p>
   </div>
 </Card>
 
 <style>
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-    transition: width 0.2s ease-in;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
-  }
-
-  .body-text-info {
-    padding: 20px 52px 0px;
-    text-align: center;
   }
 </style>

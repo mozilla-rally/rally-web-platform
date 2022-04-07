@@ -38,6 +38,7 @@
     grid-gap: 20px;
     margin-bottom: 20px;
     grid-template-columns: var(--study-card-header-columns);
+    grid-template-rows: max-content;
   }
 
   .study-card-header-info {

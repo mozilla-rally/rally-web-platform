@@ -1,5 +1,14 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: initial;
+}
+
 html {
   background-color: $bg-default;
+  box-sizing: border-box;
   color: $c-default;
   height: 100%;
   overflow: visible;
@@ -8,6 +17,13 @@ html {
 
 body {
   overflow-x: hidden;
+  line-height: 1.6;
+  height: 100%;
+  font-size: 1rem; 
+}
+
+header {
+  flex-shrink: 0;
 }
 
 footer {
@@ -16,17 +32,17 @@ footer {
 
 main {
   h2 {
-    font-size: 38px;
+    font-size: 2.375rem;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     margin-bottom: 2em;
     margin-top: 2em;
   }
 
   h4 {
-    font-size: 16px;
+    font-size: 1rem;
     margin-bottom: 0;
     margin-top: 2em;
   }
@@ -65,7 +81,3 @@ ol {
   color: $color-marketing-gray-70;
 }
 
-#rally {
-  display: grid;
-  grid-template-rows: 1fr auto 527px;
-}

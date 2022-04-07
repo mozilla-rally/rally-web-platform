@@ -1,7 +1,12 @@
 import {
   createUserWithEmailAndPassword, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithCredential,
   sendEmailVerification,
-  sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  updatePassword,
+  updateEmail,
+  signOut,
+  signInWithRedirect,
 } from "firebase/auth";
 import {
   collection, doc,
@@ -250,17 +255,19 @@ export default {
     // Allow user to select which Google account to use.
     provider.setCustomParameters({ prompt: "select_account" });
 
-    let userCredential = undefined;
+    let userCredential;
     try {
-      userCredential = await signInWithPopup(auth, provider);
+      userCredential = await signInWithRedirect(auth, provider);
     } catch (err) {
       console.error("there was an error", err);
     }
     // create a new user.
-    console.debug("Logged in as", userCredential.user.email);
-    initializeUserDocument(userCredential.user.uid);
-    listenForUserChanges(userCredential.user);
-    listenForUserStudiesChanges(userCredential.user);
+    if (userCredential) {
+      console.debug("Logged in as", userCredential.user.email);
+      initializeUserDocument(userCredential.user.uid);
+      listenForUserChanges(userCredential.user);
+      listenForUserStudiesChanges(userCredential.user);
+    }
 
     // Let the Rally SDK content script know the site is intialized.
     console.debug("initialized, dispatching rally-sdk.web-check");
