@@ -1,3 +1,20 @@
+.btn-content--sm{
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  text-align: left;
+  @media (max-width: $SM-screen) {
+    justify-content: space-around;
+  }
+}
+
+.mzp-c-button.mzp-t-md{
+  font-size: 14px; 
+}
+
+.mzp-c-button{
+  font-size: 1rem; 
+}
 /* extended button states */
 .mzp-c-button.mzp-t-compact {
   padding: 1px 10px;
