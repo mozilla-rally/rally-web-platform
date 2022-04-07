@@ -116,7 +116,6 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
-    await driver.manage().window().maximize();
     //scroll to page bottom
     await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
     //hide firebase emulator warning
