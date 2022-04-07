@@ -107,46 +107,34 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
     await findAndAct(driver, By.css("button"), (e) => e.click());
-
-    // Google sign-in prompt should open
-    await driver.wait(async () => {
-      return (await driver.getAllWindowHandles()).length === 2;
-    }, WAIT_FOR_PROPERTY);
-
-    await driver.switchTo().window((await driver.getAllWindowHandles())[1]);
-
-    await driver.wait(
-      until.titleIs("Auth Emulator IDP Login Widget"),
-      WAIT_FOR_PROPERTY
-    );
-
-    // FIXME this emulator auth pop-up isn't ready on the default "loaded" event, the window will close anyway so retry until it responds.
-    await driver.executeScript(
-      `window.setInterval(() => document.querySelector(".mdc-button").click(), 1000)`
-    );
-
+    await findAndAct(driver, By.id("add-account-button"), (e) => e.click());
     await findAndAct(driver, By.id("autogen-button"), (e) => e.click());
     await findAndAct(driver, By.id("sign-in"), (e) => e.click());
-
-    // Google sign-in prompt should close.
-    await driver.wait(async () => {
-      return (await driver.getAllWindowHandles()).length === 1;
-    }, WAIT_FOR_PROPERTY);
-
-    // Switch back to original window.
-    await driver.switchTo().window((await driver.getAllWindowHandles())[0]);
 
     await driver.wait(
       until.titleIs("Privacy Policy | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
 
-    // TODO add Cancel button test, not implemented by site yet.
+    //scroll to page bottom
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    //hide firebase emulator warning
+    let fb = driver.findElement(By.css(".firebase-emulator-warning"));
+    await driver.executeScript("arguments[0].id = 'fb'", fb);
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'");
+    await driver.executeScript("document.getElementById('accept').style.position='relative'");
+    await driver.executeScript("document.getElementById('accept').style.top='-5rem'");
+
     await findAndAct(
       driver,
       By.xpath('//button[text()="Accept & Enroll"]'),
       (e) => e.click()
     );
+
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
+    await driver.executeScript("arguments[0].id = 'fb'", fb);
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'")
+
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), (e) =>
       e.click()
     );
@@ -267,8 +255,6 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
-    await findAndAct(driver, By.id("signin"), (e) => e.click());
-
     // Totally invalid credentials fail
     await driver.findElement(By.id("id_user_email")).sendKeys("test123");
     await driver.findElement(By.id("id_user_pw")).sendKeys("Test1234");
@@ -302,7 +288,6 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.xpath('//button[text()="Sign in"]'), (e) =>
       e.click()
     );
-    await findAndAct(driver, By.id("signin"), (e) => e.click());
 
     // Unverified account can be logged into, but cannot be used until verified.
     await driver
@@ -341,7 +326,7 @@ describe("Rally Web Platform UX flows", function () {
 
     // Sign in again, need to get a new token that has email_verified as a claim.
     await driver.get("http://localhost:5000/signup");
-    await findAndAct(driver, By.id("signin"), (e) => e.click());
+
     await driver
       .findElement(By.id("id_user_email"))
       .sendKeys("test@example.com");

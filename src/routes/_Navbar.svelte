@@ -11,6 +11,10 @@
   let userEmail;
   let dropdownList;
   let isFocused = false;
+  let ariaExpanded = false;
+  let ariaHidden = true;
+  let isOpaque = false;
+  let navOpacity = 0;
 
   onMount(async () => {
     userEmail = await store.getUserEmail();
@@ -23,10 +27,30 @@
   const hideDropdown = () => (dropdownList.style.display = "none");
   const onFocus = () => (isFocused = true);
 
+  const checkOpacity = () => {
+    isOpaque ? (navOpacity = 1) : (navOpacity = 0);
+  };
+
   const handleLogOut = async () => {
     await store.signOutUser();
     browser.reload();
   };
+
+  const toggleNavIcon = () => {
+    ariaExpanded = !ariaExpanded;
+    ariaHidden = !ariaHidden;
+    isOpaque = !isOpaque;
+    checkOpacity();
+  };
+
+  const closeNavIcon = () => {
+    ariaExpanded = false;
+    ariaHidden = true;
+  }
+
+  $: cssVarStyles = `--nav-opacity:${navOpacity}`;
+  // if ariaExpanded is true hide the dropdown 
+  //fix signout hover
 </script>
 
 <RallyNavbar>
@@ -41,36 +65,31 @@
         />
       {/if}
     </a>
-
-    <!-- main nav -->
-    <nav class="header__nav" id="nav" aria-label="Primary navigation">
-      <ul class="nav-list">
-        <!-- will keep just in case -->
-        <!-- <li class="nav-list__item external">
-          {#if $mounted}
-            <a
-              in:fly={{ duration: 800, delay: 200, x: -15 }}
-              class="nav-list__link"
-              href="/studies"
-              sveltekit:prefetch
-            >
-              Support <ExternalLink />
-            </a>
-          {/if}
-        </li> -->
-      </ul>
-    </nav>
-    <!-- main nav end -->
-
-    <!-- mobile nav toggle -->
   </div>
 
+  <!-- Mobile nav toggle-->
+  <button
+    on:click={toggleNavIcon}
+    class="header__nav-toggle"
+    type="button"
+    data-expands="mobile-nav"
+    data-expands-height
+    aria-expanded={ariaExpanded}
+    slot="toggle"
+  >
+    <span class="header__nav-toggle-icon" />
+    <span class="is-active-hide" aria-label="Open navigation menu." />
+    <span class="is-active-show" aria-label="Close navigation menu." />
+  </button>
+
+  <!-- Dropdown-->
   <div
     on:focus={onFocus}
     on:mouseover={showDropdown}
+    on:mouseleave={hideDropdown}
+    on:click={closeNavIcon}
     class="header__dropdown"
-    slot="user-icon"
-  >
+    slot="user-icon">
     <div class="dropdown__user-icon">
       <img src="img/user-solid.svg" alt="user icon" />
     </div>
@@ -116,4 +135,52 @@
       </li>
     </ul>
   </div>
+
+  <!-- Mobile menu dropdown -->
+  <div
+    id="mobile-menu"
+    class="header__mobile-menu"
+    aria-hidden={ariaHidden}
+    style={cssVarStyles}
+    slot="mobile-nav"
+    >
+    <nav class="nav-mobile" aria-label="Primary navigation">
+      <ul class="dropdown-list">
+        <li class="dropdown-list__item info">
+          <div class="dropdown-list__content dropdown-list--info">
+            <div>Signed in as <span class="text-bold">{userEmail}</span></div>
+          </div>
+        </li>
+        <li class="dropdown-list__item">
+          <a class="dropdown-list__content dropdown-list--profile" href="/profile">
+            <img src="img/user-138.svg" alt="settings icon" />
+            <div class="list-item__text">Manage Profile</div>
+          </a>
+        </li>
+        <li class="dropdown-list__item">
+          <a class="dropdown-list__content dropdown-list--studies" href="/studies">
+            <img src="img/reader-mode.svg" alt="settings icon" />
+            <div class="list-item__text">Studies</div></a
+          >
+        </li>
+        <li class="dropdown-list__item">
+          <a class="dropdown-list__content dropdown-list--settings" href="/account-settings">
+            <img src="img/settings.svg" alt="settings icon" />
+            <div class="list-item__text">Account Settings</div></a
+          >
+        </li>
+        <li class="dropdown-list__item">
+          <button
+            on:click|preventDefault={handleLogOut}
+            class="dropdown-list__content dropdown-list--quit"
+          >
+            <img src="img/quit.svg" alt="quit icon" />
+            <div class="list-item__text">Sign Out</div></button
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
 </RallyNavbar>
+
+<!-- on click close navbar -->

@@ -5,20 +5,15 @@
 
   export let width;
   export let height;
-  export let minHeight;
-  export let fontSize = "38px";
   export let custom = "";
-  
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({ width, height, fontSize, minHeight }) {
+  function addStyleVariables({ width, height}) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
-      toVariable("--fontSize", fontSize),
-      toVariable("--min-height", minHeight),
     ].filter((d) => d !== undefined);
     if (values.length === 0) return undefined;
     return values.join("; ");
@@ -26,11 +21,9 @@
 
   $: styles = addStyleVariables({
     width,
-    height,
-    fontSize,
-    minHeight,
+    height
   });
-  $: classSet = ["card-body", custom].filter((t) => t).join(" ");
+  $: classSet = [custom].filter((t) => t).join(" ");
 
   const key = `card-${
     Math.random().toString(36).substring(2, 15) +
@@ -38,42 +31,34 @@
   }`;
 </script>
 
-<div id={key}>
-  <div class="card-container radius-sm" style={styles}>
-    <header class="container-header">
-      <h2>
-        <slot name="card-title"></slot>
-      </h2>
+<div id={key} class="card radius-sm" style={styles}>
+  <div class="card__inner">
+    <header class={`card-header card-header--${custom}` }>
+      <slot name="card-title" />
     </header>
 
-    <div class={classSet}>
-      <slot name="card-body">
+    <div class={`card__body card__body--${classSet}`}>
+      <slot name="card-content">
         <p>I am a Card</p>
       </slot>
+    </div>
+
+    <div class="card__cta">
+      <slot name="cta" />
     </div>
   </div>
 </div>
 
 <style>
-  .card-container {
-    width: calc(var(--width, var(--content-width)) - 40px);
+  .card {
+    max-width: var(--width);
     height: var(--height);
-    min-width: calc(var(--width, var(--content-width)) - 40px);
-    min-height: var(--min-height);
-    background-color: var(--color-white);
-    padding: 20px;
-    box-shadow: var(--box-shadow-lg);
+    background-color: #fff;
     display: grid;
-    grid-template-rows: max-content auto max-content;
-    font-size: 14px;
+    justify-content: center;
   }
 
   header {
-    display: grid;
-    grid-template-columns: auto max-content;
-  }
-
-  h2 {
-    font-size: var(--fontSize);
+    max-width: var(--width);
   }
 </style>

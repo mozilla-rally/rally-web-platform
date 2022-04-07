@@ -40,48 +40,55 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     minHeight: { control: "text" },
-    custom: { control: "text"}
+    custom: { control: "text" },
   }}
 />
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
-      <div class="title-wrapper" slot="card-title">
+      <h2 class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
-      </div>
+      </h2>
 
-      <div class="card-body-content" slot="card-body">
-        <form method="post">
-          <fieldset class="mzp-c-field-set">
-            <div class="mzp-c-field">
-              <div class="input-wrapper">
-                <input
-                  class="mzp-c-field-control"
-                  bind:value={email}
-                  bind:this={emailEl}
-                  on:change={handleChange}
-                  on:keyup={handleChange}
-                  id="id_user_email"
-                  name="id_user_email"
-                  type="email"
-                  width="100%"
-                  placeholder="Enter your email address"
-                  required
-                />
-              </div>
-            </div>
-          </fieldset>
-        </form>
-        <Button disabled={btnDisabled} size="xl" custom="modal-button create">
-          <div class="button-text">{args.cta1}</div></Button
-        >
-
-        <p class="body-text-action">
-          {args.bodyText}
+      <div
+        class="card-body-content card-body-content--forgetpw"
+        slot="card-content"
+      >
+        <p class="card-body-info">
+          Enter your email and we'll send you a link to reset your password.
         </p>
+        <div class="form-wrapper form-wrapper--forgetpw">
+          <form method="post">
+            <fieldset class="mzp-c-field-set field-set">
+              <div class="mzp-c-field field field--email">
+                <div class="input-wrapper">
+                  <input
+                    class="mzp-c-field-control"
+                    bind:value={email}
+                    bind:this={emailEl}
+                    on:change={handleChange}
+                    on:keyup={handleChange}
+                    id="id_user_email"
+                    name="id_user_email"
+                    type="email"
+                    width="100%"
+                    placeholder="Enter your email address"
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+          </form>
+          <Button disabled={btnDisabled} size="xl" custom="modal-button create">
+            <div class="button-text--signin">{args.cta1}</div></Button
+          >
+          <p class="body-text-action">
+            {args.bodyText}
+          </p>
+        </div>
       </div>
     </Card>
   </div>
@@ -92,30 +99,21 @@
 <Story
   name="Forgot Password"
   args={{
-    width: "460px",
-    height: "300px",
+    width: "391px",
+    height: "auto",
     fontSize: "38px",
     title: "Forgot your password?",
-    cta1: "Request password reset",
-    bodyText: "We'll send you a link to reset your password",
-    custom: "reset-pw",
+    cta1: "Reset password",
+    bodyText: "We'll send you a link to reset your password.",
   }}
 />
 
 <style>
-  .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
-    transition: width 0.2s ease-in;
+  .sb-container {
+    padding: 2rem 1rem;
   }
-  .body-text-action {
-    text-align: left;
-    font-size: 12px;
-    color: gray;
-    padding-top: 10px;
+  .title-highlight {
+    width: calc(var(--titleWidth) + 15px);
+    transition: width 0.2s ease-in;
   }
 </style>

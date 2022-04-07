@@ -4,19 +4,31 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 </script>
 
-<header class="header">
-  <slot name="logo-nav" />
-  <slot name="user-icon" />
+<header class="header mzp-c-navigation">
+  <div class="mzp-c-navigation-l-content header__content">
+    <div class="mzp-c-navigation-container header__container">
+      <slot name="logo-nav" />
+      <slot name="toggle" />
+      <slot name="user-icon" />
+    </div>
+    <slot name="mobile-nav"/>
+  </div>
 </header>
 
 <style>
-  .header {
+  /* .header {
     align-items: center;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     overflow: hidden;
-    grid-row-start: 1;
-    z-index: 100;
-  }
+  } */
+
+  
+
+  /* @media screen and (max-width: 688px) {
+    .header__content {
+      padding: 25px 15px 15px;
+    }
+  } */
 </style>

@@ -9,7 +9,7 @@
   div {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: max-content auto;
+    grid-template-columns: auto;
     justify-content: stretch;
     justify-items: stretch;
   }

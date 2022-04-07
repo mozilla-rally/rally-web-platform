@@ -139,20 +139,20 @@
       </p>
       <ul class="footer-social">
         <li class="footer-social-item">
-          <a href="" class="footer-social-link">
+          <a href="https://twitter.com/mozillarally" class="footer-social-link">
             <img src="img/twitter.svg" alt="twitter icon" />
           </a>
         </li>
       </ul>
       <ul class="footer-legal">
         <li class="footer-legal-item">
-          <a href="" class="footer-legal-link">Rally Privacy Policy</a>
+          <a href="__BASE_SITE__/how-rally-works/data-and-privacy/" class="footer-legal-link">Rally Privacy Policy</a>
         </li>
         <li class="footer-legal-item">
-          <a href="" class="footer-legal-link">Mozilla Privacy policy</a>
+          <a href="https://www.mozilla.org/en-US/privacy/websites/" class="footer-legal-link">Mozilla Privacy policy</a>
         </li>
         <li class="footer-legal-item">
-          <a href="" class="footer-legal-link">Legal</a>
+          <a href="https://www.mozilla.org/en-US/about/legal/" class="footer-legal-link">Legal</a>
         </li>
       </ul>
     </div>

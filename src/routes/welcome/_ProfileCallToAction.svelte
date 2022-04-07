@@ -22,40 +22,28 @@
 
 <svelte:window bind:scrollY />
 
-<OnboardingCallToActionContainer>
-  <div
-    class="call-flow"
-    in:fly={{ duration: 200, y: 5 }}
-    on:introend={() => {
-      intro = true;
-    }}
-  >
-    <Button size="xl" product on:click={() => dispatch("save")}>
-      Save & Continue
-    </Button>
-    <Button size="xl" product secondary on:click={() => dispatch("skip")}>
-      Skip for Now
-    </Button>
-    {#if showArrow && intro}
-      <div
-        transition:fade|local={{ duration: 400 }}
-        class="shortcut-callout"
-        style="text-align: right;"
-      >
-        the following 7<br /> questions are optional
-      </div>
-      <div class="arrow">
-        <Arrow02 />
-      </div>
-    {/if}
-  </div>
-</OnboardingCallToActionContainer>
+<div class="cta-wrapper">
+  <Button btnID= "save" size="xl" product on:click={() => dispatch("save")}>
+    Save & Continue
+  </Button>
+  <Button btnID= "skip"  size="xl" product secondary on:click={() => dispatch("skip")}>
+    Skip for Now
+  </Button>
+  {#if showArrow && intro}
+    <div
+      transition:fade|local={{ duration: 400 }}
+      class="shortcut-callout"
+      style="text-align: right;"
+    >
+      the following 7<br /> questions are optional
+    </div>
+    <div class="arrow">
+      <Arrow02 />
+    </div>
+  {/if}
+</div>
 
 <style>
-  .call-flow {
-    grid-template-columns: max-content max-content auto 0;
-  }
-
   .arrow {
     width: 0;
     height: 0;

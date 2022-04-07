@@ -2,11 +2,9 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { getContext } from "svelte";
-  import { onMount } from "svelte";
+  import { onMount, getContext } from "svelte";
   import { goto } from "$app/navigation";
   import * as state from "$lib/components/auth-cards/state.svelte";
-  import SignInCard from "$lib/components/auth-cards/SignInCard.svelte";
   import LaunchCard from "$lib/components/auth-cards/LaunchCard.svelte";
   import CreateCard from "$lib/components/auth-cards/CreateCard.svelte";
   import ForgetPwCard from "$lib/components/auth-cards/ForgetPWCard.svelte";
@@ -18,21 +16,18 @@
   const store: AppStore = getContext("rally:store");
 
   let isLoading = false;
-  let showCardsWrapper = true;
-  let loadingItem = null;
+  let loadingText = localStorage.getItem('isLoading')
+  let userEmail;
 
   onMount(() => {
-    localStorage.removeItem("loading");
+    localStorage.removeItem("isLoading");
   });
 
-  let userEmail;
-  
   let {
     cardArgs,
     welcomeArgs,
     joinArgs,
     createArgs,
-    signinArgs,
     forgetPWArgs,
     checkEmailPWArgs,
     checkEmailArgs,
@@ -43,21 +38,19 @@
     welcomeCard,
     joinCard,
     createAcctCard,
-    signinCard,
     forgetPWCard,
     checkEmailCard,
     checkEmailPWCard,
     resetPWCard,
   } = state.card;
 
-
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
       goto("/signup");
     } else if (!$store?.user?.enrolled) {
       goto("/welcome/terms");
-    }else{
-      goto("/studies")
+    } else {
+      goto("/studies");
     }
   }
 
@@ -67,8 +60,6 @@
     cardArgs = joinArgs;
   } else if (createAcctCard) {
     cardArgs = createArgs;
-  } else if (signinCard) {
-    cardArgs = signinArgs;
   } else if (forgetPWCard) {
     cardArgs = forgetPWArgs;
   } else if (checkEmailPWCard) {
@@ -79,19 +70,13 @@
     cardArgs = resetPWArgs;
   }
 
-  const showSpinner = (event) => {
-    loadingItem = event.detail.item;
-    if (loadingItem) {
-      isLoading = true;
-      showCardsWrapper = false;
-    }
-  };
+  $: if(loadingText === 'loading') isLoading = true 
 
   const resetState = () => {
+    isLoading = false;
     welcomeCard = true;
     joinCard = false;
     createAcctCard = false;
-    signinCard = false;
     forgetPWCard = false;
     resetPWCard = false;
     checkEmailCard = false;
@@ -111,18 +96,10 @@
         break;
       case "create":
         joinCard = false;
-        signinCard = false;
         createAcctCard = true;
-        break;
-      case "signin":
-        welcomeCard = false;
-        joinCard = false;
-        createAcctCard = false;
-        signinCard = true;
         break;
       case "forget":
         welcomeCard = false;
-        signinCard = false;
         forgetPWCard = true;
         break;
       case "reset":
@@ -148,14 +125,16 @@
   };
 </script>
 
-<section class="mzp-c-call-out sign-in-container">
-  <div class="mzp-l-content">
-    <h2 class="mzp-c-call-out-title mzp-has-zap-1">
-      <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
-    </h2>
 
-    <div class="cards-wrapper">
-      {#if isLoading}
+
+<section class="signin md-container-signin">
+  <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
+    <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
+  </h2>
+
+  <div class="cards-wrapper signin__cards">
+    {#if isLoading}
+      <div class="spinner-wrapper">
         <svg
           class="spinner"
           width="100px"
@@ -172,55 +151,56 @@
             cy="33"
             r="30"
           />
-        </svg>
+        </svg>  
+      </div>
+    {/if}
+
+    {#if !isLoading}
+      {#if welcomeCard || joinCard}
+        <LaunchCard
+          {...cardArgs}
+          {store}
+          on:type={triggerCard}
+        />
       {/if}
 
-      {#if showCardsWrapper}
-        {#if welcomeCard || joinCard}
-          <LaunchCard
-            {...cardArgs}
-            {store}
-            on:type={triggerCard}
-            on:item={showSpinner}
-          />
-        {/if}
-
-        {#if signinCard && !welcomeCard && !joinCard}
-          <SignInCard {...cardArgs} {store} on:type={triggerCard} />
-        {/if}
-
-        {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
-          <CreateCard {...cardArgs} {store} on:type={triggerCard} />
-        {/if}
-
-        {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-          <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
-        {/if}
-
-        {#if forgetPWCard && !welcomeCard && !joinCard && !signinCard && !createAcctCard && !checkEmailCard}
-          <ForgetPwCard
-            {...cardArgs}
-            {sendUserInfo}
-            {store}
-            on:type={triggerCard}
-          />
-        {/if}
-
-        {#if resetPWCard && !checkEmailPWCard}
-          <ResetPwCard {...cardArgs} on:type={triggerCard} />
-        {/if}
+      {#if createAcctCard && !welcomeCard && !joinCard}
+        <CreateCard {...cardArgs} {store} on:type={triggerCard} />
       {/if}
-    </div>
 
-    <div class="how-it-works">
-      <a
-        class="external-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="__BASE_SITE__/how-rally-works/"
-        >Wait – how does it work again?
-        <ExternalLink /></a
-      >
-    </div>
+      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+        <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
+      {/if}
+
+      {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
+        <ForgetPwCard
+          {...cardArgs}
+          {sendUserInfo}
+          {store}
+          on:type={triggerCard}
+        />
+      {/if}
+
+      {#if resetPWCard && !checkEmailPWCard}
+        <ResetPwCard {...cardArgs} on:type={triggerCard} />
+      {/if}
+    {/if}
+  </div>
+
+  <div class="how-it-works signin__howitworks">
+    <a
+      class="sign external-link"
+      target="_blank"
+      rel="noopener noreferrer"
+      href="__BASE_SITE__/how-rally-works/"
+      >Wait – how does it work again?
+      <ExternalLink /></a
+    >
   </div>
 </section>
+
+<style>
+  .spinner-wrapper {
+    text-align: center;
+  }
+</style>

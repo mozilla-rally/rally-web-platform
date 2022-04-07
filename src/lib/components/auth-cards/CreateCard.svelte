@@ -6,7 +6,6 @@
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
 
-
   const dispatch = createEventDispatcher();
 
   export let title;
@@ -14,7 +13,6 @@
   export let bodyText;
   export let linkText;
   export let width;
-  export let fontSize;
   export let height;
   export let custom;
   export let store;
@@ -131,156 +129,157 @@
   };
 </script>
 
-<Card {width} {fontSize} {height} {custom} minHeight="unset">
-  <div class="title-wrapper" slot="card-title">
+<Card {width} {height} {custom}>
+  <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
-  </div>
+  </h2>
 
-  <div class="card-body-content" slot="card-body">
-    <form method="post" style={formStyles}>
-      <fieldset class="mzp-c-field-set">
-        <div class="mzp-c-field input-wrapper">
-          <input
-            class="mzp-c-field-control "
-            bind:value={email}
-            on:change={handleChange}
-            on:keyup={handleChange}
-            id="id_user_email"
-            name="id_user_email"
-            type="email"
-            width="100%"
-            placeholder="Enter your email address"
-            required
-          />
-        </div>
-
-        {#if createErr}
-          <p class="error-msg-active invalid-email">
-            {emailErrText}
-          </p>
-        {/if}
-
-        <div class="mzp-c-field field-pw">
-          <div class="label-wrapper">
-            <label class="mzp-c-field-label" for="id_user_pw"
-              >Choose a password</label
-            >
-          </div>
-
-          <div class="mzp-c-field input-wrapper">
+  <div class="card-content card-content--form" slot="card-content">
+    <div class="form-wrapper">
+      <form method="post" style={formStyles}>
+        <fieldset class="mzp-c-field-set field-set">
+          <div class="mzp-c-field field field--email">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label" for="id_user_pw">Email</label>
+            </div>
             <input
               class="mzp-c-field-control"
-              bind:value={password}
-              bind:this={passwordEl}
+              bind:value={email}
               on:change={handleChange}
               on:keyup={handleChange}
-              id="id_user_pw"
-              name="id_user_pw"
-              type="password"
-              {pattern}
+              id="id_user_email"
+              name="id_user_email"
+              type="email"
               width="100%"
+              placeholder="Enter your email address"
               required
             />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
           </div>
 
-          <p class="info-msg-active">
-            Your password should be unique, and must contain:
-          </p>
-          <ul class="info-rules">
-            <li bind:this={length} id="length">At least 8 characters</li>
-            <li bind:this={letter} id="letter">At least 1 lowercase letter</li>
-            <li bind:this={capital} id="capital">
-              At least 1 uppercase letter
-            </li>
-            <li bind:this={number} id="number">At least 1 number</li>
-          </ul>
-        </div>
-      </fieldset>
-    </form>
+          {#if createErr}
+            <p class="error-msg-active invalid-email">
+              {emailErrText}
+            </p>
+          {/if}
 
-    {#if !checkEmail}
-      <Button disabled={btnDisabled} size="xl" custom="card-button create">
-        <div class="button-text">{cta1}</div></Button
-      >
-    {/if}
+          <!-- PASSWORD -->
+          <div class="mzp-c-field field field--pw">
+            <div class="label-wrapper">
+              <label class="mzp-c-field-label" for="id_user_pw">Password</label>
+            </div>
+            <div class="input-wrapper">
+              <input
+                class="mzp-c-field-control"
+                bind:value={password}
+                bind:this={passwordEl}
+                on:change={handleChange}
+                on:keyup={handleChange}
+                id="id_user_pw"
+                name="id_user_pw"
+                type="password"
+                {pattern}
+                width="100%"
+                required
+              />
+              {#if passwordVisible}
+                <img
+                  src="img/eye-slash.svg"
+                  alt="Eye with slash across it"
+                  class="fas fa-eye-slash togglePassword"
+                  id="hide-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {:else}
+                <img
+                  src="img/eye-open.svg"
+                  alt="Open eye"
+                  class="togglePassword"
+                  id="show-eye"
+                  width="24px"
+                  height="24px"
+                  on:click|preventDefault={handleToggle}
+                />
+              {/if}
+            </div>
 
-    {#if checkEmail && !test}
-      <Button
-        on:click={async () => {
-          await store.signupWithEmailAndPassword(email, password);
-          handleNextState();
-        }}
-        disabled={btnDisabled}
-        size="xl"
-        custom="card-button create"
-        btnID="continue"
-      >
-        <div class="button-text">{cta1}</div></Button
-      >
-    {/if}
+            <ul class="info-rules">
+              <li bind:this={length} id="length">Use at least 8 characters</li>
+              <li bind:this={letter} id="letter">
+                Use at least 1 lowercase letter
+              </li>
+              <li bind:this={capital} id="capital">
+                Use at least 1 uppercase letter
+              </li>
+              <li bind:this={number} id="number">Use at least 1 number</li>
+            </ul>
+          </div>
+        </fieldset>
+      </form>
 
-    {#if checkEmail && test}
-      <Button
-        on:click={() => {
-          handleTrigger("check-create");
-        }}
-        disabled={btnDisabled}
-        size="xl"
-        custom="card-button create"
-        btnID="continue"
-      >
-        <div class="button-text">{cta1}</div></Button
-      >
-    {/if}
-    <p class="body-text-privacy">
-      By proceeding, you agree to our <a href="/">privacy notice</a>
-    </p>
+      {#if !checkEmail}
+        <Button
+          disabled={btnDisabled}
+          size="xl"
+          custom="card-button card-button--create"
+        >
+          <div class="button-text">{cta1}</div></Button
+        >
+      {/if}
 
-    <p class="body-text-action">
-      {bodyText}
-      <button
-        on:click={() => {
-          handleTrigger("welcome");
-        }}>{linkText}</button
-      >
-    </p>
+      {#if checkEmail && !test}
+        <Button
+          on:click={async () => {
+            await store.signupWithEmailAndPassword(email, password);
+            handleNextState();
+          }}
+          disabled={btnDisabled}
+          size="xl"
+          custom="card-button card-button--create"
+          btnID="continue"
+        >
+          <div class="button-text--signin">{cta1}</div></Button
+        >
+      {/if}
+
+      {#if checkEmail && test}
+        <Button
+          on:click={() => {
+            handleTrigger("check-create");
+          }}
+          disabled={btnDisabled}
+          size="xl"
+          custom="card-button card-button--create"
+          btnID="continue"
+        >
+          <div class="button-text--create">{cta1}</div></Button
+        >
+      {/if}
+      <p class="body-text-privacy">
+        By joining, you agree to our <a
+          href="__BASE_SITE__/how-rally-works/data-and-privacy/"
+          >privacy notice</a
+        >
+      </p>
+    </div>
   </div>
+
+  <p slot="cta" class="body-text-action">
+    {bodyText}
+    <button
+      on:click={() => {
+        handleTrigger("welcome");
+      }}>{linkText}</button
+    >
+  </p>
 </Card>
 
 <style>
-
-  .title-wrapper{
-    padding-bottom:25px; 
-  }
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
+    transition: width 0.2s ease-in;
   }
 
   form {
@@ -290,9 +289,5 @@
   .invalid-email {
     margin-top: -19px;
     padding-bottom: 10px;
-  }
-
-  .field-pw {
-    position: relative;
   }
 </style>

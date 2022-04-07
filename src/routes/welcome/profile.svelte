@@ -36,5 +36,6 @@
 
 {#if $store._initialized && !$store?.user?.onboarded}
   <ProfileContent bind:formattedResults />
+
   <ProfileCallToAction on:save={onAction(true)} on:skip={onAction(false)} />
 {/if}

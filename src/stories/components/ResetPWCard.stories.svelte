@@ -7,7 +7,6 @@
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
 
-
   let password;
   let passwordEl;
   let passwordVisible = false;
@@ -93,99 +92,97 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
-    minHeight: { control: "text" },
-    custom: { control: "text" },
+    minHeight: { control: "text" }
   }}
 />
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
-  <div class="story-container">
+  <div class="sb-container">
     <Card {...args}>
       <div class="title-wrapper" slot="card-title">
         <div style={cssVarStyles} class="title-highlight" />
         <div bind:this={titleEl} class="title-text">{args.title}</div>
       </div>
 
-      <div class="card-body-content" slot="card-body">
-        <form method="post">
-          <fieldset class="mzp-c-field-set">
-            <div class="mzp-c-field field-pw">
-              <div class="label-wrapper">
-                <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-                  >Choose a new password</label
-                >
-              </div>
+      <div class="card-body-content card-body-content--form" slot="card-body">
+        <div class="form-wrapper">
+          <form method="post">
+            <fieldset class="mzp-c-field-set">
+              <div class="mzp-c-field field-pw">
+                <div class="label-wrapper">
+                  <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+                    >Choose a new password</label
+                  >
+                </div>
 
-              <div class="input-wrapper">
-                <input
-                  class="mzp-c-field-control"
-                  bind:value={password}
-                  bind:this={passwordEl}
-                  on:change={handleChange}
-                  on:keyup={handleChange}
-                  id="id_user_pw"
-                  name="id_user_pw"
-                  type="password"
-                  min={minPasswordLength}
-                  width="100%"
-                  {pattern}
-                  required
-                />
-                {#if passwordVisible}
-                  <img
-                    src="img/eye-slash.svg"
-                    alt="Eye with slash across it"
-                    class="fas fa-eye-slash togglePassword"
-                    id="hide-eye"
-                    width="24px"
-                    height="24px"
-                    on:click|preventDefault={handleToggle}
+                <div class="input-wrapper">
+                  <input
+                    class="mzp-c-field-control"
+                    bind:value={password}
+                    bind:this={passwordEl}
+                    on:change={handleChange}
+                    on:keyup={handleChange}
+                    id="id_user_pw"
+                    name="id_user_pw"
+                    type="password"
+                    min={minPasswordLength}
+                    width="100%"
+                    {pattern}
+                    required
                   />
-                {:else}
-                  <img
-                    src="img/eye-open.svg"
-                    alt="Open eye"
-                    class="togglePassword"
-                    id="show-eye"
-                    width="24px"
-                    height="24px"
-                    on:click|preventDefault={handleToggle}
-                  />
-                {/if}
-              </div>
+                  {#if passwordVisible}
+                    <img
+                      src="img/eye-slash.svg"
+                      alt="Eye with slash across it"
+                      class="fas fa-eye-slash togglePassword"
+                      id="hide-eye"
+                      width="24px"
+                      height="24px"
+                      on:click|preventDefault={handleToggle}
+                    />
+                  {:else}
+                    <img
+                      src="img/eye-open.svg"
+                      alt="Open eye"
+                      class="togglePassword"
+                      id="show-eye"
+                      width="24px"
+                      height="24px"
+                      on:click|preventDefault={handleToggle}
+                    />
+                  {/if}
+                </div>
 
-              <p class="info-msg-active-reset">
-                Your password should be unique, and must contain:
-              </p>
-              <ul class="info-rules">
-                <li bind:this={length} id="length" class="invalid">
-                  At least 8 characters
-                </li>
-                <li bind:this={capital} id="capital" class="invalid">
-                  At least 1 uppercase letter
-                </li>
-                <li bind:this={letter} id="letter" class="invalid">
-                  At least 1 lowercase letter
-                </li>
-                <li bind:this={number} id="number" class="invalid">
-                  At least 1 number
-                </li>
-              </ul>
-            </div>
-          </fieldset>
-        </form>
-        <Button disabled={btnDisabled} size="xl" custom="card-button create">
-          <div class="button-text">{args.cta1}</div></Button
-        >
+                <ul class="info-rules">
+                  <li bind:this={length} id="length" class="invalid">
+                    Use at least 8 characters
+                  </li>
+                  <li bind:this={capital} id="capital" class="invalid">
+                    Use at least 1 uppercase letter
+                  </li>
+                  <li bind:this={letter} id="letter" class="invalid">
+                    Use at least 1 lowercase letter
+                  </li>
+                  <li bind:this={number} id="number" class="invalid">
+                    Use at least 1 number
+                  </li>
+                </ul>
+              </div>
+            </fieldset>
+          </form>
+          <Button disabled={btnDisabled} size="xl" custom="card-button create">
+            <div class="button-text">{args.cta1}</div></Button
+          >
+        </div>
       </div>
     </Card>
   </div>
 </Template>
 
 <!-- 👇 Each story then reuses that template -->
-
-<Story
+<!-- Will show when this flow is active -->
+<!-- <Story
   name="Reset Password"
   args={{
     width: "460px",
@@ -194,21 +191,15 @@
     title: "Reset your password",
     body: "Text",
     cta1: "Reset password",
-    minHeight: "400px",
-    custom: "reset-pw",
+    minHeight: "400px"
   }}
-/>
+/> -->
 
 <style>
-  .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
-    width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
+  .sb-container {
+    padding: 2rem 1rem;
   }
-  form {
-    height: auto;
+  .title-highlight {
+    width: calc(var(--titleWidth) + 15px);
   }
 </style>

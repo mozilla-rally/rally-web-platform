@@ -1,15 +1,27 @@
-<script>
+<script type="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext, onMount } from "svelte";
+  import { goto } from "$app/navigation";
   import { fade, fly } from "svelte/transition";
   import Arrow01 from "$lib/components/Arrow01.svelte";
   import Button from "$lib/components/Button.svelte";
   import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
+  import type { AppStore } from "$lib/stores/types";
+
+  const store: AppStore = getContext("rally:store");
 
   const dispatch = createEventDispatcher();
+
+  let browser;
+
+  onMount(async () => {
+    if (window) {
+      browser = window.location;
+    }
+  });
 
   let scrollY = 0;
 
@@ -21,45 +33,34 @@
   }
 
   let intro = false;
+
+  const handleLogOut = async () => {
+    await store.signOutUser();
+    goto("/signup");
+    browser.reload();
+  };
 </script>
 
 <svelte:window bind:scrollY />
 
-<CallToActionContainer>
-  <div
-    class="call-flow"
-    in:fly={{ duration: 200, y: 5 }}
-    out:fly|local={{ duration: 200, y: -5 }}
-    on:introend={() => {
-      intro = true;
+<div class="cta-wrapper">
+  <Button btnID="accept" size="xl" product on:click={() => dispatch("accept")}>
+    Accept & Enroll
+  </Button>
+  <Button
+    size="xl"
+    product
+    secondary
+    btnID="decline"
+    on:click={() => {
+      handleLogOut();
     }}
   >
-    <Button size="xl" product on:click={() => dispatch("accept")}>
-      Accept & Enroll
-    </Button>
-    <Button size="xl" product secondary on:click={() => dispatch("cancel")}>
-      Cancel
-    </Button>
-    {#if showArrow && intro}
-      <div
-        transition:fade|local={{ duration: 400 }}
-        class="shortcut-callout"
-        style="text-align: right;"
-      >
-        please read through before accepting
-      </div>
-      <div class="arrow">
-        <Arrow01 />
-      </div>
-    {/if}
-  </div>
-</CallToActionContainer>
+    Decline
+  </Button>
+</div>
 
 <style>
-  .call-flow {
-    grid-template-columns: max-content max-content auto 0;
-  }
-
   .arrow {
     width: 0;
     height: 0;
