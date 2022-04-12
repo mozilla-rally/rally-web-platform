@@ -1,15 +1,14 @@
-jest.mock("../cors");
+import { jest } from "@jest/globals";
 
-import * as admin from "firebase-admin";
-import { useCors } from "../cors";
-import * as functions from "firebase-functions";
+import admin from "firebase-admin";
+import functions from "firebase-functions";
 import {
   addRallyUserToFirestoreImpl,
   deleteRallyUserImpl,
   loadFirestore,
   rallytoken,
-} from "../index";
-import { studies } from "../studies";
+} from "../index.js";
+import { studies } from "../studies.js";
 
 describe("loadFirestore", () => {
   const studyName = Object.keys(studies)[0];
@@ -141,7 +140,7 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
 });
 
 describe("rallytoken tests", () => {
-  let send: jest.Mock<any, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  let send: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   let response: functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   const uid = "fake-uid";
@@ -161,6 +160,13 @@ describe("rallytoken tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
+    jest.mock("../cors.js", () => {
+      return {
+        __esModule: true,
+        useCors: jest.fn(async (req, res, fn: any) => await fn(req, res)),
+      };
+    });
+
     send = jest.fn();
     response = ({
       set: jest.fn(),
@@ -169,10 +175,6 @@ describe("rallytoken tests", () => {
 
     fakeAuth.verifyIdToken.mockReturnValue({ uid });
     fakeAuth.createCustomToken.mockReturnValue(customToken);
-
-    (useCors as jest.Mock).mockImplementation(
-      async (req, res, fn) => await fn(req, res)
-    );
   });
 
   afterEach(() => {

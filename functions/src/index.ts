@@ -234,9 +234,9 @@ export const handleUserChangesImpl = async function (
   return true;
 };
 
-export const handleUserChanges = functions.firestore
-  .document("users/{userID}")
-  .onWrite(handleUserChangesImpl);
+// export const handleUserChanges = functions.firestore
+//   .document("users/{userID}")
+//   .onWrite(handleUserChangesImpl);
 
 /*
  * Listen for changes to the Study document
@@ -299,9 +299,9 @@ export const handleUserStudyChangesImpl = async function (
   return true;
 };
 
-export const handleUserStudyChanges = functions.firestore
-  .document("users/{userID}/studies/{studyID}")
-  .onWrite(handleUserStudyChangesImpl);
+// export const handleUserStudyChanges = functions.firestore
+//   .document("users/{userID}/studies/{studyID}")
+//   .onWrite(handleUserStudyChangesImpl);
 
 async function getRallyIdForUser(userID: string) {
   let extensionUserDoc = await admin
