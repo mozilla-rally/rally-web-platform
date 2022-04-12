@@ -2,19 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import fs from "fs";
-import { createReadStream } from "fs";
-import readline from "readline";
-
-import {
-  findAndAct,
-  getChromeDriver,
-  getFirefoxDriver,
-  extensionLogsPresent,
-  WAIT_FOR_PROPERTY,
-} from "./utils";
-import { By, until } from "selenium-webdriver";
+import fs, { createReadStream } from "fs";
 import minimist from "minimist";
+import readline from "readline";
+import { By, until, WebDriver } from "selenium-webdriver";
+import {
+  extensionLogsPresent, findAndAct,
+  getChromeDriver,
+  getFirefoxDriver, WAIT_FOR_PROPERTY
+} from "./utils";
+
 
 const args = minimist(process.argv.slice(2));
 console.debug(args);
@@ -47,7 +44,7 @@ console.info(
 // Wait ten minutes overall before Jest times the test out.
 jest.setTimeout(60 * 10000);
 
-let driver;
+let driver: WebDriver;
 let screenshotCount = 0;
 
 describe("Rally Web Platform UX flows", function () {
@@ -125,15 +122,23 @@ describe("Rally Web Platform UX flows", function () {
     await driver.executeScript("document.getElementById('accept').style.position='relative'");
     await driver.executeScript("document.getElementById('accept').style.top='-5rem'");
 
+    // NOTE: Clicking accept and enroll opens the extension page in chrome marketplace
+    // and hence we must return focus to Rally website before proceeding with further testing
+
+    const windowHandle = await driver.getWindowHandle();
+
     await findAndAct(
       driver,
       By.xpath('//button[text()="Accept & Enroll"]'),
       (e) => e.click()
     );
 
-    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
+    // Switch back to Rally website
+    driver.switchTo().window(windowHandle);
+
+    await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
     await driver.executeScript("arguments[0].id = 'fb'", fb);
-    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'")
+    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'");
 
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), (e) =>
       e.click()
