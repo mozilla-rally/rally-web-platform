@@ -25,7 +25,7 @@ export interface State {
 
 export interface User {
   uid: string;
-  createdOn: { seconds: number; nanoseconds: number };
+  createdOn: { seconds: number; nanoseconds: number; };
   enrolled: boolean;
   onboarded: boolean;
   demographicsData: object;
@@ -36,9 +36,28 @@ export interface UserStudies {
 }
 
 export interface UserStudy {
-  joinedOn: { seconds: number; nanoseconds: number };
+  joinedOn: { seconds: number; nanoseconds: number; };
   enrolled: false;
 }
 
-// FIXME: this should be well-defined and probably should live elsewhere.
-export interface StudyMetadata { }
+export interface StudyMetadata {
+  name: string;
+  description: string;
+  studyId?: string;
+  tags: string[];
+  icons: Record<string, string>;
+  addonId?: string;
+  authors: {
+    name: string;
+    url?: string;
+  };
+  endDate: string;
+  version: string;
+  studyEnded: boolean;
+  studyPaused: boolean;
+  downloadLink: string;
+  schemaNamespace?: string;
+  studyDetailsLink: string;
+  minimumCoreVersion?: string;
+  dataCollectionDetails: string[];
+}
