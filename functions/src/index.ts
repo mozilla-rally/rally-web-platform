@@ -1,5 +1,5 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import admin from "firebase-admin";
+import functions from "firebase-functions";
 import { Change, EventContext } from "firebase-functions";
 import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 import { v4 as uuidv4 } from "uuid";
@@ -100,7 +100,7 @@ export const addRallyUserToFirestoreImpl = async (
   return true;
 };
 
-exports.addRallyUserToFirestore = functions.auth
+export const addRallyUserToFirestore = functions.auth
   .user()
   .onCreate(addRallyUserToFirestoreImpl);
 
@@ -142,7 +142,7 @@ export const deleteRallyUserImpl = async function (
   return true;
 };
 
-exports.deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
+export const deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
 
 /**
  *
@@ -177,7 +177,7 @@ export const loadFirestore = functions.https.onRequest(
 export const handleUserChangesImpl = async function (
   change: Change<DocumentSnapshot>,
   context: EventContext
-): Promise<Boolean> {
+): Promise<boolean> {
   const userID = context.params.userID;
   const rallyID = await getRallyIdForUser(userID);
   if (!rallyID) {
@@ -225,7 +225,7 @@ export const handleUserChangesImpl = async function (
   return true;
 };
 
-exports.handleUserChanges = functions.firestore
+export const handleUserChanges = functions.firestore
   .document("users/{userID}")
   .onWrite(handleUserChangesImpl);
 
@@ -236,7 +236,7 @@ exports.handleUserChanges = functions.firestore
 export const handleUserStudyChangesImpl = async function (
   change: Change<DocumentSnapshot>,
   context: EventContext
-): Promise<Boolean> {
+): Promise<boolean> {
   const userID = context.params.userID;
   const rallyID = await getRallyIdForUser(userID);
   if (!rallyID) {
@@ -279,7 +279,7 @@ export const handleUserStudyChangesImpl = async function (
   return true;
 };
 
-exports.handleUserStudyChanges = functions.firestore
+export const handleUserStudyChanges = functions.firestore
   .document("users/{userID}/studies/{studyID}")
   .onWrite(handleUserStudyChangesImpl);
 
