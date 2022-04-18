@@ -12,36 +12,42 @@ admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-export const rallytoken = functions.https.onRequest(async (request, response) =>
-  useCors(request, response, async () => {
-    await useAuthentication(request, response, async (decodedToken) => {
-      if (request.method !== "POST") {
-        response.status(500).send("Only POST and OPTIONS methods are allowed.");
-        return;
-      }
+export const rallytoken = functions.https.onRequest(
+  async (request, response) =>
+    new Promise((resolve) =>
+      useCors(request, response, async () => {
+        await useAuthentication(request, response, async (decodedToken) => {
+          if (request.method !== "POST") {
+            response
+              .status(500)
+              .send("Only POST and OPTIONS methods are allowed.");
+            return;
+          }
 
-      functions.logger.info(`body type: ${typeof request.body}`, {
-        payload: request.body,
-      });
+          functions.logger.info(`body type: ${typeof request.body}`, {
+            payload: request.body,
+          });
 
-      try {
-        let studyId;
-        if (typeof request.body === "string") {
-          const body = JSON.parse(request.body);
-          studyId = body.studyId;
-        } else {
-          studyId = request.body.studyId;
-        }
+          try {
+            let studyId;
+            if (typeof request.body === "string") {
+              const body = JSON.parse(request.body);
+              studyId = body.studyId;
+            } else {
+              studyId = request.body.studyId;
+            }
 
-        const rallyToken = await generateToken(decodedToken, studyId);
-        functions.logger.info("OK");
-        response.status(200).send({ rallyToken });
-      } catch (ex) {
-        functions.logger.error(ex);
-        response.status(500).send();
-      }
-    });
-  })
+            const rallyToken = await generateToken(decodedToken, studyId);
+            functions.logger.info("OK");
+            response.status(200).send({ rallyToken });
+          } catch (ex) {
+            functions.logger.error(ex);
+            response.status(500).send();
+          }
+        });
+        resolve();
+      })
+    )
 );
 
 /**
@@ -142,7 +148,9 @@ export const deleteRallyUserImpl = async function (
   return true;
 };
 
-export const deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
+export const deleteRallyUser = functions.auth
+  .user()
+  .onDelete(deleteRallyUserImpl);
 
 /**
  *

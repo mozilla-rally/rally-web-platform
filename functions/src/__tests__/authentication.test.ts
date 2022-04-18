@@ -1,10 +1,11 @@
-jest.mock("firebase-admin");
+import { jest } from "@jest/globals";
 
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import admin from "firebase-admin";
+import functions from "firebase-functions";
 import { AuthenticatedFunction, useAuthentication } from "../authentication";
 
 describe("useAuthentication", () => {
+
   const request = {
     headers: {
       authorization: "Bearer abc123",
@@ -34,7 +35,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when request is null", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await expect(() =>
       useAuthentication(
@@ -48,7 +49,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when request is undefined", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await expect(() =>
       useAuthentication(
@@ -62,7 +63,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when response is null", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await expect(() =>
       useAuthentication(
@@ -76,7 +77,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when response is undefined", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await expect(() =>
       useAuthentication(
@@ -120,7 +121,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when request is missing", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await useAuthentication(
       ({} as unknown) as functions.https.Request,
@@ -134,7 +135,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when request authorization header is missing", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await useAuthentication(
       { ...request, headers: {} } as functions.https.Request,
@@ -148,7 +149,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when bearer prefix is missing", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await useAuthentication(
       {
@@ -165,7 +166,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when bearer prefix is not pascal cased", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await useAuthentication(
       {
@@ -182,7 +183,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when auth header has more than 2 parts", async () => {
-    const fn = jest.fn();
+    const fn: any = jest.fn();
 
     await useAuthentication(
       {
@@ -201,7 +202,7 @@ describe("useAuthentication", () => {
   it("throws http error 401 when token is invalid", async () => {
     fakeAuth.verifyIdToken.mockRejectedValue("Invalid token");
 
-    const fn = jest.fn();
+    const fn: any = jest.fn();
     await useAuthentication(request, response, fn);
 
     expect(response.status).toHaveBeenCalledWith(401);
@@ -215,9 +216,9 @@ describe("useAuthentication", () => {
       uid: "abc123",
     } as admin.auth.DecodedIdToken;
 
-    fakeAuth.verifyIdToken.mockResolvedValue(decryptedToken);
+    fakeAuth.verifyIdToken.mockReturnValue(decryptedToken);
 
-    const innerFn = jest.fn();
+    const innerFn: any = jest.fn();
     await useAuthentication(request, response, innerFn);
 
     expect(innerFn).toHaveBeenCalledWith(decryptedToken);
