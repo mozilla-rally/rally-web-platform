@@ -13,21 +13,25 @@ import fetch from "node-fetch";
 
 beforeAll(async () => {
   await fetch(
-    "http://" + process.env.FIREBASE_EMULATOR_HUB + '/functions/disableBackgroundTriggers',
+    "http://" +
+      process.env.FIREBASE_EMULATOR_HUB +
+      "/functions/disableBackgroundTriggers",
     {
-      method: 'PUT'
+      method: "PUT",
     }
   );
 });
 
 afterAll(async () => {
   await fetch(
-    "http://" + process.env.FIREBASE_EMULATOR_HUB + '/functions/enableBackgroundTriggers',
+    "http://" +
+      process.env.FIREBASE_EMULATOR_HUB +
+      "/functions/enableBackgroundTriggers",
     {
-      method: 'PUT'
+      method: "PUT",
     }
   );
-})
+});
 
 describe("loadFirestore", () => {
   const studyName = Object.keys(studies)[0];

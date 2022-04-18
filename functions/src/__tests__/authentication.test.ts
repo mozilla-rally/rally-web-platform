@@ -35,7 +35,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when request is null", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await expect(() =>
       useAuthentication(
@@ -49,7 +49,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when request is undefined", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await expect(() =>
       useAuthentication(
@@ -63,7 +63,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when response is null", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await expect(() =>
       useAuthentication(
@@ -77,7 +77,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws when response is undefined", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await expect(() =>
       useAuthentication(
@@ -121,7 +121,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when request is missing", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await useAuthentication(
       ({} as unknown) as functions.https.Request,
@@ -135,7 +135,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when request authorization header is missing", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await useAuthentication(
       { ...request, headers: {} } as functions.https.Request,
@@ -149,7 +149,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when bearer prefix is missing", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await useAuthentication(
       {
@@ -166,7 +166,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when bearer prefix is not pascal cased", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await useAuthentication(
       {
@@ -183,7 +183,7 @@ describe("useAuthentication", () => {
   });
 
   it("throws http error 401 when auth header has more than 2 parts", async () => {
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     await useAuthentication(
       {
@@ -202,7 +202,7 @@ describe("useAuthentication", () => {
   it("throws http error 401 when token is invalid", async () => {
     fakeAuth.verifyIdToken.mockRejectedValue("Invalid token");
 
-    const fn: any = jest.fn();
+    const fn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
     await useAuthentication(request, response, fn);
 
     expect(response.status).toHaveBeenCalledWith(401);
@@ -218,7 +218,7 @@ describe("useAuthentication", () => {
 
     fakeAuth.verifyIdToken.mockReturnValue(decryptedToken);
 
-    const innerFn: any = jest.fn();
+    const innerFn: any = jest.fn(); // eslint-disable-line @typescript-eslint/no-explicit-any
     await useAuthentication(request, response, innerFn);
 
     expect(innerFn).toHaveBeenCalledWith(decryptedToken);

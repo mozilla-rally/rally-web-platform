@@ -23,6 +23,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@mozilla/glean": "^1.0.0",
+    "async-mutex": "^0.3.2",
     "cors": "^2.8.5",
     "firebase-admin": "^9.8.0",
     "firebase-functions": "^3.15.5"
