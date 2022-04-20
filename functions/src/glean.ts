@@ -16,8 +16,8 @@ import {
 } from "@mozilla/glean/uploader";
 
 const GLEAN_DEBUG_VIEW_TAG = "MozillaRally";
-const GLEAN_RALLY_APP_ID = "my-app-id";
-const GLEAN_APP_DISPLAY_VERSION = "TODO-rally-firestore-server";
+const GLEAN_RALLY_APP_ID = process.env.NODE_ENV !== "test" ? "rally-core" : "test-app-id";
+const GLEAN_APP_DISPLAY_VERSION = require("../../package.json").version;
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
   kid: "rally-core",
@@ -26,9 +26,9 @@ const GLEAN_ENCRYPTION_JWK = {
   y: "zo35XIQME7Ct01uHK_LrMi5pZCuYDMhv8MUsSu7Eq08",
 };
 
-const GLEAN_DEFAULT_TIMEOUT = 5000;
+const GLEAN_DEFAULT_TIMEOUT = 10000;
 const gleanLock = withTimeout(new Mutex(), GLEAN_DEFAULT_TIMEOUT); // Lock on global Glean instance, metrics, and pings
-const sendPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // Allow Glean to signal once ping is sent
+const submitPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // Allow Glean to signal once ping is sent
 
 /*
  * platformEnrollment
@@ -40,9 +40,9 @@ export async function platformEnrollment(rallyID: string): Promise<void> {
 
   rallyMetrics.id.set(rallyID);
 
-  await sendPingFlag.acquire();
+  await submitPingFlag.acquire();
   rallyPings.enrollment.submit();
-  await sendPingFlag.waitForUnlock();
+  await submitPingFlag.waitForUnlock();
 
   releaseGlean();
 }
@@ -58,9 +58,9 @@ export async function platformUnenrollment(rallyID: string): Promise<void> {
 
   rallyMetrics.id.set(rallyID);
 
-  await sendPingFlag.acquire();
+  await submitPingFlag.acquire();
   rallyPings.unenrollment.submit();
-  await sendPingFlag.waitForUnlock();
+  await submitPingFlag.waitForUnlock();
 
   releaseGlean();
 }
@@ -79,9 +79,9 @@ export async function demographics(
   rallyMetrics.id.set(rallyID);
   setUserMetrics(demographicsData);
 
-  await sendPingFlag.acquire();
+  await submitPingFlag.acquire();
   rallyPings.demographics.submit();
-  await sendPingFlag.waitForUnlock();
+  await submitPingFlag.waitForUnlock();
 
   releaseGlean();
 }
@@ -100,9 +100,9 @@ export async function studyEnrollment(
   rallyMetrics.id.set(rallyID);
   enrollmentMetrics.studyId.set(studyID);
 
-  await sendPingFlag.acquire();
+  await submitPingFlag.acquire();
   rallyPings.studyEnrollment.submit();
-  await sendPingFlag.waitForUnlock();
+  await submitPingFlag.waitForUnlock();
 
   releaseGlean();
 }
@@ -121,9 +121,9 @@ export async function studyUnenrollment(
   rallyMetrics.id.set(rallyID);
   unenrollmentMetrics.studyId.set(studyID);
 
-  await sendPingFlag.acquire();
+  await submitPingFlag.acquire();
   rallyPings.studyUnenrollment.submit();
-  await sendPingFlag.waitForUnlock();
+  await submitPingFlag.waitForUnlock();
 
   releaseGlean();
 }
@@ -220,7 +220,9 @@ class CustomPingUploader extends Uploader {
           result: UploadResultStatus.UnrecoverableFailure,
         };
       });
-    sendPingFlag.release();
+
+    // Signal to ping function that ping has been submitted
+    submitPingFlag.release();
     return result;
   }
 }
