@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build",
+    "public": "static/bundle/main.js",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   },
   "functions": {

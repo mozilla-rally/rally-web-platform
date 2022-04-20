@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
   import ProfileContent from "$lib/views/profile/Content.svelte";
   import ProfileCallToAction from "./_ProfileCallToAction.svelte";
 
@@ -12,9 +12,9 @@
   );
 
   $: if ($isAuthenticated === false) {
-    goto("/signup");
+    $goto("/signup");
   } else if ($isAuthenticated === true && $store?.user?.onboarded) {
-    goto("/studies");
+    $goto("/studies");
   }
 
   let formattedResults;
@@ -25,7 +25,7 @@
         await store.updateDemographicSurvey(formattedResults);
       }
       await store.updateOnboardedStatus(true);
-      goto("/studies");
+      $goto("/studies");
     };
   }
 </script>

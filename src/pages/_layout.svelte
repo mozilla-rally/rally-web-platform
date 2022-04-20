@@ -1,10 +1,9 @@
 <script lang="ts">
   import { setContext, onMount } from "svelte";
-  import { page } from "$app/stores";
+  import { page } from "@roxi/routify";
   import Layout from "$lib/layouts/main/Layout.svelte";
   import Button from "$lib/components/Button.svelte";
   import Footer from "./_Footer.svelte";
-  import Sidebar from "./_Sidebar.svelte";
   import Navbar from "./_Navbar.svelte";
   import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
   import NotificationCenter from "$lib/components/notifications/NotificationCenter.svelte";
@@ -21,6 +20,8 @@
   setContext("rally:notifications", notifications);
   setContext("rally:isAuthenticated", isAuthenticated);
 
+  debugger
+
   let leaveModal = false;
   let Dialog;
 
@@ -30,6 +31,8 @@
 
   const mounted = isMounted();
 </script>
+
+<!-- routify:options bundle=true -->
 
 {#if $isAuthenticated && $store?.user?.enrolled}
   <Navbar />
@@ -126,3 +129,5 @@
 {/if}
 
 <NotificationCenter sidebarOffset />
+
+

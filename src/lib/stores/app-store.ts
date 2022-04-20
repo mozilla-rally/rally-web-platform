@@ -4,15 +4,17 @@
 
 import { writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
-import { browser } from "$app/env";
+import { isBrowser } from "browser-or-node";
 import firestoreAPI from "./api";
 import type { AppStore, State } from "./types";
 
 export function createAppStore(api = firestoreAPI): AppStore {
+  // @ts-ignore
   const _store: Writable<State> = writable({ _initialized: false });
   const { subscribe, set } = _store;
 
-  api.initialize(browser).then((state) => {
+  api.initialize(isBrowser).then((state) => {
+    // @ts-ignore
     set(state);
   });
 
@@ -105,7 +107,8 @@ function isAuthenticatedStore(): Readable<boolean> {
   return { subscribe };
 }
 
-export const isAuthenticated = browser
+export const isAuthenticated = isBrowser
   ? isAuthenticatedStore()
   : writable(undefined);
-export const store = browser ? createAppStore() : writable(undefined);
+export const store = isBrowser ? createAppStore() : writable(undefined);
+

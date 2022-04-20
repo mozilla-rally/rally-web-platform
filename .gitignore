@@ -139,3 +139,9 @@ static/firebase.config.json
 .netlify 
 # Local Netlify folder
 .netlify
+
+#routify
+.routify
+
+#rollupbundle
+static/bundle

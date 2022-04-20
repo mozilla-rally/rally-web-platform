@@ -4,11 +4,8 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
   import { createEventDispatcher, getContext, onMount } from "svelte";
-  import { goto } from "$app/navigation";
-  import { fade, fly } from "svelte/transition";
-  import Arrow01 from "$lib/components/Arrow01.svelte";
+  import { goto } from "@roxi/routify";
   import Button from "$lib/components/Button.svelte";
-  import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
   import type { AppStore } from "$lib/stores/types";
 
   const store: AppStore = getContext("rally:store");
@@ -36,7 +33,7 @@
 
   const handleLogOut = async () => {
     await store.signOutUser();
-    goto("/signup");
+    $goto("/signup");
     browser.reload();
   };
 </script>

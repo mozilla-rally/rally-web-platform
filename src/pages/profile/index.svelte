@@ -5,7 +5,7 @@
 
   // This component is used in the "Main View" of the Rally Add-On.
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
   import { fly } from "svelte/transition";
 
   import ProfileContent from "$lib/views/profile/Content.svelte";
@@ -27,10 +27,10 @@
 
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
-      goto("/signup");
+      $goto("/signup");
    
     } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
+      $goto("/welcome/terms");
     }
   }
 

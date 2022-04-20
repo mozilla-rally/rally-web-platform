@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { onMount, getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
   import * as state from "$lib/components/auth-cards/state.svelte";
   import LaunchCard from "$lib/components/auth-cards/LaunchCard.svelte";
   import CreateCard from "$lib/components/auth-cards/CreateCard.svelte";
@@ -46,11 +46,11 @@
 
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
-      goto("/signup");
+      $goto("/signup");
     } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
+      $goto("/welcome/terms");
     } else {
-      goto("/studies");
+      $goto("/studies");
     }
   }
 

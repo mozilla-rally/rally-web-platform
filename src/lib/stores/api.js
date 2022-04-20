@@ -12,6 +12,7 @@ import {
   collection, doc,
   getDoc, getDocs, onSnapshot, setDoc, updateDoc
 } from "firebase/firestore";
+// @ts-ignore
 import { produce } from "immer/dist/immer.esm";
 import initializeFirebase from "./initialize-firebase";
 
@@ -263,9 +264,13 @@ export default {
     }
     // create a new user.
     if (userCredential) {
+      // @ts-ignore
       console.debug("Logged in as", userCredential.user.email);
+      // @ts-ignore
       initializeUserDocument(userCredential.user.uid);
+      // @ts-ignore
       listenForUserChanges(userCredential.user);
+      // @ts-ignore
       listenForUserStudiesChanges(userCredential.user);
     }
 

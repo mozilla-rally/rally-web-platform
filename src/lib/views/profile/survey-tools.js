@@ -53,7 +53,9 @@ export function questionIsAnswered(answer, questionType) {
 /**
  * Clears the display version of the answer.
  * @param {string} questionType the question type (one of text, single, or multi)
- * @returns {string || undefined || []}
+ * @returns
+ * // @ts-ignore
+ * {string || undefined || []}
  */
 export function clearAnswer(questionType) {
   switch (questionType) {

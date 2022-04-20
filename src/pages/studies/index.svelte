@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
   import StudiesContent from "$lib/views/studies/Content.svelte";
 
   import type { Readable } from "svelte/store";
@@ -33,9 +33,9 @@
 
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
-      goto("/signup");
+      $goto("/signup");
     } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
+     $goto("/welcome/terms");
     }
   }
 </script>

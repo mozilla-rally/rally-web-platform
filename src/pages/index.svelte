@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
 
   import type { Readable } from "svelte/store";
   import type { AppStore } from "$lib/stores/types";
@@ -12,19 +12,19 @@
 
   isAuthenticated.subscribe((state) => {
     if (state === false) {
-      goto("/signup");
+      $goto("/signup");
       localStorage.removeItem("isLoading");
     }
   });
 
   $: if ($isAuthenticated !== undefined && $store._initialized) {
     if (!$store?.user?.uid) {
-      goto("/signup");
+      $goto("/signup");
       localStorage.removeItem("isLoading");
     } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
+      $goto("/welcome/terms");
     }else{
-      goto ("/studies")
+      $goto ("/studies")
     }
   }
 </script>

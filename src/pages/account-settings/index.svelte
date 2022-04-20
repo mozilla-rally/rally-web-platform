@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { goto } from "$app/navigation";
+  import { goto } from "@roxi/routify";
   import { fly } from "svelte/transition";
 
   import SettingsReadOnly from "$lib/views/account-settings/SettingsReadOnly.svelte";
@@ -77,9 +77,9 @@
 
   $: if ($store._initialized) {
     if (!$store?.user?.uid) {
-      goto("/signup");
+      $goto("/signup");
     } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
+      $goto("/welcome/terms");
     }
   }
 

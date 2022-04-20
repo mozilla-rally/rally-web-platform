@@ -19,7 +19,6 @@
     welcomeArgs,
     joinArgs,
     createArgs,
-    signinArgs,
     forgetPWArgs,
     checkEmailPWArgs,
     checkEmailArgs,
@@ -43,8 +42,6 @@
     cardArgs = joinArgs;
   } else if (createAcctCard) {
     cardArgs = createArgs;
-  } else if (signinCard) {
-    cardArgs = signinArgs;
   } else if (forgetPWCard) {
     cardArgs = forgetPWArgs;
   } else if (checkEmailPWCard) {
