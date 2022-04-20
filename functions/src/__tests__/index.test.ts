@@ -12,6 +12,7 @@ import { studies } from "../studies";
 import fetch from "node-fetch";
 
 beforeAll(async () => {
+  // Disable function triggers for testing (prevents inadvertent Glean pings)
   await fetch(
     "http://" +
       process.env.FIREBASE_EMULATOR_HUB +
@@ -23,6 +24,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Re-enable function triggers for potential future tests
   await fetch(
     "http://" +
       process.env.FIREBASE_EMULATOR_HUB +
