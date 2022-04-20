@@ -134,7 +134,7 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     // Switch back to Rally website
-    driver.switchTo().window(windowHandle);
+    await driver.switchTo().window(windowHandle);
 
     await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
     await driver.executeScript("arguments[0].id = 'fb'", fb);
