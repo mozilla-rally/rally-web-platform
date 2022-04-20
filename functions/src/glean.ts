@@ -17,7 +17,7 @@ import {
 
 const GLEAN_DEBUG_VIEW_TAG = "MozillaRally";
 const GLEAN_RALLY_APP_ID = process.env.NODE_ENV !== "test" ? "rally-core" : "test-app-id";
-const GLEAN_APP_DISPLAY_VERSION = (await import("../../package.json")).version;
+const GLEAN_APP_DISPLAY_VERSION = "TODO_app_version";
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
   kid: "rally-core",
