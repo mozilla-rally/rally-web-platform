@@ -39,15 +39,20 @@ export default (cliArgs) => [
         exportConditions: ["browser"],
         preferBuiltins: false,
       }),
-      commonjs(),
-      copy({
-        targets: [
-          {
-            src: "node_modules/@mozilla/rally/dist/rally-content.js",
-            dest: "dist/",
-          },
-        ],
-      }),
+      commonjs(),      
     ],
   },
+  {
+    input: "src/content-script.ts",
+    output: {
+      file: "dist/content-script.js",
+      sourcemap: isDevMode(cliArgs) ? "inline" : false,
+    },
+    plugins: [
+      resolve({
+        browser: true
+      }),
+      commonjs(),      
+    ],
+  }  
 ];
