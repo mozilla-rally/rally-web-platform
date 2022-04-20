@@ -1,4 +1,4 @@
-import { Rally, runStates } from "@mozilla/rally";
+import { Rally, RunStates } from "@mozilla/rally-sdk";
 
 const enableDevMode = false;
 const rallySite = "http://localhost:5000";
@@ -19,14 +19,14 @@ const enableEmulatorMode = true;
 
 const stateChangeCallback = async (state) => {
   switch (state) {
-    case runStates.RUNNING:
+    case RunStates.Running:
       console.log("Start data collection");
       console.log(`RallyID: ${rally.rallyId}`);
       break;
-    case runStates.PAUSED:
+    case RunStates.Paused:
       console.log("Pause data collection");
       break;
-    case runStates.ENDED:
+    case RunStates.Ended:
       console.log("Pause data collection, study has ended");
       break;
     default:
