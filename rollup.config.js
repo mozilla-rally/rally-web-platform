@@ -9,7 +9,6 @@ import babel from "@rollup/plugin-babel";
 import typescript from "@rollup/plugin-typescript";
 import autoprefixer from "autoprefixer";
 import replace from "@rollup/plugin-replace";
-import livereload from "rollup-plugin-livereload";
 import sizes from "rollup-plugin-sizes";
 import cleaner from "rollup-plugin-cleaner";
 import alias from "@rollup/plugin-alias";
@@ -86,7 +85,6 @@ const config = {
       __BASE_SITE__: "https://rally.mozilla.org",
       __EMULATOR_MODE__: emulatorMode,
     }),
-    livereload("static"),
     //simple analysis on rollup bundling
     sizes(),
     svg(),

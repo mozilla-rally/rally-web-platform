@@ -8,7 +8,7 @@
     "config:web:demo": "cp config/firebase.config.demo-rally.json static/firebase.config.json",
     "dev:web": "npm run pre-build && npm run config:web:demo",
     "build:skit": "svelte-kit build",
-    "build": "npm run pre-build && npm run build:functions && tsc --outDir dist/lib --declarationDir dist/types --declaration true && npm run build:rollup && npm run compile:sass",
+    "build": "npm run pre-build && npm run build:functions && tsc --outDir dist/lib --declarationDir dist/types --declaration true && npm run compile:sass && npm run build:rollup",
     "build:functions": "cd functions && npm install && npm run build && cd ..",
     "build:rollup": "routify -b && rollup -c",
     "build:web:emulator": "npm run pre-build && npm run config:web:demo && svelte-kit build -- --config-emulator-mode",
