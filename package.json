@@ -20,7 +20,7 @@
     "lint:functions": "cd functions && npm install && npm run lint && cd ..",
     "format": "prettier --write --plugin-search-dir=. .",
     "doc": "jsdoc -c jsdoc.conf.json && mkdir -p docs/images && cp images/rally-logo.png docs/images/",
-    "test:integration:jest": ". ./functions/.testenv && jest ./tests/integration/",
+    "test:integration:jest": "jest ./tests/integration/",
     "test:integration": "npm run build:web:emulator && npm run build:functions &&  ./scripts/integration-test.sh",
     "test:functions": "firebase emulators:exec --project demo-rally --only auth,functions,firestore --ui 'npm run build:functions && sleep 1 && cd functions && npm run test:coverage && cd ..'",
     "storybook": "start-storybook -s ./static -p 6006",
