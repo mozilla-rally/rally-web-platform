@@ -11,8 +11,7 @@ import {
 import { studies } from "../studies";
 import fetch from "node-fetch";
 
-beforeAll(async () => {
-  // Disable function triggers for testing (prevents inadvertent Glean pings)
+async function disableFunctionTriggers() {
   await fetch(
     "http://" +
       process.env.FIREBASE_EMULATOR_HUB +
@@ -21,10 +20,9 @@ beforeAll(async () => {
       method: "PUT",
     }
   );
-});
+}
 
-afterAll(async () => {
-  // Re-enable function triggers for potential future tests
+async function enableFunctionTriggers() {
   await fetch(
     "http://" +
       process.env.FIREBASE_EMULATOR_HUB +
@@ -33,6 +31,14 @@ afterAll(async () => {
       method: "PUT",
     }
   );
+}
+
+beforeAll(async () => {
+  await disableFunctionTriggers();
+});
+
+afterAll(async () => {
+  await enableFunctionTriggers();
 });
 
 describe("loadFirestore", () => {

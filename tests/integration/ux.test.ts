@@ -47,30 +47,6 @@ jest.setTimeout(60 * 10000);
 let driver: WebDriver;
 let screenshotCount = 0;
 
-beforeAll(async () => {
-  // Disable function triggers for testing (prevents inadvertent Glean pings)
-  await fetch(
-    "http://" +
-      process.env.FIREBASE_EMULATOR_HUB +
-      "/functions/disableBackgroundTriggers",
-    {
-      method: "PUT",
-    }
-  );
-});
-
-afterAll(async () => {
-  // Re-enable function triggers for potential future tests
-  await fetch(
-    "http://" +
-      process.env.FIREBASE_EMULATOR_HUB +
-      "/functions/enableBackgroundTriggers",
-    {
-      method: "PUT",
-    }
-  );
-});
-
 describe("Rally Web Platform UX flows", function () {
   beforeEach(async () => {
     driver = await webDriver(loadExtension, headlessMode);

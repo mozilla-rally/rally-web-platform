@@ -16,7 +16,11 @@ import {
 } from "@mozilla/glean/uploader";
 
 const GLEAN_DEBUG_VIEW_TAG = "MozillaRally";
-const GLEAN_RALLY_APP_ID = process.env.NODE_ENV !== "test" ? "rally-core" : "test-app-id";
+const ENABLE_GLEAN =
+  process.env.ENABLE_GLEAN || !process.env.FUNCTIONS_EMULATOR;
+const GLEAN_RALLY_APP_ID = process.env.FUNCTIONS_EMULATOR
+  ? "test-app-id"
+  : "rally-core";
 const GLEAN_APP_DISPLAY_VERSION = "TODO_app_version";
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
@@ -35,6 +39,7 @@ const submitPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // 
  * Glean ping: enrollment
  */
 export async function platformEnrollment(rallyID: string): Promise<void> {
+  if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
   initializeGlean();
 
@@ -53,6 +58,7 @@ export async function platformEnrollment(rallyID: string): Promise<void> {
  *
  */
 export async function platformUnenrollment(rallyID: string): Promise<void> {
+  if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
   initializeGlean();
 
@@ -73,6 +79,7 @@ export async function demographics(
   rallyID: string,
   demographicsData: Record<string, unknown>
 ): Promise<void> {
+  if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
   initializeGlean();
 
@@ -94,6 +101,7 @@ export async function studyEnrollment(
   rallyID: string,
   studyID: string
 ): Promise<void> {
+  if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
   initializeGlean();
 
@@ -115,6 +123,7 @@ export async function studyUnenrollment(
   rallyID: string,
   studyID: string
 ): Promise<void> {
+  if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
   initializeGlean();
 
@@ -132,8 +141,12 @@ export async function studyUnenrollment(
  * Helper function for initializing Glean
  */
 function initializeGlean(): void {
-  Glean.setDebugViewTag(GLEAN_DEBUG_VIEW_TAG);
-  Glean.setLogPings(true);
+  if (!ENABLE_GLEAN) return;
+
+  if (process.env.FUNCTIONS_EMULATOR) {
+    Glean.setDebugViewTag(GLEAN_DEBUG_VIEW_TAG);
+    Glean.setLogPings(true);
+  }
 
   // Glean.initialize is a no-op if Glean is already initialized
   Glean.initialize(GLEAN_RALLY_APP_ID, true, {
@@ -147,7 +160,8 @@ function initializeGlean(): void {
  * Helper function for setting user metrics
  * from demographic data (mapping)
  */
-function setUserMetrics(data: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
+function setUserMetrics(data: any): void {
+  // eslint-disable-line @typescript-eslint/no-explicit-any
   if ("age" in data) {
     userMetrics.age[`band_${data["age"]}`].set(true);
   }
@@ -175,7 +189,8 @@ function setUserMetrics(data: any): void { // eslint-disable-line @typescript-es
   }
 
   if ("school" in data) {
-    const KEY_FIXUP: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const KEY_FIXUP: any = {
+      // eslint-disable-line @typescript-eslint/no-explicit-any
       high_school_graduate_or_equivalent: "high_school_grad_or_eq",
       some_college_but_no_degree_or_in_progress: "college_degree_in_progress",
     };

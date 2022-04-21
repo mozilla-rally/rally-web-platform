@@ -105,6 +105,12 @@ connectFirestoreEmulator(db, "localhost", 8080);
 For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js` and automatically enabled when built in
 emulator mode.
 
+## Glean
+
+The Rally Web Platform uses [Glean](https://docs.telemetry.mozilla.org/concepts/glean/glean.html) pings to send enrollment and demographic information to a secure analysis environment.
+
+Glean is **disabled by default** when using the Firebase Emulator (i.e. for development and testing). However it can be **explicitly enabled** by setting the `ENABLE_GLEAN` environment variable to `true`. When Glean is enabled in this way, pings will be logged, and will show up in the official Glean Debug Viewer under the [MozillaRally](https://debug-ping-preview.firebaseapp.com/pings/MozillaRally) tag (note that the ping payload is encrypted before being sent to the Debug Viewer; the data will be obfuscated but you can still see ping type and receiving time).
+
 ## Deploying
 
 CircleCI is used to generate build artifacts, which are pushed to the `deploy` branch on this repository.
