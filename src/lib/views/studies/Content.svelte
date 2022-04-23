@@ -1,4 +1,6 @@
 <script>
+  import Accordion from "$lib/components/accordion/Accordion.svelte";
+
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -6,6 +8,7 @@
   import { createEventDispatcher } from "svelte";
   import { fly } from "svelte/transition";
   import StudyCard from "./StudyCard.svelte";
+  import StudyUsageTooltip from "./StudyUsageTooltip.svelte";
 
   export let studies = [];
   export let userStudies = {};
@@ -42,10 +45,15 @@
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
   <h2 class="section-header">Current Studies</h2>
 
-  <p>
+  <p class="section-sub-header">
     Browse available studies and find the choice (or choices) that feel right to
     you.
   </p>
+
+  <Accordion revealed={true}>
+    <div slot="title">How to join a study</div>
+    <slot><StudyUsageTooltip class="pb-0 mb-0" /></slot>
+  </Accordion>
 
   <div class="studies">
     {#each studies as study, i (study.studyId)}
@@ -63,6 +71,7 @@
         dataCollectionDetails={study.dataCollectionDetails}
         studyDetailsLink={study.studyDetailsLink}
         tags={study.tags}
+        downloadUrl={study.downloadLink}
         on:cta-clicked
         on:join={() => {
           joinStudy(study.studyId);
@@ -89,5 +98,11 @@
     display: grid;
     grid-auto-flow: row;
     grid-row-gap: 1rem;
+  }
+  .section-header {
+    margin-bottom: 12px;
+  }
+  .section-sub-header {
+    margin-bottom: 36px;
   }
 </style>

@@ -66,14 +66,14 @@
 }
 
 .mzp-t-leave.mzp-t-product {
-  background-color: $color-red-60;
-  color: white;
-  border-color: $color-red-60;
+  background-color: transparent;
+  border: 2px solid $color-red-60;
+  color: $color-red-60;
 }
 
 .mzp-t-leave.mzp-t-product:hover {
-  background-color: $color-red-70;
-  border-color: $color-red-70;
+  background-color: $color-red-60;
+  color: white;
 }
 
 .mzp-c-button.mzp-t-product.mzp-t-neutral {
