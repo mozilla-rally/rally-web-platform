@@ -6,6 +6,7 @@
   import { createEventDispatcher } from "svelte";
   import { fly } from "svelte/transition";
   import StudyCard from "./StudyCard.svelte";
+  import StudyUsageTooltip from "./StudyUsageTooltip.svelte";
 
   export let studies = [];
   export let userStudies = {};
@@ -42,10 +43,7 @@
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
   <h2 class="section-header">Current Studies</h2>
 
-  <p>
-    Browse available studies and find the choice (or choices) that feel right to
-    you.
-  </p>
+  <StudyUsageTooltip />
 
   <div class="studies">
     {#each studies as study, i (study.studyId)}
@@ -63,6 +61,7 @@
         dataCollectionDetails={study.dataCollectionDetails}
         studyDetailsLink={study.studyDetailsLink}
         tags={study.tags}
+        downloadUrl={study.downloadLink}
         on:cta-clicked
         on:join={() => {
           joinStudy(study.studyId);
@@ -89,5 +88,8 @@
     display: grid;
     grid-auto-flow: row;
     grid-row-gap: 1rem;
+  }
+  .section-header {
+    margin-bottom: 28px;
   }
 </style>

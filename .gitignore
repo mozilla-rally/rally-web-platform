@@ -42,6 +42,7 @@ dev
 output
 static/fonts
 static/version.json
+static/sass/bootstrap
 
 # Compiled options page
 public/build

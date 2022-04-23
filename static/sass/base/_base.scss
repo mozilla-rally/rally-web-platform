@@ -81,3 +81,19 @@ ol {
   color: $color-marketing-gray-70;
 }
 
+// Bootstrap CSS
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../bootstrap/functions";
+
+// 2. Include any default variable overrides here
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../bootstrap/variables";
+@import "../bootstrap/mixins";
+@import "../bootstrap/utilities";
+@import "../bootstrap/utilities/api";
+@import "../bootstrap/root";
+@import "../bootstrap/buttons";
+@import "../bootstrap/dropdown";
+@import "../bootstrap/popover";

@@ -4,18 +4,18 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
-  import Header from "./Header.svelte";
-  import Button from "../Button.svelte";
-  import CheckCircle from "../icons/CheckCircle.svelte";
-  import Alert from "../icons/Alert.svelte";
-  import ExternalLink from "../icons/ExternalLink.svelte";
-  import studyCategories from "./study-categories";
-
   import AccordionButton from "../accordion/AccordionButton.svelte";
+  import Button from "../Button.svelte";
+  import ExternalLink from "../icons/ExternalLink.svelte";
+  import OverflowEllipsis from "../icons/OverflowEllipsis.svelte";
+  import Header from "./Header.svelte";
+  import studyCategories from "./study-categories";
+  import StudyStatusBadge from "./StudyStatusBadge.svelte";
 
   let revealed = false;
 
   export let endDate;
+  export let downloadUrl;
   export let joined = false;
   export let connected = false;
   export let studyDetailsLink = undefined;
@@ -24,10 +24,54 @@
   export let tags = [];
 
   const dispatch = createEventDispatcher();
+
+  $: {
+    revealed = !joined;
+  }
 </script>
 
 <div class="study-card-container radius-sm">
   <Header {endDate}>
+    <span slot="study-top-section">
+      {#if joined}
+        <div
+          class={`vertically-aligned-container status-container ${
+            connected ? "connected" : "not-connected"
+          }`}
+        >
+          <StudyStatusBadge {connected} {downloadUrl} />
+          <div class="dropdown">
+            <button
+              class="btn btn-link update-dropdown-link p-0 pt-0 d-flex align-items-center"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <OverflowEllipsis color="#5E5E72" size="28px" />
+            </button>
+            <ul class="dropdown-menu dropdown-menu-bottom overflow-hidden">
+              {#if !connected}
+                <li>
+                  <a
+                    class="dropdown-item text-body-sm"
+                    href={downloadUrl}
+                    target="_blank">Add study extension</a
+                  >
+                </li>
+              {/if}
+              <li>
+                <a
+                  class="dropdown-item text-body-sm"
+                  on:click={() => dispatch("leave")}
+                  href="#">Leave study</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <hr class="header-divider mb-0" />
+      {/if}
+    </span>
     <img
       slot="study-icon"
       class="study-card-image"
@@ -37,89 +81,67 @@
     />
     <span slot="study-name"><slot name="name">Study Title</slot></span>
     <span slot="study-author"><slot name="author">Study Author</slot></span>
-    <span slot="study-cta">
-      <div class="study-card-cta">
+    <span slot="study-cta" class="w-100">
+      {#if !joined}
         <Button
           size={"md"}
-          product={!joined}
-          leave={joined}
+          custom={"w-100"}
+          product={true}
+          leave={false}
           on:click={() => {
-            dispatch(joined ? "leave" : "join");
+            dispatch("join");
           }}
         >
-          {#if joined}Leave Study{:else}Join Study{/if}
+          Join Study
         </Button>
-      </div></span
-    >
+      {/if}
+    </span>
   </Header>
-  <hr class="header-divider" />
-  {#if joined}
+  <div class="study-body">
+    <hr class="header-divider" />
+
     <div class="joined-study-accordion">
       <AccordionButton bind:revealed>
         <h4 class="study-card-subheader text-display-xxs">Study Description</h4>
       </AccordionButton>
-      {#if joined}
-        <div class="study-card-joined-date">
-          <div
-            style="text-align: right; align-items: baseline; grid-column-gap: 8px; color: var(--color-dark-gray-10);"
-            class="gafc"
-          >
-            {#if connected}
-              <div>connected</div>
-            {:else}
-              <div style="font-weight: normal;">not connected</div>
-            {/if}
-          </div>
-          <span class="gafc" style="transform: translateY(-1px);">
-            {#if joined && !connected}
-              <Alert size="20px" color="#FFA537" />
-            {:else}
-              <CheckCircle size="20px" color="var(--color-green-60)" />
-            {/if}
-          </span>
-        </div>
-      {/if}
     </div>
-  {/if}
-  {#if revealed || !joined}
-    <div class="study-card-body" transition:slide|local={{ duration: 200 }}>
-      <div class="study-card-content">
-        {#if !joined}<h4 class="study-card-subheader text-display-xxs">
-            Study Description
-          </h4>{/if}
-        <div class="study-card-description body-copy text-body-sm">
-          <slot name="description">
-            <p>description missing</p>
-          </slot>
-        </div>
-        {#if dataCollectionDetails.length}
-          <div
-            class="study-card-section study-card-collected body-copy text-body-sm"
-          >
-            <h4
-              class="study-card-subheader text-display-xxs"
-              style="margin-bottom: 10px;"
-            >
-              Key Data Collected
-            </h4>
-            <ul
-              class="mzp-u-list-styled study-card-section-body data-collection-details body-copy text-body-sm"
-            >
-              {#each dataCollectionDetails as detail}
-                <li>{detail}</li>
-              {/each}
-            </ul>
-          </div>
-        {/if}
-      </div>
-      <hr />
 
-      <div class="study-card-footer">
-        <div class="study-card-tags">
-          {#each tags as tag}
+    {#if revealed}
+      <div class="study-card-body" transition:slide|local={{ duration: 200 }}>
+        <div>
+          <div class="study-card-description body-copy text-body-sm">
+            <slot name="description">
+              <p>description missing</p>
+            </slot>
+          </div>
+          {#if dataCollectionDetails.length}
             <div
-              class="tag radius-sm"
-              style={`
+              class="study-card-section study-card-collected body-copy text-body-sm"
+            >
+              <h4
+                class="study-card-subheader text-display-xxs"
+                style="margin-bottom: 10px;"
+              >
+                Key Data Collected
+              </h4>
+              <ul
+                class="mzp-u-list-styled study-card-section-body data-collection-details body-copy text-body-sm"
+              >
+                {#each dataCollectionDetails as detail}
+                  <li>{detail}</li>
+                {/each}
+              </ul>
+            </div>
+          {/if}
+        </div>
+        <hr />
+
+        <div class="study-card-footer">
+          <div class="study-card-tags">
+            {#each tags as tag}
+              <div
+                class="tag radius-sm"
+                style={`
                 color: ${
                   (studyCategories[tag] && studyCategories[tag].color) ||
                   "var(--color-marketing-gray-100)"
@@ -129,24 +151,26 @@
                   "white"
                 };
                 `}
-            >
-              {tag}
-            </div>
-          {/each}
-        </div>
+              >
+                {tag}
+              </div>
+            {/each}
+          </div>
 
-        <div class="study-card-privacy-policy">
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            class="external-link"
-            style="--spacing: 6px;"
-            href={studyDetailsLink}>View Full Study Details <ExternalLink /></a
-          >
+          <div class="study-card-privacy-policy">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              class="external-link"
+              style="--spacing: 6px;"
+              href={studyDetailsLink}
+              >View Full Study Details <ExternalLink /></a
+            >
+          </div>
         </div>
       </div>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>
 
 <style>
@@ -155,14 +179,9 @@
     --gap: 20px;
     --left-pad: calc(var(--icon-size) + var(--gap));
 
-    padding: 1.25rem;
     box-shadow: var(--rally-box-shadow-sm);
     background-color: var(--color-white);
     border: 1px solid #ececed;
-  }
-
-  .study-card-content {
-    padding-left: var(--left-pad);
   }
 
   .study-card-description {
@@ -170,6 +189,11 @@
     /* offset the last paragraph text margin by a bit more */
     margin-top: 5.5px;
     margin-bottom: 4px;
+  }
+
+  .study-body {
+    padding: 24px;
+    padding-top: 0;
   }
 
   h4 {
@@ -254,7 +278,6 @@
   }
 
   .joined-study-accordion {
-    padding-left: var(--left-pad);
     display: grid;
     grid-template-columns: auto max-content;
     grid-gap: 36px;
@@ -275,5 +298,32 @@
     grid-auto-flow: column;
     align-items: center;
     grid-column-gap: 6px;
+  }
+
+  .update-dropdown-link {
+    text-decoration: none;
+    height: 28px;
+    width: 28px;
+  }
+
+  .update-dropdown-link:global(.show) {
+    background-color: #ededf0;
+    border-radius: 50%;
+    height: 28px;
+    width: 28px;
+  }
+
+  .status-container {
+    justify-content: space-between;
+    padding-left: 16px;
+    padding-right: 10px;
+  }
+
+  .status-container.connected {
+    background: #d6fff2;
+  }
+
+  .status-container.not-connected {
+    background: #ffe3c2;
   }
 </style>
