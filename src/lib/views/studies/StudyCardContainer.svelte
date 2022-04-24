@@ -231,7 +231,6 @@
         product
         secondary  
         on:click={() => {
-          console.debug("logEvent:", logEvent);
           logEvent(analytics, "select_content", {
             content_type: `canceled_${joined ? "join" : "leave"}_study`,
           });

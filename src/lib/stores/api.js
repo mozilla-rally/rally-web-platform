@@ -89,7 +89,6 @@ const _connectedChangeCallbacks = [async (studyId) => {
 }];
 
 const _authChangeCallbacks = [async (/** @type {import("firebase/auth").User} */ user) => {
-  console.debug(`auth state change callback: ${JSON.stringify(user)}`);
   analytics = (await import("firebase/analytics")).getAnalytics();
   logEvent = (await import("firebase/analytics")).logEvent
 
