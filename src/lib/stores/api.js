@@ -314,6 +314,7 @@ export default {
     }
     // create a new user.
     if (userCredential) {
+      // @ts-ignore
       console.debug("Logged in as", userCredential.user.email);
       initializeUserDocument(userCredential.user.uid);
       listenForUserChanges(userCredential.user);
