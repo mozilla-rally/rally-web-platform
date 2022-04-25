@@ -93,7 +93,7 @@ const _authChangeCallbacks = [async (/** @type {import("firebase/auth").User} */
   logEvent = (await import("firebase/analytics")).logEvent
 
   const loggedIn = Boolean(user && user.uid);
-  logEvent(analytics, `sign-${loggedIn ? "in" : "out"}`);
+  logEvent(analytics, `sign_${loggedIn ? "in" : "out"}`);
 }];
 
 function _updateLocalState(callback) {
