@@ -70,7 +70,7 @@
     "jest-webextension-mock": "^3.7.6",
     "jsdoc": "^3.6.6",
     "micromodal": "^0.4.6",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
     "sass": "^1.49.0",
