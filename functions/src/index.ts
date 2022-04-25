@@ -72,9 +72,9 @@ async function generateToken(
   return rallyToken;
 }
 
-export const addRallyUserToFirestoreImpl = async (
+export async function addRallyUserToFirestoreImpl (
   user: admin.auth.UserRecord
-): Promise<boolean> => {
+): Promise<boolean> {
   functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
     user,
   });
@@ -110,7 +110,7 @@ export const addRallyUserToFirestore = functions.auth
   .user()
   .onCreate(addRallyUserToFirestoreImpl);
 
-export const deleteRallyUserImpl = async function (
+export async function deleteRallyUserImpl (
   user: admin.auth.UserRecord
 ): Promise<boolean> {
   functions.logger.info("deleteRallyUser fired for user:", user);
@@ -182,7 +182,7 @@ export const loadFirestore = functions.https.onRequest(
  * Listen for changes to the User document
  * and initiate the appropriate Glean ping(s)
  */
-export const handleUserChangesImpl = async function (
+export async function handleUserChangesImpl (
   change: Change<DocumentSnapshot>,
   context: EventContext
 ): Promise<boolean> {
@@ -239,7 +239,7 @@ export const handleUserChanges = functions.firestore
  * Listen for changes to the Study document
  * and initiate the appropriate Glean ping(s)
  */
-export const handleUserStudyChangesImpl = async function (
+export async function handleUserStudyChangesImpl (
   change: Change<DocumentSnapshot>,
   context: EventContext
 ): Promise<boolean> {
