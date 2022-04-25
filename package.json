@@ -82,7 +82,7 @@
     "svelte-loader": "^3.1.2",
     "svelte-preprocess": "^4.10.3",
     "tidy-jsdoc": "^1.4.1",
-    "ts-jest": "^27.0.5",
+    "ts-jest": "^27.1.4",
     "tslib": "^2.3.1",
     "typescript": "^4.0.0",
     "watch": "^1.0.2",
