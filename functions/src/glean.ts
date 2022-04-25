@@ -2,6 +2,9 @@ import Glean from "@mozilla/glean/node";
 import PingEncryptionPlugin from "@mozilla/glean/plugins/encryption";
 import axios from "axios";
 import { Mutex, Semaphore, withTimeout } from "async-mutex";
+import fs from "fs";
+
+const RWP_pkg = JSON.parse(fs.readFileSync("../package.json").toString());
 
 import * as rallyMetrics from "./generated/rally.js";
 import * as userMetrics from "./generated/user.js";
@@ -21,7 +24,7 @@ const ENABLE_GLEAN =
 const GLEAN_RALLY_APP_ID = process.env.FUNCTIONS_EMULATOR
   ? "test-app-id"
   : "rally-core";
-const GLEAN_APP_DISPLAY_VERSION = "TODO_app_version";
+const GLEAN_APP_DISPLAY_VERSION = RWP_pkg.version;
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
   kid: "rally-core",
