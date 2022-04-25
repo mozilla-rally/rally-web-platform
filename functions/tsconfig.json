@@ -3,7 +3,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "allowJs": true,
     "esModuleInterop": false,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
