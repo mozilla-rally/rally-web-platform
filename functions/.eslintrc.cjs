@@ -24,6 +24,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "import"],
   rules: {
     quotes: ["error", "double"],
-    "import/no-unresolved": "off" // too many weird module resoltions in this project
+    "import/no-unresolved": "off" // too many weird module resolutions in this project
   },
 };
