@@ -72,7 +72,7 @@ async function generateToken(
   return rallyToken;
 }
 
-export async function addRallyUserToFirestoreImpl (
+export async function addRallyUserToFirestoreImpl(
   user: admin.auth.UserRecord
 ): Promise<boolean> {
   functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
@@ -104,13 +104,13 @@ export async function addRallyUserToFirestoreImpl (
     .set(userDoc, { merge: true });
 
   return true;
-};
+}
 
 export const addRallyUserToFirestore = functions.auth
   .user()
   .onCreate(addRallyUserToFirestoreImpl);
 
-export async function deleteRallyUserImpl (
+export async function deleteRallyUserImpl(
   user: admin.auth.UserRecord
 ): Promise<boolean> {
   functions.logger.info("deleteRallyUser fired for user:", user);
@@ -146,7 +146,7 @@ export async function deleteRallyUserImpl (
   await admin.firestore().collection("users").doc(user.uid).delete();
 
   return true;
-};
+}
 
 export const deleteRallyUser = functions.auth
   .user()
@@ -182,7 +182,7 @@ export const loadFirestore = functions.https.onRequest(
  * Listen for changes to the User document
  * and initiate the appropriate Glean ping(s)
  */
-export async function handleUserChangesImpl (
+export async function handleUserChangesImpl(
   change: Change<DocumentSnapshot>,
   context: EventContext
 ): Promise<boolean> {
@@ -217,11 +217,10 @@ export async function handleUserChangesImpl (
   }
 
   if (
-    ((!oldUser || !oldUser.demographicsData) && newUser.demographicsData) ||
-    (oldUser && oldUser.demographicsData && !newUser.demographicsData) ||
-    (oldUser &&
-      newUser &&
-      !isDeepStrictEqual(oldUser.demographicsData, newUser.demographicsData))
+    !isDeepStrictEqual(
+      oldUser && oldUser.demographicsData,
+      newUser && newUser.demographicsData
+    )
   ) {
     // User updated demographicsData
     functions.logger.info(`Sending demographics ping for user ID ${userID}`);
@@ -229,7 +228,7 @@ export async function handleUserChangesImpl (
   }
 
   return true;
-};
+}
 
 export const handleUserChanges = functions.firestore
   .document("users/{userID}")
@@ -239,7 +238,7 @@ export const handleUserChanges = functions.firestore
  * Listen for changes to the Study document
  * and initiate the appropriate Glean ping(s)
  */
-export async function handleUserStudyChangesImpl (
+export async function handleUserStudyChangesImpl(
   change: Change<DocumentSnapshot>,
   context: EventContext
 ): Promise<boolean> {
@@ -294,7 +293,7 @@ export async function handleUserStudyChangesImpl (
   }
 
   return true;
-};
+}
 
 export const handleUserStudyChanges = functions.firestore
   .document("users/{userID}/studies/{studyID}")
