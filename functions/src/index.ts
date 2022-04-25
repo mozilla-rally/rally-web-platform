@@ -224,7 +224,7 @@ export async function handleUserChangesImpl(
   ) {
     // User updated demographicsData
     functions.logger.info(`Sending demographics ping for user ID ${userID}`);
-    await gleanPings.demographics(rallyID, newUser.demographicsData);
+    await gleanPings.demographics(rallyID, newUser && newUser.demographicsData);
   }
 
   return true;

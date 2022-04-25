@@ -164,6 +164,8 @@ function initializeGlean(): void {
  * from demographic data (mapping)
  */
 function setUserMetrics(data: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
+  if (!data) return;
+
   if ("age" in data) {
     userMetrics.age[`band_${data["age"]}`].set(true);
   }
