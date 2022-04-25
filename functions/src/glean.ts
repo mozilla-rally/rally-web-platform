@@ -1,6 +1,7 @@
 import Glean from "@mozilla/glean/node";
 import PingEncryptionPlugin from "@mozilla/glean/plugins/encryption";
 import axios from "axios";
+import functions from "firebase-functions";
 import { Mutex, Semaphore, withTimeout } from "async-mutex";
 import fs from "fs";
 
@@ -232,7 +233,7 @@ class CustomPingUploader extends Uploader {
         };
       })
       .catch(function (error) {
-        console.log(error);
+        functions.logger.error(error);
         return {
           status: 500,
           result: UploadResultStatus.UnrecoverableFailure,
