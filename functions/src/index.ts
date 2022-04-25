@@ -308,9 +308,5 @@ async function getRallyIdForUser(userID: string) {
 
   const data = extensionUserDoc.data();
 
-  if (data) {
-    return data.rallyId;
-  } else {
-    return null;
-  }
+  return (data && data.rallyId) || null;
 }
