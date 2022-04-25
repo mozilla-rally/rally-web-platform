@@ -47,7 +47,7 @@
     "@sveltejs/kit": "1.0.0-next.141",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
-    "@types/selenium-webdriver": "^4.0.19",
+    "@types/selenium-webdriver": "^4.0.15",
     "@types/webextension-polyfill": "^0.8.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.2.2",
