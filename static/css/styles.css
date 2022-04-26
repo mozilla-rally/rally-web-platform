@@ -1226,6 +1226,13 @@ ol {
   border-radius: 4px;
 }
 
+.launch-button-text {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 24px;
+  color: #5e5e72;
+}
+
 .body-copy {
   color: #5e5e72;
 }
@@ -1478,10 +1485,6 @@ ol {
 .header .nav-primary .dropdown-list .list-item img {
   opacity: 0.6;
 }
-.header__dropdown .dropdown-list .list-item:hover,
-.header .nav-primary .dropdown-list .list-item:hover {
-  background-color: #f0f0f4;
-}
 .header__dropdown .dropdown-list .list-item--info,
 .header .nav-primary .dropdown-list .list-item--info {
   display: block;
@@ -1570,24 +1573,8 @@ ol {
   }
 }
 
-.btn-content--sm {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
-  text-align: left;
-}
-@media (max-width: 432px) {
-  .btn-content--sm {
-    justify-content: space-around;
-  }
-}
-
 .mzp-c-button.mzp-t-md {
   font-size: 14px;
-}
-
-.mzp-c-button {
-  font-size: 1rem;
 }
 
 /* extended button states */
@@ -1892,15 +1879,25 @@ ol {
 .card .card-header--info-card {
   padding-bottom: 32px;
 }
-.card .card-content .button-text {
-  text-align: center;
-  font-size: 1rem;
-  opacity: 0.6;
+.card .card-content .not-verified {
+  display: flex;
+  padding: 16px 16px 0;
+  border-radius: 2px;
+  background-color: #ffdfe7;
+  margin-bottom: 24px;
 }
-@media only screen and (max-width: 360px) {
-  .card .card-content .button-text {
-    font-size: 12px;
-  }
+.card .card-content .not-verified svg {
+  margin-right: 16px;
+  font-size: 42px;
+  color: #e22850;
+}
+.card .card-content .not-verified__text {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #15141a;
 }
 .card .card-content .card-body-info {
   max-width: 368px;
@@ -1913,12 +1910,30 @@ ol {
 }
 .card .card-button {
   width: 100%;
+  display: flex;
+}
+.card .card-button__text {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+@media only screen and (max-width: 360px) {
+  .card .card-button__text {
+    font-size: 12px;
+  }
 }
 .card .card-button--signup {
   margin: 16px 0px;
 }
 .card .card-button--create {
+  margin-top: 16px;
   margin-bottom: 20px;
+}
+@media (max-width: 432px) {
+  .card .card-button {
+    justify-content: space-around;
+  }
 }
 .card .line-break {
   display: flex;
@@ -1952,6 +1967,12 @@ ol {
   height: 48px;
   font-size: 0.875rem;
   border: 2px solid #9595a2;
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 400;
+}
+.card .form-wrapper form .mzp-c-field-control--error {
+  border: 2px solid #c50042;
 }
 .card .form-wrapper form,
 .card .form-wrapper button,
@@ -1977,6 +1998,9 @@ ol {
 .card .field--pw {
   padding-bottom: 16px;
 }
+.card .field--pw-create {
+  padding-bottom: 0;
+}
 .card .input-wrapper {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1993,10 +2017,22 @@ ol {
   z-index: 2;
   margin: 10px;
 }
+.card .create-hide {
+  visibility: hidden;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+}
+.card .create-show {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  transition: opacity 1s linear, height 1s linear;
+}
 .card .body-text-action {
   padding-top: 48px;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   color: #000000;
   text-align: center;
   grid-column: 1/13;
@@ -2148,8 +2184,8 @@ ol {
 
 .mzp-c-field-label {
   font-weight: 600;
-  color: #818282;
-  font-size: 0.875rem;
+  color: #20123a;
+  font-size: 1rem;
 }
 
 .error-msg-active,
@@ -2160,15 +2196,22 @@ ol {
   padding: 0;
 }
 
-.error-msg-active {
+.error-msg {
   position: inherit;
-  color: red;
-  padding-top: 0.5rem;
+  color: #c50042;
+  padding: 4px 0px 0px;
   top: 0;
+  margin: 0;
+  font-size: 14px;
 }
 
 .valid {
   text-decoration: line-through !important;
+  color: rgba(21, 20, 26, 0.4);
+}
+
+.rules-error {
+  color: #c50042;
 }
 
 .hide-error-msg {
@@ -2176,16 +2219,18 @@ ol {
 }
 
 .body-text-privacy {
-  font-size: 12px;
+  font-size: 14px;
   margin: auto;
   text-align: center;
 }
 
-.info-rules {
+.password-requirements {
   list-style: disc;
   font-size: 0.875rem;
-  color: gray;
-  padding: 16px 24px 0px;
+  color: #42435A;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 14px 24px 0px;
   text-align: left;
   margin: 0;
 }

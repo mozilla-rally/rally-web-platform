@@ -5,6 +5,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
+import { check } from "prettier";
 
   const dispatch = createEventDispatcher();
 
@@ -22,32 +23,138 @@
   let textWidth;
 
   //create account states
-  let email;
-  let password;
+  let emailEl;
   let passwordEl;
   let passwordVisible = false;
-  let btnDisabled = true;
   let capital;
   let number;
   let length;
   let letter;
   let createErr = false;
+  let pwErr = false;
   let emailErrText = null;
+  let passwordErrText = null;
   let fireBaseErr = null;
+  let emptyFieldsErr;
   const minPasswordLength = 8;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   let checkEmail = false;
   let formHeight = "auto";
+  let inputClassName = "mzp-c-field-control";
+  let inputEmailName;
+  let inputPWName;
+  let inputItemsVisible = false;
+  let lowerCaseLetters = /[a-z]/g;
+  let upperCaseLetters = /[A-Z]/g;
+  let numbers = /[0-9]/g;
 
   onMount(() => {
     if (titleEl) {
       textWidth = titleEl.clientWidth;
     }
+    inputEmailName = inputClassName;
+    inputPWName = inputClassName;
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
   $: fireBaseErr === null ? (createErr = false) : (createErr = true);
+  $: emptyFieldsErr
+    ? (inputClassName = "mzp-c-field-control mzp-c-field-control--error")
+    : (inputClassName = "mzp-c-field-control");
+  $: inputEmailName = inputClassName;
+  $: inputPWName = inputClassName;
+  $: if (emptyFieldsErr) {
+    emailErrText = "Required";
+    passwordErrText = "Required";
+  }
+
+  const checkFields = async () => {
+    if (emailEl.value === "" && passwordEl.value === "") {
+      emptyFieldsErr = true;
+    } else if (emailEl.value === "") {
+      createErr = true;
+      emailErrText = "Required";
+      emailEl.classList.add("mzp-c-field-control--error");
+    } else if (checkEmail === false) {
+      checkRules();
+    } else {
+      await store.signupWithEmailAndPassword(emailEl.value, passwordEl.value);
+      handleNextState();
+    }
+  };
+
+  const checkRules = () => {
+    pwErr = true;
+    passwordEl.classList.add("mzp-c-field-control--error");
+    passwordErrText = "Required";
+    if (passwordEl) {
+      passwordEl.value.length < minPasswordLength
+        ? length.classList.add("rules-error")
+        : null;
+
+      passwordEl.value.match(lowerCaseLetters)
+        ? letter.classList.add("clear")
+        : letter.classList.add("rules-error");
+
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("clear")
+        : capital.classList.add("rules-error");
+
+      passwordEl.value.match(numbers)
+        ? number.classList.add("clear")
+        : number.classList.add("rules-error");
+    }
+    return;
+  };
+
+  const handleChange = (e) => {
+    const name = e.srcElement.name;
+    emailEl.classList.remove("mzp-c-field-control--error");
+    emptyFieldsErr = false;
+    createErr = false;
+    pwErr = false;
+
+    letter.classList.remove("rules-error");
+    capital.classList.remove("rules-error");
+    number.classList.remove("rules-error");
+    length.classList.remove("rules-error");
+
+    if (passwordEl) {
+      passwordEl.classList.remove("mzp-c-field-control--error");
+      if (name === "id_user_pw") {
+        inputItemsVisible = true;
+        // Validate lowercase letters
+        passwordEl.value.match(lowerCaseLetters)
+          ? letter.classList.add("valid")
+          : letter.classList.remove("valid");
+
+        // Validate uppercase letters
+        passwordEl.value.match(upperCaseLetters)
+          ? capital.classList.add("valid")
+          : capital.classList.remove("valid");
+
+        // Validate numbers
+        passwordEl.value.match(numbers)
+          ? number.classList.add("valid")
+          : number.classList.remove("valid");
+
+        // Validate length
+        passwordEl.value.length >= minPasswordLength
+          ? length.classList.add("valid")
+          : length.classList.remove("valid");
+
+        if (
+          passwordEl.value.length >= minPasswordLength &&
+          passwordEl.value.match(numbers) &&
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
+        ) {
+          checkEmail = true;
+        }else checkEmail = false 
+      }
+    }
+  };
 
   const handleTrigger = (type) => {
     dispatch("type", {
@@ -62,51 +169,11 @@
     passwordEl.setAttribute("type", type);
   };
 
-  const handleChange = (e) => {
-    const name = e.srcElement.name;
-    if (passwordEl) {
-      // Validate lowercase letters
-      let lowerCaseLetters = /[a-z]/g;
-      passwordEl.value.match(lowerCaseLetters)
-        ? letter.classList.add("valid")
-        : letter.classList.remove("valid");
-
-      // Validate uppercase letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
-      // Validate numbers
-      let numbers = /[0-9]/g;
-      passwordEl.value.match(numbers)
-        ? number.classList.add("valid")
-        : number.classList.remove("valid");
-
-      // Validate length
-      passwordEl.value.length >= minPasswordLength
-        ? length.classList.add("valid")
-        : length.classList.remove("valid");
-
-      if (name === "id_user_pw") {
-        if (
-          passwordEl.value.length >= minPasswordLength &&
-          passwordEl.value.match(numbers) &&
-          passwordEl.value.match(lowerCaseLetters) &&
-          passwordEl.value.match(upperCaseLetters)
-        ) {
-          btnDisabled = false;
-          checkEmail = true;
-        } else {
-          btnDisabled = true;
-        }
-      }
-    }
-  };
-
   const handleNextState = () => {
-    fireBaseErr = localStorage.getItem("createErr");
-    fireBaseErr === null ? handleTrigger("check-create") : setMessage();
+    if (!emptyFieldsErr) {
+      fireBaseErr = localStorage.getItem("createErr");
+      fireBaseErr === null ? handleTrigger("check-create") : setMessage();
+    }
   };
 
   const setMessage = () => {
@@ -117,12 +184,14 @@
 
     isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
     if (isExistingEmail > -1) {
-      emailErrText = "Account already exists. Please sign in.";
+      emailEl.classList.add("mzp-c-field-control--error");
+      emailErrText = "Account already exists. Please Sign in.";
     }
 
     isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
     if (isInvalidEmail > -1) {
-      emailErrText = "Email is invalid. Please enter a valid email.";
+      emailEl.classList.add("mzp-c-field-control--error");
+      emailErrText = "Invalid format";
     }
 
     localStorage.removeItem("createErr");
@@ -144,8 +213,8 @@
               <label class="mzp-c-field-label" for="id_user_pw">Email</label>
             </div>
             <input
-              class="mzp-c-field-control"
-              bind:value={email}
+              class={inputEmailName}
+              bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_email"
@@ -153,25 +222,22 @@
               type="email"
               width="100%"
               placeholder="Enter your email address"
-              required
             />
+            {#if createErr || emptyFieldsErr}
+              <p class="error-msg error-msg--email">
+                {emailErrText}
+              </p>
+            {/if}
           </div>
 
-          {#if createErr}
-            <p class="error-msg-active invalid-email">
-              {emailErrText}
-            </p>
-          {/if}
-
           <!-- PASSWORD -->
-          <div class="mzp-c-field field field--pw">
+          <div class="mzp-c-field field field--pw-create">
             <div class="label-wrapper">
               <label class="mzp-c-field-label" for="id_user_pw">Password</label>
             </div>
             <div class="input-wrapper">
               <input
-                class="mzp-c-field-control"
-                bind:value={password}
+                class={inputPWName}
                 bind:this={passwordEl}
                 on:change={handleChange}
                 on:keyup={handleChange}
@@ -180,13 +246,15 @@
                 type="password"
                 {pattern}
                 width="100%"
-                required
               />
+
               {#if passwordVisible}
                 <img
                   src="img/eye-slash.svg"
                   alt="Eye with slash across it"
-                  class="fas fa-eye-slash togglePassword"
+                  class={`toggle-password ${
+                    inputItemsVisible ? "create-show" : "create-hide"
+                  }`}
                   id="hide-eye"
                   width="24px"
                   height="24px"
@@ -196,7 +264,9 @@
                 <img
                   src="img/eye-open.svg"
                   alt="Open eye"
-                  class="togglePassword"
+                  class={`toggle-password ${
+                    inputItemsVisible ? "create-show" : "create-hide"
+                  }`}
                   id="show-eye"
                   width="24px"
                   height="24px"
@@ -205,7 +275,17 @@
               {/if}
             </div>
 
-            <ul class="info-rules">
+            {#if emptyFieldsErr || pwErr}
+              <p class="error-msg error-msg--password">
+                {passwordErrText}
+              </p>
+            {/if}
+
+            <ul
+              class={`password-requirements ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
+            >
               <li bind:this={length} id="length">Use at least 8 characters</li>
               <li bind:this={letter} id="letter">
                 Use at least 1 lowercase letter
@@ -219,42 +299,27 @@
         </fieldset>
       </form>
 
-      {#if !checkEmail}
+      {#if !test}
         <Button
-          disabled={btnDisabled}
-          size="xl"
-          custom="card-button card-button--create"
-        >
-          <div class="button-text">{cta1}</div></Button
-        >
-      {/if}
-
-      {#if checkEmail && !test}
-        <Button
-          on:click={async () => {
-            await store.signupWithEmailAndPassword(email, password);
-            handleNextState();
-          }}
-          disabled={btnDisabled}
+          on:click={checkFields}
           size="xl"
           custom="card-button card-button--create"
           btnID="continue"
         >
-          <div class="button-text--signin">{cta1}</div></Button
+          <div class="card-button__text">{cta1}</div></Button
         >
       {/if}
 
-      {#if checkEmail && test}
+      {#if test}
         <Button
           on:click={() => {
             handleTrigger("check-create");
           }}
-          disabled={btnDisabled}
           size="xl"
           custom="card-button card-button--create"
           btnID="continue"
         >
-          <div class="button-text--create">{cta1}</div></Button
+          <div class="card-button__text">{cta1}</div></Button
         >
       {/if}
       <p class="body-text-privacy">
@@ -266,6 +331,7 @@
     </div>
   </div>
 
+  <!-- SIGN IN -->
   <p slot="cta" class="body-text-action">
     {bodyText}
     <button

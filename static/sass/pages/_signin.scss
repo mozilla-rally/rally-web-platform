@@ -71,16 +71,30 @@
   }
 
   .card-content {
-    .button-text {
-      text-align: center;
-      font-size: 1rem;
-      opacity: 0.6;
-
-      @media only screen and (max-width: $XS-screen) {
-        font-size: 12px;
+    .not-verified {
+      display: flex;
+      padding: 16px 16px 0;
+      border-radius: 2px;
+      background-color: $color-red-05; 
+      margin-bottom: 24px;
+      
+      svg{
+        margin-right: 16px;
+        font-size: 42px;
+        color: $color-red-60; 
       }
-    }
 
+      &__text {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        color: $color-dark-gray-90; 
+      }
+
+
+    }
     .card-body-info {
       max-width: 368px;
       text-align: left;
@@ -95,12 +109,29 @@
 
   .card-button {
     width: 100%;
+    display: flex;
+
+    &__text {
+      width: 300px;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      @media only screen and (max-width: $XS-screen) {
+        font-size: 12px;
+      }
+    }
+
     &--signup {
       margin: 16px 0px;
     }
 
     &--create {
+      margin-top: 16px;
       margin-bottom: 20px;
+    }
+
+    @media (max-width: $SM-screen) {
+      justify-content: space-around;
     }
   }
 
@@ -138,6 +169,15 @@
         height: 48px;
         font-size: 0.875rem;
         border: 2px solid $color-marketing-gray-50;
+        font-size: 1rem;
+        color: #000000;
+        font-weight: 400;
+      }
+
+      .mzp-c-field-control {
+        &--error {
+          border: 2px solid $color-red-70;
+        }
       }
     }
 
@@ -168,6 +208,10 @@
     &--pw {
       padding-bottom: 16px;
     }
+
+    &--pw-create {
+      padding-bottom: 0;
+    }
   }
 
   .input-wrapper {
@@ -187,10 +231,24 @@
     }
   }
 
+  .create-hide {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+    padding: 0;
+  }
+
+  .create-show {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+    transition: opacity 1s linear, height 1s linear;
+  }
+
   .body-text-action {
     padding-top: 48px;
     margin: 0;
-    font-size: 16px;
+    font-size: 14px;
     color: #000000;
     text-align: center;
     grid-column: 1/13;
@@ -211,10 +269,10 @@
       font-weight: 700;
     }
 
-    &--info{
+    &--info {
       padding-top: 32px;
-      .contact-text{
-        padding-top: 32px; 
+      .contact-text {
+        padding-top: 32px;
         margin: 0;
       }
     }
@@ -356,8 +414,8 @@
 
 .mzp-c-field-label {
   font-weight: 600;
-  color: #818282;
-  font-size: 0.875rem;
+  color: $color-marketing-gray-99;
+  font-size: 1rem;
 }
 
 .error-msg-active,
@@ -368,15 +426,22 @@
   padding: 0;
 }
 
-.error-msg-active {
+.error-msg {
   position: inherit;
-  color: red;
-  padding-top: 0.5rem;
+  color: $color-red-70;
+  padding: 4px 0px 0px;
   top: 0;
+  margin: 0;
+  font-size: 14px;
 }
 
 .valid {
   text-decoration: line-through !important;
+  color: rgba(21, 20, 26, 0.4);
+}
+
+.rules-error {
+  color: $color-red-70;
 }
 
 .hide-error-msg {
@@ -384,16 +449,18 @@
 }
 
 .body-text-privacy {
-  font-size: 12px;
+  font-size: 14px;
   margin: auto;
   text-align: center;
 }
 
-.info-rules {
+.password-requirements {
   list-style: disc;
   font-size: 0.875rem;
-  color: gray;
-  padding: 16px 24px 0px;
+  color: $color-helper-gray;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 14px 24px 0px;
   text-align: left;
   margin: 0;
 }
