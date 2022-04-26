@@ -31,7 +31,6 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 1. Clone this repository.
 2. Run `npm install`
-3. Run `npm run config:web:demo` to configure your environment to use the localcemulated backend (aka "[demo project]](https://firebase.google.com/docs/emulator-suite/connect_auth)")
 4. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
 5. Run `npm run build` to build the app; the results will be in `/build`
 
