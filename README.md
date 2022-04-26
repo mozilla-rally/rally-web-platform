@@ -31,8 +31,8 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 1. Clone this repository.
 2. Run `npm install`
-4. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
-5. Run `npm run build` to build the app; the results will be in `/build`
+3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
+4. Run `npm run build` to build the app; the results will be in `/build`
 
 The site will be ready for use when you see Svelte start up:
 
