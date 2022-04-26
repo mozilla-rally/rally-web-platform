@@ -42,7 +42,7 @@
     "@storybook/addon-docs": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-links": "^6.4.18",
-    "@storybook/addon-svelte-csf": "^1.1.0",
+    "@storybook/addon-svelte-csf": "^2.0.3",
     "@sveltejs/adapter-static": "^1.0.0-next.14",
     "@sveltejs/kit": "1.0.0-next.141",
     "@types/eslint": "^7.28.0",
