@@ -116,9 +116,6 @@ export async function deleteRallyUserImpl(
 ): Promise<boolean> {
   functions.logger.info("deleteRallyUser fired for user:", user);
 
-  // Delete the extension user document.
-  await admin.firestore().collection("extensionUsers").doc(user.uid).delete();
-
   // Delete the user studies subcollection.
   const collectionRef = admin
     .firestore()
@@ -201,11 +198,17 @@ export async function handleUserChangesImpl(
   // If the document does not exist, it has been deleted.
   const newUser = change.after.exists ? change.after.data() : null;
 
+  if (!newUser) {
+    // User document was deleted
+    // Delete the extension user document, now that we've obtained the rallyID
+    await admin.firestore().collection("extensionUsers").doc(userID).delete();
+  }
+
   // Get the old document, to compare the enrollment state.
   const oldUser = change.before.exists ? change.before.data() : null;
 
   if (!newUser || (oldUser && oldUser.enrolled && !newUser.enrolled)) {
-    // User document has been deleted
+    // User document has unenrolled
     functions.logger.info(`Sending unenrollment ping for user ID ${userID}`);
     await gleanPings.platformUnenrollment(rallyID);
     return true;

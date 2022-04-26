@@ -166,7 +166,6 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
     const userRecords = await getUserRecords();
 
     expect(userRecords.user.exists).toBeFalsy();
-    expect(userRecords.extensionUser.exists).toBeFalsy();
   });
 });
 
