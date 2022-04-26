@@ -31,8 +31,9 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 1. Clone this repository.
 2. Run `npm install`
-3. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
-4. Run `npm run build` to build the app; the results will be in `/build`
+3. Run `npm run config:web:demo` to configure your environment to use the localcemulated backend (aka "[demo project]](https://firebase.google.com/docs/emulator-suite/connect_auth)")
+4. Run `npm run dev` to spin up the dev environment at `http://localhost:3000`
+5. Run `npm run build` to build the app; the results will be in `/build`
 
 The site will be ready for use when you see Svelte start up:
 
@@ -113,9 +114,7 @@ Glean is **disabled by default** when using the Firebase Emulator (i.e. for deve
 
 ## Deploying
 
-CircleCI is used to generate build artifacts, which are pushed to the `deploy` branch on this repository.
-A deploy job is then triggered from this branch to the dev environment on merge to the `master` branch:
-https://rally-web-spike.web.app/
+CircleCI is used to generate build artifacts, which are deployed to [the staging environment](https://stage.rally-web.nonprod.dataops.mozgcp.net).
 
 NOTE: if you want to deploy to your own environment, you must either:
 
