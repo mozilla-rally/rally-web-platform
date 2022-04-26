@@ -7,6 +7,7 @@ import { useCors } from "./cors";
 import { studies } from "./studies";
 import { isDeepStrictEqual } from "util";
 import * as gleanPings from "./glean";
+import assert from "assert";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -188,13 +189,13 @@ export async function handleUserChangesImpl(
 ): Promise<boolean> {
   const userID = context.params.userID;
   const rallyID = await getRallyIdForUser(userID);
-  if (!rallyID) {
-    // Without Rally ID, we can't make any Glean pings
-    // This is bad and should be flagged for inspection
-    throw new Error(
-      `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
-    );
-  }
+
+  // Without Rally ID, we can't make any Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    rallyID,
+    `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+  );
 
   // Get an object with the current document value.
   // If the document does not exist, it has been deleted.
@@ -203,14 +204,14 @@ export async function handleUserChangesImpl(
   // Get the old document, to compare the enrollment state.
   const oldUser = change.before.exists ? change.before.data() : null;
 
-  if (!newUser || (oldUser && oldUser.enrolled === true && !newUser.enrolled)) {
+  if (!newUser || (oldUser && oldUser.enrolled && !newUser.enrolled)) {
     // User document has been deleted
     functions.logger.info(`Sending unenrollment ping for user ID ${userID}`);
     await gleanPings.platformUnenrollment(rallyID);
     return true;
   }
 
-  if ((!oldUser || !oldUser.enrolled) && newUser.enrolled === true) {
+  if ((!oldUser || !oldUser.enrolled) && newUser.enrolled) {
     // User just enrolled
     functions.logger.info(`Sending enrollment ping for user ID ${userID}`);
     await gleanPings.platformEnrollment(rallyID);
@@ -245,13 +246,13 @@ export async function handleUserStudyChangesImpl(
   const userID = context.params.userID;
   const firebaseStudyID = context.params.studyID;
   const rallyID = await getRallyIdForUser(userID);
-  if (!rallyID) {
-    // Without Rally ID, we can't make any Glean pings
-    // This is bad and should be flagged for inspection
-    throw new Error(
-      `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
-    );
-  }
+
+  // Without Rally ID, we can't make any Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    rallyID,
+    `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+  );
 
   // Get an object with the current document value.
   // If the document does not exist, it has been deleted.
@@ -261,20 +262,16 @@ export async function handleUserStudyChangesImpl(
   const oldStudy = change.before.exists ? change.before.data() : null;
 
   const studyID =
-    (newStudy ? newStudy.studyId : null) ||
-    (oldStudy ? oldStudy.studyId : null);
-  if (!studyID) {
-    // Without Study ID, we can't construct study-related Glean pings
-    // This is bad and should be flagged for inspection
-    throw new Error(
-      `Couldn't find Glean Study ID for user ID ${userID} and Firebase study ID ${firebaseStudyID}. Aborting Glean ping process.`
-    );
-  }
+    (newStudy && newStudy.studyId) || (oldStudy && oldStudy.studyId);
 
-  if (
-    !newStudy ||
-    (oldStudy && oldStudy.enrolled === true && !newStudy.enrolled)
-  ) {
+  // Without Study ID, we can't construct study-related Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    studyID,
+    `Couldn't find Glean Study ID for user ID ${userID} and Firebase study ID ${firebaseStudyID}. Aborting Glean ping process.`
+  );
+
+  if (!newStudy || (oldStudy && oldStudy.enrolled && !newStudy.enrolled)) {
     // User unenrolled from study
     functions.logger.info(
       `Sending unenrollment ping for study with user ID ${userID} with study ID ${studyID}`
@@ -283,7 +280,7 @@ export async function handleUserStudyChangesImpl(
     return true;
   }
 
-  if ((!oldStudy || !oldStudy.enrolled) && newStudy.enrolled === true) {
+  if ((!oldStudy || !oldStudy.enrolled) && newStudy.enrolled) {
     // User just enrolled in this study
     functions.logger.info(
       `Sending enrollment ping for study with user ID ${userID} with study ID ${studyID}`
