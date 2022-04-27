@@ -1,4 +1,6 @@
 <script>
+  import { DocumentSnapshot } from "firebase/firestore";
+
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -19,20 +21,18 @@
   let fireBaseErr = null;
   let inputClassName = "mzp-c-field-control";
   let inputEmailName;
+  let inputItemsVisible = false;
   let inputPWName;
   let passwordEl;
   let passwordErr;
   let passwordErrText = null;
   let passwordVisible = false;
-  let signInErr = false;
-  let signInErrText = "";
 
   onMount(() => {
     inputEmailName = inputClassName;
     inputPWName = inputClassName;
   });
 
-  $: fireBaseErr ? (signInErr = true) : (signInErr = false);
   $: emptyFieldsErr
     ? (inputClassName = "mzp-c-field-control mzp-c-field-control--error")
     : (inputClassName = "mzp-c-field-control");
@@ -45,13 +45,17 @@
 
   const checkEmail = async (val) => {
     if (val.match(emailPattern)) {
-      await store.loginWithEmailAndPassword(emailEl.value, passwordEl.value);
-      handleNextState();
+      if (test === false) {
+        await store.loginWithEmailAndPassword(emailEl.value, passwordEl.value);
+        handleNextState();
+      }
     } else {
       emailErr = true;
       emailErrText = "Invalid format";
       emailEl.classList.add("mzp-c-field-control--error");
     }
+
+    if (test === true) handleNotVerified();
   };
 
   const checkFields = async () => {
@@ -61,7 +65,6 @@
       emailErr = true;
       emailErrText = "Required";
       emailEl.classList.add("mzp-c-field-control--error");
-      // debugger
     } else if (passwordEl.value === "") {
       passwordErr = true;
       passwordErrText = "Required";
@@ -71,18 +74,22 @@
     }
   };
 
-  const handleChange = () => {
+  const handleChange = (e) => {
+    const name = e.srcElement.name;
     emailEl.classList.remove("mzp-c-field-control--error");
     passwordEl.classList.remove("mzp-c-field-control--error");
     emptyFieldsErr = false;
     emailErr = false;
     passwordErr = false;
-    signInErr = false;
+
+    if (name === "id_user_pw") {
+      inputItemsVisible = true;
+    }
   };
 
   const handleNotVerified = () => {
     dispatch("value", {
-      value: true
+      value: true,
     });
   };
 
@@ -107,7 +114,7 @@
     }
 
     if (isNotVerified > -1) {
-      handleNotVerified()
+      handleNotVerified();
     }
 
     localStorage.removeItem("signInErr");
@@ -183,9 +190,11 @@
           />
           {#if passwordVisible}
             <img
-              src="img/eye-slash.svg"
+              src="img/icon-password-hide.svg"
               alt="Eye with slash across it"
-              class="fas fa-eye-slash togglePassword"
+              class={`toggle-password ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
               id="hide-eye"
               width="24px"
               height="24px"
@@ -193,9 +202,11 @@
             />
           {:else}
             <img
-              src="img/eye-open.svg"
+              src="img/icon-password-show.svg"
               alt="Open eye"
-              class="togglePassword"
+              class={`toggle-password ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
               id="show-eye"
               width="24px"
               height="24px"
@@ -212,22 +223,14 @@
     </fieldset>
   </form>
 
-  {#if !test}
-    <Button
-      on:click={checkFields}
-      size="xl"
-      custom="card-button card-button--signin"
-      btnID="signin-btn"
-    >
-      <div class="card-button__text">Sign in</div></Button
-    >
-  {/if}
-
-  {#if test}
-    <Button size="xl" custom="card-button card-button--signin">
-      <div class="card-button__text">Sign in</div></Button
-    >
-  {/if}
+  <Button
+    on:click={checkFields}
+    size="xl"
+    custom="card-button card-button--signin"
+    btnID="signin-btn"
+  >
+    <div class="card-button__text">Sign in</div></Button
+  >
 </div>
 
 <style>
@@ -237,6 +240,6 @@
     cursor: pointer;
     color: var(--color-blue-50);
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
   }
 </style>

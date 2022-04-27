@@ -4,31 +4,97 @@
   import Card from "../../lib/components/Card.svelte";
   import Button from "../../lib/components/Button.svelte";
 
+  //create account states
+  let checkEmail = false;
+  let emailEl;
+  let formHeight = "auto";
+  let inputClassName = "mzp-c-field-control";
+  let inputEmailName;
+  let inputPWName;
+  let inputItemsVisible = false;
+  let passwordEl;
+  let passwordVisible = false;
   let titleEl;
   let textWidth;
 
-  let email;
-  let password;
-  let passwordEl;
-  let passwordVisible = false;
-  let btnDisabled = true;
-  let number;
-  let length;
+  //password requirements
   let capital;
-  let letter;
+  let number;
+  let numbers = /[0-9]/g;
   const minPasswordLength = 8;
+  let length;
+  let letter;
+  let lowerCaseLetters = /[a-z]/g;
   let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  let formHeight = "auto";
+  let upperCaseLetters = /[A-Z]/g;
+
+  //error states
+  let createErr = false;
+  let emailErrText = null;
+  let emptyFieldsErr;
+  let fireBaseErr = null;
+  let passwordErr = false;
+  let passwordErrText = null;
 
   onMount(async () => {
     if (titleEl) {
       await titleEl;
       textWidth = titleEl.clientWidth;
     }
+
+    inputEmailName = inputClassName;
+    inputPWName = inputClassName;
+
+    console.log("input elements", passwordEl, emailEl);
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
+  $: emptyFieldsErr
+    ? (inputClassName = "mzp-c-field-control mzp-c-field-control--error")
+    : (inputClassName = "mzp-c-field-control");
+  $: inputEmailName = inputClassName;
+  $: inputPWName = inputClassName;
+  $: if (emptyFieldsErr) {
+    emailErrText = "Required";
+    passwordErrText = "Required";
+  }
+
+  const checkFields = async () => {
+    if (emailEl.value === "" && passwordEl.value === "") {
+      emptyFieldsErr = true;
+    } else if (emailEl.value === "") {
+      createErr = true;
+      emailErrText = "Required";
+      emailEl.classList.add("mzp-c-field-control--error");
+    } else if (checkEmail === false) {
+      checkRules();
+    }
+  };
+
+  const checkRules = () => {
+    passwordErr = true;
+    passwordEl.classList.add("mzp-c-field-control--error");
+    passwordErrText = "Required";
+    if (passwordEl) {
+      passwordEl.value.length < minPasswordLength
+        ? length.classList.add("rules-error")
+        : null;
+
+      passwordEl.value.match(lowerCaseLetters)
+        ? letter.classList.add("clear")
+        : letter.classList.add("rules-error");
+
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("clear")
+        : capital.classList.add("rules-error");
+
+      passwordEl.value.match(numbers)
+        ? number.classList.add("clear")
+        : number.classList.add("rules-error");
+    }
+    return;
+  };
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
@@ -39,40 +105,48 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
+    emailEl.classList.remove("mzp-c-field-control--error");
+    emptyFieldsErr = false;
+    createErr = false;
+    passwordErr = false;
+
+    letter.classList.remove("rules-error");
+    capital.classList.remove("rules-error");
+    number.classList.remove("rules-error");
+    length.classList.remove("rules-error");
+
     if (passwordEl) {
-      // Validate lowercase letters
-      let lowerCaseLetters = /[a-z]/g;
-      passwordEl.value.match(lowerCaseLetters)
-        ? letter.classList.add("valid")
-        : letter.classList.remove("valid");
-
-      // Validate capital letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
-      // Validate numbers
-      let numbers = /[0-9]/g;
-      passwordEl.value.match(numbers)
-        ? number.classList.add("valid")
-        : number.classList.remove("valid");
-
-      // Validate length
-      passwordEl.value.length >= 8
-        ? length.classList.add("valid")
-        : length.classList.remove("valid");
+      passwordEl.classList.remove("mzp-c-field-control--error");
       if (name === "id_user_pw") {
+        inputItemsVisible = true;
+        // Validate lowercase letters
+        passwordEl.value.match(lowerCaseLetters)
+          ? letter.classList.add("valid")
+          : letter.classList.remove("valid");
+
+        // Validate uppercase letters
+        passwordEl.value.match(upperCaseLetters)
+          ? capital.classList.add("valid")
+          : capital.classList.remove("valid");
+
+        // Validate numbers
+        passwordEl.value.match(numbers)
+          ? number.classList.add("valid")
+          : number.classList.remove("valid");
+
+        // Validate length
+        passwordEl.value.length >= minPasswordLength
+          ? length.classList.add("valid")
+          : length.classList.remove("valid");
+
         if (
           passwordEl.value.length >= minPasswordLength &&
           passwordEl.value.match(numbers) &&
-          passwordEl.value.match(upperCaseLetters) &&
-          passwordEl.value.match(lowerCaseLetters)
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
         ) {
-          btnDisabled = false;
-        } else {
-          btnDisabled = true;
-        }
+          checkEmail = true;
+        } else checkEmail = false;
       }
     }
   };
@@ -114,8 +188,8 @@
                 </div>
 
                 <input
-                  class="mzp-c-field-control"
-                  bind:value={email}
+                  class={inputEmailName}
+                  bind:this={emailEl}
                   on:change={handleChange}
                   on:keyup={handleChange}
                   id="id_user_email"
@@ -125,10 +199,15 @@
                   placeholder="Enter your email address"
                   required
                 />
+                {#if createErr || emptyFieldsErr}
+                  <p class="error-msg error-msg--email">
+                    {emailErrText}
+                  </p>
+                {/if}
               </div>
 
               <!-- PASSWORD -->
-              <div class="mzp-c-field field field--pw">
+              <div class="mzp-c-field field field--pw-create">
                 <div class="label-wrapper">
                   <label class="mzp-c-field-label" for="id_user_pw"
                     >Password</label
@@ -137,8 +216,7 @@
 
                 <div class="input-wrapper">
                   <input
-                    class="mzp-c-field-control"
-                    bind:value={password}
+                    class={inputPWName}
                     bind:this={passwordEl}
                     on:change={handleChange}
                     on:keyup={handleChange}
@@ -147,13 +225,14 @@
                     type="password"
                     {pattern}
                     width="100%"
-                    required
                   />
                   {#if passwordVisible}
                     <img
-                      src="img/eye-slash.svg"
+                      src="img/icon-password-hide.svg"
                       alt="Eye with slash across it"
-                      class="fas fa-eye-slash togglePassword"
+                      class={`toggle-password ${
+                        inputItemsVisible ? "create-show" : "create-hide"
+                      }`}
                       id="hide-eye"
                       width="24px"
                       height="24px"
@@ -161,9 +240,11 @@
                     />
                   {:else}
                     <img
-                      src="img/eye-open.svg"
+                      src="img/icon-password-show.svg"
                       alt="Open eye"
-                      class="togglePassword"
+                      class={`toggle-password ${
+                        inputItemsVisible ? "create-show" : "create-hide"
+                      }`}
                       id="show-eye"
                       width="24px"
                       height="24px"
@@ -172,7 +253,17 @@
                   {/if}
                 </div>
 
-                <ul class="info-rules">
+                {#if emptyFieldsErr || passwordErr}
+                  <p class="error-msg error-msg--password">
+                    {passwordErrText}
+                  </p>
+                {/if}
+
+                <ul
+                  class={`password-requirements ${
+                    inputItemsVisible ? "create-show" : "create-hide"
+                  }`}
+                >
                   <li bind:this={length} id="length">
                     Use at least 8 characters
                   </li>
@@ -187,14 +278,19 @@
               </div>
             </fieldset>
           </form>
-          <Button disabled={btnDisabled} size="xl" custom="card-button card-button--create">
-            <div class="button-text--signin">{args.cta1}</div></Button
+          <Button
+            on:click={checkFields}
+            size="xl"
+            custom="card-button card-button--create"
+          >
+            <div class="card-button__text">{args.cta1}</div></Button
           >
           <p class="body-text-privacy">
             By proceeding, you agree to our <a href="/">Privacy Notice</a>
           </p>
         </div>
       </div>
+      <!-- SIGN IN -->
       <p slot="cta" class="body-text-action">
         {args.bodyText} <a href="/">{args.linkText}</a>
       </p>
@@ -223,11 +319,15 @@
     padding: 2rem 1rem;
   }
   .title-highlight {
-    background-color: var(--color-yellow-35);
-    border-radius: 4px;
-    position: absolute;
-    height: 1.375rem;
     width: calc(var(--titleWidth) + 15px);
-    margin-top: 24px;
+  }
+
+  form {
+    height: var(--formHeight);
+  }
+
+  .invalid-email {
+    margin-top: -19px;
+    padding-bottom: 10px;
   }
 </style>

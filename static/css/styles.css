@@ -1163,6 +1163,7 @@ html {
   height: 100%;
   overflow: visible;
   scroll-behavior: smooth;
+  font-size: 100%;
 }
 
 body {
@@ -1861,7 +1862,7 @@ ol {
 .card .card-header h2 {
   font-weight: bold;
   line-height: 44px;
-  font-size: 38px;
+  font-size: 2.375rem;
 }
 .card .card-header .title-highlight {
   display: block;
@@ -1881,23 +1882,24 @@ ol {
 }
 .card .card-content .not-verified {
   display: flex;
-  padding: 16px 16px 0;
+  padding: 16px;
   border-radius: 2px;
   background-color: #ffdfe7;
   margin-bottom: 24px;
 }
-.card .card-content .not-verified svg {
+.card .card-content .not-verified img {
   margin-right: 16px;
-  font-size: 42px;
+  font-size: 2.625rem;
   color: #e22850;
 }
 .card .card-content .not-verified__text {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 20px;
   color: #15141a;
+  margin: 0;
 }
 .card .card-content .card-body-info {
   max-width: 368px;
@@ -1920,7 +1922,7 @@ ol {
 }
 @media only screen and (max-width: 360px) {
   .card .card-button__text {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
 }
 .card .card-button--signup {
@@ -1929,6 +1931,9 @@ ol {
 .card .card-button--create {
   margin-top: 16px;
   margin-bottom: 20px;
+}
+.card .card-button--reset {
+  margin-top: 36px;
 }
 @media (max-width: 432px) {
   .card .card-button {
@@ -1945,10 +1950,10 @@ ol {
   width: 46%;
   padding: 0;
   margin: 0;
-  border: 1px solid #cdcdd4;
+  border: 1px solid #9595A2;
 }
 .card .line-break__text {
-  color: #cdcdd4;
+  color: #5E5E72;
 }
 .card .form-wrapper {
   display: grid;
@@ -1967,7 +1972,6 @@ ol {
   height: 48px;
   font-size: 0.875rem;
   border: 2px solid #9595a2;
-  font-size: 1rem;
   color: #000000;
   font-weight: 400;
 }
@@ -1983,7 +1987,7 @@ ol {
   .card .form-wrapper form,
 .card .form-wrapper button,
 .card .form-wrapper .body-text-privacy {
-    max-width: 360px;
+    max-width: 368px;
   }
 }
 .card .form-wrapper--forgetpw {
@@ -2015,7 +2019,8 @@ ol {
   grid-row: 1/2;
   justify-self: end;
   z-index: 2;
-  margin: 10px;
+  margin: 12px;
+  cursor: pointer;
 }
 .card .create-hide {
   visibility: hidden;
@@ -2032,10 +2037,11 @@ ol {
 .card .body-text-action {
   padding-top: 48px;
   margin: 0;
-  font-size: 14px;
+  font-size: 1rem;
   color: #000000;
   text-align: center;
   grid-column: 1/13;
+  opacity: 0.8;
 }
 @media only screen and (min-width: 688px) {
   .card .body-text-action {
@@ -2059,6 +2065,14 @@ ol {
   padding-top: 32px;
   margin: 0;
 }
+.card .body-text-action--check-email {
+  padding-top: 36px;
+}
+.card .body-text-action .contact-text {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #000000;
+}
 
 .mzp-c-call-out-desc {
   display: none;
@@ -2081,10 +2095,6 @@ ol {
   justify-content: center;
   animation: moveInLeft 1s ease-out;
   margin-bottom: 1.2rem;
-}
-.mzp-c-call-out .mzp-l-content .mzp-c-call-out-desc {
-  color: #5e5e72;
-  font-size: 1.6rem;
 }
 
 @keyframes moveInLeft {
@@ -2186,12 +2196,13 @@ ol {
   font-weight: 600;
   color: #20123a;
   font-size: 1rem;
+  opacity: 0.8;
 }
 
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: gray;
   padding: 0;
 }
@@ -2202,7 +2213,7 @@ ol {
   padding: 4px 0px 0px;
   top: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .valid {
@@ -2219,7 +2230,7 @@ ol {
 }
 
 .body-text-privacy {
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: auto;
   text-align: center;
 }

@@ -50,7 +50,7 @@
     h2 {
       font-weight: bold;
       line-height: 44px;
-      font-size: 38px;
+      font-size: 2.375rem;
     }
 
     .title-highlight {
@@ -73,14 +73,14 @@
   .card-content {
     .not-verified {
       display: flex;
-      padding: 16px 16px 0;
+      padding: 16px;
       border-radius: 2px;
       background-color: $color-red-05; 
       margin-bottom: 24px;
       
-      svg{
+      img{
         margin-right: 16px;
-        font-size: 42px;
+        font-size: 2.625rem;
         color: $color-red-60; 
       }
 
@@ -88,9 +88,10 @@
         font-family: "Inter";
         font-style: normal;
         font-weight: 400;
-        font-size: 14px;
+        font-size: 0.875rem;
         line-height: 20px;
         color: $color-dark-gray-90; 
+        margin: 0; 
       }
 
 
@@ -117,7 +118,7 @@
       justify-content: center;
       text-align: center;
       @media only screen and (max-width: $XS-screen) {
-        font-size: 12px;
+        font-size: 0.75rem;
       }
     }
 
@@ -128,6 +129,10 @@
     &--create {
       margin-top: 16px;
       margin-bottom: 20px;
+    }
+
+    &--reset{
+      margin-top: 36px; 
     }
 
     @media (max-width: $SM-screen) {
@@ -145,11 +150,11 @@
       width: 46%;
       padding: 0;
       margin: 0;
-      border: 1px solid #cdcdd4;
+      border: 1px solid #9595A2;
     }
 
     &__text {
-      color: #cdcdd4;
+      color: #5E5E72;
     }
   }
 
@@ -169,7 +174,6 @@
         height: 48px;
         font-size: 0.875rem;
         border: 2px solid $color-marketing-gray-50;
-        font-size: 1rem;
         color: #000000;
         font-weight: 400;
       }
@@ -187,7 +191,7 @@
       grid-column: 1/13;
 
       @media only screen and (min-width: $MD-screen) {
-        max-width: 360px;
+        max-width: 368px;
       }
     }
 
@@ -227,7 +231,8 @@
       grid-row: 1/2;
       justify-self: end;
       z-index: 2;
-      margin: 10px;
+      margin: 12px;
+      cursor: pointer;
     }
   }
 
@@ -248,10 +253,11 @@
   .body-text-action {
     padding-top: 48px;
     margin: 0;
-    font-size: 14px;
+    font-size: 1rem;
     color: #000000;
     text-align: center;
     grid-column: 1/13;
+    opacity: 0.8; 
 
     @media only screen and (min-width: $MD-screen) {
       max-width: 360px;
@@ -275,6 +281,16 @@
         padding-top: 32px;
         margin: 0;
       }
+    }
+
+    &--check-email{
+      padding-top: 36px; 
+    }
+
+    .contact-text{
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #000000; 
     }
   }
 }
@@ -300,11 +316,6 @@
       justify-content: center;
       animation: moveInLeft 1s ease-out;
       margin-bottom: 1.2rem;
-    }
-
-    .mzp-c-call-out-desc {
-      color: $color-marketing-gray-70;
-      font-size: 1.6rem;
     }
   }
 }
@@ -415,13 +426,15 @@
 .mzp-c-field-label {
   font-weight: 600;
   color: $color-marketing-gray-99;
+  // set the rem
   font-size: 1rem;
+  opacity: 0.8;
 }
 
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: gray;
   padding: 0;
 }
@@ -432,7 +445,7 @@
   padding: 4px 0px 0px;
   top: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .valid {
@@ -449,7 +462,7 @@
 }
 
 .body-text-privacy {
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: auto;
   text-align: center;
 }

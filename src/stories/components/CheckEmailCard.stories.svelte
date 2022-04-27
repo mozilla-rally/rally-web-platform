@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../lib/components/Card.svelte";
+  import Button from "../../lib/components/Button.svelte";
 
   let titleEl;
   let textWidth;
@@ -48,10 +49,17 @@
 
       <div class="card-content card-content--info" slot="card-content">
         <p class="card-content__text">{args.body}</p>
+
+        <Button
+          size="xl"
+          custom="card-button card-button--reset"
+          btnID="signin-btn"
+        >
+          <div class="card-button__text">Back to sign in</div></Button
+        >
       </div>
 
-      <div slot="cta" class="body-text-action body-text-action--info">
-        Ready to sign in? <button>Sign in</button>
+      <div slot="cta" class="body-text-action body-text-action--check-email">
         <p class="contact-text">
           {args.bodyText} <a href="/">{args.linkText}</a>
         </p>
@@ -70,7 +78,7 @@
     title: "Check your email",
     body:
       "To finish creating your account with Rally, please check your email inbox and verify your email address.",
-    bodyText: "Need help?",
+    bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-card",
   }}
@@ -82,10 +90,10 @@
     width: "368px",
     height: "auto",
     fontSize: "38px",
-    title: "Check your email",
+    title: "Reset your password",
     body:
-      "Instructions to reset your password have been sent to [example@workmail.com]",
-    bodyText: "Need help?",
+      "Instructions to reset your password has been sent to [example@workmail.com]",
+    bodyText: "Need additional help?",
     linkText: "Contact Us",
     custom: "info-card",
   }}
@@ -97,5 +105,9 @@
   }
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
+  }
+
+  .contact-text{
+    margin: 0; 
   }
 </style>

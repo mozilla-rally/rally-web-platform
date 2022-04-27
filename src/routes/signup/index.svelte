@@ -161,11 +161,12 @@
           {...cardArgs}
           {store}
           on:type={triggerCard}
+          test={false}
         />
       {/if}
 
       {#if createAcctCard && !welcomeCard && !joinCard}
-        <CreateCard {...cardArgs} {store} on:type={triggerCard} />
+        <CreateCard {...cardArgs} {store} on:type={triggerCard} test={false} />
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
@@ -178,6 +179,7 @@
           {sendUserInfo}
           {store}
           on:type={triggerCard}
+          test={false}
         />
       {/if}
 

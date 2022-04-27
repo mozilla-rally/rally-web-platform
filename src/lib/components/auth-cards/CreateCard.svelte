@@ -5,7 +5,6 @@
   import { onMount, createEventDispatcher } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
-import { check } from "prettier";
 
   const dispatch = createEventDispatcher();
 
@@ -19,34 +18,37 @@ import { check } from "prettier";
   export let store;
   export let test;
 
-  let titleEl;
-  let textWidth;
-
   //create account states
-  let emailEl;
-  let passwordEl;
-  let passwordVisible = false;
-  let capital;
-  let number;
-  let length;
-  let letter;
-  let createErr = false;
-  let pwErr = false;
-  let emailErrText = null;
-  let passwordErrText = null;
-  let fireBaseErr = null;
-  let emptyFieldsErr;
-  const minPasswordLength = 8;
-  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   let checkEmail = false;
+  let emailEl;
   let formHeight = "auto";
   let inputClassName = "mzp-c-field-control";
   let inputEmailName;
   let inputPWName;
   let inputItemsVisible = false;
-  let lowerCaseLetters = /[a-z]/g;
-  let upperCaseLetters = /[A-Z]/g;
+  let passwordEl;
+  let passwordVisible = false;
+  let titleEl;
+  let textWidth;
+
+  //password requirements
+  let capital;
+  let number;
   let numbers = /[0-9]/g;
+  const minPasswordLength = 8;
+  let length;
+  let letter;
+  let lowerCaseLetters = /[a-z]/g;
+  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
+  let upperCaseLetters = /[A-Z]/g;
+
+  //error states
+  let createErr = false;
+  let emailErrText = null;
+  let emptyFieldsErr;
+  let fireBaseErr = null;
+  let passwordErr = false;
+  let passwordErrText = null;
 
   onMount(() => {
     if (titleEl) {
@@ -85,7 +87,7 @@ import { check } from "prettier";
   };
 
   const checkRules = () => {
-    pwErr = true;
+    passwordErr = true;
     passwordEl.classList.add("mzp-c-field-control--error");
     passwordErrText = "Required";
     if (passwordEl) {
@@ -113,7 +115,7 @@ import { check } from "prettier";
     emailEl.classList.remove("mzp-c-field-control--error");
     emptyFieldsErr = false;
     createErr = false;
-    pwErr = false;
+    passwordErr = false;
 
     letter.classList.remove("rules-error");
     capital.classList.remove("rules-error");
@@ -151,7 +153,7 @@ import { check } from "prettier";
           passwordEl.value.match(upperCaseLetters)
         ) {
           checkEmail = true;
-        }else checkEmail = false 
+        } else checkEmail = false;
       }
     }
   };
@@ -250,7 +252,7 @@ import { check } from "prettier";
 
               {#if passwordVisible}
                 <img
-                  src="img/eye-slash.svg"
+                  src="img/icon-password-hide.svg"
                   alt="Eye with slash across it"
                   class={`toggle-password ${
                     inputItemsVisible ? "create-show" : "create-hide"
@@ -262,7 +264,7 @@ import { check } from "prettier";
                 />
               {:else}
                 <img
-                  src="img/eye-open.svg"
+                  src="img/icon-password-show.svg"
                   alt="Open eye"
                   class={`toggle-password ${
                     inputItemsVisible ? "create-show" : "create-hide"
@@ -275,7 +277,7 @@ import { check } from "prettier";
               {/if}
             </div>
 
-            {#if emptyFieldsErr || pwErr}
+            {#if emptyFieldsErr || passwordErr}
               <p class="error-msg error-msg--password">
                 {passwordErrText}
               </p>
@@ -299,29 +301,15 @@ import { check } from "prettier";
         </fieldset>
       </form>
 
-      {#if !test}
-        <Button
-          on:click={checkFields}
-          size="xl"
-          custom="card-button card-button--create"
-          btnID="continue"
-        >
-          <div class="card-button__text">{cta1}</div></Button
-        >
-      {/if}
+      <Button
+        on:click={checkFields}
+        size="xl"
+        custom="card-button card-button--create"
+        btnID="continue"
+      >
+        <div class="card-button__text">{cta1}</div></Button
+      >
 
-      {#if test}
-        <Button
-          on:click={() => {
-            handleTrigger("check-create");
-          }}
-          size="xl"
-          custom="card-button card-button--create"
-          btnID="continue"
-        >
-          <div class="card-button__text">{cta1}</div></Button
-        >
-      {/if}
       <p class="body-text-privacy">
         By joining, you agree to our <a
           href="__BASE_SITE__/how-rally-works/data-and-privacy/"

@@ -6,7 +6,6 @@
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
   import Signin from "./SignInCard.svelte";
-  import Alert from "../icons/Alert.svelte"
   const dispatch = createEventDispatcher();
 
   export let title;
@@ -18,14 +17,14 @@
   export let height;
   export let store;
   export let custom;
+  export let test = false;
 
-  let titleEl;
-  let textWidth;
-  let startState;
-  let test = false;
   let notVerified = false;
   let notVerifiedText =
-    "Email account is not verified. Please check your inbox and activate yoru account.";
+    "Email account is not verified. Please check your inbox and activate your account.";
+  let startState;
+  let titleEl;
+  let textWidth;
 
   onMount(async () => {
     if (titleEl) {
@@ -84,8 +83,12 @@
   <div class="card-content" slot="card-content">
     {#if notVerified}
       <div class="not-verified">
-        <Alert />
-        <p class = "not-verified__text">
+        <img
+          src="img/icon-info-critical.svg"
+          alt="Google logo in color"
+          class="card-button__img"
+        />
+        <p class="not-verified__text">
           {notVerifiedText}
         </p>
       </div>
@@ -104,7 +107,7 @@
       <img
         width="20px"
         height="20px"
-        src="img/google-logo.svg"
+        src="img/icon-logo-google.svg"
         alt="Google logo in color"
         class="card-button__img"
       />
@@ -137,7 +140,7 @@
           class="card-button__img"
           width="24px"
           height="24px"
-          src="img/email.svg"
+          src="img/icon-email.svg"
           alt="Email icon"
         />
         <div class="card-button__text launch-button-text">
