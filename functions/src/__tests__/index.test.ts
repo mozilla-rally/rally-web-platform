@@ -173,6 +173,19 @@ describe("rallytoken tests", () => {
   let send: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   let response: functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
+  // Set up callbacks inside response.status.send
+  function doAfterResponseSend(validateFn: () => void, doneFn: () => void) {
+    send = jest.fn().mockImplementation(() => {
+      validateFn(); // Jest assertions
+      doneFn(); // Complete unit test
+    });
+
+    response = ({
+      set: jest.fn(),
+      status: jest.fn().mockReturnValue({ send }),
+    } as unknown) as functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  }
+
   const uid = "fake-uid";
   const customToken = "fake-custom-token";
 
@@ -190,12 +203,6 @@ describe("rallytoken tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    send = jest.fn();
-    response = ({
-      set: jest.fn(),
-      status: jest.fn().mockReturnValue({ send }),
-    } as unknown) as functions.Response<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-
     fakeAuth.verifyIdToken.mockReturnValue({ uid });
     fakeAuth.createCustomToken.mockReturnValue(customToken);
   });
@@ -204,8 +211,15 @@ describe("rallytoken tests", () => {
     jest.resetAllMocks();
   });
 
-  it("fails for invalid http verb", async () => {
-    await rallytoken(
+  it("fails for invalid http verb", (done) => {
+    doAfterResponseSend(() => {
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(send).toHaveBeenCalledWith(
+        "Only POST and OPTIONS methods are allowed."
+      );
+    }, done);
+
+    rallytoken(
       {
         method: "PUT",
         headers: {
@@ -213,16 +227,16 @@ describe("rallytoken tests", () => {
         },
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    expect(response.status).toHaveBeenCalledWith(500);
-    expect(send).toHaveBeenCalledWith(
-      "Only POST and OPTIONS methods are allowed."
     );
   });
 
-  it("fails when POST is invoked with invalid payload", async () => {
-    await rallytoken(
+  it("fails when POST is invoked with invalid payload", (done) => {
+    doAfterResponseSend(() => {
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(send).toHaveBeenCalled();
+    }, done);
+
+    rallytoken(
       {
         method: "POST",
         headers: {
@@ -230,32 +244,29 @@ describe("rallytoken tests", () => {
         },
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
-    ); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    expect(response.status).toHaveBeenCalledWith(500);
-    expect(send).toHaveBeenCalled();
+    );
   });
 
-  it("handles payload in POST request", async () => {
-    const idToken = "idToken";
-    const studyId = "study1";
+  const idToken = "idToken";
+  const studyId = "study1";
+  const successValidateFn = () => {
+    expect(response.status).toHaveBeenCalledWith(200);
 
-    const validateFn = () => {
-      expect(response.status).toHaveBeenCalledWith(200);
+    expect(fakeAuth.verifyIdToken).toHaveBeenCalledWith(idToken);
+    expect(fakeAuth.createCustomToken).toHaveBeenCalledWith(
+      `${studyId}:${uid}`,
+      {
+        firebaseUid: uid,
+        studyId,
+      }
+    );
 
-      expect(fakeAuth.verifyIdToken).toHaveBeenCalledWith(idToken);
-      expect(fakeAuth.createCustomToken).toHaveBeenCalledWith(
-        `${studyId}:${uid}`,
-        {
-          firebaseUid: uid,
-          studyId,
-        }
-      );
+    expect(send.mock.calls[0][0]).toEqual({ rallyToken: customToken });
+  };
 
-      expect(send.mock.calls[0][0]).toEqual({ rallyToken: customToken });
-    };
-
-    await rallytoken(
+  it("handles payload string in POST request", (done) => {
+    doAfterResponseSend(successValidateFn, done);
+    rallytoken(
       {
         method: "POST",
         headers: {
@@ -265,15 +276,11 @@ describe("rallytoken tests", () => {
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
     );
+  });
 
-    validateFn();
-
-    (response.status as jest.Mock).mockClear();
-    (fakeAuth.verifyIdToken as jest.Mock).mockClear();
-    (fakeAuth.createCustomToken as jest.Mock).mockClear();
-    send.mockClear();
-
-    await rallytoken(
+  it("handles payload JSON in POST request", (done) => {
+    doAfterResponseSend(successValidateFn, done);
+    rallytoken(
       {
         method: "POST",
         headers: {
@@ -283,7 +290,5 @@ describe("rallytoken tests", () => {
       } as functions.Request<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
       response
     );
-
-    validateFn();
   });
 });
