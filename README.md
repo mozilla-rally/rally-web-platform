@@ -19,13 +19,13 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/) v16
 - [Firebase](https://firebase.google.com/docs/cli)
   - Authentication
   - Functions
   - Cloud Firestore
   - Hosting
-- [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
+- [Java SDK](https://openjdk.java.net/) v18 for Firebase emulators
 
 ## Quickstart
 
