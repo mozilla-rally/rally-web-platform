@@ -5,7 +5,7 @@ import functions from "firebase-functions";
 import { Mutex, Semaphore, withTimeout } from "async-mutex";
 import fs from "fs";
 
-const RWP_pkg = JSON.parse(fs.readFileSync("../package.json").toString());
+const RWP_pkg = JSON.parse(fs.readFileSync("package.json").toString());
 
 import * as rallyMetrics from "./generated/rally.js";
 import * as userMetrics from "./generated/user.js";
