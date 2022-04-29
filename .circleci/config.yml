@@ -15,7 +15,7 @@ jobs:
     # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
     docker:
-      - image: cimg/python:3.8.8-node
+      - image: cimg/base:stable
     # Then run your tests!
     # CircleCI will report the results back to your VCS provider.
     steps:
@@ -23,6 +23,7 @@ jobs:
       - checkout
       - node/install:
           node-version: '16.13'
+      - node/install-packages
       - run:
           name: Run lint
           command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
