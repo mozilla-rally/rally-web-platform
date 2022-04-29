@@ -22,7 +22,7 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       - node/install-packages:
-          cache-version: v1
+          cache-version: v2
       - run:
           name: Run lint
           command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
