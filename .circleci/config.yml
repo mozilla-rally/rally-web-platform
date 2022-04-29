@@ -6,7 +6,7 @@ orbs:
   # The Node.js orb contains a set of prepackaged CircleCI configuration you can utilize
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
-  node: circleci/node@4.7.0
+  node: circleci/node@5.0.2
 
 jobs:
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -21,8 +21,8 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      - node/install-packages:
-          cache-version: v2
+      - node/install:
+          node-version: '16.13'
       - run:
           name: Run lint
           command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
@@ -54,7 +54,7 @@ jobs:
   # This archives our deployable assets, before deploy happens.
   archive-site:
     docker:
-      - image: cimg/node:15.1
+      - image: cimg/base:stable
     # re-attach workspace from before tests ran
     steps:
       - attach_workspace:
@@ -79,7 +79,7 @@ jobs:
         type: string
         #default: $GCLOUD_SERVICE_KEY
     docker:
-      - image: cimg/node:15.1
+      - image: cimg/base:stable
     # re-attach workspace from before tests ran
     steps:
       - attach_workspace:
