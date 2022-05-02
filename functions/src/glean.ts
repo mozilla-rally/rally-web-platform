@@ -4,8 +4,14 @@ import axios from "axios";
 import functions from "firebase-functions";
 import { Mutex, Semaphore, withTimeout } from "async-mutex";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const RWP_pkg = JSON.parse(fs.readFileSync("package.json").toString());
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const RWP_pkg_file = fs.readFileSync(
+  path.resolve(__dirname, "../../package.json")
+);
+const RWP_pkg = JSON.parse(RWP_pkg_file.toString());
 
 import * as rallyMetrics from "./generated/rally.js";
 import * as userMetrics from "./generated/user.js";
@@ -25,7 +31,7 @@ const ENABLE_GLEAN =
 const GLEAN_RALLY_APP_ID = process.env.FUNCTIONS_EMULATOR
   ? "test-app-id"
   : "rally-core";
-const GLEAN_APP_DISPLAY_VERSION = RWP_pkg.version;
+const GLEAN_APP_DISPLAY_VERSION = `rally-web-platform:${RWP_pkg.version}`;
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
   kid: "rally-core",
