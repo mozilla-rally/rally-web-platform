@@ -283,15 +283,7 @@ src/libs/components/icons/ExternalLink.svelte:
 
 <a class="external-link" href="https://example.com">See More <ExternalLink /></a>
 */
-.external-link {
-  --spacing: 8px;
 
-  display: grid;
-  grid-auto-flow: column;
-  align-items: center;
-  justify-content: center;
-  grid-column-gap: var(--spacing);
-}
 
 /* study card: make all anchor tags a marketing gray color */
 .study-card-container a,

@@ -10,20 +10,19 @@
 
   export let title;
   export let cta1;
-  export let bodyText;
   export let width;
   export let height;
   export let store;
   export let sendUserInfo;
-  export let test;
+  export let storyBookTest;
 
-  let custom = "";
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  const errorClass = "mzp-c-field-control mzp-c-field-control--error";
+  const inputClass = "mzp-c-field-control";
+  let customClass = "";
   let emailEl;
-  // let emptyFieldsErr;
-  let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  let inputEmailClass;
   let fireBaseErr = null;
-  let inputEmailName = "mzp-c-field-control";
-  let requestErr = false;
   let requestErrText = "";
   let titleEl;
   let textWidth;
@@ -33,36 +32,34 @@
       await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    inputEmailClass = inputClass;
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
-  $: fireBaseErr ? (requestErr = true) : (requestErr = false);
 
   const checkEmail = (val) => {
     if (val.match(emailPattern)) {
-      if (test === false) {
+      if (storyBookTest === false) {
         handleForgetPassword();
       }
     } else {
-      requestErr = true;
       requestErrText = "Invalid format";
-      emailEl.classList.add("mzp-c-field-control--error");
+      inputEmailClass = errorClass;
     }
   };
 
   const checkFields = async () => {
     if (emailEl.value === "") {
-      requestErr = true;
       requestErrText = "Required";
-      emailEl.classList.add("mzp-c-field-control--error");
+      inputEmailClass = errorClass;
     } else if (emailEl) {
       checkEmail(emailEl.value);
     }
   };
 
   const handleChange = () => {
-    emailEl.classList.remove("mzp-c-field-control--error");
-    requestErr = false;
+    inputEmailClass = inputClass;
+    requestErrText = null;
   };
 
   const handleForgetPassword = async () => {
@@ -89,13 +86,14 @@
 
     if (isNotFoundErr > -1) {
       requestErrText = "Account does not exist.";
+      inputEmailClass = errorClass;
     }
 
     localStorage.removeItem("resetPasswordErr");
   };
 </script>
 
-<Card {width} {custom} {height}>
+<Card {width} {customClass} {height}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -113,7 +111,7 @@
               <label class="mzp-c-field-label" for="id_user_email">Email</label>
             </div>
             <input
-              class={inputEmailName}
+              class={inputEmailClass}
               bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}
@@ -124,7 +122,7 @@
               required
             />
             <!-- ERROR MESSAGE -->
-            {#if requestErr}
+            {#if requestErrText}
               <p class="error-msg error-msg--resetpw">
                 {requestErrText}
               </p>
@@ -136,19 +134,16 @@
       <Button
         on:click={checkFields}
         size="xl"
-        custom="card-button card-button--signin"
+        customClass="card-button card-button--signin"
       >
         <div class="card-button__text">{cta1}</div></Button
       >
 
       <p class="body-text-action">
-        {bodyText}
-      </p>
-      <p class="body-text-action">
-        Nevermind,<button
+        Back to <button
           on:click={() => {
             handleTrigger("welcome");
-          }}><a href="/signup">go back</a></button
+          }}><a href="/signup">sign in</a></button
         >
       </p>
     </div>

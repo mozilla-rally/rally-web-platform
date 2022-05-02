@@ -93,7 +93,7 @@
     <Button
       disabled={btnDisabled}
       size="xl"
-      custom="card-button create btn-settings"
+      customClass="card-button create btn-settings"
     >
       <div class="button-text">Save Changes</div></Button
     >

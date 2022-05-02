@@ -4,6 +4,11 @@
   &__logo {
     grid-column: 4/10;
     text-align: center;
+    @media (max-width: $XS-screen) {
+      width: 289px;
+      margin: auto;
+      grid-column: 6/10;
+    }
   }
 
   &__content {
@@ -16,6 +21,9 @@
   }
   &__cards {
     grid-column: 2/12;
+    @media (max-width: $SM-screen) {
+      padding: 0; 
+    }
 
     .spinner {
       -webkit-animation: rotator 1.4s linear infinite;
@@ -35,10 +43,29 @@
   }
 
   &__howitworks {
-    grid-column: 4/10;
+    
+    grid-column: 5/10;
     align-self: center;
     text-align: center;
     margin-top: 40px;
+    min-width: 300px;
+
+    .external-link{
+      display: flex;
+      align-items: center;
+    }
+
+    svg{
+      padding-left: 8px; 
+    }
+    @media (max-width: $SM-screen) {
+      min-width: 289px; 
+    }
+
+    @media (max-width: $XS-screen) {
+      margin: auto;
+      grid-column: 9/10;
+    }
   }
 }
 
@@ -75,36 +102,40 @@
       display: flex;
       padding: 16px;
       border-radius: 2px;
-      background-color: $color-red-05; 
+      background-color: $color-red-05;
       margin-bottom: 24px;
-      
-      img{
+      margin-top: -24px !important;
+      align-items: self-start;
+
+      img {
         margin-right: 16px;
         font-size: 2.625rem;
-        color: $color-red-60; 
+        color: $color-red-60;
+        margin-top: 2px;
       }
 
       &__text {
         font-family: "Inter";
         font-style: normal;
         font-weight: 400;
-        font-size: 0.875rem;
+        font-size: 1.125;
         line-height: 20px;
-        color: $color-dark-gray-90; 
-        margin: 0; 
+        color: #000 !important;
+        margin: 0;
       }
-
-
     }
     .card-body-info {
       max-width: 368px;
       text-align: left;
+      font-size: 18px;
+      color: #000000;
     }
 
     &__text {
       margin: 0;
       padding: 0;
       text-align: center;
+      color: #000000;
     }
   }
 
@@ -117,26 +148,34 @@
       display: flex;
       justify-content: center;
       text-align: center;
+      margin: auto;
       @media only screen and (max-width: $XS-screen) {
-        font-size: 0.75rem;
+        font-size: 1rem;
+        width: 289px;
       }
     }
 
     &--signup {
       margin: 16px 0px;
+      @media only screen and (max-width: $XS-screen) {
+        width: 289px;
+      }
     }
 
     &--create {
-      margin-top: 16px;
-      margin-bottom: 20px;
+      margin: 16px 0 20px;
     }
 
-    &--reset{
-      margin-top: 36px; 
+    &--reset {
+      margin-top: 36px;
     }
 
     @media (max-width: $SM-screen) {
       justify-content: space-around;
+    }
+
+    @media (max-width: $XS-screen) {
+      max-width: 289px;
     }
   }
 
@@ -150,11 +189,12 @@
       width: 46%;
       padding: 0;
       margin: 0;
-      border: 1px solid #9595A2;
+      border: 1px solid #9595a2;
+      border-radius: 10px;
     }
 
     &__text {
-      color: #5E5E72;
+      color: #5e5e72;
     }
   }
 
@@ -182,6 +222,10 @@
         &--error {
           border: 2px solid $color-red-70;
         }
+      }
+
+      @media only screen and (max-width: $XS-screen) {
+        max-width: 289px;
       }
     }
 
@@ -257,7 +301,7 @@
     color: #000000;
     text-align: center;
     grid-column: 1/13;
-    opacity: 0.8; 
+    opacity: 0.8;
 
     @media only screen and (min-width: $MD-screen) {
       max-width: 360px;
@@ -283,14 +327,14 @@
       }
     }
 
-    &--check-email{
-      padding-top: 36px; 
+    &--check-email {
+      padding-top: 36px;
     }
 
-    .contact-text{
+    .contact-text {
       font-size: 0.875rem;
       font-weight: 400;
-      color: #000000; 
+      color: #000000;
     }
   }
 }
@@ -428,7 +472,6 @@
   color: $color-marketing-gray-99;
   // set the rem
   font-size: 1rem;
-  opacity: 0.8;
 }
 
 .error-msg-active,
@@ -465,6 +508,11 @@
   font-size: 0.875rem;
   margin: auto;
   text-align: center;
+  color: #5e5e72;
+
+  a {
+    color: #5e5e72;
+  }
 }
 
 .password-requirements {
@@ -492,3 +540,4 @@
     color: #000000;
   }
 }
+

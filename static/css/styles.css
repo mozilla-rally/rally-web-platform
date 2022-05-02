@@ -1223,6 +1223,12 @@ ol {
   color: #5e5e72;
 }
 
+@media (max-width: 432px) {
+  .noise-background {
+    background: #fff;
+  }
+}
+
 .radius-sm {
   border-radius: 4px;
 }
@@ -1570,7 +1576,7 @@ ol {
 }
 @media (max-width: 432px) {
   .md-container-signin {
-    padding: 2rem 1rem;
+    padding: 2rem 0;
   }
 }
 
@@ -1664,10 +1670,16 @@ ol {
   .card {
     border: none;
     height: auto !important;
+    padding: 0;
   }
 }
 .card__inner {
   padding: 0;
+}
+@media (max-width: 360px) {
+  .card__inner {
+    max-width: 296px;
+  }
 }
 .card .title-wrapper {
   display: flex;
@@ -1683,17 +1695,13 @@ ol {
   display: inline-block;
   font-weight: bold;
 }
-@media (max-width: 360px) {
-  .card .title-text {
-    max-width: 200px;
-  }
-}
 .card__body .card-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 368px;
   width: 368px;
+  margin: auto;
 }
 @media (max-width: 688px) {
   .card__body .card-content {
@@ -1823,6 +1831,13 @@ ol {
   grid-column: 4/10;
   text-align: center;
 }
+@media (max-width: 360px) {
+  .signin__logo {
+    width: 289px;
+    margin: auto;
+    grid-column: 6/10;
+  }
+}
 .signin__content {
   width: 100%;
   display: grid;
@@ -1833,6 +1848,11 @@ ol {
 }
 .signin__cards {
   grid-column: 2/12;
+}
+@media (max-width: 432px) {
+  .signin__cards {
+    padding: 0;
+  }
 }
 .signin__cards .spinner {
   -webkit-animation: rotator 1.4s linear infinite;
@@ -1847,10 +1867,29 @@ ol {
   animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
 }
 .signin__howitworks {
-  grid-column: 4/10;
+  grid-column: 5/10;
   align-self: center;
   text-align: center;
   margin-top: 40px;
+  min-width: 300px;
+}
+.signin__howitworks .external-link {
+  display: flex;
+  align-items: center;
+}
+.signin__howitworks svg {
+  padding-left: 8px;
+}
+@media (max-width: 432px) {
+  .signin__howitworks {
+    min-width: 289px;
+  }
+}
+@media (max-width: 360px) {
+  .signin__howitworks {
+    margin: auto;
+    grid-column: 9/10;
+  }
 }
 
 .card {
@@ -1886,29 +1925,35 @@ ol {
   border-radius: 2px;
   background-color: #ffdfe7;
   margin-bottom: 24px;
+  margin-top: -24px !important;
+  align-items: self-start;
 }
 .card .card-content .not-verified img {
   margin-right: 16px;
   font-size: 2.625rem;
   color: #e22850;
+  margin-top: 2px;
 }
 .card .card-content .not-verified__text {
   font-family: "Inter";
   font-style: normal;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 1.125;
   line-height: 20px;
-  color: #15141a;
+  color: #000 !important;
   margin: 0;
 }
 .card .card-content .card-body-info {
   max-width: 368px;
   text-align: left;
+  font-size: 18px;
+  color: #000000;
 }
 .card .card-content__text {
   margin: 0;
   padding: 0;
   text-align: center;
+  color: #000000;
 }
 .card .card-button {
   width: 100%;
@@ -1919,18 +1964,24 @@ ol {
   display: flex;
   justify-content: center;
   text-align: center;
+  margin: auto;
 }
 @media only screen and (max-width: 360px) {
   .card .card-button__text {
-    font-size: 0.75rem;
+    font-size: 1rem;
+    width: 289px;
   }
 }
 .card .card-button--signup {
   margin: 16px 0px;
 }
+@media only screen and (max-width: 360px) {
+  .card .card-button--signup {
+    width: 289px;
+  }
+}
 .card .card-button--create {
-  margin-top: 16px;
-  margin-bottom: 20px;
+  margin: 16px 0 20px;
 }
 .card .card-button--reset {
   margin-top: 36px;
@@ -1938,6 +1989,11 @@ ol {
 @media (max-width: 432px) {
   .card .card-button {
     justify-content: space-around;
+  }
+}
+@media (max-width: 360px) {
+  .card .card-button {
+    max-width: 289px;
   }
 }
 .card .line-break {
@@ -1950,10 +2006,11 @@ ol {
   width: 46%;
   padding: 0;
   margin: 0;
-  border: 1px solid #9595A2;
+  border: 1px solid #9595a2;
+  border-radius: 10px;
 }
 .card .line-break__text {
-  color: #5E5E72;
+  color: #5e5e72;
 }
 .card .form-wrapper {
   display: grid;
@@ -1977,6 +2034,11 @@ ol {
 }
 .card .form-wrapper form .mzp-c-field-control--error {
   border: 2px solid #c50042;
+}
+@media only screen and (max-width: 360px) {
+  .card .form-wrapper form {
+    max-width: 289px;
+  }
 }
 .card .form-wrapper form,
 .card .form-wrapper button,
@@ -2196,7 +2258,6 @@ ol {
   font-weight: 600;
   color: #20123a;
   font-size: 1rem;
-  opacity: 0.8;
 }
 
 .error-msg-active,
@@ -2233,6 +2294,10 @@ ol {
   font-size: 0.875rem;
   margin: auto;
   text-align: center;
+  color: #5e5e72;
+}
+.body-text-privacy a {
+  color: #5e5e72;
 }
 
 .password-requirements {

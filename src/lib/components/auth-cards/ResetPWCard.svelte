@@ -171,7 +171,7 @@
         }}
         disabled={btnDisabled}
         size="xl"
-        custom="card-button card-button--create"
+        customClass="card-button card-button--create"
       >
         <div class="button-text">{cta1}</div></Button
       >

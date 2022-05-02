@@ -23,7 +23,7 @@
   export let compact = false;
 
   export let disabled = false;
-  export let custom;
+  export let customClass;
   export let btnID;
   export let customControl = false;
   export let textColor;
@@ -42,7 +42,7 @@
   $: textClass = text ? "mzp-t-secondary mzp-t-text" : undefined;
   $: errorClass = error ? "mzp-t-error" : undefined;
   $: compactClass = compact ? "mzp-t-compact" : undefined;
-  $: customClass = custom ? custom : undefined;
+  $: customClass = customClass ? customClass : undefined;
   $: customControlClass = customControl ? "custom-control" : undefined;
   $: classSet = [
     "mzp-c-button",

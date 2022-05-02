@@ -118,7 +118,7 @@
       <Button
         {btnDisabled}
         size="xl"
-        custom="card-button create"
+        customClass="card-button create"
         product
         on:click={async () => {
           await store.changeEmail(newEmail, password);
@@ -131,7 +131,7 @@
       <Button
       {btnDisabled}
         size="xl"
-        custom="card-button create"
+        customClass="card-button create"
         customControl={true}
         textColor="#0060df"
         background="transparent"

@@ -16,11 +16,11 @@
   export let width;
   export let height;
   export let store;
-  export let custom;
-  export let test = false;
+  export let storyBookTest
 
+  let customClass = "launch";
   let notVerified = false;
-  let notVerifiedText =
+  const notVerifiedText =
     "Email account is not verified. Please check your inbox and activate your account.";
   let startState;
   let titleEl;
@@ -36,6 +36,7 @@
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: startState = welcomeCard ? "join" : "welcome";
+  $: if(!welcomeCard){notVerified = false}
 
   $: if (welcomeCard) {
     setTimeout(() => {
@@ -53,7 +54,6 @@
   }
   const handleGoogleLogin = async () => {
     localStorage.setItem("isLoading", "loading");
-
     loginWithGoogle();
   };
 
@@ -70,9 +70,10 @@
   const checkNotVerified = (event) => {
     notVerified = event.detail.value;
   };
+
 </script>
 
-<Card {width} {custom} {height}>
+<Card {width} {customClass} {height}>
   <h2 class="title-wrapper--launch" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">
@@ -101,7 +102,7 @@
       textColor="#000000"
       background="transparent !important"
       borderColor="#CDCDD4"
-      custom="card-button"
+      customClass="card-button"
       on:click={handleGoogleLogin}
     >
       <img
@@ -121,7 +122,7 @@
         <hr />
       </div>
 
-      <Signin {store} {test} {handleTrigger} on:value={checkNotVerified} />
+      <Signin {store} {storyBookTest} {handleTrigger} on:value={checkNotVerified} />
     {/if}
 
     <!-- SIGN UP WITH EMAIL -->
@@ -132,7 +133,7 @@
         textColor="#000000"
         background="transparent"
         borderColor="#cdcdd4"
-        custom="card-button card-button--create"
+        customClass="card-button card-button--create"
         btnID="create"
         on:click={() => handleTrigger("create")}
       >

@@ -82,3 +82,9 @@ ol {
   color: $color-marketing-gray-70;
 }
 
+.noise-background{
+  @media (max-width: $SM-screen) {
+    background: #fff; 
+  }
+}
+

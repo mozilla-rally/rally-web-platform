@@ -14,59 +14,52 @@
   export let linkText;
   export let width;
   export let height;
-  export let custom;
+  export let customClass;
   export let store;
-  export let test;
+  export let storyBookTest;
 
-  //create account states
+  const errorClass = "mzp-c-field-control mzp-c-field-control--error";
+  const inputClass = "mzp-c-field-control";
+  const lowerCaseLetters = /[a-z]/g;
+  const numbers = /[0-9]/g;
+  const minPasswordLength = 8;
+  const pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
+  const upperCaseLetters = /[A-Z]/g;
+
   let checkEmail = false;
   let emailEl;
   let formHeight = "auto";
-  let inputClassName = "mzp-c-field-control";
-  let inputEmailName;
-  let inputPWName;
-  let inputItemsVisible = false;
+  let inputEmailClass;
+  let inputPasswordClass;
   let passwordEl;
   let passwordVisible = false;
   let titleEl;
   let textWidth;
 
-  //password requirements
   let capital;
-  let number;
-  let numbers = /[0-9]/g;
-  const minPasswordLength = 8;
+  let inputItemsVisible = false;
   let length;
   let letter;
-  let lowerCaseLetters = /[a-z]/g;
-  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  let upperCaseLetters = /[A-Z]/g;
+  let number;
 
-  //error states
-  let createErr = false;
   let emailErrText = null;
   let emptyFieldsErr;
   let fireBaseErr = null;
-  let passwordErr = false;
   let passwordErrText = null;
 
   onMount(() => {
     if (titleEl) {
       textWidth = titleEl.clientWidth;
     }
-    inputEmailName = inputClassName;
-    inputPWName = inputClassName;
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
-  $: fireBaseErr === null ? (createErr = false) : (createErr = true);
-  $: emptyFieldsErr
-    ? (inputClassName = "mzp-c-field-control mzp-c-field-control--error")
-    : (inputClassName = "mzp-c-field-control");
-  $: inputEmailName = inputClassName;
-  $: inputPWName = inputClassName;
   $: if (emptyFieldsErr) {
+    inputEmailClass = errorClass;
+    inputPasswordClass = errorClass;
     emailErrText = "Required";
     passwordErrText = "Required";
   }
@@ -75,20 +68,20 @@
     if (emailEl.value === "" && passwordEl.value === "") {
       emptyFieldsErr = true;
     } else if (emailEl.value === "") {
-      createErr = true;
+      inputEmailClass = errorClass;
       emailErrText = "Required";
-      emailEl.classList.add("mzp-c-field-control--error");
     } else if (checkEmail === false) {
       checkRules();
     } else {
-      await store.signupWithEmailAndPassword(emailEl.value, passwordEl.value);
-      handleNextState();
+      if (storyBookTest === false) {
+        await store.signupWithEmailAndPassword(emailEl.value, passwordEl.value);
+        handleNextState();
+      }
     }
   };
 
   const checkRules = () => {
-    passwordErr = true;
-    passwordEl.classList.add("mzp-c-field-control--error");
+    inputPasswordClass = errorClass;
     passwordErrText = "Required";
     if (passwordEl) {
       passwordEl.value.length < minPasswordLength
@@ -112,10 +105,11 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    emailEl.classList.remove("mzp-c-field-control--error");
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
     emptyFieldsErr = false;
-    createErr = false;
-    passwordErr = false;
+    emailErrText = null;
+    passwordErrText = null;
 
     letter.classList.remove("rules-error");
     capital.classList.remove("rules-error");
@@ -123,7 +117,7 @@
     length.classList.remove("rules-error");
 
     if (passwordEl) {
-      passwordEl.classList.remove("mzp-c-field-control--error");
+      inputPasswordClass = inputClass;
       if (name === "id_user_pw") {
         inputItemsVisible = true;
         // Validate lowercase letters
@@ -158,12 +152,6 @@
     }
   };
 
-  const handleTrigger = (type) => {
-    dispatch("type", {
-      text: type,
-    });
-  };
-
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
     const type =
@@ -171,7 +159,14 @@
     passwordEl.setAttribute("type", type);
   };
 
+  const handleTrigger = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
+
   const handleNextState = () => {
+    /* if the input fields are not empty, check for firebase errors. If there are firebase errors show error messages, otherwise proceed to show check email card*/
     if (!emptyFieldsErr) {
       fireBaseErr = localStorage.getItem("createErr");
       fireBaseErr === null ? handleTrigger("check-create") : setMessage();
@@ -186,13 +181,13 @@
 
     isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
     if (isExistingEmail > -1) {
-      emailEl.classList.add("mzp-c-field-control--error");
+      inputEmailClass = errorClass;
       emailErrText = "Account already exists. Please Sign in.";
     }
 
     isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
     if (isInvalidEmail > -1) {
-      emailEl.classList.add("mzp-c-field-control--error");
+      inputEmailClass = errorClass;
       emailErrText = "Invalid format";
     }
 
@@ -200,7 +195,7 @@
   };
 </script>
 
-<Card {width} {height} {custom}>
+<Card {width} {height} {customClass}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -215,7 +210,7 @@
               <label class="mzp-c-field-label" for="id_user_pw">Email</label>
             </div>
             <input
-              class={inputEmailName}
+              class={inputEmailClass}
               bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}
@@ -225,7 +220,7 @@
               width="100%"
               placeholder="Enter your email address"
             />
-            {#if createErr || emptyFieldsErr}
+            {#if emailErrText}
               <p class="error-msg error-msg--email">
                 {emailErrText}
               </p>
@@ -239,7 +234,7 @@
             </div>
             <div class="input-wrapper">
               <input
-                class={inputPWName}
+                class={inputPasswordClass}
                 bind:this={passwordEl}
                 on:change={handleChange}
                 on:keyup={handleChange}
@@ -248,36 +243,26 @@
                 type="password"
                 {pattern}
                 width="100%"
+                required
               />
 
-              {#if passwordVisible}
-                <img
-                  src="img/icon-password-hide.svg"
-                  alt="Eye with slash across it"
-                  class={`toggle-password ${
-                    inputItemsVisible ? "create-show" : "create-hide"
-                  }`}
-                  id="hide-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {:else}
-                <img
-                  src="img/icon-password-show.svg"
-                  alt="Open eye"
-                  class={`toggle-password ${
-                    inputItemsVisible ? "create-show" : "create-hide"
-                  }`}
-                  id="show-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {/if}
+              <img
+                src={passwordVisible
+                  ? "img/icon-password-show.svg"
+                  : "img/icon-password-hide.svg"}
+                alt={passwordVisible ? "open eye" : "eye with slash"}
+                class={`toggle-password ${
+                  inputItemsVisible ? "create-show" : "create-hide"
+                }`}
+                id="show-eye"
+                width="24px"
+                height="24px"
+                type={passwordVisible ? "text" : "password"}
+                on:click={handleToggle}
+              />
             </div>
 
-            {#if emptyFieldsErr || passwordErr}
+            {#if passwordErrText}
               <p class="error-msg error-msg--password">
                 {passwordErrText}
               </p>
@@ -304,7 +289,7 @@
       <Button
         on:click={checkFields}
         size="xl"
-        custom="card-button card-button--create"
+        customClass="card-button card-button--create"
         btnID="continue"
       >
         <div class="card-button__text">{cta1}</div></Button

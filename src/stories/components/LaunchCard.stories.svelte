@@ -76,7 +76,7 @@
           textColor="#000000"
           background="transparent !important"
           borderColor="#CDCDD4"
-          custom="card-button"
+          customClass="card-button"
         >
           <img
             width="20px"
@@ -106,7 +106,7 @@
             textColor="#000000"
             background="transparent"
             borderColor="#CDCDD4"
-            custom="card-button card-button--create"
+            customClass="card-button card-button--create"
           >
             <img
               width="24px"

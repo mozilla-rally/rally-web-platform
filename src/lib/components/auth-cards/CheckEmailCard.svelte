@@ -11,7 +11,7 @@
   export let title;
   export let width;
   export let height;
-  export let custom;
+  export let customClass;
   export let checkPW;
   export let userEmail;
   export let ctaText;
@@ -40,7 +40,7 @@
   $: checkPW ? (body = resetPWText) : (body = checkEmailText);
 </script>
 
-<Card {width} {custom} {height}>
+<Card {width} {customClass} {height}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -53,8 +53,8 @@
         handleTrigger("welcome");
       }}
       size="xl"
-      custom="card-button card-button--reset"
-      btnID="signin-btn"
+      customClass="card-button card-button--reset"
+      btnID="back-signin-btn"
     >
       <div class="card-button__text">Back to sign in</div></Button
     >

@@ -62,7 +62,8 @@
   };
 
   const triggerCard = (event) => {
-    switch (event.detail.text) {
+    let text = event.detail.text;
+    switch (text) {
       case "join":
         welcomeCard = false;
         joinCard = true;
@@ -72,18 +73,10 @@
         break;
       case "create":
         joinCard = false;
-
         createAcctCard = true;
-        break;
-      case "signin":
-        welcomeCard = false;
-        joinCard = false;
-        createAcctCard = false;
-
         break;
       case "forget":
         welcomeCard = false;
-
         forgetPWCard = true;
         break;
       case "reset":
@@ -96,6 +89,7 @@
         break;
       case "check-create":
         createAcctCard = false;
+        forgetPWCard = false;
         checkEmailCard = true;
         break;
       default:
@@ -117,11 +111,22 @@
 
     <div class="cards-wrapper signin__cards">
       {#if welcomeCard || joinCard}
-        <LaunchCard {...cardArgs} test={true} on:type={triggerCard} />
+        <LaunchCard
+          {...cardArgs}
+          store={null}
+          storyBookTest={true}
+          on:type={triggerCard}
+          {welcomeCard}
+        />
       {/if}
 
       {#if createAcctCard && !welcomeCard && !joinCard}
-        <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
+        <CreateCard
+          {...cardArgs}
+          store={null}
+          storyBookTest={true}
+          on:type={triggerCard}
+        />
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
@@ -129,7 +134,12 @@
       {/if}
 
       {#if forgetPWCard && !welcomeCard}
-        <ForgetPwCard {...cardArgs} on:type={triggerCard} test={true} />
+        <ForgetPwCard
+          {...cardArgs}
+          store={null}
+          on:type={triggerCard}
+          storyBookTest={true}
+        />
       {/if}
 
       {#if resetPWCard && !checkEmailPWCard}

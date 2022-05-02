@@ -1,6 +1,4 @@
 <script>
-  import { DocumentSnapshot } from "firebase/firestore";
-
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -10,65 +8,59 @@
   const dispatch = createEventDispatcher();
 
   export let store;
-  export let test;
+  export let storyBookTest;
   export let handleTrigger;
 
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  const errorClass = "mzp-c-field-control mzp-c-field-control--error";
+  const inputClass = "mzp-c-field-control";
+
   let emailEl;
-  let emailErr = false;
-  let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   let emailErrText = null;
   let emptyFieldsErr;
   let fireBaseErr = null;
-  let inputClassName = "mzp-c-field-control";
-  let inputEmailName;
+  let inputEmailClass;
+  let inputPasswordClass;
   let inputItemsVisible = false;
-  let inputPWName;
   let passwordEl;
-  let passwordErr;
   let passwordErrText = null;
   let passwordVisible = false;
 
   onMount(() => {
-    inputEmailName = inputClassName;
-    inputPWName = inputClassName;
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
   });
 
-  $: emptyFieldsErr
-    ? (inputClassName = "mzp-c-field-control mzp-c-field-control--error")
-    : (inputClassName = "mzp-c-field-control");
-  $: inputEmailName = inputClassName;
-  $: inputPWName = inputClassName;
   $: if (emptyFieldsErr) {
+    inputEmailClass = errorClass;
+    inputPasswordClass = errorClass;
     emailErrText = "Required";
     passwordErrText = "Required";
   }
 
   const checkEmail = async (val) => {
     if (val.match(emailPattern)) {
-      if (test === false) {
+      if (storyBookTest === false) {
         await store.loginWithEmailAndPassword(emailEl.value, passwordEl.value);
         handleNextState();
       }
     } else {
-      emailErr = true;
       emailErrText = "Invalid format";
       emailEl.classList.add("mzp-c-field-control--error");
     }
 
-    if (test === true) handleNotVerified();
+    if (storyBookTest === true) handleNotVerified();
   };
 
   const checkFields = async () => {
     if (emailEl.value === "" && passwordEl.value === "") {
       emptyFieldsErr = true;
     } else if (emailEl.value === "") {
-      emailErr = true;
+      inputEmailClass = errorClass;
       emailErrText = "Required";
-      emailEl.classList.add("mzp-c-field-control--error");
     } else if (passwordEl.value === "") {
-      passwordErr = true;
+      inputPasswordClass = errorClass;
       passwordErrText = "Required";
-      passwordEl.classList.add("mzp-c-field-control--error");
     } else if (emailEl) {
       checkEmail(emailEl.value);
     }
@@ -76,11 +68,11 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
-    emailEl.classList.remove("mzp-c-field-control--error");
-    passwordEl.classList.remove("mzp-c-field-control--error");
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
     emptyFieldsErr = false;
-    emailErr = false;
-    passwordErr = false;
+    emailErrText = null;
+    passwordErrText = null;
 
     if (name === "id_user_pw") {
       inputItemsVisible = true;
@@ -102,15 +94,13 @@
     let isNotVerified = fireBaseErr.indexOf(notVerified);
 
     if (isNotFoundErr > -1) {
-      emailErr = true;
       emailErrText = "Acount does not exist";
-      emailEl.classList.add("mzp-c-field-control--error");
+      inputEmailClass = errorClass;
     }
 
     if (isNotPassword > -1) {
-      passwordErr = true;
       passwordErrText = "Incorrect password";
-      passwordEl.classList.add("mzp-c-field-control--error");
+      inputPasswordClass = errorClass;
     }
 
     if (isNotVerified > -1) {
@@ -121,6 +111,7 @@
   };
 
   const handleNextState = () => {
+    /* if the input fields are not empty, check for firebase errors. */
     fireBaseErr = localStorage.getItem("signInErr");
     fireBaseErr ? setMessage() : null;
   };
@@ -143,7 +134,7 @@
 
         <!-- **** EMAIL INPUT *** -->
         <input
-          class={inputEmailName}
+          class={inputEmailClass}
           bind:this={emailEl}
           on:change={handleChange}
           on:keyup={handleChange}
@@ -153,7 +144,7 @@
           width="100%"
           required
         />
-        {#if emailErr || emptyFieldsErr}
+        {#if emailErrText}
           <p class="error-msg error-msg--email">
             {emailErrText}
           </p>
@@ -178,7 +169,7 @@
         <div class="input-wrapper">
           <!-- **** PASSWORD INPUT *** -->
           <input
-            class={inputPWName}
+            class={inputPasswordClass}
             bind:this={passwordEl}
             on:change={handleChange}
             on:keyup={handleChange}
@@ -188,33 +179,22 @@
             width="100%"
             required
           />
-          {#if passwordVisible}
-            <img
-              src="img/icon-password-hide.svg"
-              alt="Eye with slash across it"
-              class={`toggle-password ${
-                inputItemsVisible ? "create-show" : "create-hide"
-              }`}
-              id="hide-eye"
-              width="24px"
-              height="24px"
-              on:click|preventDefault={handleToggle}
-            />
-          {:else}
-            <img
-              src="img/icon-password-show.svg"
-              alt="Open eye"
-              class={`toggle-password ${
-                inputItemsVisible ? "create-show" : "create-hide"
-              }`}
-              id="show-eye"
-              width="24px"
-              height="24px"
-              on:click|preventDefault={handleToggle}
-            />
-          {/if}
+          <img
+            src={passwordVisible
+              ? "img/icon-password-show.svg"
+              : "img/icon-password-hide.svg"}
+            alt={passwordVisible ? "open eye" : "eye with slash"}
+            class={`toggle-password ${
+              inputItemsVisible ? "create-show" : "create-hide"
+            }`}
+            id="show-eye"
+            width="24px"
+            height="24px"
+            type={passwordVisible ? "text" : "password"}
+            on:click={handleToggle}
+          />
         </div>
-        {#if emptyFieldsErr || passwordErr}
+        {#if passwordErrText}
           <p class="error-msg error-msg--password">
             {passwordErrText}
           </p>
@@ -226,7 +206,7 @@
   <Button
     on:click={checkFields}
     size="xl"
-    custom="card-button card-button--signin"
+    customClass="card-button card-button--signin"
     btnID="signin-btn"
   >
     <div class="card-button__text">Sign in</div></Button

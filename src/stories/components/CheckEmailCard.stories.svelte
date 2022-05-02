@@ -52,7 +52,7 @@
 
         <Button
           size="xl"
-          custom="card-button card-button--reset"
+          customClass="card-button card-button--reset"
           btnID="signin-btn"
         >
           <div class="card-button__text">Back to sign in</div></Button

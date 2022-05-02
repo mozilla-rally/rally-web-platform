@@ -44,8 +44,6 @@
 
     inputEmailName = inputClassName;
     inputPWName = inputClassName;
-
-    console.log("input elements", passwordEl, emailEl);
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
@@ -281,7 +279,7 @@
           <Button
             on:click={checkFields}
             size="xl"
-            custom="card-button card-button--create"
+            customClass="card-button card-button--create"
           >
             <div class="card-button__text">{args.cta1}</div></Button
           >
@@ -292,7 +290,7 @@
       </div>
       <!-- SIGN IN -->
       <p slot="cta" class="body-text-action">
-        {args.bodyText} <a href="/">{args.linkText}</a>
+        {args.bodyText} <button on:click={() => handleTrigger("welcome")}>{args.linkText}</button>
       </p>
     </Card>
   </div>
