@@ -10,6 +10,7 @@ import {
 } from "../index";
 import { studies } from "../studies";
 import fetch from "node-fetch";
+import { UserInfo } from "firebase-functions/v1/auth";
 
 async function disableFunctionTriggers() {
   await fetch(
@@ -76,6 +77,7 @@ describe("loadFirestore", () => {
 describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
   const user: admin.auth.UserRecord = {
     uid: "abc123",
+    providerData: [{ uid: "abc123" } as admin.auth.UserInfo]
   } as admin.auth.UserRecord;
 
   async function getUserRecords() {
@@ -111,8 +113,13 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
   });
 
   it("empty provider data does not register extension users", async () => {
+    const emptyProviderDataUser: admin.auth.UserRecord = {
+      uid: "abc123",
+      providerData: ([] as UserInfo[])
+    } as admin.auth.UserRecord;
+
     await expect(
-      addRallyUserToFirestoreImpl({ ...user, providerData: [] })
+      addRallyUserToFirestoreImpl(emptyProviderDataUser)
     ).resolves.toBeFalsy();
 
     const userRecords = await getUserRecords();
@@ -123,10 +130,7 @@ describe("addRallyUserToFirestore and deleteRallyUserImpl", () => {
 
   async function createAndValidateUserRecords() {
     await expect(
-      addRallyUserToFirestoreImpl({
-        ...user,
-        providerData: [{ uid: user.uid } as admin.auth.UserInfo],
-      })
+      addRallyUserToFirestoreImpl(user)
     ).resolves.toBeTruthy();
 
     const userRecords = await getUserRecords();
