@@ -1,0 +1,10 @@
+{
+  "apiKey": "AIzaSyCmVyyGysmxOR4MtKnWbORHf1MLSVdOfaU",
+  "authDomain": "moz-fx-dev-rhelmer-rally-test1.firebaseapp.com",
+  "projectId": "moz-fx-dev-rhelmer-rally-test1",
+  "storageBucket": "moz-fx-dev-rhelmer-rally-test1.appspot.com",
+  "messagingSenderId": "211360280873",
+  "appId": "1:211360280873:web:2ea5d676ec1c5b7f298738",
+  "measurementId": "G-GBQX0PJ7R2",
+  "functionsHost": "https://us-central1-moz-fx-dev-rhelmer-rally-test1.cloudfunctions.net"
+}
