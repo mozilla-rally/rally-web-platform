@@ -43,6 +43,7 @@
           size={"md"}
           product={!joined}
           leave={joined}
+          btnID="study-action"
           on:click={() => {
             dispatch(joined ? "leave" : "join");
           }}

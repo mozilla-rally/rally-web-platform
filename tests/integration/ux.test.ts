@@ -183,17 +183,13 @@ describe("Rally Web Platform UX flows", function () {
     }
 
     // Start to leave study, but cancel.
-    await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), (e) =>
-      e.click()
-    );
+    await findAndAct(driver, By.id("study-action"), (e) => e.click());
     await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), (e) =>
       e.click()
     );
 
     // Start to leave study, and confirm.
-    await findAndAct(driver, By.xpath('//button[text()="Leave Study"]'), (e) =>
-      e.click()
-    );
+    await findAndAct(driver, By.id("study-action"), (e) => e.click());
     await findAndAct(
       driver,
       By.xpath('(//button[text()="Leave Study"])[2]'),
