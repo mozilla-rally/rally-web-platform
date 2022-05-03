@@ -37,7 +37,7 @@
     "@mozilla-protocol/core": "^16.0.0",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@rollup/plugin-replace": "^2.4.1",
+    "@rollup/plugin-replace": "^4.0.0",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-docs": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.9",
