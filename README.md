@@ -19,13 +19,13 @@ Study extensions are based on the [Rally Study Template](https://github.com/mozi
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/) v16
 - [Firebase](https://firebase.google.com/docs/cli)
   - Authentication
   - Functions
   - Cloud Firestore
   - Hosting
-- [Java SDK](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html) for Firebase emulators
+- [Java SDK](https://openjdk.java.net/) v18 for Firebase emulators
 
 ## Quickstart
 
@@ -105,11 +105,15 @@ connectFirestoreEmulator(db, "localhost", 8080);
 For the Rally Web Platform, this is done in: `./src/lib/stores/initialize-firebase.js` and automatically enabled when built in
 emulator mode.
 
+## Glean
+
+The Rally Web Platform uses [Glean](https://docs.telemetry.mozilla.org/concepts/glean/glean.html) pings to send enrollment and demographic information to a secure analysis environment.
+
+Glean is **disabled by default** when using the Firebase Emulator (i.e. for development and testing). However it can be **explicitly enabled** by setting the `ENABLE_GLEAN` environment variable to `true`. When Glean is enabled in this way, pings will be logged, and will show up in the official Glean Debug Viewer under the [MozillaRally](https://debug-ping-preview.firebaseapp.com/pings/MozillaRally) tag (note that the ping payload is encrypted before being sent to the Debug Viewer; the data will be obfuscated but you can still see ping type and receiving time).
+
 ## Deploying
 
-CircleCI is used to generate build artifacts, which are pushed to the `deploy` branch on this repository.
-A deploy job is then triggered from this branch to the dev environment on merge to the `master` branch:
-https://rally-web-spike.web.app/
+CircleCI is used to generate build artifacts, which are deployed to [the staging environment](https://stage.rally-web.nonprod.dataops.mozgcp.net).
 
 NOTE: if you want to deploy to your own environment, you must either:
 

@@ -21,7 +21,7 @@
     width: 660px;
     /* make the height conform to --height in the Dialog.svelte component. */
     /* element height - header size - dialog padding - margin before buttons */
-    height: calc(var(--element-height) - 80px - 40px - var(--pad));
+    max-height: calc(var(--element-height) - 80px - 40px - var(--pad));
     padding: var(--pad);
     padding-bottom: 0;
     background-color: var(--irb-background-color);

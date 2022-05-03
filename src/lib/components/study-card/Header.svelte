@@ -5,9 +5,15 @@
   import niceDate from "./nice-date";
 
   export let endDate;
+
+  let clazz;
+  export { clazz as class };
 </script>
 
-<div class="study-card-header grid">
+<div>
+  <slot name="study-top-section" />
+</div>
+<div class={`study-card-header grid ${clazz}`}>
   <slot name="study-icon">
     <img
       class="study-card-image"
@@ -29,21 +35,37 @@
       {/if}
     </div>
   </div>
-  <slot name="study-cta" />
+  <div class="study-cta">
+    <slot name="study-cta" />
+  </div>
 </div>
 
 <style>
   .study-card-header {
     display: grid;
-    grid-gap: 20px;
-    margin-bottom: 20px;
+    padding: 24px;
+    grid-gap: 24px;
     grid-template-columns: var(--study-card-header-columns);
-    grid-template-rows: max-content;
+  }
+
+  @media (max-width: 480px) {
+    .study-card-header {
+      grid-template-columns: var(--study-card-image-size) auto;
+      grid-template-rows: auto auto max-content;
+      grid-row-gap: 12px;
+      padding-bottom: 0px;
+    }
+
+    .study-cta {
+      grid-row: 2;
+      grid-column: 1 / span 2;
+    }
   }
 
   .study-card-header-info {
     margin-top: 8px;
   }
+
   .study-card-author {
     /* explicitly set this field to prevent Zilla in some contexts */
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,

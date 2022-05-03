@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "matches": ["*://localhost/*"],
-      "js": ["dist/rally-content.js"]
+      "js": ["dist/content-script.js"]
     }
   ]
 }

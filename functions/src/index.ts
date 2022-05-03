@@ -1,9 +1,13 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import admin from "firebase-admin";
+import functions, { Change, EventContext } from "firebase-functions";
+import { DocumentSnapshot } from "firebase-functions/v1/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthentication } from "./authentication";
 import { useCors } from "./cors";
 import { studies } from "./studies";
+import { isDeepStrictEqual } from "util";
+import * as gleanPings from "./glean";
+import assert from "assert";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -63,9 +67,9 @@ async function generateToken(
   return rallyToken;
 }
 
-export const addRallyStudyToFirestoreImpl = async (
+export async function addRallyUserToFirestoreImpl(
   user: admin.auth.UserRecord
-): Promise<boolean> => {
+): Promise<boolean> {
   functions.logger.info("addRallyUserToFirestore - onCreate fired for user", {
     user,
   });
@@ -95,19 +99,16 @@ export const addRallyStudyToFirestoreImpl = async (
     .set(userDoc, { merge: true });
 
   return true;
-};
+}
 
-exports.addRallyUserToFirestore = functions.auth
+export const addRallyUserToFirestore = functions.auth
   .user()
-  .onCreate(addRallyStudyToFirestoreImpl);
+  .onCreate(addRallyUserToFirestoreImpl);
 
-export const deleteRallyUserImpl = async function (
+export async function deleteRallyUserImpl(
   user: admin.auth.UserRecord
 ): Promise<boolean> {
   functions.logger.info("deleteRallyUser fired for user:", user);
-
-  // Delete the extension user document.
-  await admin.firestore().collection("extensionUsers").doc(user.uid).delete();
 
   // Delete the user studies subcollection.
   const collectionRef = admin
@@ -137,9 +138,11 @@ export const deleteRallyUserImpl = async function (
   await admin.firestore().collection("users").doc(user.uid).delete();
 
   return true;
-};
+}
 
-exports.deleteRallyUser = functions.auth.user().onDelete(deleteRallyUserImpl);
+export const deleteRallyUser = functions.auth
+  .user()
+  .onDelete(deleteRallyUserImpl);
 
 /**
  *
@@ -166,3 +169,138 @@ export const loadFirestore = functions.https.onRequest(
     response.status(200).send();
   }
 );
+
+/*
+ * Listen for changes to the User document
+ * and initiate the appropriate Glean ping(s)
+ */
+export async function handleUserChangesImpl(
+  change: Change<DocumentSnapshot>,
+  context: EventContext
+): Promise<boolean> {
+  const userID = context.params.userID;
+  const rallyID = await getRallyIdForUser(userID);
+
+  // Without Rally ID, we can't make any Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    rallyID,
+    `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+  );
+
+  // Get an object with the current document value.
+  // If the document does not exist, it has been deleted.
+  const newUser = change.after.exists ? change.after.data() : null;
+
+  if (!newUser) {
+    // User document was deleted
+    // Delete the extension user document, now that we've obtained the rallyID
+    await admin.firestore().collection("extensionUsers").doc(userID).delete();
+  }
+
+  // Get the old document, to compare the enrollment state.
+  const oldUser = change.before.exists ? change.before.data() : null;
+
+  if (!newUser || (oldUser && oldUser.enrolled && !newUser.enrolled)) {
+    // User document has unenrolled
+    functions.logger.info(`Sending unenrollment ping for user ID ${userID}`);
+    await gleanPings.platformUnenrollment(rallyID);
+    return true;
+  }
+
+  if ((!oldUser || !oldUser.enrolled) && newUser.enrolled) {
+    // User just enrolled
+    functions.logger.info(`Sending enrollment ping for user ID ${userID}`);
+    await gleanPings.platformEnrollment(rallyID);
+  }
+
+  if (
+    !isDeepStrictEqual(
+      oldUser && oldUser.demographicsData,
+      newUser && newUser.demographicsData
+    )
+  ) {
+    // User updated demographicsData
+    functions.logger.info(`Sending demographics ping for user ID ${userID}`);
+    await gleanPings.demographics(rallyID, newUser && newUser.demographicsData);
+  }
+
+  return true;
+}
+
+export const handleUserChanges = functions.firestore
+  .document("users/{userID}")
+  .onWrite(handleUserChangesImpl);
+
+/*
+ * Listen for changes to the Study document
+ * and initiate the appropriate Glean ping(s)
+ */
+export async function handleUserStudyChangesImpl(
+  change: Change<DocumentSnapshot>,
+  context: EventContext
+): Promise<boolean> {
+  const userID = context.params.userID;
+  const firebaseStudyID = context.params.studyID;
+  const rallyID = await getRallyIdForUser(userID);
+
+  // Without Rally ID, we can't make any Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    rallyID,
+    `Unable to obtain Rally ID for user ID ${userID}. Aborting Glean ping process.`
+  );
+
+  // Get an object with the current document value.
+  // If the document does not exist, it has been deleted.
+  const newStudy = change.after.exists ? change.after.data() : null;
+
+  // Get the old document, to compare the enrollment state.
+  const oldStudy = change.before.exists ? change.before.data() : null;
+
+  const studyID =
+    (newStudy && newStudy.studyId) || (oldStudy && oldStudy.studyId);
+
+  // Without Study ID, we can't construct study-related Glean pings
+  // This is bad and should be flagged for inspection
+  assert(
+    studyID,
+    `Couldn't find Glean Study ID for user ID ${userID} and Firebase study ID ${firebaseStudyID}. Aborting Glean ping process.`
+  );
+
+  if (!newStudy || (oldStudy && oldStudy.enrolled && !newStudy.enrolled)) {
+    // User unenrolled from study
+    functions.logger.info(
+      `Sending unenrollment ping for study with user ID ${userID} with study ID ${studyID}`
+    );
+    await gleanPings.studyUnenrollment(rallyID, studyID);
+    return true;
+  }
+
+  if ((!oldStudy || !oldStudy.enrolled) && newStudy.enrolled) {
+    // User just enrolled in this study
+    functions.logger.info(
+      `Sending enrollment ping for study with user ID ${userID} with study ID ${studyID}`
+    );
+    await gleanPings.studyEnrollment(rallyID, studyID);
+    return true;
+  }
+
+  return true;
+}
+
+export const handleUserStudyChanges = functions.firestore
+  .document("users/{userID}/studies/{studyID}")
+  .onWrite(handleUserStudyChangesImpl);
+
+async function getRallyIdForUser(userID: string) {
+  const extensionUserDoc = await admin
+    .firestore()
+    .collection("extensionUsers")
+    .doc(userID)
+    .get();
+
+  const data = extensionUserDoc.data();
+
+  return (data && data.rallyId) || null;
+}

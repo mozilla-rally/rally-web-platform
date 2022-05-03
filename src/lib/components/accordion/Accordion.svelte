@@ -12,11 +12,13 @@
   <slot name="title">expand</slot>
 </AccordionButton>
 
-{#if revealed}
-  <div transition:slide={{ duration: 200 }} class="expanded-content">
-    <slot />
-  </div>
-{/if}
+<div
+  transition:slide={{ duration: 200 }}
+  class={`expanded-content ${revealed ? "h-auto" : "invisible"}`}
+  style={!revealed ? "height: 0px; margin: 0; padding: 0" : ""}
+>
+  <slot />
+</div>
 
 <style>
   .expanded-content {
