@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build && cp config/firebase.config.moz-fx-dev-rhelmer-rally-test1.json build/firebase.config.json
+      - run: npm ci && npm run build && npm run config:web
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
