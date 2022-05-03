@@ -32,6 +32,8 @@ const GLEAN_RALLY_APP_ID = process.env.FUNCTIONS_EMULATOR
   ? "test-app-id"
   : "rally-core";
 const GLEAN_APP_DISPLAY_VERSION = `rally-web-platform:${RWP_pkg.version}`;
+
+// TODO: move these to Firestore
 const GLEAN_ENCRYPTION_JWK = {
   crv: "P-256",
   kid: "rally-core",
@@ -39,6 +41,7 @@ const GLEAN_ENCRYPTION_JWK = {
   x: "m7Gi2YD8DgPg3zxora5iwf0DFL0JFIhjoD2BRLpg7kI",
   y: "zo35XIQME7Ct01uHK_LrMi5pZCuYDMhv8MUsSu7Eq08",
 };
+const PRODUCTION_PROJECT_ID = "moz-fx-data-rally-w-prod-dfa4";
 
 const GLEAN_DEFAULT_TIMEOUT = 10000;
 const gleanLock = withTimeout(new Mutex(), GLEAN_DEFAULT_TIMEOUT); // Lock on global Glean instance, metrics, and pings
@@ -153,14 +156,26 @@ export async function studyUnenrollment(
 function initializeGlean(): void {
   if (!ENABLE_GLEAN) return;
 
+  // Set app channel and debug settings
+  let appChannel;
   if (process.env.FUNCTIONS_EMULATOR) {
     Glean.setDebugViewTag(GLEAN_DEBUG_VIEW_TAG);
     Glean.setLogPings(true);
+    appChannel = "DEVELOPMENT";
+  } else {
+    const firebaseConfig = process.env.FIREBASE_CONFIG;
+    const projectID = firebaseConfig && JSON.parse(firebaseConfig).projectId;
+    appChannel = projectID === PRODUCTION_PROJECT_ID ? "PRODUCTION" : "STAGING";
+  }
+
+  if (appChannel !== "PRODUCTION") {
+    Glean.setSourceTags(["automation"]); // discard non-production pings from non-Live Views
   }
 
   // Glean.initialize is a no-op if Glean is already initialized
   Glean.initialize(GLEAN_RALLY_APP_ID, true, {
     appDisplayVersion: GLEAN_APP_DISPLAY_VERSION,
+    channel: appChannel,
     plugins: [new PingEncryptionPlugin(GLEAN_ENCRYPTION_JWK)],
     httpClient: new CustomPingUploader(),
   });
