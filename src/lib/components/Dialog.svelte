@@ -171,7 +171,7 @@
     min-width: calc(var(--width, var(--content-width)) - 40px);
     min-height: var(--modal-min-height);
     background-color: var(--color-white);
-    padding: 20px;
+    padding: 32px;
     box-shadow: var(--box-shadow-lg);
     display: grid;
     grid-template-rows: max-content auto max-content;
