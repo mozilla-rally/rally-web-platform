@@ -6,31 +6,35 @@
   export let downloadUrl;
 </script>
 
-<div class="vertically-aligned-container status-container">
-  <div class="vertically-aligned-container">
-    <span style="margin-right: 5px" class="vertically-aligned-container">
-      {#if connected}
-        <CheckCircle size="20px" color="var(--color-green-60)" />
-      {:else}
-        <Exclaimation size="20px" color="#FFA436" />
-      {/if}
-    </span>
+<div class="status-container">
+  <span style="margin-right: 5px" class="d-flex">
     {#if connected}
-      <span class="text-body-sm connected title">You're participating</span>
+      <CheckCircle size="20px" color="var(--color-green-60)" />
     {:else}
-      <span class="text-body-sm not-connected title"
-        >Not Participating. <a href={downloadUrl} target="_blank"
-          >Add this study extension from the Chrome store.</a
-        ></span
-      >
+      <Exclaimation size="20px" color="#FFA436" />
     {/if}
-  </div>
+  </span>
+  {#if connected}
+    <span class="text-body-sm connected title">You're participating</span>
+  {:else}
+    <span class="text-body-sm not-connected title"
+      >You're not participating yet. <a href={downloadUrl} target="_blank"
+        >Add this study extension from the Chrome store.</a
+      ></span
+    >
+  {/if}
 </div>
 
 <style>
   .status-container {
-    margin-top: 11px;
-    margin-bottom: 11px;
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 480px) {
+    .status-container {
+      align-items: flex-start;
+    }
   }
 
   .status-container .not-connected.title {

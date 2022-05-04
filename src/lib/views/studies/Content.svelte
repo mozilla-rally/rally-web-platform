@@ -52,7 +52,7 @@
 
   <Accordion revealed={true}>
     <div slot="title">How to join a study</div>
-    <slot><StudyUsageTooltip class="pb-0 mb-0" /></slot>
+    <slot><StudyUsageTooltip class="mb-0" /></slot>
   </Accordion>
 
   <div class="studies">
