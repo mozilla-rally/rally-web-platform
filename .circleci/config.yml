@@ -117,7 +117,7 @@ workflows:
             branches:
               only: master
 
-      - site-deploy: # This deploys to our stage site at https://stage.rally-web.nonprod.dataops.mozgcp.net
+      - site-deploy: # This deploys to our stage site at https://stage.rally-web.nonprod.dataops.mozgcp.net / https://members.rally.allizom.org
           context: rally-web
           project_name: $PROJECT_ID_STAGE
           project_config: rally-web-stage
@@ -129,19 +129,19 @@ workflows:
               only: /.*/
             branches:
               only: master
-#      - hold: # requires approval for prod deployment
-#          type: approval
-#          requires:
-#            - site-deploy
-#      - site-deploy: # This deploys directly to our prod site at <unknown yet>
-#          context: rally-web
-#          project_name: $PROJECT_ID_PROD
-#           project_config: rally-web-prod
-#          service_account: $GCLOUD_SERVICE_KEY
-#          requires:
-#            - hold
-#          filters:
-#            tags:
-#              only: /.*/
-#            branches:
-#              only: master
+      - hold: # requires approval for prod deployment
+          type: approval
+          requires:
+            - site-deploy
+      - site-deploy: # This deploys directly to our prod site at https://prod.rally-web.prod.dataops.mozgcp.net / https://members.rally.mozilla.org
+          context: rally-web
+          project_name: $PROJECT_ID_PROD
+          project_config: rally-web-prod
+          service_account: $GCLOUD_SERVICE_KEY
+          requires:
+            - hold
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              only: master
