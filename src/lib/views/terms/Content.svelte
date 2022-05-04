@@ -36,7 +36,7 @@
       src="/img/new-platform.png"
       alt="Mozilla Rally is a new platform created to empower people to contribute their data towards <b>building a better internet"
     />
-    <div class="icon-block-right text-info">
+    <div class="icon-block-right content-text-info">
       Mozilla Rally is a <b>new platform</b> created to empower people to
       contribute their data towards <b>building a better internet</b>.
     </div>
@@ -46,7 +46,7 @@
       src="/img/who-is-eligible.png"
       alt="It is currently available to Firefox users in the U.S. who are 19 or older."
     />
-    <div class="icon-block-right text-info" style="max-width: 514px;">
+    <div class="icon-block-right content-text-info" style="max-width: 514px;">
       It is currently available to Firefox users in the U.S. who are 19 or
       older.
     </div>
@@ -56,7 +56,7 @@
       src="/img/notice-covers-rally.png"
       alt="It is currently available to Firefox users in the U.S. who are 19 or older."
     />
-    <div class="icon-block-right text-info">
+    <div class="icon-block-right content-text-info">
       <b>This notice only covers Rally itself</b>, as each study will have a
       unique privacy notice detailing how data is collected and handled in that
       particular study. We also adhere to the
@@ -84,7 +84,7 @@
     />
     <div class="icon-block-right">
       <h4>Your Demographic Data</h4>
-      <div class="text-info">
+      <div class="content-text-info">
         This includes your <b>age</b>, <b>gender</b>, <b>race/ethnicity</b>,
         <b>education level</b>, <b>household income</b>, and <b>zip code</b>.
         This is entirely optional.
@@ -99,7 +99,7 @@
     />
     <div class="icon-block-right">
       <h4>Your Device's Technical Data</h4>
-      <div class="text-info">
+      <div class="content-text-info">
         This includes your device's <b>operating system</b> and
         <b>IP address</b> (which we'll only hang on to temporarily).
       </div>
@@ -113,7 +113,7 @@
     />
     <div class="icon-block-right">
       <h4>Your Interaction Data</h4>
-      <div class="text-info">
+      <div class="content-text-info">
         This includes your <b>interactions with Firefox</b>, like the number and
         type of Firefox Add-ons you have installed, your interactions with the
         Rally add-on itself, or the duration of your active browsing session.
@@ -128,7 +128,7 @@
     />
     <div class="icon-block-right">
       <h4>Your Location Data</h4>
-      <div class="text-info">
+      <div class="content-text-info">
         This includes your <b>country</b>, <b>city</b>, and <b>state</b>
         location, which is determined by your <b>IP address</b>.
       </div>
@@ -180,7 +180,7 @@
     <div class="icon-block-right">
       <h4>Our Data Storage Provider</h4>
 
-      <div class="text-info">
+      <div class="content-text-info">
         We use Google's cloud storage service to store the data collected
         through Rally. Google only stores Rally data and <b
           >cannot use that data for its own purposes</b
@@ -197,7 +197,7 @@
     <div class="icon-block-right">
       <h4>Our Research Collaborators</h4>
 
-      <div class="text-info">
+      <div class="content-text-info">
         Rally collaborates with trusted third parties to build and release
         studies. For any studies you join, we may ask you to share the data
         collected under <b>this Privacy Notice</b> with third party
@@ -216,7 +216,7 @@
     <div class="icon-block-right">
       <h4>People Like You (only aggregated data)</h4>
 
-      <div class="text-info">
+      <div class="content-text-info">
         Our mission is focused on <b>empowering everyday citizens</b>, not just
         a select few. To that end, we may release aggregated, de-identified data
         sets to help further public knowledge on certain issues. These data sets
@@ -328,7 +328,7 @@
     padding-bottom: 48px;
   }
 
-  .text-info {
+  .content-text-info {
     padding-right: 1rem;
   }
 
