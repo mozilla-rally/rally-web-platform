@@ -72,6 +72,7 @@
     height={joined ? undefined : "auto"}
     topPadding={joined ? undefined : "calc(10vh - 20px)"}
     width={joined ? "var(--content-width)" : undefined}
+    showCloseButton={false}
     on:dismiss={() => {
       joinModal = false;
     }}
@@ -134,7 +135,7 @@
     <div class="modal-call-flow" slot="cta">
       <Button
         size="lg"
-        product
+        neutral
         secondary
         on:click={() => {
           joinModal = false;

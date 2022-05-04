@@ -326,4 +326,8 @@
   .status-container.not-connected {
     background: #ffe3c2;
   }
+
+  .dropdown-menu li {
+    display: flex;
+  }
 </style>
