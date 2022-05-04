@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RWP_pkg_file = fs.readFileSync(
-  path.resolve(__dirname, "../../package.json")
+  path.resolve(__dirname, "../package.json")
 );
 const RWP_pkg = JSON.parse(RWP_pkg_file.toString());
 
