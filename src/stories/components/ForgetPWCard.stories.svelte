@@ -82,7 +82,7 @@
               </div>
             </fieldset>
           </form>
-          <Button disabled={btnDisabled} size="xl" custom="modal-button create">
+          <Button disabled={btnDisabled} size="xl" customClass="modal-button create">
             <div class="button-text--signin">{args.cta1}</div></Button
           >
           <p class="body-text-action">

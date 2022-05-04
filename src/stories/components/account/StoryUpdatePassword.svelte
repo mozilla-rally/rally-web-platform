@@ -228,7 +228,7 @@
         </div>
       </fieldset>
     </form>
-    <Button disabled={btnDisabled} size="xl" custom="card-button create btn-settings">
+    <Button disabled={btnDisabled} size="xl" customClass="card-button create btn-settings">
       <div class="button-text">Update passsord</div></Button
     >
   </div>

@@ -5,7 +5,6 @@
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import * as state from "../../lib/components/auth-cards/state.svelte";
   import Card from "../../lib/components/Card.svelte";
-  import SignInCard from "../../lib/components/auth-cards/SignInCard.svelte";
   import LaunchCard from "../../lib/components/auth-cards/LaunchCard.svelte";
   import CreateCard from "../../lib/components/auth-cards/CreateCard.svelte";
   import ForgetPwCard from "../../lib/components/auth-cards/ForgetPWCard.svelte";
@@ -19,7 +18,6 @@
     welcomeArgs,
     joinArgs,
     createArgs,
-    signinArgs,
     forgetPWArgs,
     checkEmailPWArgs,
     checkEmailArgs,
@@ -30,7 +28,6 @@
     welcomeCard,
     joinCard,
     createAcctCard,
-    signinCard,
     forgetPWCard,
     checkEmailCard,
     checkEmailPWCard,
@@ -43,8 +40,6 @@
     cardArgs = joinArgs;
   } else if (createAcctCard) {
     cardArgs = createArgs;
-  } else if (signinCard) {
-    cardArgs = signinArgs;
   } else if (forgetPWCard) {
     cardArgs = forgetPWArgs;
   } else if (checkEmailPWCard) {
@@ -59,7 +54,6 @@
     welcomeCard = true;
     joinCard = false;
     createAcctCard = false;
-    signinCard = false;
     forgetPWCard = false;
     resetPWCard = false;
     checkEmailCard = false;
@@ -68,7 +62,8 @@
   };
 
   const triggerCard = (event) => {
-    switch (event.detail.text) {
+    let text = event.detail.text;
+    switch (text) {
       case "join":
         welcomeCard = false;
         joinCard = true;
@@ -78,18 +73,10 @@
         break;
       case "create":
         joinCard = false;
-        signinCard = false;
         createAcctCard = true;
-        break;
-      case "signin":
-        welcomeCard = false;
-        joinCard = false;
-        createAcctCard = false;
-        signinCard = true;
         break;
       case "forget":
         welcomeCard = false;
-        signinCard = false;
         forgetPWCard = true;
         break;
       case "reset":
@@ -102,6 +89,7 @@
         break;
       case "check-create":
         createAcctCard = false;
+        forgetPWCard = false;
         checkEmailCard = true;
         break;
       default:
@@ -123,23 +111,35 @@
 
     <div class="cards-wrapper signin__cards">
       {#if welcomeCard || joinCard}
-        <LaunchCard {...cardArgs} on:type={triggerCard} />
+        <LaunchCard
+          {...cardArgs}
+          store={null}
+          storyBookTest={true}
+          on:type={triggerCard}
+          {welcomeCard}
+        />
       {/if}
 
-      {#if signinCard && !welcomeCard && !joinCard}
-        <SignInCard {...cardArgs} test={true} on:type={triggerCard} />
-      {/if}
-
-      {#if createAcctCard && !welcomeCard && !joinCard && !signinCard}
-        <CreateCard {...cardArgs} test={true} on:type={triggerCard} />
+      {#if createAcctCard && !welcomeCard && !joinCard}
+        <CreateCard
+          {...cardArgs}
+          store={null}
+          storyBookTest={true}
+          on:type={triggerCard}
+        />
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
         <CheckEmailCard {...cardArgs} on:type={triggerCard} />
       {/if}
 
-      {#if forgetPWCard && !welcomeCard && !signinCard}
-        <ForgetPwCard {...cardArgs} on:type={triggerCard} />
+      {#if forgetPWCard && !welcomeCard}
+        <ForgetPwCard
+          {...cardArgs}
+          store={null}
+          on:type={triggerCard}
+          storyBookTest={true}
+        />
       {/if}
 
       {#if resetPWCard && !checkEmailPWCard}

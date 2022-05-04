@@ -282,7 +282,7 @@
         disabled={btnDisabled}
         size="xl"
         product
-        custom="card-button create"
+        customClass="card-button create"
         on:click={handleCheckPW}
       >
         <div class="button-text">Save changes</div></Button
@@ -291,7 +291,7 @@
       <Button
         {btnDisabled}
         size="xl"
-        custom="card-button create"
+        customClass="card-button create"
         customControl={true}
         textColor="#0060df"
         background="transparent"

@@ -40,7 +40,7 @@
     </div>
 
     <div class={is2FA ? "factor-btn" : "factor-btn inactive"}>
-      <Button custom="twoFA" on:click={handleAuthToggle} size="lg"
+      <Button customClass="twoFA" on:click={handleAuthToggle} size="lg"
         >{is2FA ? "Turn on" : "Turn off"}</Button
       >
     </div>

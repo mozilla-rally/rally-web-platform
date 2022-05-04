@@ -8,11 +8,14 @@
   import Button from "../../lib/components/Button.svelte";
   import Signin from "../../lib/components/auth-cards/SignInCard.svelte";
 
+  let handleTrigger = null;
+  let notVerified = false;
+  let notVerifiedText =
+    "Email account is not verified. Please check your inbox and activate your account.";
+  let store = null;
   let titleEl;
   let textWidth;
   let test = true;
-  let store = null;
-  let handleTrigger = null;
 
   onMount(async () => {
     if (titleEl) {
@@ -22,6 +25,10 @@
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
+
+  const checkNotVerified = (event) => {
+    notVerified = event.detail.value;
+  };
 </script>
 
 <Meta
@@ -49,23 +56,36 @@
       </h2>
 
       <div class="card-content" slot="card-content">
+        {#if notVerified}
+          <div class="not-verified">
+            <img
+              src="img/icon-info-critical.svg"
+              alt="Google logo in color"
+              class="card-button__img"
+            />
+            <p class="not-verified__text">
+              {notVerifiedText}
+            </p>
+          </div>
+        {/if}
+
+        <!-- GOOGLE BUTTON -->
         <Button
           size="lg"
           customControl={true}
           textColor="#000000"
           background="transparent !important"
           borderColor="#CDCDD4"
-          custom="card-button card-button--google"
+          customClass="card-button"
         >
-          <div class="btn-content--sm">
-            <img
-              width="20px"
-              height="20px"
-              src="img/google-logo.svg"
-              alt="Google logo in color"
-            />
-            <div class="button-text">{args.cta1}</div>
-          </div>
+          <img
+            width="20px"
+            height="20px"
+            src="img/icon-logo-google.svg"
+            alt="Google logo in color"
+            class="card-button__img"
+          />
+          <div class="card-button__text launch-button-text">{args.cta1}</div>
         </Button>
 
         {#if args.welcomeCard}
@@ -75,9 +95,10 @@
             <hr />
           </div>
 
-          <Signin {store} {test} {handleTrigger} />
+          <Signin {store} {test} {handleTrigger} on:value={checkNotVerified} />
         {/if}
 
+        <!-- SIGN UP WITH EMAIL -->
         {#if !args.welcomeCard}
           <Button
             size="lg"
@@ -85,16 +106,16 @@
             textColor="#000000"
             background="transparent"
             borderColor="#CDCDD4"
-            custom="card-button card-button--signup"
+            customClass="card-button card-button--create"
           >
-            <div class="btn-content--sm">
-              <img
-                width="24px"
-                height="24px"
-                src="img/email.svg"
-                alt="Email icon"
-              />
-              <div class="button-text">Sign up with email</div>
+            <img
+              width="24px"
+              height="24px"
+              src="img/icon-email.svg"
+              alt="Email icon"
+            />
+            <div class="card-button__text launch-button-text">
+              Sign up with email
             </div>
           </Button>
 

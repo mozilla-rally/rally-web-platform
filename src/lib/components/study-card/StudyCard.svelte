@@ -85,7 +85,7 @@
       {#if !joined}
         <Button
           size={"md"}
-          custom={"w-100"}
+          customClass={"w-100"}
           product={true}
           leave={false}
           on:click={() => {

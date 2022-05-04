@@ -14,45 +14,142 @@
   export let linkText;
   export let width;
   export let height;
-  export let custom;
+  export let customClass;
   export let store;
-  export let test;
+  export let storyBookTest;
 
+  const errorClass = "mzp-c-field-control mzp-c-field-control--error";
+  const inputClass = "mzp-c-field-control";
+  const lowerCaseLetters = /[a-z]/g;
+  const numbers = /[0-9]/g;
+  const minPasswordLength = 8;
+  const pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
+  const upperCaseLetters = /[A-Z]/g;
+
+  let checkEmail = false;
+  let emailEl;
+  let formHeight = "auto";
+  let inputEmailClass;
+  let inputPasswordClass;
+  let passwordEl;
+  let passwordVisible = false;
   let titleEl;
   let textWidth;
 
-  //create account states
-  let email;
-  let password;
-  let passwordEl;
-  let passwordVisible = false;
-  let btnDisabled = true;
   let capital;
-  let number;
+  let inputItemsVisible = false;
   let length;
   let letter;
-  let createErr = false;
+  let number;
+
   let emailErrText = null;
+  let emptyFieldsErr;
   let fireBaseErr = null;
-  const minPasswordLength = 8;
-  let pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-  let checkEmail = false;
-  let formHeight = "auto";
+  let passwordErrText = null;
 
   onMount(() => {
     if (titleEl) {
       textWidth = titleEl.clientWidth;
     }
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
   });
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: formStyles = `--formHeight:${formHeight}`;
-  $: fireBaseErr === null ? (createErr = false) : (createErr = true);
+  $: if (emptyFieldsErr) {
+    inputEmailClass = errorClass;
+    inputPasswordClass = errorClass;
+    emailErrText = "Required";
+    passwordErrText = "Required";
+  }
 
-  const handleTrigger = (type) => {
-    dispatch("type", {
-      text: type,
-    });
+  const checkFields = async () => {
+    if (emailEl.value === "" && passwordEl.value === "") {
+      emptyFieldsErr = true;
+    } else if (emailEl.value === "") {
+      inputEmailClass = errorClass;
+      emailErrText = "Required";
+    } else if (checkEmail === false) {
+      checkRules();
+    } else {
+      if (storyBookTest === false) {
+        await store.signupWithEmailAndPassword(emailEl.value, passwordEl.value);
+        handleNextState();
+      }
+    }
+  };
+
+  const checkRules = () => {
+    inputPasswordClass = errorClass;
+    passwordErrText = "Required";
+    if (passwordEl) {
+      passwordEl.value.length < minPasswordLength
+        ? length.classList.add("rules-error")
+        : null;
+
+      passwordEl.value.match(lowerCaseLetters)
+        ? letter.classList.add("clear")
+        : letter.classList.add("rules-error");
+
+      passwordEl.value.match(upperCaseLetters)
+        ? capital.classList.add("clear")
+        : capital.classList.add("rules-error");
+
+      passwordEl.value.match(numbers)
+        ? number.classList.add("clear")
+        : number.classList.add("rules-error");
+    }
+    return;
+  };
+
+  const handleChange = (e) => {
+    const name = e.srcElement.name;
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
+    emptyFieldsErr = false;
+    emailErrText = null;
+    passwordErrText = null;
+
+    letter.classList.remove("rules-error");
+    capital.classList.remove("rules-error");
+    number.classList.remove("rules-error");
+    length.classList.remove("rules-error");
+
+    if (passwordEl) {
+      inputPasswordClass = inputClass;
+      if (name === "id_user_pw") {
+        inputItemsVisible = true;
+        // Validate lowercase letters
+        passwordEl.value.match(lowerCaseLetters)
+          ? letter.classList.add("valid")
+          : letter.classList.remove("valid");
+
+        // Validate uppercase letters
+        passwordEl.value.match(upperCaseLetters)
+          ? capital.classList.add("valid")
+          : capital.classList.remove("valid");
+
+        // Validate numbers
+        passwordEl.value.match(numbers)
+          ? number.classList.add("valid")
+          : number.classList.remove("valid");
+
+        // Validate length
+        passwordEl.value.length >= minPasswordLength
+          ? length.classList.add("valid")
+          : length.classList.remove("valid");
+
+        if (
+          passwordEl.value.length >= minPasswordLength &&
+          passwordEl.value.match(numbers) &&
+          passwordEl.value.match(lowerCaseLetters) &&
+          passwordEl.value.match(upperCaseLetters)
+        ) {
+          checkEmail = true;
+        } else checkEmail = false;
+      }
+    }
   };
 
   const handleToggle = () => {
@@ -62,51 +159,18 @@
     passwordEl.setAttribute("type", type);
   };
 
-  const handleChange = (e) => {
-    const name = e.srcElement.name;
-    if (passwordEl) {
-      // Validate lowercase letters
-      let lowerCaseLetters = /[a-z]/g;
-      passwordEl.value.match(lowerCaseLetters)
-        ? letter.classList.add("valid")
-        : letter.classList.remove("valid");
-
-      // Validate uppercase letters
-      let upperCaseLetters = /[A-Z]/g;
-      passwordEl.value.match(upperCaseLetters)
-        ? capital.classList.add("valid")
-        : capital.classList.remove("valid");
-
-      // Validate numbers
-      let numbers = /[0-9]/g;
-      passwordEl.value.match(numbers)
-        ? number.classList.add("valid")
-        : number.classList.remove("valid");
-
-      // Validate length
-      passwordEl.value.length >= minPasswordLength
-        ? length.classList.add("valid")
-        : length.classList.remove("valid");
-
-      if (name === "id_user_pw") {
-        if (
-          passwordEl.value.length >= minPasswordLength &&
-          passwordEl.value.match(numbers) &&
-          passwordEl.value.match(lowerCaseLetters) &&
-          passwordEl.value.match(upperCaseLetters)
-        ) {
-          btnDisabled = false;
-          checkEmail = true;
-        } else {
-          btnDisabled = true;
-        }
-      }
-    }
+  const handleTrigger = (type) => {
+    dispatch("type", {
+      text: type,
+    });
   };
 
   const handleNextState = () => {
-    fireBaseErr = localStorage.getItem("createErr");
-    fireBaseErr === null ? handleTrigger("check-create") : setMessage();
+    /* if the input fields are not empty, check for firebase errors. If there are firebase errors show error messages, otherwise proceed to show check email card*/
+    if (!emptyFieldsErr) {
+      fireBaseErr = localStorage.getItem("createErr");
+      fireBaseErr === null ? handleTrigger("check-create") : setMessage();
+    }
   };
 
   const setMessage = () => {
@@ -117,19 +181,21 @@
 
     isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
     if (isExistingEmail > -1) {
-      emailErrText = "Account already exists. Please sign in.";
+      inputEmailClass = errorClass;
+      emailErrText = "Account already exists. Please Sign in.";
     }
 
     isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
     if (isInvalidEmail > -1) {
-      emailErrText = "Email is invalid. Please enter a valid email.";
+      inputEmailClass = errorClass;
+      emailErrText = "Invalid format";
     }
 
     localStorage.removeItem("createErr");
   };
 </script>
 
-<Card {width} {height} {custom}>
+<Card {width} {height} {customClass}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>
@@ -144,8 +210,8 @@
               <label class="mzp-c-field-label" for="id_user_pw">Email</label>
             </div>
             <input
-              class="mzp-c-field-control"
-              bind:value={email}
+              class={inputEmailClass}
+              bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_email"
@@ -153,25 +219,22 @@
               type="email"
               width="100%"
               placeholder="Enter your email address"
-              required
             />
+            {#if emailErrText}
+              <p class="error-msg error-msg--email">
+                {emailErrText}
+              </p>
+            {/if}
           </div>
 
-          {#if createErr}
-            <p class="error-msg-active invalid-email">
-              {emailErrText}
-            </p>
-          {/if}
-
           <!-- PASSWORD -->
-          <div class="mzp-c-field field field--pw">
+          <div class="mzp-c-field field field--pw-create">
             <div class="label-wrapper">
               <label class="mzp-c-field-label" for="id_user_pw">Password</label>
             </div>
             <div class="input-wrapper">
               <input
-                class="mzp-c-field-control"
-                bind:value={password}
+                class={inputPasswordClass}
                 bind:this={passwordEl}
                 on:change={handleChange}
                 on:keyup={handleChange}
@@ -182,30 +245,34 @@
                 width="100%"
                 required
               />
-              {#if passwordVisible}
-                <img
-                  src="img/eye-slash.svg"
-                  alt="Eye with slash across it"
-                  class="fas fa-eye-slash togglePassword"
-                  id="hide-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {:else}
-                <img
-                  src="img/eye-open.svg"
-                  alt="Open eye"
-                  class="togglePassword"
-                  id="show-eye"
-                  width="24px"
-                  height="24px"
-                  on:click|preventDefault={handleToggle}
-                />
-              {/if}
+
+              <img
+                src={passwordVisible
+                  ? "img/icon-password-show.svg"
+                  : "img/icon-password-hide.svg"}
+                alt={passwordVisible ? "open eye" : "eye with slash"}
+                class={`toggle-password ${
+                  inputItemsVisible ? "create-show" : "create-hide"
+                }`}
+                id="show-eye"
+                width="24px"
+                height="24px"
+                type={passwordVisible ? "text" : "password"}
+                on:click={handleToggle}
+              />
             </div>
 
-            <ul class="info-rules">
+            {#if passwordErrText}
+              <p class="error-msg error-msg--password">
+                {passwordErrText}
+              </p>
+            {/if}
+
+            <ul
+              class={`password-requirements ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
+            >
               <li bind:this={length} id="length">Use at least 8 characters</li>
               <li bind:this={letter} id="letter">
                 Use at least 1 lowercase letter
@@ -219,44 +286,15 @@
         </fieldset>
       </form>
 
-      {#if !checkEmail}
-        <Button
-          disabled={btnDisabled}
-          size="xl"
-          custom="card-button card-button--create"
-        >
-          <div class="button-text">{cta1}</div></Button
-        >
-      {/if}
+      <Button
+        on:click={checkFields}
+        size="xl"
+        customClass="card-button card-button--create"
+        btnID="continue"
+      >
+        <div class="card-button__text">{cta1}</div></Button
+      >
 
-      {#if checkEmail && !test}
-        <Button
-          on:click={async () => {
-            await store.signupWithEmailAndPassword(email, password);
-            handleNextState();
-          }}
-          disabled={btnDisabled}
-          size="xl"
-          custom="card-button card-button--create"
-          btnID="continue"
-        >
-          <div class="button-text--signin">{cta1}</div></Button
-        >
-      {/if}
-
-      {#if checkEmail && test}
-        <Button
-          on:click={() => {
-            handleTrigger("check-create");
-          }}
-          disabled={btnDisabled}
-          size="xl"
-          custom="card-button card-button--create"
-          btnID="continue"
-        >
-          <div class="button-text--create">{cta1}</div></Button
-        >
-      {/if}
       <p class="body-text-privacy">
         By joining, you agree to our <a
           href="__BASE_SITE__/how-rally-works/data-and-privacy/"
@@ -266,6 +304,7 @@
     </div>
   </div>
 
+  <!-- SIGN IN -->
   <p slot="cta" class="body-text-action">
     {bodyText}
     <button

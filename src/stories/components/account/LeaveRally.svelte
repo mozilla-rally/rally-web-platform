@@ -48,7 +48,7 @@
     />
   </div>
   <div class="modal-call-flow">
-    <Button custom="btn-settings" size="lg" product leave>Leave Rally</Button>
+    <Button customClass="btn-settings" size="lg" product leave>Leave Rally</Button>
   </div>
 </div>
 
