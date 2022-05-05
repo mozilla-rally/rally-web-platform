@@ -119,17 +119,27 @@
       padding: 24px;
     }
 
+    .two-factor__steps {
+      font-size: 12px;
+      line-height: 12px;
+      color: #393473;
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 600;
+    }
+
     .two-factor__headline {
       font-size: 38px;
       line-height: 105%;
       color: #271948;
+      margin-bottom: 20px;
     }
     .two-factor__form {
       display: flex;
       align-items: stretch;
       width: 100%;
     }
-  
+
     .two-factor__subheadline {
       font-size: 24px;
       line-height: 28px;

@@ -7467,10 +7467,19 @@ ol {
   align-self: center;
   padding: 24px;
 }
+.settings-wrapper .two-factor-content .two-factor__steps {
+  font-size: 12px;
+  line-height: 12px;
+  color: #393473;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+}
 .settings-wrapper .two-factor-content .two-factor__headline {
   font-size: 38px;
   line-height: 105%;
   color: #271948;
+  margin-bottom: 20px;
 }
 .settings-wrapper .two-factor-content .two-factor__form {
   display: flex;

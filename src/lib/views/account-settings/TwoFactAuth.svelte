@@ -124,6 +124,53 @@
     </div>
   </div>
 
+  <!-- Enter Phone -->
+  <div class="two-factor-content">
+    <h1 class="two-factor__headline">Two-Factor Authentication</h1>
+
+    <h2 class="two-factor__steps">STEP 1 OF 2</h2>
+    <h2 class="two-factor__subheadline">Let’s set up your phone</h2>
+    <p class="two-factor__text ">Where should we send the code?</p>
+
+    <div class="two-factor__form d-flex">
+      <!-- todo - country/state dropdown  -->
+    </div>
+
+    <p class="two-factor__text txt-sm">
+      Mozilla Rally will use this number only account security. Messages and
+      data rates may apply
+    </p>
+
+    <div class="two-factor__actions">
+      <Button size="lg" secondary>Cancel</Button>
+      <Button size="lg" product>Send Code</Button>
+    </div>
+  </div>
+
+  <!-- Confirm Code -->
+  <div class="two-factor-content">
+    <h1 class="two-factor__headline">Two-Factor Authentication</h1>
+
+    <h2 class="two-factor__steps">STEP 2 OF 2</h2>
+    <h2 class="two-factor__subheadline">Confirm code</h2>
+    <p class="two-factor__text ">We just sent your verification code to (XXX)XXX-XXXX. Please enter the code to compelete two factor authentication.</p>
+
+    <div class="two-factor__form d-flex">
+      <!-- todo - 2fa code confirm inputs  -->
+    </div>
+
+    <p class="two-factor__text txt-sm">
+      Mozilla Rally will use this number only account security. Messages and
+      data rates may apply
+    </p>
+
+    <div class="two-factor__actions">
+      <p class="align-self-start">Need another code? <a href="#">Resend</a></p>
+      <Button size="lg" secondary>Cancel</Button>
+      <Button size="lg" product>Verify</Button>
+    </div>
+  </div> 
+
   <!-- Confirmed -->
   <div class="two-factor-content">
     <h1 class="two-factor__headline">Two-Factor Authentication</h1>
