@@ -135,6 +135,9 @@ workflows:
           type: approval
           requires:
             - stage-site-deploy
+          filters:
+            tags:
+              only: /.*/
 
       - site-deploy: # This deploys directly to our prod site at https://prod.rally-web.prod.dataops.mozgcp.net / https://members.rally.mozilla.org
           context: rally-web
@@ -147,5 +150,3 @@ workflows:
           filters:
             tags:
               only: /.*/
-            branches:
-              only: master
