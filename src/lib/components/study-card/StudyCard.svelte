@@ -35,7 +35,7 @@
     <span slot="study-top-section">
       {#if joined}
         <div
-          class={`vertically-aligned-container status-container ${
+          class={`d-flex status-container ${
             connected ? "connected" : "not-connected"
           }`}
         >
@@ -102,7 +102,7 @@
 
     <div class="joined-study-accordion">
       <AccordionButton bind:revealed>
-        <h4 class="study-card-subheader text-display-xxs">Study Description</h4>
+        <h4 class="study-card-subheader text-display-xxs">About this study</h4>
       </AccordionButton>
     </div>
 
@@ -181,7 +181,6 @@
 
     box-shadow: var(--rally-box-shadow-sm);
     background-color: var(--color-white);
-    border: 1px solid #ececed;
   }
 
   .study-card-description {
@@ -302,21 +301,35 @@
 
   .update-dropdown-link {
     text-decoration: none;
-    height: 28px;
-    width: 28px;
-  }
-
-  .update-dropdown-link:global(.show) {
-    background-color: #ededf0;
     border-radius: 50%;
     height: 28px;
     width: 28px;
+    box-shadow: none;
+  }
+
+  .update-dropdown-link:hover {
+    background-color: #cdcdd499;
+  }
+
+  .update-dropdown-link:global(.show) {
+    background-color: #c8c8d0;
   }
 
   .status-container {
     justify-content: space-between;
-    padding-left: 16px;
-    padding-right: 10px;
+    align-items: center;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  @media (max-width: 480px) {
+    .status-container {
+      align-items: flex-start;
+    }
   }
 
   .status-container.connected {
@@ -325,5 +338,9 @@
 
   .status-container.not-connected {
     background: #ffe3c2;
+  }
+
+  .dropdown-menu li {
+    display: flex;
   }
 </style>

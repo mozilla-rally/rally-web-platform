@@ -19,6 +19,7 @@
   export let minHeight;
   export let fontSize = "38px";
   export let custom = "";
+  export let showCloseButton = true;
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
@@ -118,9 +119,11 @@
           <h2 class="mzp-t-mozilla">
             <slot name="title">Title.</slot>
           </h2>
-          <button class="dismiss" on:click={onDismiss}>
-            <Close size="28px" />
-          </button>
+          {#if showCloseButton}
+            <button class="dismiss" on:click={onDismiss}>
+              <Close size="28px" />
+            </button>
+          {/if}
         </header>
 
         <div class={classSet}>
