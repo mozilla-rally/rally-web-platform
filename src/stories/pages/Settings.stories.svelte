@@ -9,11 +9,13 @@
   const listArr = [
     { email: "update-email" },
     { password: "update-pw" },
+    { twoFactor: "update-2fa" },
     { leaveRally: "leave-rally" },
   ];
 
   let isEmail = false;
   let isPW = false;
+  let is2FA = false;
   let isLeaveRally = false;
   let isReadOnly = true;
   let settingsTitle = "Account Settings";
@@ -36,6 +38,11 @@
     custom: "settings",
   };
 
+  let twoFaArgs = {
+    ...cardArgs,
+    custom: "settings extra-padding",
+  };
+
   let leaveRallyArgs = {
     ...cardArgs,
     custom: "settings extra-padding",
@@ -51,6 +58,7 @@
       case "update-email":
         isEmail = true;
         isPW = false;
+        is2FA = false;
         isLeaveRally = false;
         isReadOnly = false;
         settingsTitle = "Update email";
@@ -58,6 +66,15 @@
       case "update-pw":
         isPW = true;
         isEmail = false;
+        is2FA = false;
+        isLeaveRally = false;
+        settingsTitle = "Update password";
+        isReadOnly = false;
+        break;
+      case "update-2fa":
+        isPW = false;
+        isEmail = false;
+        is2FA = true;
         isLeaveRally = false;
         settingsTitle = "Update password";
         isReadOnly = false;
@@ -95,6 +112,8 @@
     cardArgs = updatePWArgs;
   } else if (isLeaveRally) {
     cardArgs = leaveRallyArgs;
+  } else if (is2FA) {
+    cardArgs = twoFaArgs;
   }
 </script>
 

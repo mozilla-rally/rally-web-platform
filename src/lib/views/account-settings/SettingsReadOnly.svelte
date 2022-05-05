@@ -37,7 +37,7 @@
   class="settings-readonly"
 >
   <div class="settings-readonly--first">
-    <h3 class="readonly-title">Contact Info</h3>
+    <h3 class="readonly-title">Sign In</h3>
     <div
       class="readonly-email"
       on:click={() => {
@@ -46,17 +46,27 @@
     >
       <ReadOnlyCard title="Email Address" content={userEmail} />
     </div>
-  </div>
-
-  <div class="settings-readonly--second">
-    <h3 class="readonly-title">Account Security</h3>
     <div
       class="readonly-pw"
       on:click={() => {
         handleSelect(settingsList["password"]);
       }}
     >
-      <ReadOnlyCard title="Password" content="*************" />
+    <ReadOnlyCard title="Password" content="*************" />
+
+    </div>
+  </div>
+
+  <div class="settings-readonly--second">
+    <h3 class="readonly-title">Account Security</h3>
+    <div
+      class="readonly-2fa"
+      on:click={() => {
+        handleSelect(settingsList["twoFactor"]);
+      }}
+    >
+    <ReadOnlyCard title="Two-step verification" content="Increase your security by adding two-step verification" />
+
     </div>
   </div>
 

@@ -38,7 +38,7 @@
     </header>
 
     <div class={`card__body card__body--${classSet}`}>
-      <slot name="card-content">
+      <slot name="card-body">
         <p>I am a Card</p>
       </slot>
     </div>

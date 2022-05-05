@@ -9,6 +9,7 @@
   import type { Readable } from "svelte/store";
   import type { AppStore } from "$lib/stores/types";
   import type { NotificationStore } from "$lib/components/notifications";
+import TwoFactAuth from "$lib/views/account-settings/TwoFactAuth.svelte";
 
   const store: AppStore = getContext("rally:store");
 
@@ -20,12 +21,14 @@
   const settingsList = {
     email: "update-email",
     password: "update-pw",
-    leaveRally: "leave-rally",
+    twoFactor: "update-2fa",
+    leaveRally: "leave-rally"
   };
 
   let isEmail = false;
   let isPW = false;
   let isReadOnly = true;
+  let is2FA = false;
   let settingsTitle = "Account Settings";
   let settingsDecription =
     "Manage your info, privacy, and security to make Rally work better for you.";
@@ -58,6 +61,14 @@
         settingsDecription = "Change your current password.";
         isReadOnly = false;
         break;
+      case "update-2fa":
+        isPW = false;
+        is2FA = true;
+        isEmail = false;
+        settingsTitle = "Change your 2fa";
+        settingsDecription = "Change your current 2fa settings.";
+        isReadOnly = false;
+        break;
       case "read-only":
         showReadOnly();
         break;
@@ -70,6 +81,7 @@
     isReadOnly = true;
     isEmail = false;
     isPW = false;
+    is2FA = false;
     settingsTitle = "Account Settings";
     settingsDecription =
       "Manage your info, privacy, and security to make Rally work better for you.";
@@ -94,6 +106,9 @@
 
 {#if $store._initialized && $isAuthenticated === true}
   <section>
+    {#if is2FA}
+          <TwoFactAuth on:type={displayCard} {settingsList} />
+    {:else}
     <div in:fly={{ duration: 800, y: 5 }} class="account-settings-container">
       <div class="title-wrapper">
         {#if !isReadOnly}
@@ -107,24 +122,14 @@
       <p class="description">
         {settingsDecription}
       </p>
-
       <hr />
       <div class="account-settings-main">
         {#if isReadOnly}
           <SettingsReadOnly on:type={displayCard} {settingsList} />
         {/if}
-
-        {#if !isReadOnly}
-          <SettingsCard
-            {isEmail}
-            {isPW}
-            {cardArgs}
-            {displayCard}
-            on:type={displayCard}
-          />
-        {/if}
       </div>
     </div>
+        {/if}
   </section>
 {/if}
 

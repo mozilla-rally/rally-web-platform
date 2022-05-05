@@ -103,14 +103,49 @@
 
   .two-factor-content {
     display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
-    width: 575px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 595px;
     margin-bottom: 40px;
+    padding: 32px;
+    background-color: #fff;
+    border: 1px solid #e7e5e2;
+    box-sizing: border-box;
+    border-radius: 4px;
 
+    .two-factor__icon {
+      align-self: center;
+      padding: 24px;
+    }
+
+    .two-factor__headline {
+      font-size: 38px;
+      line-height: 105%;
+      color: #271948;
+    }
+    .two-factor__form {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+    }
+  
+    .two-factor__subheadline {
+      font-size: 24px;
+      line-height: 28px;
+      color: #2b2156;
+      margin: 12px 0px;
+    }
     .two-factor__text {
-      width: 400px;
+      font-size: 18px;
+      line-height: 28px;
+      color: #5e5e72;
+      margin: 12px 0px;
+    }
+
+    .two-factor__actions {
+      align-items: flex-end;
+      align-self: flex-end;
     }
   }
 
@@ -118,7 +153,4 @@
     background-color: $color-dark-gray-60;
     border-color: $color-dark-gray-60;
   }
-
 }
-
-
