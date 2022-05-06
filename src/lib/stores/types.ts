@@ -6,8 +6,10 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   loginWithEmailAndPassword: Function;
   signOutUser: Function;
   enrollMfa: Function;
+  verifyEnrollMfa: Function;
   sendUserPasswordResetEmail: Function;
   resetUserPassword: Function;
+  reauthenticateUser: Function;
   changeEmail: Function;
   isUserVerified: Function;
   getUserEmail: Function;

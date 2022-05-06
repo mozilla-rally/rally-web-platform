@@ -9,7 +9,8 @@ import {
   signInWithRedirect,
   PhoneAuthProvider,
   RecaptchaVerifier,
-  multiFactor
+  multiFactor,
+  PhoneMultiFactorGenerator
 } from "firebase/auth";
 import {
   collection, doc,
@@ -284,9 +285,10 @@ export default {
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      console.error("there was an error", err);
       localStorage.setItem("signInErr", err);
-      return;
+      throw new Error(
+        err.code
+      );
     }
     if (userCredential.user.emailVerified) {
       initializeUserDocument(userCredential.user.uid);
@@ -330,20 +332,67 @@ export default {
     }
   },
 
-  async enrollMfa(phoneNumber) {
+  async verifyPassword(email, password) {
     try {
       const user = auth.currentUser;
       const mfaUser = multiFactor(user); 
       const session = await mfaUser.getSession();
 
+      const phoneAuthProvider = new PhoneAuthProvider(auth);
+      console.info("MFA SMS Sent");
+      return await phoneAuthProvider.verifyPhoneNumber(
+        phoneNumber,
+        // @ts-ignore
+        window.recaptchaVerifier
+      );
+
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("createErr", err);
+      return;
+    }
+  },
+
+  async enrollMfa(phoneNumber) {
+    console.log(phoneNumber)
+    try {
+      const user = auth.currentUser;
+      const mfaUser = multiFactor(user); 
+      const session = await mfaUser.getSession();
 
       const phoneAuthProvider = new PhoneAuthProvider(auth);
       console.info("MFA SMS Sent");
       return await phoneAuthProvider.verifyPhoneNumber(
-        '+15074296912',
+        phoneNumber,
         // @ts-ignore
         window.recaptchaVerifier
       );
+
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("createErr", err);
+      return;
+    }
+  },
+
+  async verifyEnrollMfa(verificationId, code) {
+    console.log(verificationId, code)
+    try {
+      const cred = PhoneAuthProvider.credential(
+        verificationId,
+        code
+      );
+    
+      const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(
+        cred
+      );
+
+      const user = auth.currentUser;
+      const mfaUser = multiFactor(user); 
+    
+      await mfaUser.enroll(multiFactorAssertion, 'phone number');
+    
+      alert('enrolled in MFA');
 
     } catch (err) {
       console.error("there was an error", err);

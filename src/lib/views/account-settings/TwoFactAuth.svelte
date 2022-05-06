@@ -9,31 +9,38 @@
   import Button from "../../../lib/components/Button.svelte";
   import { overwrite, getCodeList } from "country-list";
 
-	import {
-		getAuth,
-		createUserWithEmailAndPassword,
-		signInWithEmailAndPassword,
-		RecaptchaVerifier
-	} from 'firebase/auth';
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    RecaptchaVerifier,
+  } from "firebase/auth";
 
   const dispatch = createEventDispatcher();
   export let store;
 
   let password;
   let passwordEl;
+  let phoneNumberEl;
+  let enrollmentCodeEl;
+  let phoneVerificationId;
   let passwordVisible = false;
   let is2FA = false;
   let isBlank = true;
 
   const auth = getAuth();
+  const user = auth.currentUser;
 
   onMount(() => {
     // @ts-ignore
-    window.recaptchaVerifier = new RecaptchaVerifier('2fa-captcha', {
-        size: 'invisible',
-        callback: function (response) {
-        },
-      }, auth);
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "2fa-captcha",
+      {
+        size: "invisible",
+        callback: function (response) {},
+      },
+      auth
+    );
   });
 
   const handleToggle = () => {
@@ -47,13 +54,27 @@
     is2FA = !is2FA;
   };
 
-  const handleForgetPassword = async () => {
-    console.log(await store.enrollMfa("+16505550101"))
-  }
-
-  const handleChange = () => {
-    console.log("test");
+  const handleVerifyPassword = async () => {
+    store
+      .reauthenticateUser(passwordEl.value)
+      .then(() => {
+        console.log("password verified");
+      })
+      .catch((error) => {
+        console.error("incorrect password");
+      });
   };
+
+  const handleEnrollMfa = async () => {
+    phoneVerificationId = await store.enrollMfa("+1" + phoneNumberEl.value);
+    console.log('verification id - ', phoneVerificationId)
+  };
+
+  const handleVerifyEnrollMfa = async () => {
+    console.log(await store.verifyEnrollMfa(phoneVerificationId, enrollmentCodeEl.value));
+  };
+
+  const handleChange = () => {};
 
   const handleSelect = (type) => {
     dispatch("type", {
@@ -82,12 +103,12 @@
     {
       code: "hm",
       name: "Mcdonald Island",
-    }
+    },
   ]);
 </script>
 
 <div class="settings-wrapper settings-wrapper--two-factor">
-  <div id="2fa-captcha"></div>
+  <div id="2fa-captcha" />
 
   <!-- Enable -->
   <div class="two-factor-content">
@@ -132,7 +153,6 @@
         <div class="input-wrapper input-first ">
           <input
             class="mzp-l-stretch mzp-c-field-control w-100"
-            bind:value={password}
             bind:this={passwordEl}
             on:change={handleChange}
             on:keyup={handleChange}
@@ -151,7 +171,9 @@
               id="hide-eye"
               width="24px"
               height="24px"
-              on:click|preventDefault={handleToggle}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
             />
           {:else}
             <img
@@ -170,7 +192,7 @@
 
     <div class="two-factor__actions">
       <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product>Next</Button>
+      <Button size="lg" product on:click={handleVerifyPassword}>Next</Button>
     </div>
   </div>
 
@@ -194,6 +216,7 @@
       <div class="input-wrapper number">
         <input
           class="mzp-c-field-control mb-0"
+          bind:this={phoneNumberEl}
           on:change={handleChange}
           on:keyup={handleChange}
           id="id_user_number"
@@ -213,7 +236,7 @@
 
     <div class="two-factor__actions">
       <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product on:click={handleForgetPassword}>Send Code</Button>
+      <Button size="lg" product on:click={handleEnrollMfa}>Send Code</Button>
     </div>
   </div>
 
@@ -231,6 +254,7 @@
     <div class="two-factor__form d-flex justify-content-center mt-3 mb-3">
       <div class="input-wrapper--code">
         <input
+        bind:this={enrollmentCodeEl}
           on:change={handleChange}
           on:keyup={handleChange}
           id="id_user_number"
@@ -305,7 +329,7 @@
     <div class="two-factor__actions">
       <p class="align-self-start">Need another code? <a href="#">Resend</a></p>
       <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product>Verify</Button>
+      <Button size="lg" product on:click={handleVerifyEnrollMfa}>Verify</Button>
     </div>
   </div>
 
@@ -329,7 +353,7 @@
     </div>
   </div>
 
-  {#if is2FA}
+  <!-- {#if is2FA}
     <form method="post">
       <fieldset class="mzp-c-field-set field-set-settings">
         <div class="mzp-c-field field-pw">
@@ -423,7 +447,7 @@
         <div class="button-text">Cancel</div></Button
       >
     </div>
-  {/if}
+  {/if} -->
 </div>
 
 <style>
@@ -435,11 +459,13 @@
     padding-right: 19px;
   }
 
-  .input-wrapper--code input { min-width: auto; height: 48px }
+  .input-wrapper--code input {
+    min-width: auto;
+    height: 48px;
+  }
   .input-wrapper--code {
     padding-right: 8px;
     width: 40px;
-    
   }
 
   .input-first {

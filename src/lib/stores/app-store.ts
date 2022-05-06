@@ -7,6 +7,7 @@ import type { Readable, Writable } from "svelte/store";
 import { browser } from "$app/env";
 import firestoreAPI from "./api";
 import type { AppStore, State } from "./types";
+import type { reauthenticateWithCredential } from "firebase/auth";
 
 export function createAppStore(api = firestoreAPI): AppStore {
   const _store: Writable<State> = writable({ _initialized: false });
@@ -36,8 +37,14 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async signOutUser() {
       return api.signOutUser();
     },
-    async enrollMfa() {
-      return api.enrollMfa();
+    async enrollMfa(phoneNumber) {
+      return api.enrollMfa(phoneNumber);
+    },
+    async verifyEnrollMfa(id, code) {
+      return api.verifyEnrollMfa(id, code);
+    },
+    async reauthenticateUser(password) {
+      return api.reauthenticateUser(password);
     },
     async sendUserPasswordResetEmail(email) {
       return api.sendUserPasswordResetEmail(email);

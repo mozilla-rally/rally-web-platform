@@ -11,7 +11,7 @@
   export let storyBookTest;
   export let handleTrigger;
 
-  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  const emailPattern = /^[+\a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
 
@@ -41,12 +41,20 @@
   const checkEmail = async (val) => {
     if (val.match(emailPattern)) {
       if (storyBookTest === false) {
-        await store.loginWithEmailAndPassword(emailEl.value, passwordEl.value);
-        handleNextState();
+        try {
+          await store.loginWithEmailAndPassword(
+            emailEl.value,
+            passwordEl.value
+          );
+        } catch (error) {
+          if (error.message === "auth/multi-factor-auth-required") {
+            handleError("2FA verification required");
+
+          }
+        }
       }
     } else {
-      emailErrText = "Invalid format";
-      emailEl.classList.add("mzp-c-field-control--error");
+      handleError("Invalid Format");
     }
 
     if (storyBookTest === true) handleNotVerified();
@@ -77,6 +85,11 @@
     if (name === "id_user_pw") {
       inputItemsVisible = true;
     }
+  };
+
+  const handleError = (msg) => {
+    emailErrText = msg;
+    emailEl.classList.add("mzp-c-field-control--error");
   };
 
   const handleNotVerified = () => {
