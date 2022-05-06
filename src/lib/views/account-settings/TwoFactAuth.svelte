@@ -7,6 +7,7 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { createEventDispatcher } from "svelte";
   import Button from "../../../lib/components/Button.svelte";
+  import { overwrite, getCodeList } from "country-list";
 
   const dispatch = createEventDispatcher();
 
@@ -36,6 +37,30 @@
       text: type,
     });
   };
+
+  const countries = Object.entries(getCodeList());
+  overwrite([
+    {
+      code: "bo",
+      name: "Bolivia",
+    },
+    {
+      code: "bq",
+      name: "Bonaire",
+    },
+    {
+      code: "cd",
+      name: "Congo, DR",
+    },
+    {
+      code: "fm",
+      name: "Micronesia",
+    },
+    {
+      code: "hm",
+      name: "Mcdonald Island",
+    }
+  ]);
 </script>
 
 <div class="settings-wrapper settings-wrapper--two-factor">
@@ -134,9 +159,29 @@
 
     <div class="two-factor__form d-flex">
       <!-- todo - country/state dropdown  -->
+      <div class="input-wrapper--select w-50">
+        <select name="language" id="language">
+          {#each countries as country, i}
+            <option value={country[0]}>{country[1]}</option>
+          {/each}
+        </select>
+      </div>
+      <div class="input-wrapper number">
+        <input
+          class="mzp-c-field-control mb-0"
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          width="100%"
+          required
+          disabled={is2FA}
+        />
+      </div>
     </div>
 
-    <p class="two-factor__text txt-sm">
+    <p class="two-factor__text--small">
       Mozilla Rally will use this number only account security. Messages and
       data rates may apply
     </p>
@@ -153,13 +198,81 @@
 
     <h2 class="two-factor__steps">STEP 2 OF 2</h2>
     <h2 class="two-factor__subheadline">Confirm code</h2>
-    <p class="two-factor__text ">We just sent your verification code to (XXX)XXX-XXXX. Please enter the code to compelete two factor authentication.</p>
+    <p class="two-factor__text ">
+      We just sent your verification code to (XXX)XXX-XXXX. Please enter the
+      code to compelete two factor authentication.
+    </p>
 
-    <div class="two-factor__form d-flex">
-      <!-- todo - 2fa code confirm inputs  -->
+    <div class="two-factor__form d-flex justify-content-center mt-3 mb-3">
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
+      <div class="input-wrapper--code">
+        <input
+          on:change={handleChange}
+          on:keyup={handleChange}
+          id="id_user_number"
+          name="id_user_number"
+          type="tel"
+          required
+          disabled={is2FA}
+        />
+      </div>
     </div>
 
-    <p class="two-factor__text txt-sm">
+    <p class="two-factor__text--small">
       Mozilla Rally will use this number only account security. Messages and
       data rates may apply
     </p>
@@ -169,7 +282,7 @@
       <Button size="lg" secondary>Cancel</Button>
       <Button size="lg" product>Verify</Button>
     </div>
-  </div> 
+  </div>
 
   <!-- Confirmed -->
   <div class="two-factor-content">
@@ -291,6 +404,17 @@
 <style>
   .number {
     padding-bottom: 15px;
+  }
+
+  .input-wrapper--select {
+    padding-right: 19px;
+  }
+
+  .input-wrapper--code input { min-width: auto; height: 48px }
+  .input-wrapper--code {
+    padding-right: 8px;
+    width: 40px;
+    
   }
 
   .input-first {

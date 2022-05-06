@@ -7498,6 +7498,11 @@ ol {
   color: #5e5e72;
   margin: 12px 0px;
 }
+.settings-wrapper .two-factor-content .two-factor__text--small {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
 .settings-wrapper .two-factor-content .two-factor__actions {
   align-items: flex-end;
   align-self: flex-end;

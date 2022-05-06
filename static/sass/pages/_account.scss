@@ -151,6 +151,12 @@
       line-height: 28px;
       color: #5e5e72;
       margin: 12px 0px;
+
+      &--small {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+      }
     }
 
     .two-factor__actions {
