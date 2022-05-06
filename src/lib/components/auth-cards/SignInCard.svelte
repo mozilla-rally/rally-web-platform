@@ -85,7 +85,7 @@
           on:keyup={handleChange}
           id="id_user_email"
           name="id_user_email"
-          type="email"
+          type="text"
           width="100%"
           required
         />
@@ -162,7 +162,7 @@
       custom="card-button signin__btn"
       btnID="signin-btn"
     >
-      <div class="button-text--signin">Sign in</div></Button
+      <div class="button-text--signin">Sidgn in</div></Button
     >
   {/if}
 

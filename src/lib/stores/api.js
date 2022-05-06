@@ -7,6 +7,9 @@ import {
   updateEmail,
   signOut,
   signInWithRedirect,
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  multiFactor
 } from "firebase/auth";
 import {
   collection, doc,
@@ -18,6 +21,7 @@ import initializeFirebase from "./initialize-firebase";
 let auth;
 let db;
 let functionsHost;
+let app;
 
 async function initializeFirestoreAPIs() {
   const request = await fetch("/firebase.config.json");
@@ -31,6 +35,7 @@ async function initializeFirestoreAPIs() {
   });
   auth = fb.auth;
   db = fb.db;
+  app = fb.app;
 }
 
 // NOTE: this object is not to be touched.
@@ -321,6 +326,28 @@ export default {
       console.info("Signing out");
     } catch (err) {
       console.error("there was an error", err);
+      return;
+    }
+  },
+
+  async enrollMfa(phoneNumber) {
+    try {
+      const user = auth.currentUser;
+      const mfaUser = multiFactor(user); 
+      const session = await mfaUser.getSession();
+
+
+      const phoneAuthProvider = new PhoneAuthProvider(auth);
+      console.info("MFA SMS Sent");
+      return await phoneAuthProvider.verifyPhoneNumber(
+        '+15074296912',
+        // @ts-ignore
+        window.recaptchaVerifier
+      );
+
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("createErr", err);
       return;
     }
   },

@@ -5,17 +5,36 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import Button from "../../../lib/components/Button.svelte";
   import { overwrite, getCodeList } from "country-list";
 
+	import {
+		getAuth,
+		createUserWithEmailAndPassword,
+		signInWithEmailAndPassword,
+		RecaptchaVerifier
+	} from 'firebase/auth';
+
   const dispatch = createEventDispatcher();
+  export let store;
 
   let password;
   let passwordEl;
   let passwordVisible = false;
   let is2FA = false;
   let isBlank = true;
+
+  const auth = getAuth();
+
+  onMount(() => {
+    // @ts-ignore
+    window.recaptchaVerifier = new RecaptchaVerifier('2fa-captcha', {
+        size: 'invisible',
+        callback: function (response) {
+        },
+      }, auth);
+  });
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
@@ -27,6 +46,10 @@
   const handleAuthToggle = () => {
     is2FA = !is2FA;
   };
+
+  const handleForgetPassword = async () => {
+    console.log(await store.enrollMfa("+16505550101"))
+  }
 
   const handleChange = () => {
     console.log("test");
@@ -64,6 +87,8 @@
 </script>
 
 <div class="settings-wrapper settings-wrapper--two-factor">
+  <div id="2fa-captcha"></div>
+
   <!-- Enable -->
   <div class="two-factor-content">
     <h1 class="two-factor__headline">Two-Factor Authentication</h1>
@@ -188,7 +213,7 @@
 
     <div class="two-factor__actions">
       <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product>Send Code</Button>
+      <Button size="lg" product on:click={handleForgetPassword}>Send Code</Button>
     </div>
   </div>
 

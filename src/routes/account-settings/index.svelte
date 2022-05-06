@@ -107,7 +107,7 @@ import TwoFactAuth from "$lib/views/account-settings/TwoFactAuth.svelte";
 {#if $store._initialized && $isAuthenticated === true}
   <section>
     {#if is2FA}
-          <TwoFactAuth on:type={displayCard} {settingsList} />
+          <TwoFactAuth {store} on:type={displayCard} {settingsList} />
     {:else}
     <div in:fly={{ duration: 800, y: 5 }} class="account-settings-container">
       <div class="title-wrapper">
