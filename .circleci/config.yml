@@ -126,8 +126,6 @@ workflows:
           requires:
             - archive-site
           filters:
-            tags:
-              only: /.*/
             branches:
               only: master
 
@@ -137,8 +135,6 @@ workflows:
           project_name: $PROJECT_ID_PROD
           project_config: rally-web-prod
           service_key: $GCLOUD_SERVICE_KEY
-          requires:
-            - stage-site-deploy
           filters:
             tags:
               only: /.*/
