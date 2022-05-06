@@ -22,7 +22,7 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       - node/install:
-          node-version: '16.13'
+          node-version: "16.13"
       - node/install-packages
       - run:
           name: Run lint
@@ -131,14 +131,6 @@ workflows:
             branches:
               only: master
 
-      - hold: # requires approval for prod deployment
-          type: approval
-          requires:
-            - stage-site-deploy
-          filters:
-            tags:
-              only: /.*/
-
       - site-deploy: # This deploys directly to our prod site at https://prod.rally-web.prod.dataops.mozgcp.net / https://members.rally.mozilla.org
           context: rally-web
           name: prod-site-deploy
@@ -146,7 +138,7 @@ workflows:
           project_config: rally-web-prod
           service_key: $GCLOUD_SERVICE_KEY
           requires:
-            - hold
+            - stage-site-deploy
           filters:
             tags:
               only: /.*/
