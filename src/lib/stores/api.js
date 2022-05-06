@@ -332,27 +332,6 @@ export default {
     }
   },
 
-  async verifyPassword(email, password) {
-    try {
-      const user = auth.currentUser;
-      const mfaUser = multiFactor(user); 
-      const session = await mfaUser.getSession();
-
-      const phoneAuthProvider = new PhoneAuthProvider(auth);
-      console.info("MFA SMS Sent");
-      return await phoneAuthProvider.verifyPhoneNumber(
-        phoneNumber,
-        // @ts-ignore
-        window.recaptchaVerifier
-      );
-
-    } catch (err) {
-      console.error("there was an error", err);
-      localStorage.setItem("createErr", err);
-      return;
-    }
-  },
-
   async enrollMfa(phoneNumber) {
     console.log(phoneNumber)
     try {
@@ -385,7 +364,7 @@ export default {
     
       const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(
         cred
-      );
+        );
 
       const user = auth.currentUser;
       const mfaUser = multiFactor(user); 
