@@ -103,11 +103,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-and-test:
-          filters:
-            tags:
-              only: /.*/
-
+      - build-and-test
       - archive-site:
           requires:
             - build-and-test
@@ -128,6 +124,8 @@ workflows:
           filters:
             branches:
               only: master
+            tags:
+              ignore: /.*/
 
       - site-deploy: # This deploys directly to our prod site at https://prod.rally-web.prod.dataops.mozgcp.net / https://members.rally.mozilla.org
           context: rally-web
@@ -135,6 +133,10 @@ workflows:
           project_name: $PROJECT_ID_PROD
           project_config: rally-web-prod
           service_key: $GCLOUD_SERVICE_KEY
+          requires:
+            - archive-site
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*/
