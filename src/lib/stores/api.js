@@ -341,8 +341,14 @@ export default {
 
       const phoneAuthProvider = new PhoneAuthProvider(auth);
       console.info("MFA SMS Sent");
-      return await phoneAuthProvider.verifyPhoneNumber(
+
+      const phoneInfoOptions = {
         phoneNumber,
+        session
+      };
+
+      return await phoneAuthProvider.verifyPhoneNumber(
+        phoneInfoOptions,
         // @ts-ignore
         window.recaptchaVerifier
       );
