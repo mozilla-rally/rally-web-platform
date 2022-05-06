@@ -125,8 +125,6 @@
   };
 </script>
 
-
-
 <section class="signin md-container-signin">
   <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
     <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
@@ -161,11 +159,13 @@
           {...cardArgs}
           {store}
           on:type={triggerCard}
+          storyBookTest={false}
+          {welcomeCard}
         />
       {/if}
 
       {#if createAcctCard && !welcomeCard && !joinCard}
-        <CreateCard {...cardArgs} {store} on:type={triggerCard} />
+        <CreateCard {...cardArgs} {store} on:type={triggerCard} storyBookTest={false} />
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
@@ -178,6 +178,7 @@
           {sendUserInfo}
           {store}
           on:type={triggerCard}
+          storyBookTest={false}
         />
       {/if}
 

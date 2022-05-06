@@ -10,10 +10,14 @@
   @media (max-width: $SM-screen) {
     border: none;
     height: auto !important;
+    padding: 0; 
   }
 
   &__inner {
     padding: 0;
+    @media (max-width: $XS-screen) {
+      max-width: 296px;
+    }
   }
 
   .title-wrapper {
@@ -31,10 +35,6 @@
     text-align: center;
     display: inline-block;
     font-weight: bold;
-
-    @media (max-width: $XS-screen) {
-      max-width: 200px;
-    }
   }
 
   &__body {
@@ -44,6 +44,7 @@
       justify-content: center;
       max-width: 368px;
       width: 368px;
+      margin: auto; 
       @media (max-width: $MD-screen) {
         width: 100%;
       }

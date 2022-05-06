@@ -4,6 +4,11 @@
   &__logo {
     grid-column: 4/10;
     text-align: center;
+    @media (max-width: $XS-screen) {
+      width: 289px;
+      margin: auto;
+      grid-column: 6/10;
+    }
   }
 
   &__content {
@@ -16,6 +21,9 @@
   }
   &__cards {
     grid-column: 2/12;
+    @media (max-width: $SM-screen) {
+      padding: 0; 
+    }
 
     .spinner {
       -webkit-animation: rotator 1.4s linear infinite;
@@ -35,10 +43,29 @@
   }
 
   &__howitworks {
-    grid-column: 4/10;
+    
+    grid-column: 5/10;
     align-self: center;
     text-align: center;
     margin-top: 40px;
+    min-width: 300px;
+
+    .external-link{
+      display: flex;
+      align-items: center;
+    }
+
+    svg{
+      padding-left: 8px; 
+    }
+    @media (max-width: $SM-screen) {
+      min-width: 289px; 
+    }
+
+    @media (max-width: $XS-screen) {
+      margin: auto;
+      grid-column: 9/10;
+    }
   }
 }
 
@@ -50,7 +77,7 @@
     h2 {
       font-weight: bold;
       line-height: 44px;
-      font-size: 38px;
+      font-size: 2.375rem;
     }
 
     .title-highlight {
@@ -71,36 +98,84 @@
   }
 
   .card-content {
-    .button-text {
-      text-align: center;
-      font-size: 1rem;
-      opacity: 0.6;
+    .not-verified {
+      display: flex;
+      padding: 16px;
+      border-radius: 2px;
+      background-color: $color-red-05;
+      margin-bottom: 24px;
+      margin-top: -24px !important;
+      align-items: self-start;
 
-      @media only screen and (max-width: $XS-screen) {
-        font-size: 12px;
+      img {
+        margin-right: 16px;
+        font-size: 2.625rem;
+        color: $color-red-60;
+        margin-top: 2px;
+      }
+
+      &__text {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1.125;
+        line-height: 20px;
+        color: #000 !important;
+        margin: 0;
       }
     }
-
     .card-body-info {
       max-width: 368px;
       text-align: left;
+      font-size: 18px;
+      color: #000000;
     }
 
     &__text {
       margin: 0;
       padding: 0;
       text-align: center;
+      color: #000000;
     }
   }
 
   .card-button {
     width: 100%;
+    display: flex;
+
+    &__text {
+      width: 300px;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      margin: auto;
+      @media only screen and (max-width: $XS-screen) {
+        font-size: 1rem;
+        width: 289px;
+      }
+    }
+
     &--signup {
       margin: 16px 0px;
+      @media only screen and (max-width: $XS-screen) {
+        width: 289px;
+      }
     }
 
     &--create {
-      margin-bottom: 20px;
+      margin: 16px 0 20px;
+    }
+
+    &--reset {
+      margin-top: 36px;
+    }
+
+    @media (max-width: $SM-screen) {
+      justify-content: space-around;
+    }
+
+    @media (max-width: $XS-screen) {
+      max-width: 289px;
     }
   }
 
@@ -114,11 +189,12 @@
       width: 46%;
       padding: 0;
       margin: 0;
-      border: 1px solid #cdcdd4;
+      border: 1px solid #9595a2;
+      border-radius: 10px;
     }
 
     &__text {
-      color: #cdcdd4;
+      color: #5e5e72;
     }
   }
 
@@ -138,6 +214,18 @@
         height: 48px;
         font-size: 0.875rem;
         border: 2px solid $color-marketing-gray-50;
+        color: #000000;
+        font-weight: 400;
+      }
+
+      .mzp-c-field-control {
+        &--error {
+          border: 2px solid $color-red-70;
+        }
+      }
+
+      @media only screen and (max-width: $XS-screen) {
+        max-width: 289px;
       }
     }
 
@@ -147,7 +235,7 @@
       grid-column: 1/13;
 
       @media only screen and (min-width: $MD-screen) {
-        max-width: 360px;
+        max-width: 368px;
       }
     }
 
@@ -168,6 +256,10 @@
     &--pw {
       padding-bottom: 16px;
     }
+
+    &--pw-create {
+      padding-bottom: 0;
+    }
   }
 
   .input-wrapper {
@@ -183,17 +275,33 @@
       grid-row: 1/2;
       justify-self: end;
       z-index: 2;
-      margin: 10px;
+      margin: 12px;
+      cursor: pointer;
     }
+  }
+
+  .create-hide {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+    padding: 0;
+  }
+
+  .create-show {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+    transition: opacity 1s linear, height 1s linear;
   }
 
   .body-text-action {
     padding-top: 48px;
     margin: 0;
-    font-size: 16px;
+    font-size: 1rem;
     color: #000000;
     text-align: center;
     grid-column: 1/13;
+    opacity: 0.8;
 
     @media only screen and (min-width: $MD-screen) {
       max-width: 360px;
@@ -211,12 +319,22 @@
       font-weight: 700;
     }
 
-    &--info{
+    &--info {
       padding-top: 32px;
-      .contact-text{
-        padding-top: 32px; 
+      .contact-text {
+        padding-top: 32px;
         margin: 0;
       }
+    }
+
+    &--check-email {
+      padding-top: 36px;
+    }
+
+    .contact-text {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #000000;
     }
   }
 }
@@ -242,11 +360,6 @@
       justify-content: center;
       animation: moveInLeft 1s ease-out;
       margin-bottom: 1.2rem;
-    }
-
-    .mzp-c-call-out-desc {
-      color: $color-marketing-gray-70;
-      font-size: 1.6rem;
     }
   }
 }
@@ -356,27 +469,35 @@
 
 .mzp-c-field-label {
   font-weight: 600;
-  color: #818282;
-  font-size: 0.875rem;
+  color: $color-marketing-gray-99;
+  // set the rem
+  font-size: 1rem;
 }
 
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: gray;
   padding: 0;
 }
 
-.error-msg-active {
+.error-msg {
   position: inherit;
-  color: red;
-  padding-top: 0.5rem;
+  color: $color-red-70;
+  padding: 4px 0px 0px;
   top: 0;
+  margin: 0;
+  font-size: 0.875rem;
 }
 
 .valid {
   text-decoration: line-through !important;
+  color: rgba(21, 20, 26, 0.4);
+}
+
+.rules-error {
+  color: $color-red-70;
 }
 
 .hide-error-msg {
@@ -384,16 +505,23 @@
 }
 
 .body-text-privacy {
-  font-size: 12px;
+  font-size: 0.875rem;
   margin: auto;
   text-align: center;
+  color: #5e5e72;
+
+  a {
+    color: #5e5e72;
+  }
 }
 
-.info-rules {
+.password-requirements {
   list-style: disc;
   font-size: 0.875rem;
-  color: gray;
-  padding: 16px 24px 0px;
+  color: $color-helper-gray;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 14px 24px 0px;
   text-align: left;
   margin: 0;
 }
@@ -412,3 +540,4 @@
     color: #000000;
   }
 }
+

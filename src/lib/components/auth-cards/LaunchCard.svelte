@@ -6,7 +6,6 @@
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
   import Signin from "./SignInCard.svelte";
-
   const dispatch = createEventDispatcher();
 
   export let title;
@@ -17,12 +16,15 @@
   export let width;
   export let height;
   export let store;
-  export let custom;
+  export let storyBookTest
 
+  let customClass = "launch";
+  let notVerified = false;
+  const notVerifiedText =
+    "Email account is not verified. Please check your inbox and activate your account.";
+  let startState;
   let titleEl;
   let textWidth;
-  let startState;
-  let test = false;
 
   onMount(async () => {
     if (titleEl) {
@@ -34,6 +36,7 @@
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: startState = welcomeCard ? "join" : "welcome";
+  $: if(!welcomeCard){notVerified = false}
 
   $: if (welcomeCard) {
     setTimeout(() => {
@@ -51,7 +54,6 @@
   }
   const handleGoogleLogin = async () => {
     localStorage.setItem("isLoading", "loading");
-
     loginWithGoogle();
   };
 
@@ -64,9 +66,14 @@
       text: type,
     });
   };
+
+  const checkNotVerified = (event) => {
+    notVerified = event.detail.value;
+  };
+
 </script>
 
-<Card {width} {custom} {height}>
+<Card {width} {customClass} {height}>
   <h2 class="title-wrapper--launch" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">
@@ -75,24 +82,37 @@
   </h2>
 
   <div class="card-content" slot="card-content">
+    {#if notVerified}
+      <div class="not-verified">
+        <img
+          src="img/icon-info-critical.svg"
+          alt="Google logo in color"
+          class="card-button__img"
+        />
+        <p class="not-verified__text">
+          {notVerifiedText}
+        </p>
+      </div>
+    {/if}
+
+    <!-- GOOGLE BUTTON -->
     <Button
       size="lg"
       customControl={true}
       textColor="#000000"
       background="transparent !important"
       borderColor="#CDCDD4"
-      custom="card-button card-button--google"
+      customClass="card-button"
       on:click={handleGoogleLogin}
     >
-      <div class="btn-content--sm">
-        <img
-          width="20px"
-          height="20px"
-          src="img/google-logo.svg"
-          alt="Google logo in color"
-        />
-        <div class="button-text">{cta1}</div>
-      </div>
+      <img
+        width="20px"
+        height="20px"
+        src="img/icon-logo-google.svg"
+        alt="Google logo in color"
+        class="card-button__img"
+      />
+      <div class="card-button__text launch-button-text">{cta1}</div>
     </Button>
 
     {#if welcomeCard}
@@ -102,9 +122,10 @@
         <hr />
       </div>
 
-      <Signin {store} {test} {handleTrigger} />
+      <Signin {store} {storyBookTest} {handleTrigger} on:value={checkNotVerified} />
     {/if}
 
+    <!-- SIGN UP WITH EMAIL -->
     {#if !welcomeCard}
       <Button
         size="lg"
@@ -112,25 +133,26 @@
         textColor="#000000"
         background="transparent"
         borderColor="#cdcdd4"
-        custom="card-button card-button--signup"
+        customClass="card-button card-button--create"
         btnID="create"
         on:click={() => handleTrigger("create")}
       >
-        <div class="btn-content--sm">
-          <img
-            width="24px"
-            height="24px"
-            src="img/email.svg"
-            alt="Email icon"
-          />
-          <div class="button-text">Sign up with email</div>
+        <img
+          class="card-button__img"
+          width="24px"
+          height="24px"
+          src="img/icon-email.svg"
+          alt="Email icon"
+        />
+        <div class="card-button__text launch-button-text">
+          Sign up with email
         </div>
       </Button>
 
       <p class="body-text-privacy">
         By joining, you agree to our <a
           href="__BASE_SITE__/how-rally-works/data-and-privacy/"
-          >privacy notice</a
+          >privacy notice.</a
         >
       </p>
     {/if}

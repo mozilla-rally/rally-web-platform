@@ -5,7 +5,7 @@
 
   export let width;
   export let height;
-  export let custom = "";
+  export let customClass = "";
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
@@ -23,7 +23,7 @@
     width,
     height
   });
-  $: classSet = [custom].filter((t) => t).join(" ");
+  $: classSet = [customClass].filter((t) => t).join(" ");
 
   const key = `card-${
     Math.random().toString(36).substring(2, 15) +
@@ -33,7 +33,7 @@
 
 <div id={key} class="card radius-sm" style={styles}>
   <div class="card__inner">
-    <header class={`card-header card-header--${custom}` }>
+    <header class={`card-header card-header--${customClass}` }>
       <slot name="card-title" />
     </header>
 

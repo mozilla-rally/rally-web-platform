@@ -235,11 +235,6 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
-    await findAndAct(
-      driver,
-      By.xpath('//button[text()="Create account"]'),
-      (e) => e.click()
-    );
     await findAndAct(driver, By.id("create"), (e) => e.click());
 
     // Invalid email address fails.
@@ -270,6 +265,12 @@ describe("Rally Web Platform UX flows", function () {
       WAIT_FOR_PROPERTY
     );
 
+    await findAndAct(
+      driver,
+      By.xpath('//button[text()="Sign in"]'),
+      (e) => e.click()
+    );
+
     // Totally invalid credentials fail
     await driver.findElement(By.id("id_user_email")).sendKeys("test123");
     await driver.findElement(By.id("id_user_pw")).sendKeys("Test1234");
@@ -285,11 +286,7 @@ describe("Rally Web Platform UX flows", function () {
   });
 
   it("signs up for website with valid email credentials", async function () {
-    await findAndAct(
-      driver,
-      By.xpath('//button[text()="Create account"]'),
-      (e) => e.click()
-    );
+
     await findAndAct(driver, By.id("create"), (e) => e.click());
 
     // Valid credentials succeed.
@@ -300,9 +297,7 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.id("continue"), (e) => e.click());
 
     //navigate to sign in cards
-    await findAndAct(driver, By.xpath('//button[text()="Sign in"]'), (e) =>
-      e.click()
-    );
+    await findAndAct(driver, By.id("back-signin-btn"), (e) => e.click());
 
     // Unverified account can be logged into, but cannot be used until verified.
     await driver
@@ -341,6 +336,12 @@ describe("Rally Web Platform UX flows", function () {
 
     // Sign in again, need to get a new token that has email_verified as a claim.
     await driver.get("http://localhost:5000/signup");
+
+    await findAndAct(
+      driver,
+      By.xpath('//button[text()="Sign in"]'),
+      (e) => e.click()
+    );
 
     await driver
       .findElement(By.id("id_user_email"))

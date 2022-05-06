@@ -1163,6 +1163,7 @@ html {
   height: 100%;
   overflow: visible;
   scroll-behavior: smooth;
+  font-size: 100%;
 }
 
 body {
@@ -6861,6 +6862,13 @@ ol {
   align-items: center;
 }
 
+.launch-button-text {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 24px;
+  color: #5e5e72;
+}
+
 .body-copy {
   color: #5e5e72;
 }
@@ -7113,10 +7121,6 @@ ol {
 .header .nav-primary .dropdown-list .list-item img {
   opacity: 0.6;
 }
-.header__dropdown .dropdown-list .list-item:hover,
-.header .nav-primary .dropdown-list .list-item:hover {
-  background-color: #f0f0f4;
-}
 .header__dropdown .dropdown-list .list-item--info,
 .header .nav-primary .dropdown-list .list-item--info {
   display: block;
@@ -7201,28 +7205,12 @@ ol {
 }
 @media (max-width: 432px) {
   .md-container-signin {
-    padding: 2rem 1rem;
-  }
-}
-
-.btn-content--sm {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
-  text-align: left;
-}
-@media (max-width: 432px) {
-  .btn-content--sm {
-    justify-content: space-around;
+    padding: 2rem 0;
   }
 }
 
 .mzp-c-button.mzp-t-md {
   font-size: 14px;
-}
-
-.mzp-c-button {
-  font-size: 1rem;
 }
 
 /* extended button states */
@@ -7311,10 +7299,16 @@ ol {
   .card {
     border: none;
     height: auto !important;
+    padding: 0;
   }
 }
 .card__inner {
   padding: 0;
+}
+@media (max-width: 360px) {
+  .card__inner {
+    max-width: 296px;
+  }
 }
 .card .title-wrapper {
   display: flex;
@@ -7330,17 +7324,13 @@ ol {
   display: inline-block;
   font-weight: bold;
 }
-@media (max-width: 360px) {
-  .card .title-text {
-    max-width: 200px;
-  }
-}
 .card__body .card-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 368px;
   width: 368px;
+  margin: auto;
 }
 @media (max-width: 688px) {
   .card__body .card-content {
@@ -7516,6 +7506,13 @@ ol {
   grid-column: 4/10;
   text-align: center;
 }
+@media (max-width: 360px) {
+  .signin__logo {
+    width: 289px;
+    margin: auto;
+    grid-column: 6/10;
+  }
+}
 .signin__content {
   width: 100%;
   display: grid;
@@ -7526,6 +7523,11 @@ ol {
 }
 .signin__cards {
   grid-column: 2/12;
+}
+@media (max-width: 432px) {
+  .signin__cards {
+    padding: 0;
+  }
 }
 .signin__cards .spinner {
   -webkit-animation: rotator 1.4s linear infinite;
@@ -7540,10 +7542,29 @@ ol {
   animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
 }
 .signin__howitworks {
-  grid-column: 4/10;
+  grid-column: 5/10;
   align-self: center;
   text-align: center;
   margin-top: 40px;
+  min-width: 300px;
+}
+.signin__howitworks .external-link {
+  display: flex;
+  align-items: center;
+}
+.signin__howitworks svg {
+  padding-left: 8px;
+}
+@media (max-width: 432px) {
+  .signin__howitworks {
+    min-width: 289px;
+  }
+}
+@media (max-width: 360px) {
+  .signin__howitworks {
+    margin: auto;
+    grid-column: 9/10;
+  }
 }
 
 .card {
@@ -7555,7 +7576,7 @@ ol {
 .card .card-header h2 {
   font-weight: bold;
   line-height: 44px;
-  font-size: 38px;
+  font-size: 2.375rem;
 }
 .card .card-header .title-highlight {
   display: block;
@@ -7573,33 +7594,82 @@ ol {
 .card .card-header--info-card {
   padding-bottom: 32px;
 }
-.card .card-content .button-text {
-  text-align: center;
-  font-size: 1rem;
-  opacity: 0.6;
+.card .card-content .not-verified {
+  display: flex;
+  padding: 16px;
+  border-radius: 2px;
+  background-color: #ffdfe7;
+  margin-bottom: 24px;
+  margin-top: -24px !important;
+  align-items: self-start;
 }
-@media only screen and (max-width: 360px) {
-  .card .card-content .button-text {
-    font-size: 12px;
-  }
+.card .card-content .not-verified img {
+  margin-right: 16px;
+  font-size: 2.625rem;
+  color: #e22850;
+  margin-top: 2px;
+}
+.card .card-content .not-verified__text {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.125;
+  line-height: 20px;
+  color: #000 !important;
+  margin: 0;
 }
 .card .card-content .card-body-info {
   max-width: 368px;
   text-align: left;
+  font-size: 18px;
+  color: #000000;
 }
 .card .card-content__text {
   margin: 0;
   padding: 0;
   text-align: center;
+  color: #000000;
 }
 .card .card-button {
   width: 100%;
+  display: flex;
+}
+.card .card-button__text {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: auto;
+}
+@media only screen and (max-width: 360px) {
+  .card .card-button__text {
+    font-size: 1rem;
+    width: 289px;
+  }
 }
 .card .card-button--signup {
   margin: 16px 0px;
 }
+@media only screen and (max-width: 360px) {
+  .card .card-button--signup {
+    width: 289px;
+  }
+}
 .card .card-button--create {
-  margin-bottom: 20px;
+  margin: 16px 0 20px;
+}
+.card .card-button--reset {
+  margin-top: 36px;
+}
+@media (max-width: 432px) {
+  .card .card-button {
+    justify-content: space-around;
+  }
+}
+@media (max-width: 360px) {
+  .card .card-button {
+    max-width: 289px;
+  }
 }
 .card .line-break {
   display: flex;
@@ -7611,10 +7681,11 @@ ol {
   width: 46%;
   padding: 0;
   margin: 0;
-  border: 1px solid #cdcdd4;
+  border: 1px solid #9595a2;
+  border-radius: 10px;
 }
 .card .line-break__text {
-  color: #cdcdd4;
+  color: #5e5e72;
 }
 .card .form-wrapper {
   display: grid;
@@ -7633,6 +7704,16 @@ ol {
   height: 48px;
   font-size: 0.875rem;
   border: 2px solid #9595a2;
+  color: #000000;
+  font-weight: 400;
+}
+.card .form-wrapper form .mzp-c-field-control--error {
+  border: 2px solid #c50042;
+}
+@media only screen and (max-width: 360px) {
+  .card .form-wrapper form {
+    max-width: 289px;
+  }
 }
 .card .form-wrapper form,
 .card .form-wrapper button,
@@ -7643,7 +7724,7 @@ ol {
   .card .form-wrapper form,
 .card .form-wrapper button,
 .card .form-wrapper .body-text-privacy {
-    max-width: 360px;
+    max-width: 368px;
   }
 }
 .card .form-wrapper--forgetpw {
@@ -7657,6 +7738,9 @@ ol {
 }
 .card .field--pw {
   padding-bottom: 16px;
+}
+.card .field--pw-create {
+  padding-bottom: 0;
 }
 .card .input-wrapper {
   display: grid;
@@ -7672,15 +7756,29 @@ ol {
   grid-row: 1/2;
   justify-self: end;
   z-index: 2;
-  margin: 10px;
+  margin: 12px;
+  cursor: pointer;
+}
+.card .create-hide {
+  visibility: hidden;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+}
+.card .create-show {
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  transition: opacity 1s linear, height 1s linear;
 }
 .card .body-text-action {
   padding-top: 48px;
   margin: 0;
-  font-size: 16px;
+  font-size: 1rem;
   color: #000000;
   text-align: center;
   grid-column: 1/13;
+  opacity: 0.8;
 }
 @media only screen and (min-width: 688px) {
   .card .body-text-action {
@@ -7704,6 +7802,14 @@ ol {
   padding-top: 32px;
   margin: 0;
 }
+.card .body-text-action--check-email {
+  padding-top: 36px;
+}
+.card .body-text-action .contact-text {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #000000;
+}
 
 .mzp-c-call-out-desc {
   display: none;
@@ -7726,10 +7832,6 @@ ol {
   justify-content: center;
   animation: moveInLeft 1s ease-out;
   margin-bottom: 1.2rem;
-}
-.mzp-c-call-out .mzp-l-content .mzp-c-call-out-desc {
-  color: #5e5e72;
-  font-size: 1.6rem;
 }
 
 @keyframes moveInLeft {
@@ -7829,27 +7931,34 @@ ol {
 
 .mzp-c-field-label {
   font-weight: 600;
-  color: #818282;
-  font-size: 0.875rem;
+  color: #20123a;
+  font-size: 1rem;
 }
 
 .error-msg-active,
 .info-msg-active {
   text-align: left;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: gray;
   padding: 0;
 }
 
-.error-msg-active {
+.error-msg {
   position: inherit;
-  color: red;
-  padding-top: 0.5rem;
+  color: #c50042;
+  padding: 4px 0px 0px;
   top: 0;
+  margin: 0;
+  font-size: 0.875rem;
 }
 
 .valid {
   text-decoration: line-through !important;
+  color: rgba(21, 20, 26, 0.4);
+}
+
+.rules-error {
+  color: #c50042;
 }
 
 .hide-error-msg {
@@ -7857,16 +7966,22 @@ ol {
 }
 
 .body-text-privacy {
-  font-size: 12px;
+  font-size: 0.875rem;
   margin: auto;
   text-align: center;
+  color: #5e5e72;
+}
+.body-text-privacy a {
+  color: #5e5e72;
 }
 
-.info-rules {
+.password-requirements {
   list-style: disc;
   font-size: 0.875rem;
-  color: gray;
-  padding: 16px 24px 0px;
+  color: #42435A;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 14px 24px 0px;
   text-align: left;
   margin: 0;
 }

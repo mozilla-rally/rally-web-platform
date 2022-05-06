@@ -171,7 +171,7 @@
               </div>
             </fieldset>
           </form>
-          <Button disabled={btnDisabled} size="xl" custom="card-button create">
+          <Button disabled={btnDisabled} size="xl" customClass="card-button create">
             <div class="button-text">{args.cta1}</div></Button
           >
         </div>

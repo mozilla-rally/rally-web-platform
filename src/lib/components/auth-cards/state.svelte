@@ -1,8 +1,8 @@
 <script context="module">
   //launch card states
   export const card = {
-    welcomeCard: true,
-    joinCard: false,
+    welcomeCard: false,
+    joinCard: true,
     createAcctCard: false,
     forgetPWCard: false,
     resetPWCard: false,
@@ -51,10 +51,9 @@
 
   export const forgetPWArgs = {
     height: "auto",
-    width: "391px",
+    width: "425px",
     title: "Forgot your password?",
     cta1: "Reset password",
-    bodyText: "We'll send you a link to reset your password.",
   };
 
   export const resetPWArgs = {
@@ -69,7 +68,7 @@
     ...cardArgs,
     height: "auto",
     title: "Check your email",
-    ctaText: "Need help?",
+    ctaText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-card",
     checkPW: true,
@@ -78,7 +77,7 @@
     ...cardArgs,
     height: "auto",
     title: "Check your email",
-    ctaText: "Need help?",
+    ctaText: "Need additional help?",
     linkText: "Contact us",
     custom: "info-card",
     checkPW: false,

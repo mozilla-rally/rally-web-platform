@@ -403,7 +403,7 @@
         disabled={is2FA && isBlank}
         size="xl"
         product
-        custom="card-button create"
+        customClass="card-button create"
       >
         <div class="button-text">Enable 2FA</div></Button
       >
@@ -411,7 +411,7 @@
       <Button
         disabled={is2FA && isBlank}
         size="xl"
-        custom="card-button create"
+        customClass="card-button create"
         customControl={true}
         textColor="#0060df"
         background="transparent"
