@@ -1,35 +1,25 @@
-<script>
-  import TwoFactor from "$lib/components/icons/TwoFactor.svelte";
-  import TwoFactorConfirmed from "$lib/components/icons/TwoFactorConfirmed.svelte";
-
+<script lang="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, createEventDispatcher } from "svelte";
+
+  import TwoFactorConfirmed from "$lib/components/icons/TwoFactorConfirmed.svelte";
+  import { getAuth, RecaptchaVerifier } from "firebase/auth";
+  import { onMount } from "svelte";
   import Button from "../../../lib/components/Button.svelte";
-  import { overwrite, getCodeList } from "country-list";
+  import MultiFactorIntroduction from "./multi-factor/MultiFactorIntroduction.svelte";
+  import PhoneInputView from "./multi-factor/PhoneInputView.svelte";
+  import VerifyIdentityView from "./multi-factor/VerifyIdentityView.svelte";
+  import VerifyPhoneView from "./multi-factor/VerifyPhoneView.svelte";
 
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    RecaptchaVerifier,
-  } from "firebase/auth";
-
-  import { codes as countriesCodes } from "country-calling-code";
-
-  const dispatch = createEventDispatcher();
   export let store;
 
-  let password;
-  let passwordEl;
-  let countryCodeEl;
-  let phoneNumberEl;
+  let phoneNumber;
+
   let enrollmentCodeEl;
   let phoneVerificationId;
-  let passwordVisible = false;
+
   let is2FA = false;
-  let isBlank = true;
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -46,204 +36,33 @@
     );
   });
 
-  const handleToggle = () => {
-    passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
-  };
-
-  const handleAuthToggle = () => {
-    is2FA = !is2FA;
-  };
-
-  const handleVerifyPassword = async () => {
-    store
-      .reauthenticateUser(passwordEl.value)
-      .then(() => {
-        console.log("password verified");
-      })
-      .catch((error) => {
-        console.error("incorrect password");
-      });
-  };
-
-  const handleEnrollMfa = async () => {
-    phoneVerificationId = await store.enrollMfa(`+${countryCodeEl.value}${phoneNumberEl.value}`);
-    console.log("verification id - ", phoneVerificationId);
-  };
-
   const handleVerifyEnrollMfa = async () => {
-    await store.verifyEnrollMfa(phoneVerificationId, enrollmentCodeEl.value);
+    console.log(
+      await store.verifyEnrollMfa(phoneVerificationId, enrollmentCodeEl.value)
+    );
   };
 
   const handleChange = () => {};
 
-  const handleSelect = (type) => {
-    dispatch("type", {
-      text: type,
-    });
-  };
+  const onCancel = () => (location.href = "/account-settings");
 
-  const countries = Object.entries(getCodeList());
-  overwrite([
-    {
-      code: "bo",
-      name: "Bolivia",
-    },
-    {
-      code: "bq",
-      name: "Bonaire",
-    },
-    {
-      code: "cd",
-      name: "Congo, DR",
-    },
-    {
-      code: "fm",
-      name: "Micronesia",
-    },
-    {
-      code: "hm",
-      name: "Mcdonald Island",
-    },
-  ]);
+  async function onSendCode(phone: string) {
+    phoneNumber = phone;
+    phoneVerificationId = await store.enrollMfa(phoneNumber);
+    console.log("verification id - ", phoneVerificationId);
+  }
 </script>
 
 <div class="settings-wrapper settings-wrapper--two-factor">
   <div id="2fa-captcha" />
 
-  <!-- Enable -->
-  <div class="two-factor-content">
-    <h1 class="two-factor__headline">Two-Factor Authentication</h1>
+  <MultiFactorIntroduction onNext={() => alert("hi")} {onCancel} />
 
-    <div class="two-factor__icon">
-      <TwoFactor />
-    </div>
+  <VerifyIdentityView email={user.email} {onCancel} {store} />
 
-    <h2 class="two-factor__subheadline">Protect your account</h2>
+  <PhoneInputView {onCancel} onNext={onSendCode} />
 
-    <p class="two-factor__text">
-      Two factor authentication adds an extra layer of security to your Rally
-      account. Once enabled, you will have to enter a password and a code sent
-      to your mobile phone when logging in.
-    </p>
-
-    <div class="two-factor__actions">
-      <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product>Turn On</Button>
-    </div>
-  </div>
-
-  <!-- Verify Password -->
-  <div class="two-factor-content">
-    <h1 class="two-factor__headline">Two-Factor Authentication</h1>
-
-    <h2 class="two-factor__subheadline">First, let’s verify that it’s you</h2>
-
-    <p class="two-factor__text">
-      For security, please enter your password for account@example.com
-    </p>
-
-    <div class="two-factor__form d-flex">
-      <div class="mzp-c-field field-pw w-100">
-        <div class="label-wrapper">
-          <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-            >Password</label
-          >
-        </div>
-
-        <div class="input-wrapper input-first ">
-          <input
-            class="mzp-l-stretch mzp-c-field-control w-100"
-            bind:this={passwordEl}
-            on:change={handleChange}
-            on:keyup={handleChange}
-            id="id_user_pw"
-            name="id_user_pw"
-            type="password"
-            width="100%"
-            required
-            disabled={is2FA}
-          />
-          {#if passwordVisible}
-            <img
-              src="img/eye-slash.svg"
-              alt="Eye with slash across it"
-              class="fas fa-eye-slash togglePassword"
-              id="hide-eye"
-              width="24px"
-              height="24px"
-              bind:this={passwordEl}
-              on:change={handleChange}
-              on:keyup={handleChange}
-            />
-          {:else}
-            <img
-              src="img/eye-open.svg"
-              alt="Open eye"
-              class="togglePassword"
-              id="show-eye"
-              width="24px"
-              height="24px"
-              on:click|preventDefault={handleToggle}
-            />
-          {/if}
-        </div>
-      </div>
-    </div>
-
-    <div class="two-factor__actions">
-      <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product on:click={handleVerifyPassword}>Next</Button>
-    </div>
-  </div>
-
-  <!-- Enter Phone -->
-  <div class="two-factor-content">
-    <h1 class="two-factor__headline">Two-Factor Authentication</h1>
-
-    <h2 class="two-factor__steps">STEP 1 OF 2</h2>
-    <h2 class="two-factor__subheadline">Let’s set up your phone</h2>
-    <p class="two-factor__text ">Where should we send the code?</p>
-
-    <div class="two-factor__form d-flex">
-      <!-- todo - country/state dropdown  -->
-      <div class="input-wrapper--select w-25">
-        <select name="countryCode" id="countryCode" class="country-select" bind:this={countryCodeEl}>
-          {#each countriesCodes as countryCode, i}
-            <option value={countryCode.countryCodes[0]}
-              >+{countryCode.countryCodes[0]} {countryCode.country} </option
-            >
-          {/each}
-        </select>
-      </div>
-      <div class="input-wrapper w-75">
-        <input
-          class="mzp-c-field-control mb-0"
-          bind:this={phoneNumberEl}
-          on:change={handleChange}
-          on:keyup={handleChange}
-          id="id_user_number"
-          name="id_user_number"
-          type="tel"
-          width="100%"
-          required
-          disabled={is2FA}
-        />
-      </div>
-    </div>
-
-    <p class="two-factor__text--small">
-      Mozilla Rally will use this number only account security. Messages and
-      data rates may apply
-    </p>
-
-    <div class="two-factor__actions">
-      <Button size="lg" secondary>Cancel</Button>
-      <Button size="lg" product on:click={handleEnrollMfa}>Send Code</Button>
-    </div>
-  </div>
+  <VerifyPhoneView {onCancel} {phoneNumber} />
 
   <!-- Confirm Code -->
   <div class="two-factor-content">

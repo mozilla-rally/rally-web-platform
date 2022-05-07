@@ -98,6 +98,7 @@
     "country-calling-code": "0.0.3",
     "fs": "^0.0.1-security",
     "npm": "^8.5.1",
+    "phone": "^3.1.17",
     "sal.js": "^0.8.5",
     "sirv-cli": "^1.0.10",
     "styled-components": "^5.3.1",
