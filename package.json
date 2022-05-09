@@ -56,7 +56,7 @@
     "chromedriver": "^100.0.0",
     "core-js": "^3.8.1",
     "eslint": "^8.14.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.1.3",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
