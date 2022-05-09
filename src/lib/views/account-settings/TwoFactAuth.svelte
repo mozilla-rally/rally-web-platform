@@ -16,11 +16,14 @@
     RecaptchaVerifier,
   } from "firebase/auth";
 
+  import { codes as countriesCodes } from "country-calling-code";
+
   const dispatch = createEventDispatcher();
   export let store;
 
   let password;
   let passwordEl;
+  let countryCodeEl;
   let phoneNumberEl;
   let enrollmentCodeEl;
   let phoneVerificationId;
@@ -66,12 +69,12 @@
   };
 
   const handleEnrollMfa = async () => {
-    phoneVerificationId = await store.enrollMfa("+1" + phoneNumberEl.value);
-    console.log('verification id - ', phoneVerificationId)
+    phoneVerificationId = await store.enrollMfa(`+${countryCodeEl.value}${phoneNumberEl.value}`);
+    console.log("verification id - ", phoneVerificationId);
   };
 
   const handleVerifyEnrollMfa = async () => {
-    console.log(await store.verifyEnrollMfa(phoneVerificationId, enrollmentCodeEl.value));
+    await store.verifyEnrollMfa(phoneVerificationId, enrollmentCodeEl.value);
   };
 
   const handleChange = () => {};
@@ -206,14 +209,16 @@
 
     <div class="two-factor__form d-flex">
       <!-- todo - country/state dropdown  -->
-      <div class="input-wrapper--select w-50">
-        <select name="language" id="language">
-          {#each countries as country, i}
-            <option value={country[0]}>{country[1]}</option>
+      <div class="input-wrapper--select w-25">
+        <select name="countryCode" id="countryCode" class="country-select" bind:this={countryCodeEl}>
+          {#each countriesCodes as countryCode, i}
+            <option value={countryCode.countryCodes[0]}
+              >+{countryCode.countryCodes[0]} {countryCode.country} </option
+            >
           {/each}
         </select>
       </div>
-      <div class="input-wrapper number">
+      <div class="input-wrapper w-75">
         <input
           class="mzp-c-field-control mb-0"
           bind:this={phoneNumberEl}
@@ -254,7 +259,7 @@
     <div class="two-factor__form d-flex justify-content-center mt-3 mb-3">
       <div class="input-wrapper--code">
         <input
-        bind:this={enrollmentCodeEl}
+          bind:this={enrollmentCodeEl}
           on:change={handleChange}
           on:keyup={handleChange}
           id="id_user_number"

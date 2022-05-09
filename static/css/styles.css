@@ -7476,6 +7476,10 @@ ol {
   align-items: stretch;
   width: 100%;
 }
+.settings-wrapper .two-factor-content .two-factor__form .country-select {
+  width: 175px;
+  min-width: auto;
+}
 .settings-wrapper .two-factor-content .two-factor__subheadline {
   font-size: 24px;
   line-height: 28px;

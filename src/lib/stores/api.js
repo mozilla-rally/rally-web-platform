@@ -376,14 +376,13 @@ export default {
       const mfaUser = multiFactor(user); 
     
       await mfaUser.enroll(multiFactorAssertion, 'phone number');
-    
-      alert('enrolled in MFA');
+        console.log(`${cred} enrolled in MFA`)
 
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("createErr", err);
-      return;
     }
+    return;
   },
 
   async sendUserPasswordResetEmail(email) {
