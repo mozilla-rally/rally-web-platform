@@ -145,6 +145,16 @@
       }
     }
 
+    .field-pw .input-wrapper {
+      position: relative;
+
+      img {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+      }
+    }
+
     .two-factor__subheadline {
       font-size: 24px;
       line-height: 28px;

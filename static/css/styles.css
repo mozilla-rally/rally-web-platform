@@ -7480,6 +7480,14 @@ ol {
   width: 175px;
   min-width: auto;
 }
+.settings-wrapper .two-factor-content .field-pw .input-wrapper {
+  position: relative;
+}
+.settings-wrapper .two-factor-content .field-pw .input-wrapper img {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
 .settings-wrapper .two-factor-content .two-factor__subheadline {
   font-size: 24px;
   line-height: 28px;
