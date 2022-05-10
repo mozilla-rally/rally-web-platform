@@ -63,7 +63,8 @@
                 <a
                   class="dropdown-item text-body-sm"
                   on:click={() => dispatch("leave")}
-                  href="#">Leave study</a
+                  href="#"
+                  >{connected ? "Leave study" : "Don't join this study"}</a
                 >
               </li>
             </ul>

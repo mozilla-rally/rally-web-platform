@@ -34,12 +34,19 @@
   const dispatch = createEventDispatcher();
 
   let joinModal = false;
+  let leaveModal = false;
 
   function triggerJoinEvent() {
     // send CTA click event to parent.
     dispatch("cta-clicked");
-    joinModal = true;
+
+    if (connected || !joined) {
+      joinModal = true;
+    } else {
+      leaveModal = true;
+    }
   }
+
   let Dialog;
   let mounted = false;
   onMount(async () => {
@@ -66,6 +73,51 @@
     {description}
   </p>
 </StudyCard>
+
+{#if leaveModal && Dialog}
+  <Dialog
+    width={"482px"}
+    showCloseButton={false}
+    on:dismiss={() => {
+      leaveModal = false;
+    }}
+  >
+    <div slot="title" class="dialog-title">
+      Confirm if you want to join this study or not
+    </div>
+
+    <div slot="body" class="dialog-body">
+      You previously started to join this study, but didn’t finish the process
+      by installing the study extension from the Chrome Web Store.
+    </div>
+
+    <div class="modal-call-flow" slot="cta">
+      <Button
+        size="lg"
+        neutral
+        secondary
+        leave
+        on:click={() => {
+          window.open(downloadUrl, "_blank");
+          leaveModal = false;
+        }}
+      >
+        Add study extension
+      </Button>
+
+      <Button
+        size="lg"
+        product
+        on:click={() => {
+          dispatch("leave");
+          leaveModal = false;
+        }}
+      >
+        Don't join this study
+      </Button>
+    </div>
+  </Dialog>
+{/if}
 
 {#if joinModal && mounted && Dialog}
   <Dialog
@@ -179,5 +231,18 @@
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
+  }
+
+  .dialog-title {
+    margin-bottom: 24px;
+  }
+
+  .dialog-body {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 40px;
+    margin-right: 20px;
+    color: #5e5e72;
   }
 </style>

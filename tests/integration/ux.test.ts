@@ -187,11 +187,11 @@ describe("Rally Web Platform UX flows", function () {
       e.click()
     );
 
-    await findAndAct(driver, By.xpath('//a[text()="Leave study"]'), (e) =>
+    await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
       e.click()
     );
 
-    await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), (e) =>
+    await findAndAct(driver, By.xpath('//html'), (e) =>
       e.click()
     );
 
@@ -200,13 +200,13 @@ describe("Rally Web Platform UX flows", function () {
       e.click()
     );
 
-    await findAndAct(driver, By.xpath('//a[text()="Leave study"]'), (e) =>
+    await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
       e.click()
     );
 
     await findAndAct(
       driver,
-      By.xpath('(//button[text()="Leave Study"])'),
+      By.xpath('(//button[text()="Don\'t join this study"])'),
       (e) => e.click()
     );
 
