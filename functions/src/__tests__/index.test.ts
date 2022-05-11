@@ -69,7 +69,7 @@ describe("loadFirestore", () => {
 
     expect(userStudyDocs.docs.length).toBe(1);
 
-    expect(userStudyDocs.docs[0].data()).toEqual(studies.exampleStudy1);
+    expect(userStudyDocs.docs[0].data()).toEqual(studies.facebookPixelHunt);
   });
 });
 
