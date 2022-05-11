@@ -11,6 +11,8 @@
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
 
+  const offboardURL = "https://rally.mozilla.org/account-deleted";
+
   export let settingsList;
   let leaveModal = false;
   let Dialog;
@@ -28,6 +30,11 @@
       text: type,
     });
   };
+
+  async function deleteUserAccount() {
+    await store.deleteUserAccount();
+    window.location.href = offboardURL;
+  }
 </script>
 
 <di
@@ -128,7 +135,7 @@
           product
           leave
           on:click={() => {
-            leaveModal = false;
+            deleteUserAccount();
           }}
         >
           Leave Rally
