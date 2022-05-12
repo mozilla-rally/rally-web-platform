@@ -163,7 +163,7 @@ describe("Rally Web Platform UX flows", function () {
     );
     await findAndAct(
       driver,
-      By.xpath('//button[text()="Accept & Enroll"]'),
+      By.xpath('//button[text()="Add study extension"]'),
       (e) => e.click()
     );
 
