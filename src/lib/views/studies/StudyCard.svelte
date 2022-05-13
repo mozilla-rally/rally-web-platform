@@ -123,7 +123,7 @@
   <Dialog
     height={joined ? undefined : "auto"}
     topPadding={joined ? undefined : "calc(10vh - 20px)"}
-    width={joined ? "var(--content-width)" : undefined}
+    width={joined ? "673px" : undefined}
     showCloseButton={false}
     on:dismiss={() => {
       joinModal = false;
@@ -158,29 +158,34 @@
           {/if}
         </IRBWindow>
       {:else}
-        <div style="width: 400px;">
+        <div>
           <p class="leave-tagline">You’re free to come and go as you please.</p>
-          <p class="leave-sub-tagline">Leaving a study means:</p>
-          <ul class="mzp-u-list-styled bigger-gap" style="padding-right: 48px;">
-            <li>
-              <b>You will only be leaving this specific study</b>. You will
-              continue contributing your browsing data to any other studies
-              you've joined.
-            </li>
-            <li>
-              <b>You will stop contributing browsing data to this study</b> and the
-              researchers leading this study.
-            </li>
-            <li>
-              <b>Rally will delete all your data from this study.</b>
-            </li>
-          </ul>
+          <div class="d-flex flex-row">
+            <div style="width: 316px;">
+              <p class="leave-sub-tagline">Leaving a study means:</p>
+              <ul class="mzp-u-list-styled bigger-gap">
+                <li>
+                  <b>You will only be leaving this specific study</b>. You will
+                  continue contributing your browsing data to any other studies
+                  you've joined.
+                </li>
+                <li>
+                  <b>You will stop contributing browsing data to this study</b> and
+                  the researchers leading this study.
+                </li>
+                <li>
+                  <b>Rally will delete all your data from this study.</b>
+                </li>
+              </ul>
+            </div>
+
+            <img
+              style="width: 316px; padding-top: 20px; transform: translateX(-24px);"
+              src="img/leave-this-study.png"
+              alt="person considering leaving the study"
+            />
+          </div>
         </div>
-        <img
-          style="width: 264px; max-height: 312px; padding-top: 20px; transform: translateX(-24px);"
-          src="img/leave-this-study.png"
-          alt="person considering leaving the study"
-        />
       {/if}
     </div>
     <!-- if the leave study modal is present, shore up the button hheights -->
@@ -207,7 +212,7 @@
           joinModal = false;
         }}
       >
-        {#if joined}Leave Study{:else}Accept & Enroll{/if}
+        {#if joined}Leave Study{:else}Add study extension{/if}
       </Button>
     </div>
   </Dialog>
