@@ -22,7 +22,7 @@
   &__cards {
     grid-column: 2/12;
     @media (max-width: $SM-screen) {
-      padding: 0; 
+      padding: 0;
     }
 
     .spinner {
@@ -43,23 +43,22 @@
   }
 
   &__howitworks {
-    
     grid-column: 5/10;
     align-self: center;
     text-align: center;
     margin-top: 40px;
     min-width: 300px;
 
-    .external-link{
+    .external-link {
       display: flex;
       align-items: center;
     }
 
-    svg{
-      padding-left: 8px; 
+    svg {
+      padding-left: 8px;
     }
     @media (max-width: $SM-screen) {
-      min-width: 289px; 
+      min-width: 289px;
     }
 
     @media (max-width: $XS-screen) {
@@ -73,13 +72,6 @@
   margin: auto;
 
   .card-header {
-    padding-bottom: 48px;
-    h2 {
-      font-weight: bold;
-      line-height: 44px;
-      font-size: 2.375rem;
-    }
-
     .title-highlight {
       display: block;
       background-color: $color-yellow-35;
@@ -94,6 +86,9 @@
 
     &--info-card {
       padding-bottom: 32px;
+      .title-text{
+        font-size: 48px !important; 
+      }
     }
   }
 
@@ -540,4 +535,3 @@
     color: #000000;
   }
 }
-

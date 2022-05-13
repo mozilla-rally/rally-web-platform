@@ -5,12 +5,13 @@
 
   export let width;
   export let height;
-  export let customClass = "";
+  export let headerClass="";
+  export let customClass="";
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({ width, height}) {
+  function addStyleVariables({ width, height }) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
@@ -21,7 +22,7 @@
 
   $: styles = addStyleVariables({
     width,
-    height
+    height,
   });
   $: classSet = [customClass].filter((t) => t).join(" ");
 
@@ -31,9 +32,9 @@
   }`;
 </script>
 
-<div id={key} class="card radius-sm" style={styles}>
-  <div class="card__inner">
-    <header class={`card-header card-header--${customClass}` }>
+<div id={key} class={`card radius-sm card--${customClass}`} style={styles}>
+  <div class={`card__inner card__inner--${customClass}`}>
+    <header class={`card-header card-header--${headerClass}`}>
       <slot name="card-title" />
     </header>
 
@@ -54,8 +55,6 @@
     max-width: var(--width);
     height: var(--height);
     background-color: #fff;
-    display: grid;
-    justify-content: center;
   }
 
   header {

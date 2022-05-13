@@ -163,6 +163,7 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
+    headerClass: {control: "text"}
   }}
 />
 
@@ -309,6 +310,7 @@
     bodyText: "Already have an account?",
     linkText: "Sign in",
     custom: "card-body-create",
+    headerClass: "signin"
   }}
 />
 

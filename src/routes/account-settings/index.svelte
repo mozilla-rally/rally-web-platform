@@ -3,6 +3,7 @@
   import { goto } from "$app/navigation";
   import { fly } from "svelte/transition";
 
+  import SideNav from "$lib/components/SideNav.svelte";
   import SettingsReadOnly from "$lib/views/account-settings/SettingsReadOnly.svelte";
   import SettingsCard from "$lib/views/account-settings/SettingsCard.svelte";
 
@@ -17,24 +18,51 @@
   );
   const notifications: NotificationStore = getContext("rally:notifications");
 
-  const settingsList = {
-    email: "update-email",
-    password: "update-pw",
-    leaveRally: "leave-rally",
+  let siderListArr = [
+    {
+      title: "Manage Profile",
+      type: "profile",
+      href: "/profile",
+      highlight: false,
+      icon: "img/icon-profile.svg",
+    },
+    {
+      title: "Account settings",
+      type: "read-only",
+      highlight: false,
+      icon: "img/icon-gear.svg",
+      sublistArr: [
+        { type: "update-email", highlight: false, title: "Edit Email" },
+        {
+          type: "update-pw",
+          highlight: false,
+          title: "Edit Password",
+        },
+        { type: "delete", highlight: false, title: "Delete Account" },
+      ],
+    },
+  ];
+
+  let siderArgs = {
+    width: "265px",
+    clazz: "side-nav-settings",
+    fontSize: "14px",
   };
 
   let isEmail = false;
   let isPW = false;
+  let isDelete = false;
   let isReadOnly = true;
-  let settingsTitle = "Account Settings";
+  let settingsTitle = "Account settings";
   let settingsDecription =
     "Manage your info, privacy, and security to make Rally work better for you.";
 
   let cardArgs = {
-    width: "700px",
+    width: "486px",
     height: "auto",
     fontSize: "38px",
-    custom: "settings",
+    customClass: "settings-update",
+    headerClass: "settings-update"
   };
 
   let isReadOnlyArgs = {
@@ -43,20 +71,32 @@
   };
 
   const displayCard = (event) => {
-    switch (event.detail.text) {
+    let value;
+
+    if (event.detail) {
+      value = event.detail.text;
+    } else {
+      value = event;
+    }
+
+    switch (value) {
       case "update-email":
         isEmail = true;
         isPW = false;
         isReadOnly = false;
         settingsTitle = "Change your email address";
-        settingsDecription = "Change your current email with a new one.";
         break;
       case "update-pw":
         isPW = true;
         isEmail = false;
         settingsTitle = "Change your password";
-        settingsDecription = "Change your current password.";
         isReadOnly = false;
+        break;
+      case "delete":
+        isPW = false;
+        isEmail = false;
+        isReadOnly = false;
+        settingsTitle = "Delete your Rally account";
         break;
       case "read-only":
         showReadOnly();
@@ -93,36 +133,42 @@
 </svelte:head>
 
 {#if $store._initialized && $isAuthenticated === true}
-  <section>
-    <div in:fly={{ duration: 800, y: 5 }} class="account-settings-container">
-      <div class="title-wrapper">
-        {#if !isReadOnly}
-          <button class="arrow-btn" on:click={showReadOnly}>
-            <img class="back-arrow" alt="back arrow" src="/img/Back.svg" />
-          </button>
-        {/if}
-        <h2 class="section-header">{settingsTitle}</h2>
+  <section
+    in:fly={{ duration: 800, y: 5 }}
+    class="container account-settings-container"
+  >
+    <div class="row">
+      <div class="sider-nav col-12 col-md-4">
+        <SideNav {...siderArgs} listArr={siderListArr} on:type={displayCard} />
       </div>
 
-      <p class="description">
-        {settingsDecription}
-      </p>
-
-      <hr />
-      <div class="account-settings-main">
+      <div class="account-settings col-12 col-lg-7">
         {#if isReadOnly}
-          <SettingsReadOnly on:type={displayCard} {settingsList} />
+          <div class="title-wrapper">
+            <h2 class="section-header">{settingsTitle}</h2>
+          </div>
+
+          <p class="description">
+            {settingsDecription}
+          </p>
         {/if}
 
-        {#if !isReadOnly}
-          <SettingsCard
-            {isEmail}
-            {isPW}
-            {cardArgs}
-            {displayCard}
-            on:type={displayCard}
-          />
-        {/if}
+        <div class="account-settings-main">
+          {#if isReadOnly}
+            <SettingsReadOnly {displayCard} on:type={displayCard} />
+          {/if}
+
+          {#if !isReadOnly}
+            <SettingsCard
+              {isEmail}
+              {isPW}
+              {cardArgs}
+              {displayCard}
+              {settingsTitle}
+              on:type={displayCard}
+            />
+          {/if}
+        </div>
       </div>
     </div>
   </section>
@@ -131,6 +177,15 @@
 <style>
   .title-wrapper {
     display: flex;
+  }
+
+  .sider-nav {
+    max-width: 265px;
+    padding: 0;
+  }
+
+  .description {
+    margin-bottom: 34px;
   }
   .arrow-btn {
     background: transparent;

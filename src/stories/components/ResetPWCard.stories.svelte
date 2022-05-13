@@ -92,7 +92,8 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
-    minHeight: { control: "text" }
+    minHeight: { control: "text" },
+    headerClass: {control: "text"}
   }}
 />
 
@@ -191,7 +192,8 @@
     title: "Reset your password",
     body: "Text",
     cta1: "Reset password",
-    minHeight: "400px"
+    minHeight: "400px",
+    headerClass: "signin"
   }}
 /> -->
 

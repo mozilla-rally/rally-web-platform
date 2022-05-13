@@ -1,7 +1,6 @@
 <script>
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import ContentContainer from "../../lib/layouts/main/ContentContainer.svelte";
-  import StoryNavbar from "../components/account/StoryNavbar.svelte";
   import Footer from "../../lib/layouts/main/Footer.svelte";
   import StorySettingsCard from "../components/account/StorySettingsCard.svelte";
   import StorySettingsReadOnly from "../components/account/StorySettingsReadOnly.svelte";

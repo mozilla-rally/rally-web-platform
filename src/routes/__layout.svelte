@@ -4,7 +4,6 @@
   import Layout from "$lib/layouts/main/Layout.svelte";
   import Button from "$lib/components/Button.svelte";
   import Footer from "./_Footer.svelte";
-  import Sidebar from "./_Sidebar.svelte";
   import Navbar from "./_Navbar.svelte";
   import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
   import NotificationCenter from "$lib/components/notifications/NotificationCenter.svelte";
@@ -23,12 +22,17 @@
 
   let leaveModal = false;
   let Dialog;
+  let clazz = ""
 
   onMount(async () => {
     Dialog = (await import("../lib/components/Dialog.svelte")).default;
   });
 
   const mounted = isMounted();
+
+  $: if($page.path === "/account-settings"){
+    clazz = "account-settings"
+  } else clazz = ""
 </script>
 
 <svelte:head>
@@ -45,14 +49,14 @@
     <svelte:component
       this={$page.path === "/studies" ? StudyBackgroundElement : EmptySlot}
     >
-      <ContentContainer>
+      <ContentContainer {clazz}>
         {#if $store._initialized}
           <slot />
         {/if}
       </ContentContainer>
     </svelte:component>
   </Layout>
-  <Footer />
+  <!-- <Footer /> -->
 {:else}
   <slot />
 {/if}

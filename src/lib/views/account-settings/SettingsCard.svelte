@@ -10,10 +10,14 @@
   export let isPW;
   export let cardArgs;
   export let displayCard;
+  export let settingsTitle
 </script>
 
 <Card {...cardArgs}>
-  <div class="card-body-content" slot="card-body">
+  <h2 class="title-wrapper" slot="card-title">
+    <div class="title-text">{settingsTitle}</div>
+  </h2>
+  <div class="card-body-content" slot="card-content">
     {#if isEmail}
       <UpdateEmail on:type={displayCard} />
     {/if}

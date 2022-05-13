@@ -2,6 +2,8 @@
   import { onMount, getContext } from "svelte";
   import { fly } from "svelte/transition";
   import RallyNavbar from "$lib/layouts/main/Navbar.svelte";
+  import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
+  import Dropdown from "./_Dropdown.svelte"
   import isMounted from "$lib/is-mounted";
   import type { AppStore } from "$lib/stores/types";
 
@@ -9,12 +11,12 @@
   const mounted = isMounted();
   let browser;
   let userEmail;
-  let dropdownList;
   let isFocused = false;
   let ariaExpanded = false;
   let ariaHidden = true;
-  let isOpaque = false;
-  let navOpacity = 0;
+  let dropDownVisible = false;
+  let opacity;
+  let visibility;
 
   onMount(async () => {
     userEmail = await store.getUserEmail();
@@ -23,13 +25,12 @@
     }
   });
 
-  const showDropdown = () => (dropdownList.style.display = "block");
-  const hideDropdown = () => (dropdownList.style.display = "none");
-  const onFocus = () => (isFocused = true);
+  $: dropDownVisible === true ? (opacity = 1) : (opacity = 0);
+  $: dropDownVisible === true ? (visibility = "visible") : (visibility = "hidden");
+  $: cssVarStyles = `--opacity:${opacity}; --visibility:${visibility}`;
 
-  const checkOpacity = () => {
-    isOpaque ? (navOpacity = 1) : (navOpacity = 0);
-  };
+  const toggleDropdown = () => (dropDownVisible = !dropDownVisible);
+  const onFocus = () => (isFocused = true);
 
   const handleLogOut = async () => {
     await store.signOutUser();
@@ -39,32 +40,50 @@
   const toggleNavIcon = () => {
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
-    isOpaque = !isOpaque;
-    checkOpacity();
   };
 
-  const closeNavIcon = () => {
-    ariaExpanded = false;
-    ariaHidden = true;
-  }
-
-  $: cssVarStyles = `--nav-opacity:${navOpacity}`;
-  // if ariaExpanded is true hide the dropdown 
   //fix signout hover
 </script>
 
 <RallyNavbar>
-  <div class="header__logo" slot="logo-nav">
-    <!-- rally logo -->
-    <a class="header__logo-link" href="/" alt="">
-      {#if $mounted}
-        <img
-          in:fly={{ duration: 800, x: -15 }}
-          src="img/moz-rally-logo.svg"
-          alt="Mozilla Rally Logo"
-        />
-      {/if}
-    </a>
+  <div class="top-nav-left" slot="top-nav-left">
+    <div class="header__logo">
+      <!-- rally logo -->
+      <a class="header__logo-link" href="/" alt="">
+        {#if $mounted}
+          <img
+            in:fly={{ duration: 800, x: -15 }}
+            src="img/moz-rally-logo.svg"
+            alt="Mozilla Rally Logo"
+          />
+        {/if}
+      </a>
+    </div>
+
+    <div class="header__primary-nav">
+      <ul class="primary-nav d-flex align-items-center">
+        <li
+          class="primary-nav__item"
+          in:fly={{ duration: 800, delay: 200, x: -15 }}
+        >
+          <a
+            href="/studies"
+            class="nav-link nav-link--studies"
+            sveltekit:prefetch>Current Studies</a
+          >
+        </li>
+        <li
+          class="primary-nav__item"
+          in:fly={{ duration: 800, delay: 200, x: -15 }}
+        >
+          <a
+            href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
+            class="nav-link nav-link--support d-flex justify-content-between align-items-center"
+            target="_blank">Support <ExternalLink /></a
+          >
+        </li>
+      </ul>
+    </div>
   </div>
 
   <!-- Mobile nav toggle-->
@@ -82,105 +101,47 @@
     <span class="is-active-show" aria-label="Close navigation menu." />
   </button>
 
-  <!-- Dropdown-->
   <div
     on:focus={onFocus}
-    on:mouseover={showDropdown}
-    on:mouseleave={hideDropdown}
-    on:click={closeNavIcon}
+    on:click={toggleDropdown}
     class="header__dropdown"
-    slot="user-icon">
+    data-expands="drop-nav"
+    data-expands-height
+    aria-expanded={ariaExpanded}
+    slot="user-icon"
+  >
     <div class="dropdown__user-icon">
-      <img src="img/user-solid.svg" alt="user icon" />
+      <img class="user-icon__img" src="img/icon-profile.svg" alt="user icon" />
     </div>
 
-    <ul
-      on:mouseleave={hideDropdown}
-      bind:this={dropdownList}
-      class="dropdown-list"
-    >
-      <li class="dropdown-list__item">
-        <div class="list-item--info">
-          <p>Signed in as</p>
-          <p class="text-bold">{userEmail}</p>
-        </div>
-      </li>
-      <hr />
-      <li class="dropdown-list__item">
-        <a class="list-item list-item--profile" href="/profile">
-          <img src="img/user-138.svg" alt="settings icon" />
-          <div class="list-item__text">Manage Profile</div>
-        </a>
-      </li>
-      <li class="dropdown-list__item">
-        <a class="list-item list-item--studies" href="/studies">
-          <img src="img/reader-mode.svg" alt="settings icon" />
-          <div class="list-item__text">Studies</div></a
-        >
-      </li>
-      <li class="dropdown-list__item">
-        <a class="list-item list-item--settings" href="/account-settings">
-          <img src="img/settings.svg" alt="settings icon" />
-          <div class="list-item__text">Account Settings</div></a
-        >
-      </li>
-      <li class="dropdown-list__item">
-        <button
-          on:click|preventDefault={handleLogOut}
-          class="list-item list-item--quit"
-        >
-          <img src="img/quit.svg" alt="quit icon" />
-          <div class="list-item__text">Sign Out</div></button
-        >
-      </li>
-    </ul>
+    <!-- DESKTOP Dropdown-->
+    <Dropdown  clazz = "desktop" {userEmail} {handleLogOut} {cssVarStyles}/>
   </div>
+
 
   <!-- Mobile menu dropdown -->
   <div
-    id="mobile-menu"
+    id="mobile-nav"
     class="header__mobile-menu"
     aria-hidden={ariaHidden}
-    style={cssVarStyles}
     slot="mobile-nav"
-    >
+  >
     <nav class="nav-mobile" aria-label="Primary navigation">
-      <ul class="dropdown-list">
-        <li class="dropdown-list__item info">
-          <div class="dropdown-list__content dropdown-list--info">
-            <div>Signed in as <span class="text-bold">{userEmail}</span></div>
-          </div>
-        </li>
-        <li class="dropdown-list__item">
-          <a class="dropdown-list__content dropdown-list--profile" href="/profile">
-            <img src="img/user-138.svg" alt="settings icon" />
-            <div class="list-item__text">Manage Profile</div>
-          </a>
-        </li>
-        <li class="dropdown-list__item">
-          <a class="dropdown-list__content dropdown-list--studies" href="/studies">
-            <img src="img/reader-mode.svg" alt="settings icon" />
-            <div class="list-item__text">Studies</div></a
-          >
-        </li>
-        <li class="dropdown-list__item">
-          <a class="dropdown-list__content dropdown-list--settings" href="/account-settings">
-            <img src="img/settings.svg" alt="settings icon" />
-            <div class="list-item__text">Account Settings</div></a
-          >
-        </li>
-        <li class="dropdown-list__item">
-          <button
-            on:click|preventDefault={handleLogOut}
-            class="dropdown-list__content dropdown-list--quit"
-          >
-            <img src="img/quit.svg" alt="quit icon" />
-            <div class="list-item__text">Sign Out</div></button
-          >
-        </li>
-      </ul>
+      <Dropdown {toggleNavIcon} clazz="mobile" {userEmail} {handleLogOut} cssVarStyles={null} />
     </nav>
   </div>
 </RallyNavbar>
 
-<!-- on click close navbar -->
+<style>
+  .top-nav-left {
+    display: flex;
+    justify-content: space-between;
+    max-width: 580px;
+    width: 100%;
+  }
+
+  .header__mobile-menu {
+    max-height: 450px;
+    height: 100%; 
+  }
+</style>

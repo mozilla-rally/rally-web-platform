@@ -11,8 +11,9 @@
   export let title;
   export let cta1;
   export let width;
-  export let custom;
+  export let customClass;
   export let height;
+  export let headerClass;
 
   let titleEl;
   let textWidth;
@@ -91,7 +92,7 @@
   };
 </script>
 
-<Card {width} {custom} {height}>
+<Card {width} {customClass} {height} {headerClass}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>

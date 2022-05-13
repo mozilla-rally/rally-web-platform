@@ -30,7 +30,7 @@
   );
 </script>
 
-<div class="profile md-container">
+<div class="profile main-content">
   <h2 class="section-header profile__header">Tell Us About Yourself</h2>
 
   <p class="profile__description">

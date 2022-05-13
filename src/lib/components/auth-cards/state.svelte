@@ -22,6 +22,8 @@
   export const cardArgs = {
     width: "370px",
     height: "auto",
+    customClass: "signin",
+    headerClass: "signin"
   };
 
   export const welcomeArgs = {
@@ -41,7 +43,7 @@
   };
   export const createArgs = {
     ...cardArgs,
-    custom: "card__body--create",
+    customClass: "card__body--create",
     height: card.cardHeight,
     title: "Create account",
     cta1: "Continue",
@@ -54,6 +56,8 @@
     width: "425px",
     title: "Forgot your password?",
     cta1: "Reset password",
+    headerClass: "signin",
+    customClass: "signin"
   };
 
   export const resetPWArgs = {
@@ -61,7 +65,8 @@
     width: "391px",
     title: "Reset your password",
     cta1: "Reset password",
-    custom: "reset-pw",
+    headerClass: "signin",
+    customClass: "signin"
   };
 
   export const checkEmailPWArgs = {
@@ -70,7 +75,8 @@
     title: "Check your email",
     ctaText: "Need additional help?",
     linkText: "Contact us",
-    custom: "info-card",
+    customClass: "info-card",
+    headerClass: "info-card",
     checkPW: true,
   };
   export const checkEmailArgs = {
@@ -79,7 +85,8 @@
     title: "Check your email",
     ctaText: "Need additional help?",
     linkText: "Contact us",
-    custom: "info-card",
+    customClass: "info-card",
+    headerClass: "info-card",
     checkPW: false,
   };
 </script>

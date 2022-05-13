@@ -2,7 +2,7 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import { getContext } from "svelte";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
@@ -12,18 +12,68 @@
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");
 
+  const emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const errorClass = "mzp-c-field-control mzp-c-field-control--error";
+  const inputClass = "mzp-c-field-control";
+
   //create account states
-  let newEmail;
-  let btnDisabled = true;
   let password;
+  let emailEl;
+  let emailErrText = null;
+  let emptyFieldsErr;
+  let inputEmailClass;
+  let inputPasswordClass;
+  let inputItemsVisible = false;
   let passwordEl;
+  let passwordErrText = null;
   let passwordVisible = false;
 
-  const handleChange = () => {
-    if (newEmail && password) {
-      password.length > 0 && newEmail.length > 0
-        ? (btnDisabled = false)
-        : (btnDisabled = true);
+  onMount(() => {
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
+  });
+
+  $: if (emptyFieldsErr) {
+    inputEmailClass = errorClass;
+    inputPasswordClass = errorClass;
+    emailErrText = "Required";
+    passwordErrText = "Required";
+  }
+
+  const checkEmail = async (val) => {
+    if (val.match(emailPattern)) {
+      await store.changeEmail(emailEl.value, password);
+      clearFields();
+    } else {
+      emailErrText = "Invalid format";
+      emailEl.classList.add("mzp-c-field-control--error");
+    }
+  };
+
+  const checkFields = async () => {
+    if (emailEl.value === "" && passwordEl.value === "") {
+      emptyFieldsErr = true;
+    } else if (emailEl.value === "") {
+      inputEmailClass = errorClass;
+      emailErrText = "Required";
+    } else if (passwordEl.value === "") {
+      inputPasswordClass = errorClass;
+      passwordErrText = "Required";
+    } else if (emailEl) {
+      checkEmail(emailEl.value);
+    }
+  };
+
+  const handleChange = (e) => {
+    const name = e.srcElement.name;
+    inputEmailClass = inputClass;
+    inputPasswordClass = inputClass;
+    emptyFieldsErr = false;
+    emailErrText = null;
+    passwordErrText = null;
+
+    if (name === "id_user_pw") {
+      inputItemsVisible = true;
     }
   };
 
@@ -41,9 +91,8 @@
   };
 
   const clearFields = () => {
-    newEmail = "";
+    emailEl = "";
     password = "";
-    btnDisabled = true;
     handleSelect("read-only");
     notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
   };
@@ -52,34 +101,52 @@
 <div class="settings-wrapper settings-wrapper--email">
   <div class="card-body-content">
     <form method="post">
-      <fieldset class="mzp-c-field-set field-set-settings">
-        <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-          >Enter a new email address for your account</label
-        >
-
-        <div class="mzp-c-field input-wrapper">
+      <fieldset class="mzp-c-field-set field-set">
+        <div class="mzp-c-field field field--email">
+          <div class="label-wrapper">
+            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+              >New email address</label
+            >
+          </div>
+          <!-- **** EMAIL INPUT *** -->
           <input
-            class="mzp-c-field-control "
-            bind:value={newEmail}
+            class={inputEmailClass}
+            bind:this={emailEl}
+            on:change={handleChange}
+            on:keyup={handleChange}
             id="id_user_email"
             name="id_user_email"
             type="email"
             width="100%"
-            placeholder="mynewemail@address.com"
             required
           />
+
+          {#if emailErrText}
+            <p class="error-msg error-msg--email">
+              {emailErrText}
+            </p>
+          {/if}
         </div>
-        <div class="mzp-c-field field-pw">
+
+        <div class="mzp-c-field field field--pw">
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Enter your password</label
+              >Password</label
             >
+            <!-- FORGOT PASSWORD -->
+            <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+              <button
+                on:click={() => {
+                  handleTrigger("forget");
+                }}>Forgot password</button
+              ></label
+            > -->
           </div>
-
-          <div class="input-wrapper input-first">
+  
+          <div class="input-wrapper">
+            <!-- **** PASSWORD INPUT *** -->
             <input
-              class="mzp-c-field-control"
-              bind:value={password}
+              class={inputPasswordClass}
               bind:this={passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
@@ -89,47 +156,35 @@
               width="100%"
               required
             />
-            {#if passwordVisible}
-              <img
-                src="img/eye-slash.svg"
-                alt="Eye with slash across it"
-                class="fas fa-eye-slash togglePassword"
-                id="hide-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {:else}
-              <img
-                src="img/eye-open.svg"
-                alt="Open eye"
-                class="togglePassword"
-                id="show-eye"
-                width="24px"
-                height="24px"
-                on:click|preventDefault={handleToggle}
-              />
-            {/if}
+            <img
+              src={passwordVisible
+                ? "img/icon-password-show.svg"
+                : "img/icon-password-hide.svg"}
+              alt={passwordVisible ? "open eye" : "eye with slash"}
+              class={`toggle-password ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
+              id="show-eye"
+              width="24px"
+              height="24px"
+              type={passwordVisible ? "text" : "password"}
+              on:click={handleToggle}
+            />
           </div>
+          {#if passwordErrText}
+            <p class="error-msg error-msg--password">
+              {passwordErrText}
+            </p>
+          {/if}
         </div>
+
+        
+
+
       </fieldset>
     </form>
     <div class="btn-group btn-group--email">
       <Button
-        {btnDisabled}
-        size="xl"
-        customClass="card-button create"
-        product
-        on:click={async () => {
-          await store.changeEmail(newEmail, password);
-          clearFields();
-        }}
-      >
-        <div class="button-text">Save changes</div></Button
-      >
-
-      <Button
-      {btnDisabled}
         size="xl"
         customClass="card-button create"
         customControl={true}
@@ -142,7 +197,22 @@
       >
         <div class="button-text">Cancel</div></Button
       >
+
+      <Button
+        size="xl"
+        customClass="card-button create"
+        product
+        on:click={checkFields}
+      >
+        <div class="button-text">Update email</div></Button
+      >
     </div>
   </div>
 </div>
 
+<style>
+   input{
+    width: 100%;
+  }
+
+</style>

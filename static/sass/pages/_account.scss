@@ -1,124 +1,102 @@
 .account-settings-container {
   backface-visibility: hidden;
-  hr {
-    border-top: 1px dashed #000000;
-    margin: 22px 0;
-    margin-bottom: 2rem;
+  padding: 0;
+
+  .row{
+    margin: 0;
+    padding: 0; 
   }
 
-  .card-container {
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  .account-settings {
+    min-width: unset;
+    padding: 0;
+    margin: auto; 
+    
 
-    .card-body {
-      width: 400px;
-      justify-self: flex-start;
-      .card-description {
-        margin: 0 !important;
-      }
+    @media (min-width: $LG-screen) {
+      margin-left: 44px; 
+    }
 
-      .field-set-settings {
-        margin: 0 !important;
-      }
-
-      button {
-        margin: 0 !important;
-      }
+    @media (min-width: 1313px) {
+      min-width: 660px;
     }
   }
+
+  .mzp-c-field-control--error{
+    border: 2px solid #c50042;
+  }
+
+  
 }
 
-//read only container
 .settings-readonly {
-  &--first {
-    margin-bottom: 40px;
-  }
+  .card {
+    padding: 12px;
+    justify-content: start;
 
-  &--leave {
-    margin-top: 45px;
-    text-align: center;
-  }
+    @media (min-width: $MD-screen) {
+      padding: 24px; 
+    }
 
-  .readonly-title {
-    margin-bottom: 23px;
-    font-size: 24px;
-    font-family: "Zilla Slab", Inter, X-LocaleSpecific, sans-serif;
-  }
-}
-
-.read-only-card-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 660px;
-  height: 60px;
-  background-color: $color-white;
-  padding: 20px;
-  box-shadow: $box-shadow-lg;
-  font-size: 14px;
-  margin-bottom: 20px;
-  cursor: pointer;
-
-  header {
-    text-transform: uppercase;
-    opacity: 0.6;
-    padding-bottom: 5px;
-    font-family: Inter, X-LocaleSpecific, sans-serif;
-  }
-
-  .twoFA {
-    font-style: italic;
-  }
-
-  .card-body__content {
-    font-weight: 700;
-    color: #000;
-  }
-
-  .read-only-card--right {
-    cursor: pointer;
-    .read-only__arrow {
-      &:hover {
-        transform: translateX(6px);
-        transition: ease-in;
+    .content-box {
+      font-family: "Inter";
+      font-style: normal;
+      &__title {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 18px;
+        color: $color-marketing-gray-99;
+        margin-bottom: 12px;
       }
+
+      &__content {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+      }
+
+      .content-description {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+        color: $color-helper-gray;
+
+        @media (min-width: $MD-screen) {
+         font-size: 16px;
+        }
+      }
+
+      .password-dots {
+        color: $color-marketing-gray-50;
+      }
+
+      .edit-btn {
+        border: none;
+        background-color: transparent;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    hr {
+      margin: 24px 0;
+      border: 1px solid $color-marketing-gray-30;
     }
   }
 }
+
 .settings-wrapper {
   .btn-group {
     display: flex;
     justify-content: space-between;
     width: 285px;
+    float: right; 
+    margin-top: 24px; 
 
     .card-button {
       width: auto;
-    }
-
-    &--two-factor {
-      width: 262px;
+      padding: 0; 
     }
   }
-
-  .two-factor-content {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
-    width: 575px;
-    margin-bottom: 40px;
-
-    .two-factor__text {
-      width: 400px;
-    }
-  }
-
-  .active .twoFA {
-    background-color: $color-dark-gray-60;
-    border-color: $color-dark-gray-60;
-  }
-
 }
-
-

@@ -41,6 +41,7 @@
     bodyText: { control: "text" },
     minHeight: { control: "text" },
     custom: { control: "text" },
+    headerClass: {control: "text"}
   }}
 />
 
@@ -105,6 +106,7 @@
     title: "Forgot your password?",
     cta1: "Reset password",
     bodyText: "We'll send you a link to reset your password.",
+    headerClass: "signin"
   }}
 />
 

@@ -20,10 +20,15 @@
 }
 
 %nav-list-item {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
   display: flex;
   align-items: center;
   float: none;
-  color: black;
+  color: $color-ink-80;
   text-decoration: none;
   text-align: left;
 }
@@ -31,6 +36,5 @@
 %list-item-quit {
   background-color: transparent;
   border: none;
-  width: 100%;
   cursor: pointer;
 }

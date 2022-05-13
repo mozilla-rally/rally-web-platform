@@ -17,6 +17,7 @@
   export let height;
   export let store;
   export let storyBookTest
+  export let headerClass
 
   let customClass = "launch";
   let notVerified = false;
@@ -73,7 +74,7 @@
 
 </script>
 
-<Card {width} {customClass} {height}>
+<Card {width} {customClass} {height} {headerClass}>
   <h2 class="title-wrapper--launch" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">

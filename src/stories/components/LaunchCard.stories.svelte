@@ -43,6 +43,7 @@
     fontSize: { control: "text" },
     bodyText: { control: "text" },
     linkText: { control: "text" },
+    headerClass: {control: "text"}
   }}
 />
 
@@ -146,6 +147,7 @@
     bodyText: "Don't have an account?",
     linkText: "Create Account",
     welcomeCard: true,
+    headerClass: "signin"
   }}
 />
 
@@ -160,6 +162,7 @@
     bodyText: "Already have an account?",
     linkText: "Sign in",
     welcomeCard: false,
+    headerClass: "signin"
   }}
 />
 
