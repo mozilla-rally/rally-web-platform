@@ -144,7 +144,7 @@ describe("Rally Web Platform UX flows", function () {
       e.click()
     );
 
-    await driver.wait(
+      await driver.wait(
       until.titleIs("Studies | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );

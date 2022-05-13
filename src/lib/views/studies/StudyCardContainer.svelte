@@ -204,6 +204,9 @@
         neutral
         secondary
         on:click={() => {
+          logEvent(analytics, "select_content", {
+            content_type: `canceled_${joined ? "leave" : "join"}_study`,
+          });
           joinModal = false;
         }}
       >
