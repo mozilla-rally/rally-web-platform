@@ -44,11 +44,11 @@
       class="icon-block-left"
       width="111"
       src="/img/who-is-eligible.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="It is currently available to Firefox and Chrome users in the U.S. who are 19 or older."
     />
     <div class="icon-block-right content-text-info" style="max-width: 514px;">
-      It is currently available to Firefox users in the U.S. who are 19 or
-      older.
+      It is currently available to Firefox and Chrome users in the U.S. who are
+      19 or older.
     </div>
     <img
       class="icon-block-left"
@@ -68,11 +68,11 @@
       for how we receive, handle, and share information.
     </div>
   </div>
-  <h3>Types of Information We Collect</h3>
+  <h3>The Types of Information We Collect</h3>
 
   <p>
-    We'll ask for your consent before we collect any of your info, which could
-    include:
+    When you click “Accept and Enroll” below, you are consenting to data
+    collection, which could include:
   </p>
 
   <div class="icon-explanation-block">
@@ -80,14 +80,15 @@
       class="icon-block-left"
       width="95"
       src="/img/your-demographic-data.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Your Demographic Data."
     />
     <div class="icon-block-right">
       <h4>Your Demographic Data</h4>
       <div class="content-text-info">
         This includes your <b>age</b>, <b>gender</b>, <b>race/ethnicity</b>,
         <b>education level</b>, <b>household income</b>, and <b>zip code</b>.
-        This is entirely optional.
+        This is entirely optional. We collect this information so researchers
+        can understand how Rally users compare to the general population.
       </div>
     </div>
 
@@ -95,7 +96,7 @@
       class="icon-block-left"
       width="109"
       src="/img/your-technical-data.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Your Device's Technical Data."
     />
     <div class="icon-block-right">
       <h4>Your Device's Technical Data</h4>
@@ -109,14 +110,33 @@
       class="icon-block-left"
       width="97"
       src="/img/your-interaction-data.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Your interaction data."
     />
     <div class="icon-block-right">
       <h4>Your Interaction Data</h4>
       <div class="content-text-info">
-        This includes your <b>interactions with Firefox</b>, like the number and
-        type of Firefox Add-ons you have installed, your interactions with the
-        Rally add-on itself, or the duration of your active browsing session.
+        This includes your <b>interactions with</b> the Rally website and with
+        <b>your web browser</b>. Interaction data includes the number and type
+        of browser extensions you have installed, your interactions with the
+        Rally add-on itself, and the duration of your active browsing session.
+        We collect this data to understand usage, prioritize new features, and
+        confirm all Rally systems are working properly.
+      </div>
+    </div>
+
+    <img
+      class="icon-block-left"
+      width="97"
+      src="/img/your-interaction-data.png"
+      alt="Your Contact Data."
+    />
+
+    <div class="icon-block-right">
+      <h4>Your Contact Data</h4>
+      <div class="content-text-info">
+        This includes your <b>email address</b>, which we use to authenticate
+        and help you administer your login account. We also use your email
+        address to send you notifications on the studies you have joined.
       </div>
     </div>
 
@@ -124,7 +144,7 @@
       class="icon-block-left"
       width="82"
       src="/img/your-location-data.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Your Location Data."
     />
     <div class="icon-block-right">
       <h4>Your Location Data</h4>
@@ -147,7 +167,7 @@
       class="icon-block-left align-start"
       width="125"
       src="/img/how-we-use-your-information.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="How We Use Your Information."
     />
     <ul class="mzp-u-list-styled icon-block-right">
       <li>
@@ -175,7 +195,7 @@
       class="icon-block-left"
       width="99"
       src="/img/data-storage-provider.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Our Data Storage Provider."
     />
     <div class="icon-block-right">
       <h4>Our Data Storage Provider</h4>
@@ -192,7 +212,7 @@
       class="icon-block-left"
       width="117"
       src="/img/our-research-collaborators.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="Our Research Collaborators."
     />
     <div class="icon-block-right">
       <h4>Our Research Collaborators</h4>
@@ -211,7 +231,7 @@
       class="icon-block-left"
       width="118"
       src="/img/people-like-you.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="People Like You (only aggregated data)."
     />
     <div class="icon-block-right">
       <h4>People Like You (only aggregated data)</h4>
@@ -237,7 +257,7 @@
       class="icon-block-left"
       width="96"
       src="/img/manage-your-data.png"
-      alt="It is currently available to Firefox users in the U.S. who are 19 or older."
+      alt="How You Can Manage Your Data."
     />
     <!-- accommodate the link breaking -->
     <div class="icon-block-right">
@@ -359,7 +379,7 @@
   @media only screen and (max-width: 436px) {
     .icon-explanation-block {
       grid-template-columns: auto;
-      grid-column-gap: unset; 
+      grid-column-gap: unset;
     }
   }
 </style>
