@@ -2,8 +2,9 @@
 name: Story
 about: Use this to file a new story for a cycle
 title: "[story]"
-labels: ""
-assignees: ""
+labels: ''
+assignees: ''
+
 ---
 
 ## Story

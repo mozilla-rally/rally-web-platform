@@ -2,7 +2,7 @@ import { Rally, RunStates } from "@mozilla/rally-sdk";
 
 const enableDevMode = false;
 const rallySite = "http://localhost:5000";
-const studyId = "exampleStudy1";
+const studyId = "facebookPixelHunt";
 
 // TODO load from JSON file in /config/
 const firebaseConfig = {

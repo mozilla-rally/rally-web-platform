@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 24px;
+    padding: 20px;
     list-style-type: none;
 
     background: #ffffff;
@@ -100,5 +100,28 @@
     line-height: 18px;
     text-align: center;
     color: #5e5e72;
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      flex-direction: column;
+      padding: 12px;
+    }
+
+    .container li {
+      border: none !important;
+      padding-left: 0px !important;
+    }
+
+    .container li::before {
+      align-self: unset;
+      position: absolute;
+    }
+
+    .container h1,
+    .container p {
+      text-align: unset !important;
+      margin-left: 36.65px;
+    }
   }
 </style>

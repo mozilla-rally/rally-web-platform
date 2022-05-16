@@ -34,12 +34,19 @@
   const dispatch = createEventDispatcher();
 
   let joinModal = false;
+  let leaveModal = false;
 
   function triggerJoinEvent() {
     // send CTA click event to parent.
     dispatch("cta-clicked");
-    joinModal = true;
+
+    if (connected || !joined) {
+      joinModal = true;
+    } else {
+      leaveModal = true;
+    }
   }
+
   let Dialog;
   let mounted = false;
   onMount(async () => {
@@ -67,11 +74,57 @@
   </p>
 </StudyCard>
 
+{#if leaveModal && Dialog}
+  <Dialog
+    width={"482px"}
+    showCloseButton={false}
+    on:dismiss={() => {
+      leaveModal = false;
+    }}
+  >
+    <div slot="title" class="dialog-title">
+      Confirm if you want to join this study or not
+    </div>
+
+    <div slot="body" class="dialog-body">
+      You previously started to join this study, but didn’t finish the process
+      by installing the study extension from the Chrome Web Store.
+    </div>
+
+    <div class="modal-call-flow" slot="cta">
+      <Button
+        size="lg"
+        neutral
+        secondary
+        leave
+        on:click={() => {
+          window.open(downloadUrl, "_blank");
+          leaveModal = false;
+        }}
+      >
+        Add study extension
+      </Button>
+
+      <Button
+        size="lg"
+        product
+        on:click={() => {
+          dispatch("leave");
+          leaveModal = false;
+        }}
+      >
+        Don't join this study
+      </Button>
+    </div>
+  </Dialog>
+{/if}
+
 {#if joinModal && mounted && Dialog}
   <Dialog
     height={joined ? undefined : "auto"}
     topPadding={joined ? undefined : "calc(10vh - 20px)"}
-    width={joined ? "var(--content-width)" : undefined}
+    width={joined ? "673px" : undefined}
+    showCloseButton={false}
     on:dismiss={() => {
       joinModal = false;
     }}
@@ -105,36 +158,41 @@
           {/if}
         </IRBWindow>
       {:else}
-        <div style="width: 400px;">
+        <div>
           <p class="leave-tagline">You’re free to come and go as you please.</p>
-          <p class="leave-sub-tagline">Leaving a study means:</p>
-          <ul class="mzp-u-list-styled bigger-gap" style="padding-right: 48px;">
-            <li>
-              <b>You will only be leaving this specific study</b>. You will
-              continue contributing your browsing data to any other studies
-              you've joined.
-            </li>
-            <li>
-              <b>You will stop contributing browsing data to this study</b> and the
-              researchers leading this study.
-            </li>
-            <li>
-              <b>Rally will delete all your data from this study.</b>
-            </li>
-          </ul>
+          <div class="d-flex flex-row">
+            <div style="width: 316px;">
+              <p class="leave-sub-tagline">Leaving a study means:</p>
+              <ul class="mzp-u-list-styled bigger-gap">
+                <li>
+                  <b>You will only be leaving this specific study</b>. You will
+                  continue contributing your browsing data to any other studies
+                  you've joined.
+                </li>
+                <li>
+                  <b>You will stop contributing browsing data to this study</b> and
+                  the researchers leading this study.
+                </li>
+                <li>
+                  <b>Rally will delete all your data from this study.</b>
+                </li>
+              </ul>
+            </div>
+
+            <img
+              style="width: 316px; padding-top: 20px; transform: translateX(-24px);"
+              src="img/leave-this-study.png"
+              alt="person considering leaving the study"
+            />
+          </div>
         </div>
-        <img
-          style="width: 264px; max-height: 312px; padding-top: 20px; transform: translateX(-24px);"
-          src="img/leave-this-study.png"
-          alt="person considering leaving the study"
-        />
       {/if}
     </div>
     <!-- if the leave study modal is present, shore up the button hheights -->
     <div class="modal-call-flow" slot="cta">
       <Button
         size="lg"
-        product
+        neutral
         secondary
         on:click={() => {
           joinModal = false;
@@ -154,7 +212,7 @@
           joinModal = false;
         }}
       >
-        {#if joined}Leave Study{:else}Accept & Enroll{/if}
+        {#if joined}Leave Study{:else}Add study extension{/if}
       </Button>
     </div>
   </Dialog>
@@ -178,5 +236,18 @@
     font-weight: 600;
     font-size: 16px;
     line-height: 24px;
+  }
+
+  .dialog-title {
+    margin-bottom: 24px;
+  }
+
+  .dialog-body {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    margin-bottom: 40px;
+    margin-right: 20px;
+    color: #5e5e72;
   }
 </style>

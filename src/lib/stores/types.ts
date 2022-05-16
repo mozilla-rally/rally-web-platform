@@ -11,6 +11,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   isUserVerified: Function;
   getUserEmail: Function;
   getUserProvider: Function,
+  deleteUserAccount: Function;
   updateOnboardedStatus: Function;
   updateStudyEnrollment: Function;
   updatePlatformEnrollment: Function;
@@ -39,7 +40,9 @@ export interface UserStudies {
 
 export interface UserStudy {
   joinedOn: { seconds: number; nanoseconds: number; };
-  enrolled: false;
+  enrolled: boolean;
+  attached: boolean;
+  studyId: string;
 }
 
 export interface StudyMetadata {

@@ -7,6 +7,7 @@ import {
   updateEmail,
   signOut,
   signInWithRedirect,
+  deleteUser
 } from "firebase/auth";
 import {
   collection, doc,
@@ -367,6 +368,11 @@ export default {
     const user = auth.currentUser;
     const userCredential = EmailAuthProvider.credential(user.email, password);
     await reauthenticateWithCredential(user, userCredential);
+  },
+
+  async deleteUserAccount() {
+    const user = auth.currentUser;
+    await deleteUser(user);
   },
 
   async isUserVerified() {

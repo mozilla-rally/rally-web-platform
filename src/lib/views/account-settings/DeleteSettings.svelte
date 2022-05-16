@@ -11,6 +11,8 @@
   export let customClass;
   export let headerClass;
   export let displayCard;
+
+  export let deleteUserAccount
 </script>
 
 <div class="settings-delete">
