@@ -177,12 +177,9 @@
             </p>
           {/if}
         </div>
-
-        
-
-
       </fieldset>
     </form>
+    
     <div class="btn-group btn-group--email">
       <Button
         size="xl"

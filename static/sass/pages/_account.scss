@@ -2,19 +2,18 @@
   backface-visibility: hidden;
   padding: 0;
 
-  .row{
+  .row {
     margin: 0;
-    padding: 0; 
+    padding: 0;
   }
 
   .account-settings {
     min-width: unset;
     padding: 0;
-    margin: auto; 
-    
+    margin: auto;
 
     @media (min-width: $LG-screen) {
-      margin-left: 44px; 
+      margin-left: 44px;
     }
 
     @media (min-width: 1313px) {
@@ -22,11 +21,9 @@
     }
   }
 
-  .mzp-c-field-control--error{
+  .mzp-c-field-control--error {
     border: 2px solid #c50042;
   }
-
-  
 }
 
 .settings-readonly {
@@ -35,7 +32,7 @@
     justify-content: start;
 
     @media (min-width: $MD-screen) {
-      padding: 24px; 
+      padding: 24px;
     }
 
     .content-box {
@@ -53,17 +50,31 @@
         display: flex;
         justify-content: space-between;
         align-items: start;
+
+        &--google {
+          @extend %card-border;
+          align-items: center;
+          padding: 12px;
+        }
       }
 
-      .content-description {
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 24px;
+      &__description {
+        @extend %content-body-MD;
         color: $color-helper-gray;
 
-        @media (min-width: $MD-screen) {
-         font-size: 16px;
+        &--google {
+          display: flex;
+          align-items: center;
+
+          .info {
+            @extend %content-body-XS;
+            max-width: 276px;
+            color: $color-marketing-gray-70;
+            margin-left: 8px;
+            @media (max-width: $MD-screen) {
+              max-width: unset;
+             }
+          }
         }
       }
 
@@ -76,6 +87,25 @@
         background-color: transparent;
         text-decoration: underline;
         cursor: pointer;
+        @media (max-width: $MD-screen) {
+         font-size: 14px; 
+        }
+      }
+
+      &__link {
+        color: #000000;
+        text-decoration: underline;
+     
+        svg {
+          margin-left: 6px;
+        }
+
+        @media (max-width: $MD-screen) {
+          font-size: 14px; 
+          svg{
+            width: 100%;
+          }
+         }
       }
     }
 
@@ -90,13 +120,19 @@
   .btn-group {
     display: flex;
     justify-content: space-between;
-    width: 285px;
-    float: right; 
-    margin-top: 24px; 
+    width: 272px;
+    float: right;
+    margin-top: 24px;
+    &--password {
+      width: auto;
+      .cancel {
+        margin-right: 8px;
+      }
+    }
 
     .card-button {
       width: auto;
-      padding: 0; 
+      padding: 8px 21.82px;
     }
   }
 }

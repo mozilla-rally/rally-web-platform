@@ -5,20 +5,11 @@
   import SigninSettings from "./SigninSettings.svelte";
   import DeleteSettings from "./DeleteSettings.svelte";
   import { getContext, onMount, createEventDispatcher } from "svelte";
-  import type { AppStore } from "$lib/stores/types";
-  import isMounted from "$lib/is-mounted";
+  import moment from "moment";
 
   const dispatch = createEventDispatcher();
-  const store: AppStore = getContext("rally:store");
 
-  export let displayCard
-
-  // export let settingsList;
-  let userEmail;
-
-  onMount(async () => {
-    userEmail = await store.getUserEmail();
-  });
+  export let displayCard;
 
   let readOnlyArgs = {
     width: "612px",
@@ -38,11 +29,12 @@
     title: "Delete account",
   };
 
-  const mounted = isMounted();
+ ;
+
 </script>
 
 <div class="settings-readonly">
-  <SigninSettings {displayCard} {userEmail} {...signinArgs} />
+  <SigninSettings {displayCard} {...signinArgs} />
 
   <DeleteSettings {displayCard} {...deleteArgs} />
 </div>

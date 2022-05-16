@@ -51,6 +51,9 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async getUserEmail(){
       return api.getUserEmail()
     },
+    async getUserProvider(){
+      return api.getUserProvider()
+    },
     async updateOnboardedStatus(onboardingOrNot) {
       return api.updateOnboardedStatus(onboardingOrNot);
     },

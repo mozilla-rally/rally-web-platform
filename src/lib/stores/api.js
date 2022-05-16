@@ -389,6 +389,15 @@ export default {
     }
   },
 
+  async getUserProvider() {
+    const user = await auth.currentUser;
+    try {
+      return user.providerData;
+    } catch (err) {
+      console.error("there was an error", err);
+    }
+  },
+
   async updateOnboardedStatus(onboarded) {
     return updateUserDocument({ onboarded });
   },

@@ -187,17 +187,4 @@
   .description {
     margin-bottom: 34px;
   }
-  .arrow-btn {
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-  .back-arrow {
-    padding-right: 10px;
-    cursor: pointer;
-  }
-  .back-arrow:hover {
-    transform: translateX(-4px);
-    transition: ease-in;
-  }
 </style>

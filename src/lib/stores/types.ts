@@ -10,6 +10,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   changeEmail: Function;
   isUserVerified: Function;
   getUserEmail: Function;
+  getUserProvider: Function,
   updateOnboardedStatus: Function;
   updateStudyEnrollment: Function;
   updatePlatformEnrollment: Function;
@@ -29,6 +30,7 @@ export interface User {
   enrolled: boolean;
   onboarded: boolean;
   demographicsData: object;
+  providerData: object
 }
 
 export interface UserStudies {

@@ -14,7 +14,7 @@
 </script>
 
 <Card {...cardArgs}>
-  <h2 class="title-wrapper" slot="card-title">
+  <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
     <div class="title-text">{settingsTitle}</div>
   </h2>
   <div class="card-body-content" slot="card-content">
@@ -27,3 +27,9 @@
     {/if}
   </div>
 </Card>
+
+<style>
+  .title-wrapper{
+    justify-content: unset;
+  }
+</style>

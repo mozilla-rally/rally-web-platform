@@ -169,6 +169,7 @@
 
       .list-item {
         @extend %nav-list-item;
+        
         padding: 12px 12px 12px 20px;
 
         &--top {

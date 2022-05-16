@@ -1114,6 +1114,32 @@ legend.mzp-c-field-label {
 
 /* $$$$- shared component variables $$$$$ */
 /* study card variables */
+.settings-readonly .card .content-box__content--google {
+  border: 1px solid #cdcdd4;
+  border-radius: 4px;
+}
+
+.settings-readonly .card .content-box__description--google .info {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.settings-readonly .card .content-box__description {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+}
+@media (min-width: 688px) {
+  .settings-readonly .card .content-box__description {
+    font-size: 16px;
+  }
+}
+
 .signin {
   display: grid;
   justify-content: center;
@@ -13557,7 +13583,7 @@ ol {
 .main-content--account-settings {
   max-width: unset;
 }
-@media (max-width: 432px) {
+@media (max-width: 688px) {
   .main-content--account-settings {
     padding: 0.625rem 0.75rem;
   }
@@ -13706,6 +13732,7 @@ ol {
 }
 .card--settings-update {
   padding: 32px 32px 44px;
+  justify-content: unset;
 }
 .card__inner {
   padding: 0;
@@ -13930,16 +13957,25 @@ ol {
   justify-content: space-between;
   align-items: start;
 }
-.settings-readonly .card .content-box .content-description {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
+.settings-readonly .card .content-box__content--google {
+  align-items: center;
+  padding: 12px;
+}
+.settings-readonly .card .content-box__description {
   color: #42435A;
 }
-@media (min-width: 688px) {
-  .settings-readonly .card .content-box .content-description {
-    font-size: 16px;
+.settings-readonly .card .content-box__description--google {
+  display: flex;
+  align-items: center;
+}
+.settings-readonly .card .content-box__description--google .info {
+  max-width: 276px;
+  color: #5e5e72;
+  margin-left: 8px;
+}
+@media (max-width: 688px) {
+  .settings-readonly .card .content-box__description--google .info {
+    max-width: unset;
   }
 }
 .settings-readonly .card .content-box .password-dots {
@@ -13951,6 +13987,26 @@ ol {
   text-decoration: underline;
   cursor: pointer;
 }
+@media (max-width: 688px) {
+  .settings-readonly .card .content-box .edit-btn {
+    font-size: 14px;
+  }
+}
+.settings-readonly .card .content-box__link {
+  color: #000000;
+  text-decoration: underline;
+}
+.settings-readonly .card .content-box__link svg {
+  margin-left: 6px;
+}
+@media (max-width: 688px) {
+  .settings-readonly .card .content-box__link {
+    font-size: 14px;
+  }
+  .settings-readonly .card .content-box__link svg {
+    width: 100%;
+  }
+}
 .settings-readonly .card hr {
   margin: 24px 0;
   border: 1px solid #cdcdd4;
@@ -13959,13 +14015,19 @@ ol {
 .settings-wrapper .btn-group {
   display: flex;
   justify-content: space-between;
-  width: 285px;
+  width: 272px;
   float: right;
   margin-top: 24px;
 }
+.settings-wrapper .btn-group--password {
+  width: auto;
+}
+.settings-wrapper .btn-group--password .cancel {
+  margin-right: 8px;
+}
 .settings-wrapper .btn-group .card-button {
   width: auto;
-  padding: 0;
+  padding: 8px 21.82px;
 }
 
 .signin__logo {
