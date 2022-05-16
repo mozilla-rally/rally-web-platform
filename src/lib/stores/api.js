@@ -122,15 +122,14 @@ export default {
       await initializeFirestoreAPIs();
 
       async function handleContentScriptEvents(e) {
-        console.log("message from content script received:", e.type, e);
-
         // Mark this study as connected.
         // TODO
         // this.updateStudyEnrollment(true, e.detail.studyId, true);
         switch (e.type) {
           case "rally-sdk.complete-signup":
 
-            const studyId = e.detail && e.detail.studyId;
+            const detail = JSON.parse(e.detail);
+            const studyId = detail && detail.studyId;
             if (!studyId) {
               throw new Error(
                 "handling rally-sdk.complete-signup from content script: No study ID provided."
