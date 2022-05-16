@@ -129,14 +129,14 @@ export default {
         // this.updateStudyEnrollment(true, e.detail.studyId, true);
         switch (e.type) {
           case "rally-sdk.complete-signup":
-            // @ts-ignore
-            if (!e.detail && !e.detail.studyId) {
+
+            const studyId = e.detail && e.detail.studyId;
+            if (!studyId) {
               throw new Error(
                 "handling rally-sdk.complete-signup from content script: No study ID provided."
               );
             }
 
-            const studyId = e.detail.studyId;
             if (functionsHost === undefined) {
               throw new Error(
                 "Firebase Functions host not defined, cannot generate JWTs for extensions."
