@@ -194,9 +194,9 @@ export default {
             }
 
             // Mark this study as connected.
+            const studies = await getStudies();
             _connectedChangeCallbacks.forEach(async callback => {
-              const studies = await getStudies();
-              const found = studies.filter((a) => a.studyId === studyId);
+              const found = studies.find((a) => a.studyId === studyId);
               if (!found) {
                 throw new Error(
                   `Received rally-sdk.web-check-response for non-existent study: ${studyId}`
