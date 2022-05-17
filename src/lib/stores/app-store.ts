@@ -39,19 +39,19 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async sendUserPasswordResetEmail(email) {
       return api.sendUserPasswordResetEmail(email);
     },
-    async resetUserPassword(newPassword, oldPassword){
+    async resetUserPassword(newPassword, oldPassword) {
       return api.resetUserPassword(newPassword, oldPassword)
     },
-    async changeEmail(email, password){
+    async changeEmail(email, password) {
       return api.changeEmail(email, password)
     },
-    async isUserVerified(){
+    async isUserVerified() {
       return api.isUserVerified()
     },
-    async getUserEmail(){
+    async getUserEmail() {
       return api.getUserEmail()
     },
-    async deleteUserAccount(){
+    async deleteUserAccount() {
       return api.deleteUserAccount()
     },
     async updateOnboardedStatus(onboardingOrNot) {
@@ -111,4 +111,23 @@ function isAuthenticatedStore(): Readable<boolean> {
 export const isAuthenticated = browser
   ? isAuthenticatedStore()
   : writable(undefined);
+
+/**
+ * Creates a store whose value is a boolean that logs whether the Rally extension
+ * is present or not.
+ * @returns WritableStore<boolean>["subscribe"]
+ */
+function isExtensionConnectedStore(): Readable<boolean> {
+  const { subscribe, set } = writable(undefined);
+  set(false);
+  firestoreAPI.onExtensionConnected((studyId) => {
+    set(true)
+  });
+  return { subscribe };
+}
+
+export const isExtensionConnected = browser
+  ? isExtensionConnectedStore()
+  : writable(undefined);
+
 export const store = browser ? createAppStore() : writable(undefined);

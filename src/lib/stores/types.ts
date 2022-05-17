@@ -39,7 +39,6 @@ export interface UserStudies {
 export interface UserStudy {
   joinedOn: { seconds: number; nanoseconds: number; };
   enrolled: boolean;
-  attached: boolean;
   studyId: string;
 }
 

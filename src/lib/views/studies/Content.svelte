@@ -62,8 +62,6 @@
         author={study.authors.name}
         joined={study.studyId in userStudies &&
           userStudies[study.studyId].enrolled}
-        connected={study.studyId in userStudies &&
-          userStudies[study.studyId].attached}
         imageSrc={study.icons[64]}
         studyId={study.studyId}
         endDate={parseDateIfNeeded(study.endDate)}
