@@ -121,7 +121,6 @@ function isExtensionConnectedStore(): Readable<boolean> {
   const { subscribe, set } = writable(undefined);
   set(false);
   firestoreAPI.onExtensionConnected((studyId) => {
-    console.debug("studyId:", studyId);
     set(true)
   });
   return { subscribe };
