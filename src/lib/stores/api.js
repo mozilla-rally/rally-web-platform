@@ -85,6 +85,7 @@ const _stateChangeCallbacks = [];
 const _connectedChangeCallbacks = [async (studyId) => {
   analytics = (await import("firebase/analytics")).getAnalytics();
   logEvent = (await import("firebase/analytics")).logEvent
+
   logEvent(analytics, "activate_extension", { studyId });
 }];
 
