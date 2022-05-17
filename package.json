@@ -62,7 +62,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-storybook": "^0.5.11",
     "firebase": "^9.0.1",
-    "firebase-functions": "^3.20.1",
+    "firebase-functions": "^3.21.1",
     "firebase-tools": "^10.9.2",
     "geckodriver": "^3.0.1",
     "immer": "^9.0.14",
