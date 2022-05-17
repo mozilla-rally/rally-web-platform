@@ -9,7 +9,6 @@
     "rally:isExtensionConnected"
   );
 
-  console.debug("isExtensionConnected", $isExtensionConnected);
   export let downloadUrl;
 </script>
 
