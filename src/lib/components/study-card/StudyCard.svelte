@@ -1,8 +1,9 @@
-<script>
+<script type="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
+  import type { Readable } from "svelte/store";
   import { slide } from "svelte/transition";
   import AccordionButton from "../accordion/AccordionButton.svelte";
   import Button from "../Button.svelte";
@@ -12,12 +13,15 @@
   import studyCategories from "./study-categories";
   import StudyStatusBadge from "./StudyStatusBadge.svelte";
 
+  const isExtensionConnected: Readable<boolean> = getContext(
+    "rally:isExtensionConnected"
+  );
+
   let revealed = false;
 
   export let endDate;
   export let downloadUrl;
   export let joined = false;
-  export let connected = false;
   export let studyDetailsLink = undefined;
   export let imageSrc;
   export let dataCollectionDetails = [];
@@ -36,10 +40,10 @@
       {#if joined}
         <div
           class={`d-flex status-container ${
-            connected ? "connected" : "not-connected"
+            $isExtensionConnected ? "connected" : "not-connected"
           }`}
         >
-          <StudyStatusBadge {connected} {downloadUrl} />
+          <StudyStatusBadge {$isExtensionConnected} {downloadUrl} />
           <div class="dropdown">
             <button
               class="btn btn-link update-dropdown-link p-0 pt-0 d-flex align-items-center"
@@ -50,7 +54,7 @@
               <OverflowEllipsis color="#5E5E72" size="28px" />
             </button>
             <ul class="dropdown-menu dropdown-menu-bottom overflow-hidden">
-              {#if !connected}
+              {#if !$isExtensionConnected}
                 <li>
                   <a
                     class="dropdown-item text-body-sm"
@@ -64,7 +68,7 @@
                   class="dropdown-item text-body-sm"
                   on:click={() => dispatch("leave")}
                   href="#"
-                  >{connected ? "Leave study" : "Don't join this study"}</a
+                  >{$isExtensionConnected ? "Leave study" : "Don't join this study"}</a
                 >
               </li>
             </ul>

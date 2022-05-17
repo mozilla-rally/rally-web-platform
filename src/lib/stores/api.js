@@ -39,6 +39,7 @@ let __STATE__ = {
   user: undefined,
   userStudies: undefined,
   onboarded: false,
+  connected: false
 };
 
 let userRef;
@@ -69,6 +70,7 @@ async function getStudies() {
 
 const _stateChangeCallbacks = [];
 const _authChangeCallbacks = [];
+const _connectedChangeCallbacks = [];
 
 function _updateLocalState(callback) {
   __STATE__ = produce(__STATE__, callback);
@@ -121,12 +123,9 @@ export default {
     } else {
       await initializeFirestoreAPIs();
 
-      async function handleContentScriptEvents(e) {
-        // Mark this study as connected.
-        // TODO
-        // this.updateStudyEnrollment(true, e.detail.studyId, true);
+      const handleContentScriptEvents = async (/** @type {CustomEvent} */ e) => {
         switch (e.type) {
-          case "rally-sdk.complete-signup":
+          case "rally-sdk.complete-signup": {
 
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
@@ -183,13 +182,35 @@ export default {
               })
             );
             break;
-          case "rally-sdk.web-check-response":
+          }
+          case "rally-sdk.web-check-response": {
             console.debug("Received rally-sdk.web-check-response.");
+            const detail = JSON.parse(e.detail);
+            const studyId = detail && detail.studyId;
+            if (!studyId) {
+              throw new Error(
+                "handling rally-sdk.web-check-response from content script: No study ID provided."
+              );
+            }
+
+            // Mark this study as connected.
+            _connectedChangeCallbacks.forEach(async callback => {
+              const studies = await getStudies();
+              const found = studies.filter((a) => a.studyId === studyId);
+              if (!found) {
+                throw new Error(
+                  `Received rally-sdk.web-check-response for non-existent study: ${studyId}`
+                );
+              }
+              callback(studyId);
+            });
             break;
-          default:
+          }
+          default: {
             console.warn(
               `Unknown message received from content script: ${e.type}`
             );
+          }
         }
       }
       window.addEventListener(
@@ -399,8 +420,7 @@ export default {
     return updateUserDocument({ onboarded });
   },
 
-  async updateStudyEnrollment(studyId, enroll, attached) {
-    const connected = !!attached;
+  async updateStudyEnrollment(studyId, enroll) {
     const userStudies = { ...(__STATE__.userStudies || {}) };
     if (!(studyId in userStudies)) {
       userStudies[studyId] = {};
@@ -408,7 +428,6 @@ export default {
     userStudies[studyId] = { ...userStudies[studyId] };
     userStudies[studyId].enrolled = enroll;
     userStudies[studyId].studyId = studyId;
-    userStudies[studyId].attached = connected;
     if (enroll) {
       userStudies[studyId].joinedOn = new Date();
     }
@@ -432,4 +451,8 @@ export default {
   onNextState(callback) {
     _stateChangeCallbacks.push(callback);
   },
+
+  onExtensionConnected(callback) {
+    _connectedChangeCallbacks.push(callback);
+  }
 };
