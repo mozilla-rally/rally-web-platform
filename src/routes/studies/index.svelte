@@ -11,16 +11,22 @@
   const isAuthenticated: Readable<boolean> = getContext(
     "rally:isAuthenticated"
   );
+  const isExtensionConnected: Readable<boolean> = getContext(
+    "rally:isExtensionConnected"
+  );
+
   const notifications: NotificationStore = getContext("rally:notifications");
 
   function joinStudy(studyId) {
     const study = $store.studies.find((s) => s.studyId === studyId);
 
     if (!study) {
-      throw new Error(`Study with id: ${studyId} not found.`);      
+      throw new Error(`Study with id: ${studyId} not found.`);
     }
 
-    window.open(study.downloadLink, "_blank");
+    if (!$isExtensionConnected) {
+      window.open(study.downloadLink, "_blank");
+    }
 
     store.updateStudyEnrollment(studyId, true);
     notifications.send({ code: "SUCCESSFULLY_JOINED_STUDY" });
