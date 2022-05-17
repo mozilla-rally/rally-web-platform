@@ -122,20 +122,20 @@ export default {
       await initializeFirestoreAPIs();
 
       async function handleContentScriptEvents(e) {
-        console.log("message from content script received:", e.type, e);
-
         // Mark this study as connected.
         // TODO
         // this.updateStudyEnrollment(true, e.detail.studyId, true);
         switch (e.type) {
           case "rally-sdk.complete-signup":
-            // @ts-ignore
-            const studyId = e.detail;
+
+            const detail = JSON.parse(e.detail);
+            const studyId = detail && detail.studyId;
             if (!studyId) {
               throw new Error(
                 "handling rally-sdk.complete-signup from content script: No study ID provided."
               );
             }
+
             if (functionsHost === undefined) {
               throw new Error(
                 "Firebase Functions host not defined, cannot generate JWTs for extensions."
