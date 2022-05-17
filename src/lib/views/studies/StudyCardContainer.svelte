@@ -229,20 +229,6 @@
       >
         {#if joined}Leave Study{:else}Add study extension{/if}
       </Button>
-      <Button
-        size="lg"
-        product
-        secondary  
-        on:click={() => {
-          logEvent(analytics, "select_content", {
-            content_type: `canceled_${joined ? "join" : "leave"}_study`,
-          });
-
-          joinModal = false;
-        }}
-      >
-        Cancel
-      </Button>
     </div>
   </Dialog>
 {/if}
