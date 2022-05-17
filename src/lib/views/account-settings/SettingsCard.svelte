@@ -8,15 +8,26 @@
 
   export let isEmail;
   export let isPW;
+  export let isDelete;
   export let cardArgs;
   export let displayCard;
-  export let settingsTitle
+  export let settingsTitle;
+  export let settingsDescription;
 </script>
 
 <Card {...cardArgs}>
-  <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
-    <div class="title-text">{settingsTitle}</div>
-  </h2>
+  <div slot="card-title">
+    <h2 class="title-wrapper title-wrapper--settings">
+      <div class="title-text">{settingsTitle}</div>
+    </h2>
+
+    {#if settingsDescription}
+      <p class="description">
+        {settingsDescription}
+      </p>
+    {/if}
+  </div>
+
   <div class="card-body-content" slot="card-content">
     {#if isEmail}
       <UpdateEmail on:type={displayCard} />
@@ -31,5 +42,8 @@
 <style>
   .title-wrapper{
     justify-content: unset;
+  }
+  .description {
+    margin-top: 8px;
   }
 </style>

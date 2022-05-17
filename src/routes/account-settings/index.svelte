@@ -54,7 +54,7 @@
   let isDelete = false;
   let isReadOnly = true;
   let settingsTitle = "Account settings";
-  let settingsDecription =
+  let settingsDescription =
     "Manage your info, privacy, and security to make Rally work better for you.";
 
   let cardArgs = {
@@ -83,20 +83,26 @@
       case "update-email":
         isEmail = true;
         isPW = false;
+        isDelete = false;
         isReadOnly = false;
         settingsTitle = "Change your email address";
+        settingsDescription = null;
         break;
       case "update-pw":
         isPW = true;
         isEmail = false;
+        isDelete = false;
         settingsTitle = "Change your password";
+        settingsDescription = null;
         isReadOnly = false;
         break;
       case "delete":
         isPW = false;
         isEmail = false;
+        isDelete = true;
         isReadOnly = false;
         settingsTitle = "Delete your Rally account";
+        settingsDescription = "Thank you for helping make the Internet a little better";
         break;
       case "read-only":
         showReadOnly();
@@ -110,8 +116,9 @@
     isReadOnly = true;
     isEmail = false;
     isPW = false;
+    isDelete = false;
     settingsTitle = "Account Settings";
-    settingsDecription =
+    settingsDescription =
       "Manage your info, privacy, and security to make Rally work better for you.";
   };
 
@@ -149,7 +156,7 @@
           </div>
 
           <p class="description">
-            {settingsDecription}
+            {settingsDescription}
           </p>
         {/if}
 
@@ -162,9 +169,11 @@
             <SettingsCard
               {isEmail}
               {isPW}
+              {isDelete}
               {cardArgs}
               {displayCard}
               {settingsTitle}
+              {settingsDescription}
               on:type={displayCard}
             />
           {/if}
