@@ -300,7 +300,7 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
-      window.location.reload();
+      window.location.href = "/studies";
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("signInErr", err);
