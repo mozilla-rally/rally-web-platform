@@ -58,8 +58,8 @@
     "Manage your info, privacy, and security to make Rally work better for you.";
   let userProvider;
   let isGoogleAccount;
-  let isUserVerified = null;
-  let getEmailStatus = null;
+  let isUserVerified;
+  let getEmailStatus;
 
   let cardArgs = {
     width: "486px",
@@ -75,14 +75,12 @@
   };
 
   onMount(async () => {
-    isUserVerified = await store.isUserVerified();
     userProvider = await store.getUserProvider();
     if (userProvider) {
       userProvider[0].providerId === "google.com"
         ? (isGoogleAccount = true)
         : (isGoogleAccount = false);
     }
-    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
   });
 
   const displayCard = (event) => {
@@ -99,11 +97,13 @@
         isEmail = true;
         isPW = false;
         isReadOnly = false;
+        isCheckEmail = false;
         settingsTitle = "Change your email address";
         break;
       case "update-pw":
         isPW = true;
         isEmail = false;
+        isCheckEmail = false;
         settingsTitle = "Change your password";
         isReadOnly = false;
         break;
@@ -111,6 +111,7 @@
         isPW = false;
         isEmail = false;
         isReadOnly = false;
+        isCheckEmail = false;
         settingsTitle = "Delete your Rally account";
         break;
       case "read-only":
@@ -132,8 +133,14 @@
     isEmail = false;
     isPW = false;
     settingsTitle = "Account Settings";
+    isCheckEmail = false;
     settingsDecription =
       "Manage your info, privacy, and security to make Rally work better for you.";
+  };
+
+  const getLatestVerified = async () => {
+    isUserVerified = await store.isUserVerified();
+    return isUserVerified;
   };
 
   $: if ($store._initialized) {
@@ -148,13 +155,12 @@
     cardArgs = isReadOnlyArgs;
   }
 
+  $: isUserVerified = getLatestVerified();
   $: getEmailStatus = localStorage.getItem("isEmailChange");
-
-  $: if (isUserVerified && getEmailStatus) {
+  $: if (isUserVerified === true && getEmailStatus) {
     notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
     localStorage.removeItem("isEmailChange");
   }
-
 </script>
 
 <svelte:head>

@@ -3,14 +3,14 @@
   import { fly } from "svelte/transition";
   import RallyNavbar from "$lib/layouts/main/Navbar.svelte";
   import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
-  import Dropdown from "./_Dropdown.svelte"
+  import Dropdown from "./_Dropdown.svelte";
   import isMounted from "$lib/is-mounted";
   import type { AppStore } from "$lib/stores/types";
 
   const store: AppStore = getContext("rally:store");
   const mounted = isMounted();
   let browser;
-  let userEmail;
+
   let isFocused = false;
   let ariaExpanded = false;
   let ariaHidden = true;
@@ -19,15 +19,10 @@
   let visibility;
 
   onMount(async () => {
-    userEmail = await store.getUserEmail();
     if (window) {
       browser = window.location;
     }
   });
-
-  $: dropDownVisible === true ? (opacity = 1) : (opacity = 0);
-  $: dropDownVisible === true ? (visibility = "visible") : (visibility = "hidden");
-  $: cssVarStyles = `--opacity:${opacity}; --visibility:${visibility}`;
 
   const toggleDropdown = () => (dropDownVisible = !dropDownVisible);
   const onFocus = () => (isFocused = true);
@@ -42,7 +37,11 @@
     ariaHidden = !ariaHidden;
   };
 
-  //fix signout hover
+  $: dropDownVisible === true ? (opacity = 1) : (opacity = 0);
+  $: dropDownVisible === true
+    ? (visibility = "visible")
+    : (visibility = "hidden");
+  $: cssVarStyles = `--opacity:${opacity}; --visibility:${visibility}`;
 </script>
 
 <RallyNavbar>
@@ -115,9 +114,8 @@
     </div>
 
     <!-- DESKTOP Dropdown-->
-    <Dropdown  clazz = "desktop" {userEmail} {handleLogOut} {cssVarStyles}/>
+    <Dropdown clazz="desktop" {handleLogOut} {cssVarStyles} />
   </div>
-
 
   <!-- Mobile menu dropdown -->
   <div
@@ -127,7 +125,12 @@
     slot="mobile-nav"
   >
     <nav class="nav-mobile" aria-label="Primary navigation">
-      <Dropdown {toggleNavIcon} clazz="mobile" {userEmail} {handleLogOut} cssVarStyles={null} />
+      <Dropdown
+        {toggleNavIcon}
+        clazz="mobile"
+        {handleLogOut}
+        cssVarStyles={null}
+      />
     </nav>
   </div>
 </RallyNavbar>
@@ -142,6 +145,6 @@
 
   .header__mobile-menu {
     max-height: 450px;
-    height: 100%; 
+    height: 100%;
   }
 </style>

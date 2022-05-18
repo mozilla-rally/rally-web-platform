@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  import {  getContext, onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   import moment from "moment";
@@ -22,22 +22,40 @@
   let timeSeconds = null;
   let createdOn;
   let userProvider;
+  let getEmailStatus;
 
   let isGoogleAccount;
   let showBtn = "display: block;";
   let hideBtn = "display: none;";
   let googleAccountLink = "https://www.google.com/account";
+  let showWarning = false;
 
-  
   onMount(async () => {
-    userEmail = await store.getUserEmail();
     userProvider = await store.getUserProvider();
     timeSeconds = $store.user.createdOn.seconds;
     createdOn = formatDate();
     if (userProvider) {
-      userProvider[0].providerId === "google.com" ? isGoogleAccount = true : isGoogleAccount = false 
+      userProvider[0].providerId === "google.com"
+        ? (isGoogleAccount = true)
+        : (isGoogleAccount = false);
     }
   });
+
+  const getLatestVerified = async () => {
+    isUserVerified = await store.isUserVerified();
+    debugger;
+    return isUserVerified;
+  };
+
+  const getLatestUserEmail = async () => {
+    userEmail = await store.getUserEmail();
+    debugger;
+    return userEmail;
+  };
+
+  const resendVerificationEmail = async () => {
+    await store.resendUserVerificationEmail();
+  };
 
   const formatDate = () => {
     if (timeSeconds) {
@@ -46,6 +64,15 @@
       return date;
     }
   };
+
+  $: isUserVerified = getLatestVerified();
+  $: userEmail = getLatestUserEmail();
+  $: getEmailStatus = localStorage.getItem("isEmailChange");
+  $: if (isUserVerified === false && getEmailStatus) {
+    showWarning = true;
+  } else {
+    showWarning = false;
+  }
 </script>
 
 <Card {width} {height} {customClass} {headerClass}>
@@ -56,7 +83,17 @@
     <div class="content-box">
       <div class="content-box__title">Email</div>
       <div class="content-box__content">
-        <div class="content-description user-email">{userEmail}</div>
+        <div class="content-description user-email">
+          {userEmail}
+          <span class="not-verified-warning"
+            >{showWarning ? "(not verified)" : ""}
+          </span>
+          <span
+            on:click={resendVerificationEmail}
+            class="not-verified-warning--action"
+            >{showWarning ? "Resend verification email" : ""}</span
+          >
+        </div>
         <button
           style={isGoogleAccount === true ? hideBtn : showBtn}
           on:click={() => {
@@ -109,3 +146,14 @@
     </div>
   </div></Card
 >
+
+<style>
+  .not-verified-warning {
+    color: red;
+  }
+
+  .not-verified-warning--action {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>

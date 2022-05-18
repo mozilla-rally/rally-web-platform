@@ -48,7 +48,7 @@ let __STATE__ = {
   user: undefined,
   userStudies: undefined,
   onboarded: false,
-  connected: false
+  connected: false,
 };
 
 let userRef;
@@ -132,10 +132,11 @@ export default {
     } else {
       await initializeFirestoreAPIs();
 
-      const handleContentScriptEvents = async (/** @type {CustomEvent} */ e) => {
+      const handleContentScriptEvents = async (
+        /** @type {CustomEvent} */ e
+      ) => {
         switch (e.type) {
           case "rally-sdk.complete-signup": {
-
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
             if (!studyId) {
@@ -207,7 +208,7 @@ export default {
 
             // Mark this study as connected.
             const studies = await getStudies();
-            _connectedChangeCallbacks.forEach(async callback => {
+            _connectedChangeCallbacks.forEach(async (callback) => {
               const found = studies.find((a) => a.studyId === studyId);
               if (!found) {
                 throw new Error(
@@ -224,7 +225,7 @@ export default {
             );
           }
         }
-      }
+      };
       window.addEventListener(
         "rally-sdk.complete-signup",
         handleContentScriptEvents
@@ -371,10 +372,10 @@ export default {
   },
 
   async resetUserPassword(newPassword, oldPassword) {
-    this.reauthenticateUser(oldPassword);
-    let user
+    if (this) this.reauthenticateUser(oldPassword);
+    let user;
     try {
-      if(auth) user = await auth.currentUser;
+      if (auth) user = await auth.currentUser;
       await updatePassword(user, newPassword);
       console.info("reset password");
     } catch (err) {
@@ -387,12 +388,20 @@ export default {
   async changeEmail(email, password) {
     let user;
     try {
-      if(auth) user = await auth.currentUser
-      this.reauthenticateUser(password);
-      await updateEmail(auth.currentUser, email);
-      if (!user.emailVerified) {
-        await sendEmailVerification(user);
-        console.info("email changed!");
+      if (auth) user = await auth.currentUser;
+      if (this) {
+        if (this.reauthenticateUser(password)) {
+          if (user) {
+            await updateEmail(user, email);
+            console.info("email changed!");
+            if (!user.emailVerified) {
+              console.info("user not verified!");
+              await sendEmailVerification(user);
+            } else {
+              console.info("email verified!");
+            }
+          }
+        }
       }
     } catch (err) {
       console.error("there was an error", err);
@@ -402,14 +411,35 @@ export default {
   },
 
   async reauthenticateUser(password) {
-    let user
+    let user;
     try {
-      if(auth) user = await auth.currentUser;
-      const userCredential = EmailAuthProvider.credential(user.email, password);
-      await reauthenticateWithCredential(user, userCredential);
+      if (auth) user = await auth.currentUser;
+      if (user) {
+        const userCredential = EmailAuthProvider.credential(
+          user.email,
+          password
+        );
+        await reauthenticateWithCredential(user, userCredential);
+        return true;
+      }
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("changeEmailErr", err);
+    }
+  },
+
+  async resendUserVerificationEmail() {
+    let user;
+    try {
+      if (auth) user = await auth.currentUser;
+      if (user) {
+        await sendEmailVerification(user);
+        console.info("email verification resent!");
+      }
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("changeEmailErr", err);
+      return;
     }
   },
 
@@ -423,8 +453,7 @@ export default {
     try {
       if (auth) user = await auth.currentUser;
       if (user) {
-        if (user.emailVerified) return true;
-        else return false;
+        return user.emailVerified;
       }
     } catch (err) {
       console.error("there was an error", err);
@@ -489,5 +518,5 @@ export default {
 
   onExtensionConnected(callback) {
     _connectedChangeCallbacks.push(callback);
-  }
+  },
 };

@@ -21,6 +21,7 @@
 
   onMount(() => {
     localStorage.removeItem("isLoading");
+    localStorage.removeItem("isEmailChange");
   });
 
   let {
@@ -169,7 +170,7 @@
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
+        <CheckEmailCard isSettings={false} {...cardArgs} on:type={triggerCard} />
       {/if}
 
       {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}

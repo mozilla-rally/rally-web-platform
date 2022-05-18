@@ -2,9 +2,13 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher, getContext } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
+
+  import type { AppStore } from "$lib/stores/types";
+
+  const store: AppStore = getContext("rally:store");
 
   const dispatch = createEventDispatcher();
 
@@ -13,17 +17,17 @@
   export let height;
   export let customClass;
   export let checkPW;
-  export let userEmail;
   export let ctaText;
   export let linkText;
   export let headerClass;
   export let isSettings;
-  export let checkEmailText = `To finish creating your account with Rally, please check your email inbox and verify your email address.`;
 
   let body;
   let titleEl;
   let textWidth;
-  let resetPWText = `Instructions to reset your password has been sent to ${userEmail}`;
+  let userEmail;
+  let checkEmailText;
+  let resetPWText;
 
   onMount(async () => {
     if (titleEl) {
@@ -37,8 +41,17 @@
       text: type,
     });
   };
+  const getLatestUserEmail = async () => {
+    userEmail = await store.getUserEmail()
+    return userEmail
+  };
 
+  $: userEmail = getLatestUserEmail();
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
+  $: resetPWText = `Instructions to reset your password have been sent to ${userEmail}`;
+  $: isSettings === true
+    ? (checkEmailText = `Successfully sent email change request. To finish updating, please follow instructions sent to ${userEmail}`)
+    : (checkEmailText = `To finish creating your account with Rally, please check your email inbox and verify your email address.`);
   $: checkPW ? (body = resetPWText) : (body = checkEmailText);
 </script>
 

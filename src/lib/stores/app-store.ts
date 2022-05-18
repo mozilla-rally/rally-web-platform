@@ -48,6 +48,9 @@ export function createAppStore(api = firestoreAPI): AppStore {
     async isUserVerified() {
       return api.isUserVerified()
     },
+    async resendUserVerificationEmail() {
+      return api.resendUserVerificationEmail()
+    },
     async getUserEmail() {
       return api.getUserEmail()
     },
