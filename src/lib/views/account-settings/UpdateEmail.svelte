@@ -6,21 +6,19 @@
   import { getContext } from "svelte";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
-  import type { NotificationStore } from "$lib/components/notifications";
 
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
-  const notifications: NotificationStore = getContext("rally:notifications");
 
   const emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
 
   //create account states
-  let password;
   let emailEl;
   let emailErrText = null;
   let emptyFieldsErr;
+  let fireBaseErr = null;
   let inputEmailClass;
   let inputPasswordClass;
   let inputItemsVisible = false;
@@ -42,8 +40,8 @@
 
   const checkEmail = async (val) => {
     if (val.match(emailPattern)) {
-      await store.changeEmail(emailEl.value, password);
-      clearFields();
+      await store.changeEmail(emailEl.value, passwordEl.value);
+      handleNextState();
     } else {
       emailErrText = "Invalid format";
       emailEl.classList.add("mzp-c-field-control--error");
@@ -77,10 +75,37 @@
     }
   };
 
+  const handleNextState = () => {
+    /* if the input fields are not empty, check for firebase errors. */
+    fireBaseErr = localStorage.getItem("changeEmailErr");
+    fireBaseErr ? setMessage() : clearFields();
+  };
+
   const handleSelect = (type) => {
     dispatch("type", {
       text: type,
     });
+  };
+
+  const setMessage = () => {
+    let wrongPW = "auth/wrong-password";
+    let emailAlready = "auth/email-already-in-use";
+    let isNotPassword = fireBaseErr.indexOf(wrongPW);
+    let isEmailAlready = fireBaseErr.indexOf(emailAlready);
+
+    if (isNotPassword > -1) {
+      passwordErrText =
+        "The password you entered is incorrect. Please try again.";
+      inputPasswordClass = errorClass;
+    }
+
+    if (isEmailAlready > -1) {
+      emailErrText =
+        "The email you entered is already in use. Please try another email.";
+      inputEmailClass = errorClass;
+    }
+
+    localStorage.removeItem("changeEmailErr");
   };
 
   const handleToggle = () => {
@@ -91,10 +116,10 @@
   };
 
   const clearFields = () => {
-    emailEl = "";
-    password = "";
-    handleSelect("read-only");
-    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
+    emailEl.value = "";
+    passwordEl.value = "";
+    localStorage.setItem("isEmailChange", "true");
+    handleSelect("check-email");
   };
 </script>
 
@@ -134,6 +159,7 @@
               >Password</label
             >
             <!-- FORGOT PASSWORD -->
+            <!-- Will include this flow post mvp? -->
             <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
               <button
                 on:click={() => {
@@ -142,7 +168,7 @@
               ></label
             > -->
           </div>
-  
+
           <div class="input-wrapper">
             <!-- **** PASSWORD INPUT *** -->
             <input
@@ -179,7 +205,7 @@
         </div>
       </fieldset>
     </form>
-    
+
     <div class="btn-group btn-group--email">
       <Button
         size="xl"
@@ -208,8 +234,7 @@
 </div>
 
 <style>
-   input{
+  input {
     width: 100%;
   }
-
 </style>

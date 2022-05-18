@@ -5,10 +5,7 @@
 
   import { createEventDispatcher, getContext, onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { fade, fly } from "svelte/transition";
-  import Arrow01 from "$lib/components/Arrow01.svelte";
   import Button from "$lib/components/Button.svelte";
-  import CallToActionContainer from "$lib/layouts/onboarding/CallToActionContainer.svelte";
   import type { AppStore } from "$lib/stores/types";
 
   const store: AppStore = getContext("rally:store");
@@ -59,12 +56,3 @@
     Decline
   </Button>
 </div>
-
-<style>
-  .arrow {
-    width: 0;
-    height: 0;
-    display: inline-block;
-    transform: translateY(-177px);
-  }
-</style>

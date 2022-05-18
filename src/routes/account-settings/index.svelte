@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { fly } from "svelte/transition";
 
   import SideNav from "$lib/components/SideNav.svelte";
   import SettingsReadOnly from "$lib/views/account-settings/SettingsReadOnly.svelte";
   import SettingsCard from "$lib/views/account-settings/SettingsCard.svelte";
-
   import type { Readable } from "svelte/store";
   import type { AppStore } from "$lib/stores/types";
   import type { NotificationStore } from "$lib/components/notifications";
@@ -53,22 +52,38 @@
   let isPW = false;
   let isDelete = false;
   let isReadOnly = true;
+  let isCheckEmail = false;
   let settingsTitle = "Account settings";
   let settingsDecription =
     "Manage your info, privacy, and security to make Rally work better for you.";
+  let userProvider;
+  let isGoogleAccount;
+  let isUserVerified = null;
+  let getEmailStatus = null;
 
   let cardArgs = {
     width: "486px",
     height: "auto",
     fontSize: "38px",
     customClass: "settings-update",
-    headerClass: "settings-update"
+    headerClass: "settings-update",
   };
 
   let isReadOnlyArgs = {
     ...cardArgs,
     custom: "settings extra-padding is-read-only",
   };
+
+  onMount(async () => {
+    isUserVerified = await store.isUserVerified();
+    userProvider = await store.getUserProvider();
+    if (userProvider) {
+      userProvider[0].providerId === "google.com"
+        ? (isGoogleAccount = true)
+        : (isGoogleAccount = false);
+    }
+    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
+  });
 
   const displayCard = (event) => {
     let value;
@@ -101,6 +116,12 @@
       case "read-only":
         showReadOnly();
         break;
+      case "check-email":
+        isCheckEmail = true;
+        isPW = true;
+        isEmail = false;
+        isReadOnly = false;
+        break;
       default:
         break;
     }
@@ -126,6 +147,14 @@
   $: if (isReadOnly) {
     cardArgs = isReadOnlyArgs;
   }
+
+  $: getEmailStatus = localStorage.getItem("isEmailChange");
+
+  $: if (isUserVerified && getEmailStatus) {
+    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
+    localStorage.removeItem("isEmailChange");
+  }
+
 </script>
 
 <svelte:head>
@@ -139,7 +168,12 @@
   >
     <div class="row">
       <div class="sider-nav col-12 col-md-4">
-        <SideNav {...siderArgs} listArr={siderListArr} on:type={displayCard} />
+        <SideNav
+          {isGoogleAccount}
+          {...siderArgs}
+          listArr={siderListArr}
+          on:type={displayCard}
+        />
       </div>
 
       <div class="account-settings col-12 col-lg-7">
@@ -160,6 +194,7 @@
 
           {#if !isReadOnly}
             <SettingsCard
+              {isCheckEmail}
               {isEmail}
               {isPW}
               {cardArgs}

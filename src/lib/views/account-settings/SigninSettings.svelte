@@ -18,14 +18,12 @@
   export let headerClass;
   export let displayCard;
 
-
-  // export let settingsList;
   let userEmail;
   let timeSeconds = null;
   let createdOn;
   let userProvider;
 
-  let isGoogleAccount = null;
+  let isGoogleAccount;
   let showBtn = "display: block;";
   let hideBtn = "display: none;";
   let googleAccountLink = "https://www.google.com/account";
@@ -36,7 +34,7 @@
     userProvider = await store.getUserProvider();
     timeSeconds = $store.user.createdOn.seconds;
     createdOn = formatDate();
-    if (userProvider[0]) {
+    if (userProvider) {
       userProvider[0].providerId === "google.com" ? isGoogleAccount = true : isGoogleAccount = false 
     }
   });

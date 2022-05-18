@@ -24,7 +24,7 @@
   {#if $notification.id}
     <svelte:component
       this={messages[$notification.code]}
-      location={sidebarOffset ? "top-left" : "top"}
+      location={sidebarOffset ? "top-left" : "top-center"}
       xOffset={sidebarOffset ? "var(--main-notification-offset)" : undefined}
     />
   {/if}

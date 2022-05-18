@@ -11,11 +11,14 @@
   export let fontSize;
   export let clazz;
   export let listArr;
+  export let isGoogleAccount
 
   let ariaExpanded = false;
   let ariaHidden = true;
   let arrowCollapsed = false;
   let transform = "unset";
+  let hide = "display:none;"
+  let show = "display:block;"
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
@@ -47,7 +50,6 @@
         }
         //handle the sublists' highlight
         if (siderItem.sublistArr) {
-        
           siderItem.sublistArr.forEach((sublistItem) => {
             if (sublistItem.type === type) {
               sublistItem.highlight = true;
@@ -121,7 +123,11 @@
             </div>
           {:else}
             <img src={item.icon} alt="sider icon" />
-            <div class="list-text">{item.title}</div>
+            {#if item.href}
+              <a href={item.href} class="list-text">{item.title}</a>
+            {:else}
+              <div class="list-text">{item.title}</div>
+            {/if}
           {/if}
         </li>
       {/each}
@@ -139,11 +145,14 @@
               class={`sublist-menu__item sidenav__list__item sidenav__list__item--${
                 subItem.type
               }  ${
-                subItem.highlight === true ? "list-item--active" : "list-item--inactive"
+                subItem.highlight === true
+                  ? "list-item--active"
+                  : "list-item--inactive"
               } sublist__item--${subItem.type}`}
               on:click={() => {
                 handleSelect(subItem.type);
               }}
+              style={isGoogleAccount && subItem.type !== "delete" ? hide : show}
             >
               <div class="sublist-menu__text">
                 {subItem.title}
@@ -176,5 +185,10 @@
   .sider-sublist__arrow {
     transform: var(--transform);
     transition: all 0.4s ease;
+  }
+
+  a{
+    text-decoration: none;
+    color: var(--color-marketing-gray-99);
   }
 </style>

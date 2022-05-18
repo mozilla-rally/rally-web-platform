@@ -5,7 +5,8 @@
   import { scale } from "svelte/transition";
   export let width = undefined;
   export let level = "info"; // info, error.
-
+  export let pad
+ 
   export let xOffset = undefined;
   export let yOffset = undefined;
 
@@ -19,6 +20,7 @@
       width ? `--width: ${width}` : undefined,
       xOffset ? `--x-offset: ${xOffset}` : undefined,
       yOffset ? `--y-offset: ${yOffset}` : undefined,
+      pad ? `--padClass:${pad}` : `20px`
     ];
     return styles.filter((d) => d !== undefined).join("; ");
   }
@@ -49,7 +51,7 @@
   aside {
     --width: max-content;
 
-    padding: 8px 14px;
+    padding: 16px 20px;
     width: var(--width);
     box-shadow: var(--rally-box-shadow-sm);
     /* taken from Figma. Is there a display style we have now that matches? */
@@ -109,7 +111,7 @@
 
   .notification-floating {
     position: fixed;
-    --pad: 20px;
+    --pad: var(--padClass);
     /* stylelint-disable */
     --x-offset: 0px;
     --y-offset: 0px;
