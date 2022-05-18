@@ -77,7 +77,7 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("changeEmailErr");
+    fireBaseErr = localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 

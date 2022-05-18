@@ -377,6 +377,7 @@ export default {
     try {
       if (auth) user = await auth.currentUser;
       await updatePassword(user, newPassword);
+      localStorage.removeItem("authErr");
       console.info("reset password");
     } catch (err) {
       console.error("there was an error", err);
@@ -424,7 +425,7 @@ export default {
       }
     } catch (err) {
       console.error("there was an error", err);
-      localStorage.setItem("changeEmailErr", err);
+      localStorage.setItem("authErr", err);
     }
   },
 

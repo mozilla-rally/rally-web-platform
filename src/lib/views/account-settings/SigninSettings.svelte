@@ -43,13 +43,11 @@
 
   const getLatestVerified = async () => {
     isUserVerified = await store.isUserVerified();
-    debugger;
     return isUserVerified;
   };
 
   const getLatestUserEmail = async () => {
     userEmail = await store.getUserEmail();
-    debugger;
     return userEmail;
   };
 

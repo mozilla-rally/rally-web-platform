@@ -17,11 +17,9 @@
 
   let isLoading = false;
   let loadingText = localStorage.getItem('isLoading')
-  let userEmail;
 
   onMount(() => {
     localStorage.removeItem("isLoading");
-    localStorage.removeItem("isEmailChange");
   });
 
   let {
@@ -176,7 +174,6 @@
       {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
         <ForgetPwCard
           {...cardArgs}
-          {sendUserInfo}
           {store}
           on:type={triggerCard}
           storyBookTest={false}

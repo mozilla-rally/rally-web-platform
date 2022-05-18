@@ -13,7 +13,6 @@
   export let width;
   export let height;
   export let store;
-  export let sendUserInfo;
   export let storyBookTest;
   export let headerClass
 
@@ -67,7 +66,6 @@
     emailEl.value = emailEl.value.trim();
     await store.sendUserPasswordResetEmail(emailEl.value);
     handleNextState();
-    sendUserInfo(emailEl.value);
   };
 
   const handleNextState = () => {
