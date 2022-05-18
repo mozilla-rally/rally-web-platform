@@ -180,38 +180,64 @@ describe("Rally Web Platform UX flows", function () {
           WAIT_FOR_PROPERTY
         );
       }
+    } else {
+      // Start to leave study, but cancel.
+      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//html'), (e) =>
+        e.click()
+      );
+
+      // Start to leave study, and confirm.
+      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
+        e.click()
+      );
+
+      await findAndAct(
+        driver,
+        By.xpath('(//button[text()="Don\'t join this study"])'),
+        (e) => e.click()
+      );
     }
-
-    // Start to leave study, but cancel.
-    await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-      e.click()
-    );
-
-    await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-      e.click()
-    );
-
-    await findAndAct(driver, By.xpath('//html'), (e) =>
-      e.click()
-    );
-
-    // Start to leave study, and confirm.
-    await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-      e.click()
-    );
-
-    await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-      e.click()
-    );
-
-    await findAndAct(
-      driver,
-      By.xpath('(//button[text()="Don\'t join this study"])'),
-      (e) => e.click()
-    );
-
     if (loadExtension) {
-      // FIXME need to load Chrome-compatible study metadata into firestore.
+      // Start to leave study, but cancel.
+      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//a[text()="Leave study"]'), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//button[text()="Cancel"]'), (e) =>
+        e.click()
+      );
+
+      // Start to leave study, and confirm.
+      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+        e.click()
+      );
+
+      await findAndAct(driver, By.xpath('//a[text()="Leave study"]'), (e) =>
+        e.click()
+      );
+
+      await findAndAct(
+        driver,
+        By.xpath('(//button[text()="Leave Study"])'),
+        (e) => e.click()
+      );
+      // FIXME check for Chrome logs.
       if (testBrowser === "firefox") {
         await driver.wait(
           async () =>
@@ -224,9 +250,6 @@ describe("Rally Web Platform UX flows", function () {
         );
       }
     }
-
-    // FIXME the website hasn't implemented this yet
-    // await driver.wait(until.elementIsVisible(await driver.findElement(By.xpath('//button[text()="Accent & Enroll"]'))), WAIT_FOR_PROPERTY);
   });
 
   it("fails to sign up for a new email account with invalid info", async function () {
