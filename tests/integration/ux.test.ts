@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import fs, { createReadStream } from "fs";
+import crypto from "crypto";
 import minimist from "minimist";
 import readline from "readline";
 import { By, until, WebDriver } from "selenium-webdriver";
@@ -14,7 +15,16 @@ import {
 
 const url = "https://members.rally.allizom.org";
 const testEmail = "rhelmer+test1@mozilla.com";
-const testPassword = Math.random().toString(36).slice(-8) + "Aa";
+
+const generatePassword = (
+  length = 20,
+  wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$'
+) =>
+  Array.from(crypto.randomFillSync(new Uint32Array(length)))
+    .map((x) => wishlist[x % wishlist.length])
+    .join('')
+
+const testPassword = generatePassword();
 
 const args = minimist(process.argv.slice(2));
 console.debug(args);
