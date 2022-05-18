@@ -13734,6 +13734,10 @@ ol {
   padding: 32px 32px 44px;
   justify-content: unset;
 }
+.card--settings-delete {
+  padding: 32px 32px 34.5px;
+  justify-content: unset;
+}
 .card__inner {
   padding: 0;
   display: block;
@@ -14024,6 +14028,13 @@ ol {
 }
 .settings-wrapper .btn-group--password .cancel {
   margin-right: 8px;
+}
+.settings-wrapper .btn-group--delete {
+  width: auto;
+  float: left;
+}
+.settings-wrapper .btn-group--delete .cancel {
+  margin-right: 12px;
 }
 .settings-wrapper .btn-group .card-button {
   width: auto;

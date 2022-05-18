@@ -5,6 +5,7 @@
   import Card from "$lib/components/Card.svelte";
   import UpdatePassword from "./UpdatePassword.svelte";
   import UpdateEmail from "./UpdateEmail.svelte";
+  import DeleteAccount from "./DeleteAccount.svelte";
 
   export let isEmail;
   export let isPW;
@@ -36,6 +37,10 @@
     {#if isPW}
       <UpdatePassword on:type={displayCard} />
     {/if}
+
+    {#if isDelete}
+      <DeleteAccount on:type={displayCard} />
+    {/if}
   </div>
 </Card>
 
@@ -45,5 +50,7 @@
   }
   .description {
     margin-top: 8px;
+    margin-bottom: 0px;
+    font-size: 18px;
   }
 </style>

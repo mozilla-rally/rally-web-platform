@@ -133,6 +133,14 @@
   $: if (isReadOnly) {
     cardArgs = isReadOnlyArgs;
   }
+
+  $: if (isDelete) {
+    cardArgs.width = "660px";
+    cardArgs.customClass = "settings-delete";
+  } else {
+    cardArgs.width = "486px";
+    cardArgs.customClass = "settings-update";
+  }
 </script>
 
 <svelte:head>

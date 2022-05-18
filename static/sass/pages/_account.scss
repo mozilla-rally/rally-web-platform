@@ -123,10 +123,19 @@
     width: 272px;
     float: right;
     margin-top: 24px;
+
     &--password {
       width: auto;
       .cancel {
         margin-right: 8px;
+      }
+    }
+
+    &--delete {
+      width: auto;
+      float: left;
+      .cancel {
+        margin-right: 12px;
       }
     }
 
