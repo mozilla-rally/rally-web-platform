@@ -266,7 +266,7 @@ export default {
     return initialState;
   },
 
-  async onAuthStateChanged(callback) {
+  async onAuthChanged(callback) {
     await initializeFirestoreAPIs();
     onAuthStateChanged(auth, callback);
   },
@@ -300,6 +300,7 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
+      window.location.reload();
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("signInErr", err);
@@ -309,6 +310,7 @@ export default {
       console.warn("Email account not verified, sending verification email");
       localStorage.setItem("signInErr", "Email account not verified");
       await sendEmailVerification(userCredential.user);
+      await this.signOutUser();
     }
   },
 
