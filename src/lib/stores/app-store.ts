@@ -102,7 +102,7 @@ export function createAppStore(api = firestoreAPI): AppStore {
  */
 function isAuthenticatedStore(): Readable<boolean> {
   const { subscribe, set } = writable(undefined);
-  firestoreAPI.onAuthChange((authState) => {
+  firestoreAPI.onAuthStateChanged((authState) => {
     set(authState !== null);
   });
   return { subscribe };

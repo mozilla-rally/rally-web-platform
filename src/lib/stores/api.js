@@ -266,7 +266,7 @@ export default {
     return initialState;
   },
 
-  async onAuthChanged(callback) {
+  async onAuthStateChanged(callback) {
     await initializeFirestoreAPIs();
     onAuthStateChanged(auth, callback);
   },
