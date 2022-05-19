@@ -19,6 +19,7 @@
   const pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   const upperCaseLetters = /[A-Z]/g;
 
+  let btnDisabled = true;
   let inputItemsVisible = false;
   let capital;
   let number;
@@ -132,12 +133,19 @@
 
   const handleChange = (e) => {
     const name = e.srcElement.name;
+    btnDisabled = false;
     resetState();
 
     letter.classList.remove("rules-error");
     capital.classList.remove("rules-error");
     number.classList.remove("rules-error");
     length.classList.remove("rules-error");
+
+    if (oldPassword.passwordEl && newPassword.passwordEl && confirmPassword.passwordEl) {
+      if (oldPassword.passwordEl.value === "" && newPassword.passwordEl.value === "" && confirmPassword.passwordEl.value === "") {
+        btnDisabled = true;
+      }
+    }
 
     if (newPassword.passwordEl) {
       newPassword.inputPasswordClass = inputClass;
@@ -386,6 +394,7 @@
 
     <div class="btn-group btn-group--password">
       <Button
+        disabled={btnDisabled}
         size="xl"
         customClass="card-button create cancel"
         customControl={true}
@@ -400,6 +409,7 @@
       >
 
       <Button
+        disabled={btnDisabled}
         size="xl"
         product
         customClass="card-button create"

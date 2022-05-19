@@ -14,7 +14,7 @@
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
 
-  //create account states
+  let btnDisabled = true;
   let emailEl;
   let emailErrText = null;
   let emptyFieldsErr;
@@ -69,9 +69,16 @@
     emptyFieldsErr = false;
     emailErrText = null;
     passwordErrText = null;
+    btnDisabled = false;
 
     if (name === "id_user_pw") {
       inputItemsVisible = true;
+    }
+
+    if (emailEl && passwordEl) {
+      if (emailEl.value === "" && passwordEl.value === "") {
+        btnDisabled = true;
+      }
     }
   };
 
@@ -110,9 +117,6 @@
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
   };
 
   const clearFields = () => {
@@ -178,7 +182,7 @@
               on:keyup={handleChange}
               id="id_user_pw"
               name="id_user_pw"
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               width="100%"
               required
             />
@@ -193,7 +197,6 @@
               id="show-eye"
               width="24px"
               height="24px"
-              type={passwordVisible ? "text" : "password"}
               on:click={handleToggle}
             />
           </div>
@@ -208,6 +211,7 @@
 
     <div class="btn-group btn-group--email">
       <Button
+        disabled={btnDisabled}
         size="xl"
         customClass="card-button create"
         customControl={true}
@@ -222,6 +226,7 @@
       >
 
       <Button
+        disabled={btnDisabled}
         size="xl"
         customClass="card-button create"
         product
