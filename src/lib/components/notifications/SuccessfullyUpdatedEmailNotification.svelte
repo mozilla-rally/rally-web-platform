@@ -4,15 +4,15 @@
      * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   
     import Notification from "./NotificationElement.svelte";
-    import Alert from "../icons/Alert.svelte";
-    export let xOffset;
-    export let location = "top";
-    let level = "alert"
+    let xOffset = '14px';
+    let pad = '100px'
+    let location = "top-center";
+    let level = "info"
   </script>
   
-  <Notification {location} {xOffset} {level}>
+  <Notification {location} {xOffset} {level} {pad}>
     <span style="display: contents;" slot="icon">
-      <Alert />
+      <img src="img/icon-status-checkmark.svg" alt="checkmark icon">
     </span>
-    <span slot="body">Confirm your new email address to save your changes</span>
+    <span slot="body">Successfully updated email address</span>
   </Notification>

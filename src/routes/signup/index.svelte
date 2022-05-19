@@ -17,7 +17,6 @@
 
   let isLoading = false;
   let loadingText = localStorage.getItem('isLoading')
-  let userEmail;
 
   onMount(() => {
     localStorage.removeItem("isLoading");
@@ -169,13 +168,12 @@
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard {...cardArgs} {userEmail} on:type={triggerCard} />
+        <CheckEmailCard isSettings={false} {...cardArgs} on:type={triggerCard} />
       {/if}
 
       {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
         <ForgetPwCard
           {...cardArgs}
-          {sendUserInfo}
           {store}
           on:type={triggerCard}
           storyBookTest={false}

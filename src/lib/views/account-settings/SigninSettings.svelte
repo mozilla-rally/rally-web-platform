@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  import {  getContext, onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   import moment from "moment";
@@ -18,28 +18,41 @@
   export let headerClass;
   export let displayCard;
 
-
-  // export let settingsList;
   let userEmail;
   let timeSeconds = null;
   let createdOn;
   let userProvider;
+  let getEmailStatus;
 
-  let isGoogleAccount = null;
+  let isGoogleAccount;
   let showBtn = "display: block;";
   let hideBtn = "display: none;";
   let googleAccountLink = "https://www.google.com/account";
+  let showWarning = false;
 
-  
   onMount(async () => {
-    userEmail = await store.getUserEmail();
     userProvider = await store.getUserProvider();
     timeSeconds = $store.user.createdOn.seconds;
     createdOn = formatDate();
-    if (userProvider[0]) {
-      userProvider[0].providerId === "google.com" ? isGoogleAccount = true : isGoogleAccount = false 
-    }
+    isGoogleAccount =
+      userProvider &&
+      userProvider.length &&
+      userProvider[0].providerId &&
+      userProvider[0].providerId === "google.com";
   });
+
+  const getLatestVerified = async () => {
+   return isUserVerified = await store.isUserVerified();
+   
+  };
+
+  const getLatestUserEmail = async () => {
+    return userEmail = await store.getUserEmail();
+  };
+
+  const resendVerificationEmail = async () => {
+    await store.resendUserVerificationEmail();
+  };
 
   const formatDate = () => {
     if (timeSeconds) {
@@ -48,6 +61,15 @@
       return date;
     }
   };
+
+  $: isUserVerified = getLatestVerified();
+  $: userEmail = getLatestUserEmail();
+  $: getEmailStatus = localStorage.getItem("isEmailChange");
+  $: if (isUserVerified === false && getEmailStatus) {
+    showWarning = true;
+  } else {
+    showWarning = false;
+  }
 </script>
 
 <Card {width} {height} {customClass} {headerClass}>
@@ -58,7 +80,17 @@
     <div class="content-box">
       <div class="content-box__title">Email</div>
       <div class="content-box__content">
-        <div class="content-description user-email">{userEmail}</div>
+        <div class="content-description user-email">
+          {userEmail}
+          <span class="not-verified-warning"
+            >{showWarning ? "(not verified)" : ""}
+          </span>
+          <span
+            on:click={resendVerificationEmail}
+            class="not-verified-warning--action"
+            >{showWarning ? "Resend verification email" : ""}</span
+          >
+        </div>
         <button
           style={isGoogleAccount === true ? hideBtn : showBtn}
           on:click={() => {
@@ -111,3 +143,14 @@
     </div>
   </div></Card
 >
+
+<style>
+  .not-verified-warning {
+    color: red;
+  }
+
+  .not-verified-warning--action {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>

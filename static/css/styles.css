@@ -13726,6 +13726,19 @@ ol {
     padding: 0;
   }
 }
+.card--signin, .card--launch {
+  margin: auto;
+}
+.card--settings {
+  display: block;
+  border: 1px solid #cdcdd4;
+  margin-bottom: 16px;
+}
+.card--settings-update {
+  padding: 32px 32px 44px;
+  justify-content: unset;
+  margin: 0 !important;
+}
 .card--settings {
   display: block;
   border: 1px solid #cdcdd4;
@@ -14106,9 +14119,6 @@ ol {
   }
 }
 
-.card {
-  margin: auto;
-}
 .card .card-header .title-highlight {
   display: block;
   background-color: #f9cd34;
@@ -14484,6 +14494,7 @@ ol {
   top: 0;
   margin: 0;
   font-size: 0.875rem;
+  grid-column: 1/3;
 }
 
 .valid {

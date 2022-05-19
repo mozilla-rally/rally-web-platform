@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { fly } from "svelte/transition";
 
@@ -53,22 +53,36 @@
   let isPW = false;
   let isDelete = false;
   let isReadOnly = true;
+  let isCheckEmail = false;
   let settingsTitle = "Account settings";
-  let settingsDescription =
+  let settingsDecription =
     "Manage your info, privacy, and security to make Rally work better for you.";
+  let userProvider;
+  let isGoogleAccount;
+  let isUserVerified;
+  let getEmailStatus;
 
   let cardArgs = {
     width: "486px",
     height: "auto",
     fontSize: "38px",
     customClass: "settings-update",
-    headerClass: "settings-update"
+    headerClass: "settings-update",
   };
 
   let isReadOnlyArgs = {
     ...cardArgs,
     custom: "settings extra-padding is-read-only",
   };
+
+  onMount(async () => {
+    userProvider = await store.getUserProvider();
+    if (userProvider) {
+      userProvider[0].providerId === "google.com"
+        ? (isGoogleAccount = true)
+        : (isGoogleAccount = false);
+    }
+  });
 
   const displayCard = (event) => {
     let value;
@@ -85,27 +99,35 @@
         isPW = false;
         isDelete = false;
         isReadOnly = false;
+        isCheckEmail = false;
         settingsTitle = "Change your email address";
-        settingsDescription = null;
         break;
       case "update-pw":
         isPW = true;
         isEmail = false;
         isDelete = false;
+        isCheckEmail = false;
         settingsTitle = "Change your password";
-        settingsDescription = null;
         isReadOnly = false;
         break;
       case "delete":
+        isDelete = true;
         isPW = false;
         isEmail = false;
-        isDelete = true;
         isReadOnly = false;
+        isCheckEmail = false;
         settingsTitle = "Delete your Rally account";
-        settingsDescription = "Thank you for helping make the Internet a little better";
+        settingsDecription =
+          "Thank you for helping make the Internet a little better";
         break;
       case "read-only":
         showReadOnly();
+        break;
+      case "check-email":
+        isCheckEmail = true;
+        isPW = true;
+        isEmail = false;
+        isReadOnly = false;
         break;
       default:
         break;
@@ -118,8 +140,13 @@
     isPW = false;
     isDelete = false;
     settingsTitle = "Account Settings";
-    settingsDescription =
+    isCheckEmail = false;
+    settingsDecription =
       "Manage your info, privacy, and security to make Rally work better for you.";
+  };
+
+  const getLatestVerified = async () => {
+    return (isUserVerified = await store.isUserVerified());
   };
 
   $: if ($store._initialized) {
@@ -134,12 +161,11 @@
     cardArgs = isReadOnlyArgs;
   }
 
-  $: if (isDelete) {
-    cardArgs.width = "660px";
-    cardArgs.customClass = "settings-delete";
-  } else {
-    cardArgs.width = "486px";
-    cardArgs.customClass = "settings-update";
+  $: isUserVerified = getLatestVerified();
+  $: getEmailStatus = localStorage.getItem("isEmailChange");
+  $: if (isUserVerified === true && getEmailStatus) {
+    notifications.send({ code: "SUCCESSFULLY_UPDATED_EMAIL" });
+    localStorage.removeItem("isEmailChange");
   }
 </script>
 
@@ -154,7 +180,12 @@
   >
     <div class="row">
       <div class="sider-nav col-12 col-md-4">
-        <SideNav {...siderArgs} listArr={siderListArr} on:type={displayCard} />
+        <SideNav
+          {isGoogleAccount}
+          {...siderArgs}
+          listArr={siderListArr}
+          on:type={displayCard}
+        />
       </div>
 
       <div class="account-settings col-12 col-lg-7">
@@ -164,7 +195,7 @@
           </div>
 
           <p class="description">
-            {settingsDescription}
+            {settingsDecription}
           </p>
         {/if}
 
@@ -175,13 +206,14 @@
 
           {#if !isReadOnly}
             <SettingsCard
+              {isCheckEmail}
               {isEmail}
               {isPW}
               {isDelete}
               {cardArgs}
               {displayCard}
               {settingsTitle}
-              {settingsDescription}
+              {settingsDecription}
               on:type={displayCard}
             />
           {/if}

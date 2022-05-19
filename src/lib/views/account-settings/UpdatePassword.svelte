@@ -7,6 +7,7 @@
   import type { NotificationStore } from "$lib/components/notifications";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
+
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");
@@ -19,142 +20,212 @@
   const pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
   const upperCaseLetters = /[A-Z]/g;
 
-  let inputPasswordClass;
-  let passwordEl;
-
+  let btnDisabled = true;
   let inputItemsVisible = false;
-
-  let oldPasswordEl;
-  let newPasswordEl;
-  let newPasswordEl2;
   let capital;
   let number;
   let length;
   let letter;
-  let passwordVisible1 = false;
-  let passwordVisible2 = false;
-  let passwordVisible3 = false;
-
   let emptyFieldsErr;
-  let passwordErr = false;
-  let passwordErrText;
+  let fireBaseErr = null;
+  let oldPassword = {
+    inputPasswordClass: "",
+    passwordEl: null,
+    passwordVisible: false,
+    passwordErrText: null,
+    showIcon: false,
+  };
+  let newPassword = {
+    inputPasswordClass: "",
+    passwordEl: null,
+    passwordVisible: false,
+    passwordErrText: null,
+    showIcon: false,
+  };
+  let confirmPassword = {
+    inputPasswordClass: "",
+    passwordEl: null,
+    passwordVisible: false,
+    passwordErrText: null,
+    showIcon: false,
+  };
 
   onMount(() => {
-    inputPasswordClass = inputClass;
+    oldPassword.inputPasswordClass = inputClass;
+    newPassword.inputPasswordClass = inputClass;
+    confirmPassword.inputPasswordClass = inputClass;
   });
 
-  $: if (emptyFieldsErr) {
-    inputPasswordClass = errorClass;
-    passwordErrText = "Required";
-  }
-
   const checkFields = async () => {
-    if (
-      oldPasswordEl.value === "" ||
-      newPasswordEl.value === "" ||
-      newPasswordEl2.value === ""
-    ) {
-      inputPasswordClass = errorClass;
-      passwordErrText = "Required";
+    const isOldAbsent = !oldPassword.passwordEl.value;
+    const isNewAbsent = !newPassword.passwordEl.value;
+    const isConfirmAbsent = !confirmPassword.passwordEl.value;
+    if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
+      emptyFieldsErr = true;
+      return;
     }
+    if (isOldAbsent) {
+      oldPassword.inputPasswordClass = errorClass;
+      oldPassword.passwordErrText = "Required";
+      return;
+    }
+    if (isNewAbsent) {
+      newPassword.inputPasswordClass = errorClass;
+      newPassword.passwordErrText = "Required";
+      return;
+    }
+    if (isConfirmAbsent) {
+      confirmPassword.inputPasswordClass = errorClass;
+      confirmPassword.passwordErrText = "Required";
+      return;
+    }
+    //all fields are filled
+    checkRules();
   };
 
   const checkRules = () => {
-    inputPasswordClass = errorClass;
-    passwordErrText = "Required";
-    if (passwordEl) {
-      passwordEl.value.length < minPasswordLength
+    const newPasswordEl = newPassword.passwordEl;
+    if (newPasswordEl) {
+      newPasswordEl.value.length < minPasswordLength
         ? length.classList.add("rules-error")
         : null;
-
-      passwordEl.value.match(lowerCaseLetters)
+      newPasswordEl.value.match(lowerCaseLetters)
         ? letter.classList.add("clear")
         : letter.classList.add("rules-error");
-
-      passwordEl.value.match(upperCaseLetters)
+      newPasswordEl.value.match(upperCaseLetters)
         ? capital.classList.add("clear")
         : capital.classList.add("rules-error");
-
-      passwordEl.value.match(numbers)
+      newPasswordEl.value.match(numbers)
         ? number.classList.add("clear")
         : number.classList.add("rules-error");
+      if (
+        newPasswordEl.value.length >= minPasswordLength &&
+        !newPasswordEl.value.match(numbers) &&
+        !newPasswordEl.value.match(lowerCaseLetters) &&
+        !newPasswordEl.value.match(upperCaseLetters)
+      ) {
+        rulesError();
+        return;
+      }
     }
-    return;
+    //if rules are clear, handle making sure new and confirm passwords match
+    handleCheckPW();
+  };
+
+  const clearFields = () => {
+    oldPassword.passwordEl.value = newPassword.passwordEl.value = confirmPassword.passwordEl.value =
+      "";
+    let success = localStorage.getItem("resetPW");
+    resetState();
+    if (!success) {
+      console.info("Something went wrong");
+      return;
+    }
+    if (success) {
+      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
+      localStorage.removeItem("resetPW");
+    }
   };
 
   const handleCheckPW = async () => {
-    if (newPasswordEl.value === newPasswordEl2.value) {
-      await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
-      handleSelect("read-only");
-      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
-    } else {
-      passwordErr = true;
-      passwordErrText = "Passwords do not match.";
+    const oldPasswordEl = oldPassword.passwordEl;
+    const newPasswordEl = newPassword.passwordEl;
+    const confirmPasswordEl = confirmPassword.passwordEl;
+
+    if (newPasswordEl && confirmPasswordEl && oldPasswordEl) {
+      if (!newPasswordEl.value === confirmPasswordEl.value) {
+        newPassword.inputPasswordClass = errorClass;
+        confirmPassword.inputPasswordClass = errorClass;
+        confirmPassword.passwordErrText = "Passwords do not match.";
+        return;
+      }
+      if (newPasswordEl.value === confirmPasswordEl.value) {
+        await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
+      }
+      handleNextState();
     }
   };
 
   const handleChange = (e) => {
+    const newPasswordEl = newPassword.passwordEl;
+    const isOldAbsent = !oldPassword.passwordEl.value;
+    const isNewAbsent = !newPassword.passwordEl.value;
+    const isConfirmAbsent = !confirmPassword.passwordEl.value;
     const name = e.srcElement.name;
-    inputPasswordClass = inputClass;
-    emptyFieldsErr = false;
-    passwordErrText = null;
+    btnDisabled = false;
+    resetState();
 
     letter.classList.remove("rules-error");
     capital.classList.remove("rules-error");
     number.classList.remove("rules-error");
     length.classList.remove("rules-error");
 
-    if (passwordEl) {
-      inputPasswordClass = inputClass;
-      if (
-        name === "id_user_pw--current" ||
-        name === "id_user_pw--new" ||
-        name === "id_user_pw--confirm"
-      ) {
+    if (
+      oldPassword.passwordEl &&
+      newPassword.passwordEl &&
+      confirmPassword.passwordEl
+    ) {
+      if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
+        btnDisabled = true;
+      } else btnDisabled = false;
+    }
+    if (newPasswordEl) {
+      newPassword.inputPasswordClass = inputClass;
+      if (name === "id_user_pw--new") {
+        newPassword.showIcon = true;
+        inputItemsVisible = true;
         // Validate lowercase letters
-        passwordEl.value.match(lowerCaseLetters)
+        newPassword.passwordEl.value.match(lowerCaseLetters)
           ? letter.classList.add("valid")
           : letter.classList.remove("valid");
-
         // Validate uppercase letters
-        passwordEl.value.match(upperCaseLetters)
+        newPassword.passwordEl.value.match(upperCaseLetters)
           ? capital.classList.add("valid")
           : capital.classList.remove("valid");
-
         // Validate numbers
-        passwordEl.value.match(numbers)
+        newPassword.passwordEl.value.match(numbers)
           ? number.classList.add("valid")
           : number.classList.remove("valid");
-
         // Validate length
-        passwordEl.value.length >= minPasswordLength
+        newPassword.passwordEl.value.length >= minPasswordLength
           ? length.classList.add("valid")
           : length.classList.remove("valid");
-
-        // if (
-        //   passwordEl.value.length >= minPasswordLength &&
-        //   passwordEl.value.match(numbers) &&
-        //   passwordEl.value.match(lowerCaseLetters) &&
-        //   passwordEl.value.match(upperCaseLetters)
-        // ) {
-        //   checkEmail = true;
-        // } else checkEmail = false;
+      }
+      switch (name) {
+        case "id_user_pw--current":
+          oldPassword.showIcon = true;
+          break;
+        case "id_user_pw--confirm":
+          confirmPassword.showIcon = true;
+          break;
+        default:
+          break;
       }
     }
+  };
 
-    switch (name) {
-      case "id_user_pw--current":
-        passwordVisible1 = true;
-        break;
-      case "id_user_pw--new":
-        passwordVisible2 = true;
-        break;
-      case "id_user_pw--confirm":
-        passwordVisible3 = true;
-        break;
-      default:
-        break;
+  const handleNextState = () => {
+    /* if the input fields are not empty, check for firebase errors. */
+    fireBaseErr = localStorage.getItem("authErr");
+    fireBaseErr ? setMessage() : clearFields();
+  };
+
+  const rulesError = () => {
+    newPassword.inputPasswordClass = errorClass;
+    newPassword.passwordErrText = "Required";
+    return;
+  };
+
+  const setMessage = () => {
+    let wrongPW = "auth/wrong-password";
+    let isNotPassword = fireBaseErr.indexOf(wrongPW);
+    if (isNotPassword > -1) {
+      oldPassword.passwordErrText =
+        "The password you entered is incorrect. Please try again.";
+      oldPassword.inputPasswordClass = errorClass;
+      return;
     }
+    localStorage.removeItem("changePWErr");
   };
 
   const handleSelect = (type) => {
@@ -163,35 +234,34 @@
     });
   };
 
-  const handleToggle = (el) => {
-    let type;
-    switch (el) {
+  const handleToggle = (i) => {
+    switch (i) {
+      case "type0":
+        oldPassword.passwordVisible = !oldPassword.passwordVisible;
+        break;
       case "type1":
-        type =
-          oldPasswordEl.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        oldPasswordEl.setAttribute("type", type);
+        newPassword.passwordVisible = !newPassword.passwordVisible;
         break;
       case "type2":
-        type =
-          newPasswordEl.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        newPasswordEl.setAttribute("type", type);
-
-        break;
-      case "type3":
-        type =
-          newPasswordEl2.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        newPasswordEl2.setAttribute("type", type);
+        confirmPassword.passwordVisible = !confirmPassword.passwordVisible;
         break;
       default:
         break;
     }
   };
+
+  const resetState = () => {
+    oldPassword.inputPasswordClass = newPassword.inputPasswordClass = confirmPassword.inputPasswordClass = inputClass;
+    emptyFieldsErr = false;
+    oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText = null;
+    inputItemsVisible = false;
+  };
+  
+  $: if (emptyFieldsErr) {
+    oldPassword.inputPasswordClass = newPassword.inputPasswordClass = confirmPassword.inputPasswordClass = errorClass;
+    oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText =
+      "Required";
+  }
 </script>
 
 <div class="settings-wrapper settings-wrapper--password">
@@ -207,34 +277,33 @@
 
           <div class="input-wrapper input-wrapper--curent">
             <input
-              class={inputPasswordClass}
-              bind:this={oldPasswordEl}
+              class={oldPassword.inputPasswordClass}
+              bind:this={oldPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw"
               name="id_user_pw--current"
-              type="password"
+              type={oldPassword.passwordVisible ? "text" : "password"}
               {pattern}
               width="100%"
               required
             />
             <img
-              src={passwordVisible1
+              src={oldPassword.passwordVisible
                 ? "img/icon-password-show.svg"
                 : "img/icon-password-hide.svg"}
-              alt={passwordVisible1 ? "open eye" : "eye with slash"}
+              alt={oldPassword.passwordVisible ? "open eye" : "eye with slash"}
               class={`toggle-password ${
-                passwordVisible1 ? "create-show" : "create-hide"
+                oldPassword.showIcon ? "create-show" : "create-hide"
               }`}
               id="show-eye"
               width="24px"
               height="24px"
-              type={passwordVisible1 ? "text" : "password"}
-              on:click|preventDefault={() => handleToggle("type1")}
+              on:click|preventDefault={() => handleToggle("type0")}
             />
-            {#if passwordErrText}
+            {#if oldPassword.passwordErrText}
               <p class="error-msg error-msg--password">
-                {passwordErrText}
+                {oldPassword.passwordErrText}
               </p>
             {/if}
           </div>
@@ -247,34 +316,33 @@
           </div>
           <div class="input-wrapper input-wrapper--new">
             <input
-              class={inputPasswordClass}
-              bind:this={newPasswordEl}
+              class={newPassword.inputPasswordClass}
+              bind:this={newPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw id_user_pw--new"
               name="id_user_pw--new"
-              type="password"
+              type={newPassword.passwordVisible ? "text" : "password"}
               {pattern}
               width="100%"
               required
             />
             <img
-              src={passwordVisible2
+              src={newPassword.passwordVisible
                 ? "img/icon-password-show.svg"
                 : "img/icon-password-hide.svg"}
-              alt={passwordVisible2 ? "open eye" : "eye with slash"}
+              alt={newPassword.passwordVisible ? "open eye" : "eye with slash"}
               class={`toggle-password ${
-                inputItemsVisible ? "create-show" : "create-hide"
+                newPassword.showIcon ? "create-show" : "create-hide"
               }`}
               id="show-eye"
               width="24px"
               height="24px"
-              type={passwordVisible2 ? "text" : "password"}
-              on:click|preventDefault={() => handleToggle("type2")}
+              on:click|preventDefault={() => handleToggle("type1")}
             />
-            {#if passwordErrText}
+            {#if newPassword.passwordErrText}
               <p class="error-msg error-msg--password">
-                {passwordErrText}
+                {newPassword.passwordErrText}
               </p>
             {/if}
           </div>
@@ -294,6 +362,8 @@
             <li bind:this={number} id="number">Use at least 1 number</li>
           </ul>
 
+          <!--NEW PASSWORD END -->
+
           <!--CONFIRM PASSWORD -->
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
@@ -302,34 +372,35 @@
           </div>
           <div class="input-wrapper">
             <input
-              class={inputPasswordClass}
-              bind:this={newPasswordEl2}
+              class={confirmPassword.inputPasswordClass}
+              bind:this={confirmPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
               id="id_user_pw"
               name="id_user_pw--confirm"
-              type="password"
+              type={confirmPassword.passwordVisible ? "text" : "password"}
               {pattern}
               width="100%"
               required
             />
             <img
-              src={passwordVisible3
+              src={confirmPassword.passwordVisible
                 ? "img/icon-password-show.svg"
                 : "img/icon-password-hide.svg"}
-              alt={passwordVisible3 ? "open eye" : "eye with slash"}
+              alt={confirmPassword.passwordVisible
+                ? "open eye"
+                : "eye with slash"}
               class={`toggle-password ${
-                passwordVisible3 ? "create-show" : "create-hide"
+                confirmPassword.showIcon ? "create-show" : "create-hide"
               }`}
               id="show-eye"
               width="24px"
               height="24px"
-              type={passwordVisible3 ? "text" : "password"}
-              on:click|preventDefault={() => handleToggle("type3")}
+              on:click|preventDefault={() => handleToggle("type2")}
             />
-            {#if passwordErrText}
+            {#if confirmPassword.passwordErrText}
               <p class="error-msg error-msg--password">
-                {passwordErrText}
+                {confirmPassword.passwordErrText}
               </p>
             {/if}
           </div>
@@ -339,6 +410,7 @@
 
     <div class="btn-group btn-group--password">
       <Button
+        disabled={btnDisabled}
         size="xl"
         customClass="card-button create cancel"
         customControl={true}
@@ -353,6 +425,7 @@
       >
 
       <Button
+        disabled={btnDisabled}
         size="xl"
         product
         customClass="card-button create"
@@ -368,38 +441,30 @@
   form {
     height: auto;
   }
-
   .input-wrapper {
     margin-bottom: 30px;
   }
-
   .info-msg-active-reset {
     text-align: left;
     font-size: 12px;
     color: gray;
   }
-
   .info-rules {
     margin-bottom: 15px;
   }
-
   .input-wrapper--new {
     margin-bottom: 10px;
   }
-
   .password-requirements {
     padding: 0px 24px 14px;
   }
-
-  .field-set-settings{
-    margin-bottom: 0; 
+  .field-set-settings {
+    margin-bottom: 0;
   }
-
-  .btn-group--password{
-    margin-top: 0; 
+  .btn-group--password {
+    margin-top: 0;
   }
-
-  .field-pw{
+  .field-pw {
     padding-bottom: 0;
   }
 </style>

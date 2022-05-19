@@ -5,52 +5,56 @@
   import Card from "$lib/components/Card.svelte";
   import UpdatePassword from "./UpdatePassword.svelte";
   import UpdateEmail from "./UpdateEmail.svelte";
+  import CheckEmailCard from "$lib/components/auth-cards/CheckEmailCard.svelte";
   import DeleteAccount from "./DeleteAccount.svelte";
 
   export let isEmail;
   export let isPW;
   export let isDelete;
+  export let isCheckEmail;
   export let cardArgs;
   export let displayCard;
   export let settingsTitle;
   export let settingsDescription;
+
+  let checkEmailArgs = {
+    ...cardArgs,
+    title: "Check your email",
+    isSettings: true,
+  };
 </script>
 
-<Card {...cardArgs}>
-  <div slot="card-title">
-    <h2 class="title-wrapper title-wrapper--settings">
+{#if isCheckEmail}
+  <CheckEmailCard {...checkEmailArgs} />
+{:else}
+  <Card {...cardArgs}>
+    <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
       <div class="title-text">{settingsTitle}</div>
     </h2>
 
     {#if settingsDescription}
-      <p class="description">
+      <p class="settings-description">
         {settingsDescription}
       </p>
     {/if}
-  </div>
+    <div class="card-body-content" slot="card-content">
+      {#if isEmail}
+        <UpdateEmail on:type={displayCard} />
+      {/if}
 
-  <div class="card-body-content" slot="card-content">
-    {#if isEmail}
-      <UpdateEmail on:type={displayCard} />
-    {/if}
+      {#if isPW}
+        <UpdatePassword on:type={displayCard} />
+      {/if}
 
-    {#if isPW}
-      <UpdatePassword on:type={displayCard} />
-    {/if}
-
-    {#if isDelete}
-      <DeleteAccount on:type={displayCard} />
-    {/if}
-  </div>
-</Card>
+      {#if isDelete}
+        <DeleteAccount on:type={displayCard} />
+      {/if}
+    </div>
+  </Card>
+{/if}
 
 <style>
-  .title-wrapper{
+  .title-wrapper {
     justify-content: unset;
-  }
-  .description {
-    margin-top: 8px;
-    margin-bottom: 0px;
-    font-size: 18px;
   }
 </style>

@@ -1,5 +1,9 @@
 import {
-  createUserWithEmailAndPassword, EmailAuthProvider, GoogleAuthProvider, onAuthStateChanged, reauthenticateWithCredential,
+  createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  reauthenticateWithCredential,
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -7,11 +11,16 @@ import {
   updateEmail,
   signOut,
   signInWithRedirect,
-  deleteUser
+  deleteUser,
 } from "firebase/auth";
 import {
-  collection, doc,
-  getDoc, getDocs, onSnapshot, setDoc, updateDoc
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { produce } from "immer/dist/immer.esm";
 import initializeFirebase from "./initialize-firebase";
@@ -39,7 +48,7 @@ let __STATE__ = {
   user: undefined,
   userStudies: undefined,
   onboarded: false,
-  connected: false
+  connected: false,
 };
 
 let userRef;
@@ -123,10 +132,11 @@ export default {
     } else {
       await initializeFirestoreAPIs();
 
-      const handleContentScriptEvents = async (/** @type {CustomEvent} */ e) => {
+      const handleContentScriptEvents = async (
+        /** @type {CustomEvent} */ e
+      ) => {
         switch (e.type) {
           case "rally-sdk.complete-signup": {
-
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
             if (!studyId) {
@@ -167,7 +177,10 @@ export default {
             const body = JSON.stringify({ studyId });
             const result = await fetch(`${functionsHost}/rallytoken`, {
               method: "POST",
-              headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${idToken}`,
+              },
               body,
             });
             const rallyToken = (await result.json()).rallyToken;
@@ -195,7 +208,7 @@ export default {
 
             // Mark this study as connected.
             const studies = await getStudies();
-            _connectedChangeCallbacks.forEach(async callback => {
+            _connectedChangeCallbacks.forEach(async (callback) => {
               const found = studies.find((a) => a.studyId === studyId);
               if (!found) {
                 throw new Error(
@@ -212,7 +225,7 @@ export default {
             );
           }
         }
-      }
+      };
       window.addEventListener(
         "rally-sdk.complete-signup",
         handleContentScriptEvents
@@ -354,36 +367,67 @@ export default {
   },
 
   async resetUserPassword(newPassword, oldPassword) {
-    this.reauthenticateUser(oldPassword);
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      const user = auth.currentUser;
-      await updatePassword(user, newPassword);
-      console.info("reset password");
+      if (this.reauthenticateUser(oldPassword)) {
+        await updatePassword(user, newPassword);
+        localStorage.removeItem("authErr");
+        console.info("reset password");
+        localStorage.setItem("resetPW", "success");
+      }
     } catch (err) {
       console.error("there was an error", err);
+      localStorage.setItem("changePWErr", err);
       return;
     }
   },
 
   async changeEmail(email, password) {
-    const user = auth.currentUser;
-    this.reauthenticateUser(password);
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      await updateEmail(auth.currentUser, email);
-      if (!user.emailVerified) {
-        await sendEmailVerification(user);
+      if (this.reauthenticateUser(password)) {
+        await updateEmail(user, email);
+        console.info("email changed!");
+        if (!user.emailVerified) {
+          console.info("user not verified!");
+          await sendEmailVerification(user);
+        } else {
+          console.info("email verified!");
+        }
       }
-      console.info("email changed!");
     } catch (err) {
       console.error("there was an error", err);
+      localStorage.setItem("changeEmailErr", err);
       return;
     }
   },
 
   async reauthenticateUser(password) {
-    const user = auth.currentUser;
-    const userCredential = EmailAuthProvider.credential(user.email, password);
-    await reauthenticateWithCredential(user, userCredential);
+    const user = auth && auth.currentUser;
+    if (!user) return;
+    try {
+      const userCredential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, userCredential);
+      return true;
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("authErr", err);
+    }
+  },
+
+  async resendUserVerificationEmail() {
+    const user = auth && auth.currentUser;
+    if (!user) return;
+    try {
+      await sendEmailVerification(user);
+      console.info("email verification resent!");
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("changeEmailErr", err);
+      return;
+    }
   },
 
   async deleteUserAccount() {
@@ -392,18 +436,18 @@ export default {
   },
 
   async isUserVerified() {
-    const user = await auth.currentUser;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (user.emailVerified) {
-        return true;
-      } else return false;
+      return user.emailVerified;
     } catch (err) {
       console.error("there was an error", err);
     }
   },
 
   async getUserEmail() {
-    const user = await auth.currentUser;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
       return user.email;
     } catch (err) {
@@ -412,7 +456,8 @@ export default {
   },
 
   async getUserProvider() {
-    const user = await auth.currentUser;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
       return user.providerData;
     } catch (err) {
@@ -458,5 +503,5 @@ export default {
 
   onExtensionConnected(callback) {
     _connectedChangeCallbacks.push(callback);
-  }
+  },
 };

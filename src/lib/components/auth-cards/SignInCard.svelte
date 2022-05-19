@@ -118,9 +118,6 @@
 
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
-    const type =
-      passwordEl.getAttribute("type") === "password" ? "text" : "password";
-    passwordEl.setAttribute("type", type);
   };
 </script>
 
@@ -175,7 +172,7 @@
             on:keyup={handleChange}
             id="id_user_pw"
             name="id_user_pw"
-            type="password"
+            type={passwordVisible ? "text" : "password"}
             width="100%"
             required
           />
@@ -190,7 +187,6 @@
             id="show-eye"
             width="24px"
             height="24px"
-            type={passwordVisible ? "text" : "password"}
             on:click={handleToggle}
           />
         </div>

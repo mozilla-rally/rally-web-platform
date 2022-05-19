@@ -4,14 +4,16 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
   import Notification from "./NotificationElement.svelte";
-  import Check from "../icons/Check.svelte";
-  export let xOffset;
-  export let location = "top";
+
+  let xOffset = "14px";
+  let pad = "100px";
+  let location = "top-center";
+  let level = "info";
 </script>
 
-<Notification {location} {xOffset}>
+<Notification {location} {xOffset} {level} {pad}>
   <span style="display: contents;" slot="icon">
-    <Check />
+    <img src="img/icon-status-checkmark.svg" alt="checkmark icon" />
   </span>
   <span slot="body">Password successfully updated</span>
 </Notification>
