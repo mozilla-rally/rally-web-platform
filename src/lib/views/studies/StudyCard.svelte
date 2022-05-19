@@ -1,4 +1,4 @@
-<script>
+<script type="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -10,16 +10,20 @@
     It relies on props instead of slots to reduce the cost of use.
 */
 
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher, getContext, onMount } from "svelte";
   import StudyCard from "../../components/study-card/StudyCard.svelte";
   import StudyCardHeader from "../../components/study-card/Header.svelte";
   import Button from "../../components/Button.svelte";
   import IRBWindow from "../irb/IRBWindow.svelte";
   import GenericConsent from "../irb/GenericConsent.svelte";
   import irb from "../irb";
+  import type { Readable } from "svelte/store";
+
+  const isExtensionConnected: Readable<boolean> = getContext(
+    "rally:isExtensionConnected"
+  );
 
   export let joined = false;
-  export let connected = false;
   export let imageSrc;
   export let title = "Untitled Study";
   export let author = "Author Unknown";
@@ -40,7 +44,7 @@
     // send CTA click event to parent.
     dispatch("cta-clicked");
 
-    if (connected || !joined) {
+    if ($isExtensionConnected || !joined) {
       joinModal = true;
     } else {
       leaveModal = true;
@@ -57,7 +61,7 @@
 
 <StudyCard
   {joined}
-  {connected}
+  {$isExtensionConnected}
   on:join={triggerJoinEvent}
   on:leave={triggerJoinEvent}
   {endDate}
@@ -188,7 +192,7 @@
         </div>
       {/if}
     </div>
-    <!-- if the leave study modal is present, shore up the button hheights -->
+    <!-- if the leave study modal is present, shore up the button heights -->
     <div class="modal-call-flow" slot="cta">
       <Button
         size="lg"

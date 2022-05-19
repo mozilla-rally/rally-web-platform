@@ -7,7 +7,7 @@
   import Navbar from "./_Navbar.svelte";
   import ContentContainer from "$lib/layouts/main/ContentContainer.svelte";
   import NotificationCenter from "$lib/components/notifications/NotificationCenter.svelte";
-  import { store, isAuthenticated } from "$lib/stores/app-store";
+  import { store, isAuthenticated, isExtensionConnected } from "$lib/stores/app-store";
   import isMounted from "$lib/is-mounted";
   import profileCompletionStatus from "../lib/stores/profile-completion-status";
   import notifications from "../lib/components/notifications";
@@ -19,6 +19,7 @@
   setContext("rally:profileCompletionStatus", profileCompletionStatus);
   setContext("rally:notifications", notifications);
   setContext("rally:isAuthenticated", isAuthenticated);
+  setContext("rally:isExtensionConnected", isExtensionConnected);
 
   let leaveModal = false;
   let Dialog;
