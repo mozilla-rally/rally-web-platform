@@ -6,6 +6,7 @@
   import SideNav from "$lib/components/SideNav.svelte";
   import SettingsReadOnly from "$lib/views/account-settings/SettingsReadOnly.svelte";
   import SettingsCard from "$lib/views/account-settings/SettingsCard.svelte";
+
   import type { Readable } from "svelte/store";
   import type { AppStore } from "$lib/stores/types";
   import type { NotificationStore } from "$lib/components/notifications";
@@ -104,16 +105,20 @@
       case "update-pw":
         isPW = true;
         isEmail = false;
+        isDelete = false;
         isCheckEmail = false;
         settingsTitle = "Change your password";
         isReadOnly = false;
         break;
       case "delete":
+        isDelete = true;
         isPW = false;
         isEmail = false;
         isReadOnly = false;
         isCheckEmail = false;
         settingsTitle = "Delete your Rally account";
+        settingsDecription =
+          "Thank you for helping make the Internet a little better";
         break;
       case "read-only":
         showReadOnly();
@@ -141,7 +146,7 @@
   };
 
   const getLatestVerified = async () => {
-    return isUserVerified = await store.isUserVerified();
+    return (isUserVerified = await store.isUserVerified());
   };
 
   $: if ($store._initialized) {
@@ -204,9 +209,11 @@
               {isCheckEmail}
               {isEmail}
               {isPW}
+              {isDelete}
               {cardArgs}
               {displayCard}
               {settingsTitle}
+              {settingsDecription}
               on:type={displayCard}
             />
           {/if}

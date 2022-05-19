@@ -6,13 +6,16 @@
   import UpdatePassword from "./UpdatePassword.svelte";
   import UpdateEmail from "./UpdateEmail.svelte";
   import CheckEmailCard from "$lib/components/auth-cards/CheckEmailCard.svelte";
+  import DeleteAccount from "./DeleteAccount.svelte";
 
   export let isEmail;
   export let isPW;
+  export let isDelete;
   export let isCheckEmail;
   export let cardArgs;
   export let displayCard;
   export let settingsTitle;
+  export let settingsDescription;
 
   let checkEmailArgs = {
     ...cardArgs,
@@ -28,6 +31,12 @@
     <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
       <div class="title-text">{settingsTitle}</div>
     </h2>
+
+    {#if settingsDescription}
+      <p class="settings-description">
+        {settingsDescription}
+      </p>
+    {/if}
     <div class="card-body-content" slot="card-content">
       {#if isEmail}
         <UpdateEmail on:type={displayCard} />
@@ -35,6 +44,10 @@
 
       {#if isPW}
         <UpdatePassword on:type={displayCard} />
+      {/if}
+
+      {#if isDelete}
+        <DeleteAccount on:type={displayCard} />
       {/if}
     </div>
   </Card>
