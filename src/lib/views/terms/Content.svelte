@@ -8,7 +8,7 @@
   export let onboarding = true;
 </script>
 
-<div class="terms md-container">
+<div class="terms main-content">
   <h2 class="section-header terms__header">Our Privacy Notice</h2>
 
   {#if onboarding}

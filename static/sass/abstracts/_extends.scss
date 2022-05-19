@@ -1,3 +1,28 @@
+%card-border {
+  border: 1px solid #cdcdd4;
+  border-radius: 4px;
+}
+
+%content-body-XS {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+%content-body-MD {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+
+  @media (min-width: $MD-screen) {
+    font-size: 16px;
+  }
+}
+
 %XL-12-Col-account-creation {
   display: grid;
   justify-content: center;
@@ -20,10 +45,15 @@
 }
 
 %nav-list-item {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
   display: flex;
   align-items: center;
   float: none;
-  color: black;
+  color: $color-ink-80;
   text-decoration: none;
   text-align: left;
 }
@@ -31,6 +61,5 @@
 %list-item-quit {
   background-color: transparent;
   border: none;
-  width: 100%;
   cursor: pointer;
 }

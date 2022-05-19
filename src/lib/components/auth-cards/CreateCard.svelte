@@ -17,6 +17,7 @@
   export let customClass;
   export let store;
   export let storyBookTest;
+  export let headerClass;
 
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
@@ -195,7 +196,7 @@
   };
 </script>
 
-<Card {width} {height} {customClass}>
+<Card {width} {height} {customClass} {headerClass}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>

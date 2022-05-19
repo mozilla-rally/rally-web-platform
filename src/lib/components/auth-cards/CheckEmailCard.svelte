@@ -16,6 +16,7 @@
   export let userEmail;
   export let ctaText;
   export let linkText;
+  export let headerClass
 
   let body;
   let titleEl;
@@ -40,7 +41,7 @@
   $: checkPW ? (body = resetPWText) : (body = checkEmailText);
 </script>
 
-<Card {width} {customClass} {height}>
+<Card {width} {customClass} {height} {headerClass}>
   <h2 class="title-wrapper" slot="card-title">
     <div style={cssVarStyles} class="title-highlight" />
     <div bind:this={titleEl} class="title-text">{title}</div>

@@ -33,7 +33,8 @@
     height: { control: "text" },
     fontSize: { control: "text" },
     linkText: { control: "text" },
-    custom: { control: "text" },
+    customClass: { control: "text" },
+    headerClass: {control: "text"},
     minHeight: { control: "text" },
   }}
 />
@@ -80,7 +81,8 @@
       "To finish creating your account with Rally, please check your email inbox and verify your email address.",
     bodyText: "Need additional help?",
     linkText: "Contact Us",
-    custom: "info-card",
+    customClass: "info-card",
+    headerClass: "info-card"
   }}
 />
 
@@ -95,7 +97,8 @@
       "Instructions to reset your password has been sent to [example@workmail.com]",
     bodyText: "Need additional help?",
     linkText: "Contact Us",
-    custom: "info-card",
+    customClass: "info-card",
+    headerClass: "info-card"
   }}
 />
 
