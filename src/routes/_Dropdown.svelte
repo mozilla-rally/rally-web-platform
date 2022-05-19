@@ -3,23 +3,22 @@
   import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");
 
-  export let cssVarStyles;
   export let handleLogOut;
   export let clazz;
   export let toggleNavIcon;
-
+  export let dropDownVisible
+  
+  let isVisible = "hide"
   let userEmail;
 
   const getLatestUserEmail = async () => {
-    userEmail = await store.getUserEmail();
-    return userEmail;
+    return (userEmail = await store.getUserEmail());
   };
 
-  $: getLatestUserEmail();
   $: userEmail = getLatestUserEmail();
 </script>
 
-<ul class={`dropdown-list dropdown-list--${clazz}`} style={cssVarStyles}>
+<ul class={`dropdown-list dropdown-list--${clazz} dropdown-list--${dropDownVisible ? "show" :"hide"}`}>
   <li
     class={`dropdown-list__item dropdown-list__item--top dropdown-list__item--${clazz}-top`}
   >
@@ -125,8 +124,16 @@
 
 <style>
   .dropdown-list {
-    opacity: var(--opacity);
-    visibility: var(--visibility);
-    transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s, visibility 0.5s ease-out;
+  }
+
+  .dropdown-list--show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .dropdown-list--hide {
+    opacity: 0;
+    visibility: hidden;
   }
 </style>

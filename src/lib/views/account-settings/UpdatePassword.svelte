@@ -59,79 +59,117 @@
   });
 
   const checkFields = async () => {
-    if (
-      oldPassword.passwordEl.value === "" &&
-      newPassword.passwordEl.value === "" &&
-      confirmPassword.passwordEl.value === ""
-    ) {
+    const isOldAbsent = !oldPassword.passwordEl.value;
+    const isNewAbsent = !newPassword.passwordEl.value;
+    const isConfirmAbsent = !confirmPassword.passwordEl.value;
+
+    if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
       emptyFieldsErr = true;
-    } else if (newPassword.passwordEl.value === "") {
+      return;
+    }
+
+    if (isOldAbsent) {
+      oldPassword.inputPasswordClass = errorClass;
+      oldPassword.passwordErrText = "Required";
+      return;
+    }
+
+    if (isNewAbsent) {
       newPassword.inputPasswordClass = errorClass;
       newPassword.passwordErrText = "Required";
-    } else if (confirmPassword.passwordEl.value === "") {
+      return;
+    }
+
+    if (isConfirmAbsent) {
       confirmPassword.inputPasswordClass = errorClass;
       confirmPassword.passwordErrText = "Required";
-    } else {
-      //if no fields are empty check the rules
-      checkRules();
+      return;
     }
+
+    //all fields are filled
+    checkRules();
   };
 
   const checkRules = () => {
-    if (newPassword.passwordEl) {
-      newPassword.passwordEl.value.length < minPasswordLength
+    const newPasswordEl = newPassword.passwordEl;
+
+    if (newPasswordEl) {
+      newPasswordEl.value.length < minPasswordLength
         ? length.classList.add("rules-error")
         : null;
 
-      newPassword.passwordEl.value.match(lowerCaseLetters)
+      newPasswordEl.value.match(lowerCaseLetters)
         ? letter.classList.add("clear")
         : letter.classList.add("rules-error");
 
-      newPassword.passwordEl.value.match(upperCaseLetters)
+      newPasswordEl.value.match(upperCaseLetters)
         ? capital.classList.add("clear")
         : capital.classList.add("rules-error");
 
-      newPassword.passwordEl.value.match(numbers)
+      newPasswordEl.value.match(numbers)
         ? number.classList.add("clear")
         : number.classList.add("rules-error");
-    }
 
-    if (
-      newPassword.passwordEl.value.length >= minPasswordLength &&
-      newPassword.passwordEl.value.match(numbers) &&
-      newPassword.passwordEl.value.match(lowerCaseLetters) &&
-      newPassword.passwordEl.value.match(upperCaseLetters)
-    ) {
-      //if user follows rules handle checkPW
-      handleCheckPW();
-    } else rulesError();
+      if (
+        newPasswordEl.value.length >= minPasswordLength &&
+        !newPasswordEl.value.match(numbers) &&
+        !newPasswordEl.value.match(lowerCaseLetters) &&
+        !newPasswordEl.value.match(upperCaseLetters)
+      ) {
+        rulesError();
+        return;
+      }
+    }
+    //if rules are clear, handle making sure new and confirm passwords match
+    handleCheckPW();
   };
 
   const clearFields = () => {
     oldPassword.passwordEl.value = newPassword.passwordEl.value = confirmPassword.passwordEl.value =
       "";
+    let success = localStorage.getItem("resetPW")
     resetState();
-    notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
+    if(!success){
+      console.info("Something went wrong")
+      return 
+    }
+
+    if(success){
+      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" })
+      localStorage.removeItem("resetPW")
+    }
   };
 
   const handleCheckPW = async () => {
-    if (newPassword.passwordEl && confirmPassword.passwordEl) {
-      if (newPassword.passwordEl.value === confirmPassword.passwordEl.value) {
-        await store.resetUserPassword(
-          newPassword.passwordEl.value,
-          oldPassword.passwordEl.value
-        );
-        // handleSelect("read-only");
-        handleNextState();
-      } else {
+    const oldPasswordEl =  oldPassword.passwordEl;
+    const newPasswordEl = newPassword.passwordEl;
+    const confirmPasswordEl = confirmPassword.passwordEl;
+  
+
+    if (newPasswordEl && confirmPasswordEl && oldPasswordEl) {
+      if (!newPasswordEl.value === confirmPasswordEl.value) {
         newPassword.inputPasswordClass = errorClass;
         confirmPassword.inputPasswordClass = errorClass;
         confirmPassword.passwordErrText = "Passwords do not match.";
+        return;
       }
+
+      if(newPasswordEl.value === confirmPasswordEl.value){
+        await store.resetUserPassword(
+          newPasswordEl.value,
+          oldPasswordEl.value
+        );
+      }
+
+      handleNextState();
     }
   };
 
   const handleChange = (e) => {
+    const newPasswordEl = newPassword.passwordEl;
+    const isOldAbsent = !oldPassword.passwordEl.value;
+    const isNewAbsent = !newPassword.passwordEl.value;
+    const isConfirmAbsent = !confirmPassword.passwordEl.value;
     const name = e.srcElement.name;
     btnDisabled = false;
     resetState();
@@ -141,13 +179,17 @@
     number.classList.remove("rules-error");
     length.classList.remove("rules-error");
 
-    if (oldPassword.passwordEl && newPassword.passwordEl && confirmPassword.passwordEl) {
-      if (oldPassword.passwordEl.value === "" && newPassword.passwordEl.value === "" && confirmPassword.passwordEl.value === "") {
+    if (
+      oldPassword.passwordEl &&
+      newPassword.passwordEl &&
+      confirmPassword.passwordEl
+    ) {
+      if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
         btnDisabled = true;
-      }
+      } else btnDisabled = false
     }
 
-    if (newPassword.passwordEl) {
+    if (newPasswordEl) {
       newPassword.inputPasswordClass = inputClass;
       if (name === "id_user_pw--new") {
         newPassword.showIcon = true;
@@ -206,6 +248,7 @@
       oldPassword.passwordErrText =
         "The password you entered is incorrect. Please try again.";
       oldPassword.inputPasswordClass = errorClass;
+      return
     }
 
     localStorage.removeItem("changePWErr");

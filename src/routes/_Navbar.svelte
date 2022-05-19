@@ -15,7 +15,6 @@
   let ariaExpanded = false;
   let ariaHidden = true;
   let dropDownVisible = false;
-  let opacity;
   let visibility;
 
   onMount(async () => {
@@ -36,12 +35,6 @@
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
   };
-
-  $: dropDownVisible === true ? (opacity = 1) : (opacity = 0);
-  $: dropDownVisible === true
-    ? (visibility = "visible")
-    : (visibility = "hidden");
-  $: cssVarStyles = `--opacity:${opacity}; --visibility:${visibility}`;
 </script>
 
 <RallyNavbar>
@@ -102,19 +95,18 @@
 
   <div
     on:focus={onFocus}
-    on:click={toggleDropdown}
     class="header__dropdown"
     data-expands="drop-nav"
     data-expands-height
     aria-expanded={ariaExpanded}
     slot="user-icon"
   >
-    <div class="dropdown__user-icon">
+    <div on:click={toggleDropdown} class="dropdown__user-icon">
       <img class="user-icon__img" src="img/icon-profile.svg" alt="user icon" />
     </div>
 
     <!-- DESKTOP Dropdown-->
-    <Dropdown clazz="desktop" {handleLogOut} {cssVarStyles} />
+    <Dropdown clazz="desktop" {handleLogOut} {dropDownVisible} />
   </div>
 
   <!-- Mobile menu dropdown -->
@@ -129,7 +121,7 @@
         {toggleNavIcon}
         clazz="mobile"
         {handleLogOut}
-        cssVarStyles={null}
+        {dropDownVisible}
       />
     </nav>
   </div>

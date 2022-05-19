@@ -39,27 +39,41 @@
   }
 
   const checkEmail = async (val) => {
+    if (!val.match(emailPattern)) {
+      emailErrText = "Invalid format";
+      emailEl.classList.add("mzp-c-field-control--error");
+      return;
+    }
+
     if (val.match(emailPattern)) {
       await store.changeEmail(emailEl.value, passwordEl.value);
       handleNextState();
-    } else {
-      emailErrText = "Invalid format";
-      emailEl.classList.add("mzp-c-field-control--error");
     }
   };
 
   const checkFields = async () => {
-    if (emailEl.value === "" && passwordEl.value === "") {
+    const isEmailAbsent = !emailEl.value;
+    const isPasswordAbsent = !passwordEl.value;
+
+    if (isEmailAbsent && isPasswordAbsent) {
       emptyFieldsErr = true;
-    } else if (emailEl.value === "") {
+      return;
+    }
+
+    if (isEmailAbsent) {
       inputEmailClass = errorClass;
       emailErrText = "Required";
-    } else if (passwordEl.value === "") {
+      return;
+    }
+
+    if (isPasswordAbsent) {
       inputPasswordClass = errorClass;
       passwordErrText = "Required";
-    } else if (emailEl) {
-      checkEmail(emailEl.value);
+      return;
     }
+
+    // Both are present
+    checkEmail(emailEl.value);
   };
 
   const handleChange = (e) => {
@@ -104,12 +118,14 @@
       passwordErrText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
+      return
     }
 
     if (isEmailAlready > -1) {
       emailErrText =
         "The email you entered is already in use. Please try another email.";
       inputEmailClass = errorClass;
+      return
     }
 
     localStorage.removeItem("changeEmailErr");

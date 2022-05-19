@@ -20,7 +20,7 @@
     return values.join("; ");
   }
 
-  $: styles = addStyleVariables({
+  $:styles = addStyleVariables({
     width,
     height,
   });

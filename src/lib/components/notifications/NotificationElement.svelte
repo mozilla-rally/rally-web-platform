@@ -5,8 +5,8 @@
   import { scale } from "svelte/transition";
   export let width = undefined;
   export let level = "info"; // info, error.
-  export let pad
- 
+  export let pad;
+
   export let xOffset = undefined;
   export let yOffset = undefined;
 
@@ -20,7 +20,7 @@
       width ? `--width: ${width}` : undefined,
       xOffset ? `--x-offset: ${xOffset}` : undefined,
       yOffset ? `--y-offset: ${yOffset}` : undefined,
-      pad ? `--padClass:${pad}` : `20px`
+      pad ? `--padClass:${pad}` : `20px`,
     ];
     return styles.filter((d) => d !== undefined).join("; ");
   }

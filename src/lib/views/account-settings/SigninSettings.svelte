@@ -34,21 +34,20 @@
     userProvider = await store.getUserProvider();
     timeSeconds = $store.user.createdOn.seconds;
     createdOn = formatDate();
-    if (userProvider) {
-      userProvider[0].providerId === "google.com"
-        ? (isGoogleAccount = true)
-        : (isGoogleAccount = false);
-    }
+    isGoogleAccount =
+      userProvider &&
+      userProvider.length &&
+      userProvider[0].providerId &&
+      userProvider[0].providerId === "google.com";
   });
 
   const getLatestVerified = async () => {
-    isUserVerified = await store.isUserVerified();
-    return isUserVerified;
+   return isUserVerified = await store.isUserVerified();
+   
   };
 
   const getLatestUserEmail = async () => {
-    userEmail = await store.getUserEmail();
-    return userEmail;
+    return userEmail = await store.getUserEmail();
   };
 
   const resendVerificationEmail = async () => {

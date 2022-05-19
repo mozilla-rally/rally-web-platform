@@ -372,13 +372,15 @@ export default {
   },
 
   async resetUserPassword(newPassword, oldPassword) {
-    if (this) this.reauthenticateUser(oldPassword);
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      await updatePassword(user, newPassword);
-      localStorage.removeItem("authErr");
-      console.info("reset password");
+      if (this.reauthenticateUser(oldPassword)) {
+        await updatePassword(user, newPassword);
+        localStorage.removeItem("authErr");
+        console.info("reset password");
+        localStorage.setItem("resetPW", "success");
+      }
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("changePWErr", err);
@@ -387,21 +389,17 @@ export default {
   },
 
   async changeEmail(email, password) {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      if (this) {
-        if (this.reauthenticateUser(password)) {
-          if (user) {
-            await updateEmail(user, email);
-            console.info("email changed!");
-            if (!user.emailVerified) {
-              console.info("user not verified!");
-              await sendEmailVerification(user);
-            } else {
-              console.info("email verified!");
-            }
-          }
+      if (this.reauthenticateUser(password)) {
+        await updateEmail(user, email);
+        console.info("email changed!");
+        if (!user.emailVerified) {
+          console.info("user not verified!");
+          await sendEmailVerification(user);
+        } else {
+          console.info("email verified!");
         }
       }
     } catch (err) {
@@ -412,17 +410,12 @@ export default {
   },
 
   async reauthenticateUser(password) {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      if (user) {
-        const userCredential = EmailAuthProvider.credential(
-          user.email,
-          password
-        );
-        await reauthenticateWithCredential(user, userCredential);
-        return true;
-      }
+      const userCredential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, userCredential);
+      return true;
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("authErr", err);
@@ -430,13 +423,11 @@ export default {
   },
 
   async resendUserVerificationEmail() {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      if (user) {
-        await sendEmailVerification(user);
-        console.info("email verification resent!");
-      }
+      await sendEmailVerification(user);
+      console.info("email verification resent!");
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("changeEmailErr", err);
@@ -450,21 +441,19 @@ export default {
   },
 
   async isUserVerified() {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      if (user) {
-        return user.emailVerified;
-      }
+      return user.emailVerified;
     } catch (err) {
       console.error("there was an error", err);
     }
   },
 
   async getUserEmail() {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
       return user.email;
     } catch (err) {
       console.error("there was an error", err);
@@ -472,10 +461,10 @@ export default {
   },
 
   async getUserProvider() {
-    let user;
+    const user = auth && auth.currentUser;
+    if (!user) return;
     try {
-      if (auth) user = await auth.currentUser;
-      if (user) return user.providerData;
+      return user.providerData;
     } catch (err) {
       console.error("there was an error", err);
     }

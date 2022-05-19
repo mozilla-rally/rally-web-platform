@@ -11,18 +11,18 @@
   export let fontSize;
   export let clazz;
   export let listArr;
-  export let isGoogleAccount
+  export let isGoogleAccount;
 
   let ariaExpanded = false;
   let ariaHidden = true;
   let arrowCollapsed = false;
-  let transform = "unset";
-  let hide = "display:none;"
-  let show = "display:block;"
+  let hide = "display:none;";
+  let show = "display:block;";
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
+  
   function addStyleVariables({ width, fontSize }) {
     const values = [
       toVariable("--width", width),
@@ -41,36 +41,17 @@
   };
 
   const handleHighlight = (type) => {
-    try {
-      listArr.forEach((siderItem) => {
-        if (siderItem.type === type) {
-          siderItem.highlight = true;
-        } else {
-          siderItem.highlight = false;
-        }
-        //handle the sublists' highlight
-        if (siderItem.sublistArr) {
-          siderItem.sublistArr.forEach((sublistItem) => {
-            if (sublistItem.type === type) {
-              sublistItem.highlight = true;
-            } else {
-              sublistItem.highlight = false;
-            }
-          });
-        }
+    listArr.forEach((siderItem) => {
+      siderItem.highlight = siderItem.type === type;
+      //handle the sublists' highlight
+      (siderItem.sublistArr || []).forEach((sublistItem) => {
+        sublistItem.highlight = sublistItem.type === type;
       });
-      listArr = listArr;
-    } catch (error) {
-      console.error("ERROR:", error);
-    }
+    });
+    listArr = listArr;
   };
 
-  const rotateArrow = () => {
-    arrowCollapsed = !arrowCollapsed;
-    arrowCollapsed === true
-      ? (transform = "rotateZ(90deg)")
-      : (transform = "rotateZ(0deg)");
-  };
+  const rotateArrow = () => (arrowCollapsed = !arrowCollapsed);
 
   const toggleNav = () => {
     ariaExpanded = !ariaExpanded;
@@ -83,7 +64,6 @@
     fontSize,
   });
   $: classSet = ["sidenav-body", clazz].filter((t) => t).join(" ");
-  $: cssVarStyles = `--transform:${transform};`;
 
   const key = `sidenav-${
     Math.random().toString(36).substring(2, 15) +
@@ -111,12 +91,13 @@
               <div class="sider-sublist__text list-text">{item.title}</div>
               <button
                 on:click={toggleNav}
-                class="sider-sublist__arrow"
+                class={`sider-sublist__arrow sider-sublist__arrow--${
+                  arrowCollapsed === true ? "collapsed" : "default"
+                }`}
                 data-expands="sublist-nav"
                 data-expands-height
                 aria-expanded={ariaExpanded}
                 type="button"
-                style={cssVarStyles}
               >
                 <Arrow />
               </button>
@@ -183,11 +164,18 @@
   }
 
   .sider-sublist__arrow {
-    transform: var(--transform);
     transition: all 0.4s ease;
   }
 
-  a{
+  .sider-sublist__arrow--collapsed {
+    transform: rotateZ(90deg);
+  }
+
+  .sider-sublist__arrow--default {
+    transform: rotateZ(0deg);
+  }
+
+  a {
     text-decoration: none;
     color: var(--color-marketing-gray-99);
   }

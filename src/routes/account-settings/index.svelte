@@ -139,8 +139,7 @@
   };
 
   const getLatestVerified = async () => {
-    isUserVerified = await store.isUserVerified();
-    return isUserVerified;
+    return isUserVerified = await store.isUserVerified();
   };
 
   $: if ($store._initialized) {

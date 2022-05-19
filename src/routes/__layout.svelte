@@ -31,9 +31,7 @@
 
   const mounted = isMounted();
 
-  $: if($page.path === "/account-settings"){
-    clazz = "account-settings"
-  } else clazz = ""
+  $: clazz = $page.path === "/account-settings" ? "account-settings": ""
 </script>
 
 <svelte:head>
