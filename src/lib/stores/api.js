@@ -300,13 +300,14 @@ export default {
     let userCredential;
     try {
       userCredential = await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "/studies";
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("signInErr", err);
       return;
     }
-    if (!userCredential.user.emailVerified) {
+    if (userCredential.user.emailVerified) {
+      window.location.href = "/studies";
+    } else {
       console.warn("Email account not verified, sending verification email");
       localStorage.setItem("signInErr", "Email account not verified");
       await sendEmailVerification(userCredential.user);
