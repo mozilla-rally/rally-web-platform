@@ -47,7 +47,7 @@
         </ul>
       </div>
       <div class="settings-delete-image">
-        <img src="images/before-you-go.png" alt="person walking through exit door">
+        <img src="img/before-you-go.png" alt="person walking through exit door">
       </div>
     </div>
 
