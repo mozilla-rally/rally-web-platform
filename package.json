@@ -70,6 +70,7 @@
     "jest-transform-stub": "^2.0.0",
     "jest-webextension-mock": "^3.7.22",
     "jsdoc": "^3.6.6",
+    "mailosaur": "^8.3.0",
     "micromodal": "^0.4.6",
     "minimist": "^1.2.6",
     "prettier": "~2.2.1",

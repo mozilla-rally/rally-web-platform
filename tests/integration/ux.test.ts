@@ -13,8 +13,15 @@ import {
   getFirefoxDriver, WAIT_FOR_PROPERTY
 } from "./utils";
 
+import MailosaurClient from "mailosaur";
+
 const url = "https://members.rally.allizom.org";
-const testEmail = "rhelmer+test1@mozilla.com";
+const testEmail = "";
+
+// Available in the API tab of a server
+const apiKey = ''
+const serverId = ''
+const serverDomain = '.mailosaur.net'
 
 const generatePassword = (
   length = 20,
@@ -24,7 +31,7 @@ const generatePassword = (
     .map((x) => wishlist[x % wishlist.length])
     .join('')
 
-const testPassword = generatePassword();
+const testPassword = generatePassword() + "1";
 
 const args = minimist(process.argv.slice(2));
 console.debug(args);
@@ -230,6 +237,9 @@ describe("Rally Web Platform UX flows", function () {
 
     await findAndAct(driver, By.id("create"), (e) => e.click());
 
+    const mailosaur = new MailosaurClient(apiKey)
+    await mailosaur.messages.deleteAll(serverId);
+
     // Valid credentials succeed.
     await driver
       .findElement(By.id("id_user_email"))
@@ -240,6 +250,27 @@ describe("Rally Web Platform UX flows", function () {
     //navigate to sign in cards
     await findAndAct(driver, By.id("back-signin-btn"), (e) => e.click());
 
+    const criteria = {
+      sentTo: `nearer-sink@${serverDomain}`
+    }
+
+    const email = await mailosaur.messages.get(serverId, criteria)
+
+    console.log(`Subject: ${email.text.body}`)
+    for (const line of email.text.body.split("\n")) {
+      if (line.startsWith(url)) {
+        console.debug(line);
+        const windowHandle = await driver.getWindowHandle();
+        await driver.switchTo().newWindow('tab');
+        await driver.navigate().to(line);
+
+        await driver.wait(until.elementLocated(By.className("firebaseui-title")), WAIT_FOR_PROPERTY);
+        const element = await driver.findElement(By.className("firebaseui-title"));
+        (await element.getText()).includes("Your email has been verified");
+        await driver.switchTo().window(windowHandle);
+      }
+    }
+
     // Unverified account can be logged into, but cannot be used until verified.
     await driver
       .findElement(By.id("id_user_email"))
@@ -247,21 +278,6 @@ describe("Rally Web Platform UX flows", function () {
     await driver.findElement(By.id("id_user_pw")).sendKeys(testPassword);
     await findAndAct(driver, By.id("signin-btn"), (e) => e.click());
 
-    // FIXME verify email
-
-    await findAndAct(
-      driver,
-      By.xpath('//button[text()="Sign in"]'),
-      (e) => e.click()
-    );
-
-    await driver
-      .findElement(By.id("id_user_email"))
-      .sendKeys(testEmail);
-    await driver.findElement(By.id("id_user_pw")).sendKeys(testPassword);
-    await findAndAct(driver, By.id("signin-btn"), (e) => e.click());
-
-    /* FIXME enable after we can delete test account
     await driver.wait(
       until.titleIs("Privacy Policy | Mozilla Rally"),
       WAIT_FOR_PROPERTY
@@ -269,17 +285,6 @@ describe("Rally Web Platform UX flows", function () {
 
     //scroll to page bottom
     await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-    //hide firebase emulator warning
-    let fb = driver.findElement(By.css(".firebase-emulator-warning"));
-    await driver.executeScript("arguments[0].id = 'fb'", fb);
-    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'");
-    await driver.executeScript("document.getElementById('accept').style.position='relative'");
-    await driver.executeScript("document.getElementById('accept').style.top='-5rem'");
-
-    // NOTE: Clicking accept and enroll opens the extension page in chrome marketplace
-    // and hence we must return focus to Rally website before proceeding with further testing
-
-    const windowHandle = await driver.getWindowHandle();
 
     await findAndAct(
       driver,
@@ -287,17 +292,11 @@ describe("Rally Web Platform UX flows", function () {
       (e) => e.click()
     );
 
-    // Switch back to Rally website
-    await driver.switchTo().window(windowHandle);
-
     await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-    await driver.executeScript("arguments[0].id = 'fb'", fb);
-    await driver.executeScript("document.getElementById('fb').style.visibility='hidden'");
 
     await findAndAct(driver, By.xpath('//button[text()="Skip for Now"]'), (e) =>
       e.click()
     );
-    */
 
     await driver.wait(
       until.titleIs("Studies | Mozilla Rally"),
@@ -316,6 +315,12 @@ describe("Rally Web Platform UX flows", function () {
     await findAndAct(driver, By.xpath('//button[text()="Join Study"]'), (e) =>
       e.click()
     );
+
+    // NOTE: Clicking "Add study extension" opens the extension page in chrome marketplace
+    // and hence we must return focus to Rally website before proceeding with further testing
+
+    const windowHandle = await driver.getWindowHandle();
+
     await findAndAct(
       driver,
       By.xpath('//button[text()="Add study extension"]'),
@@ -323,48 +328,54 @@ describe("Rally Web Platform UX flows", function () {
     );
 
     if (loadExtension) {
-      // FIXME need to load Chrome-compatible study metadata into firestore.
-      if (testBrowser === "firefox") {
-        await driver.wait(
-          async () =>
-            await extensionLogsPresent(
-              driver,
-              testBrowser,
-              `Start data collection`
-            ),
-          WAIT_FOR_PROPERTY
-        );
-      }
-    } else {
-      // Start to leave study, but cancel.
-      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//html'), (e) =>
-        e.click()
-      );
-
-      // Start to leave study, and confirm.
-      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-        e.click()
-      );
-
-      await findAndAct(
-        driver,
-        By.xpath('(//button[text()="Don\'t join this study"])'),
-        (e) => e.click()
+      await driver.wait(
+        async () =>
+          await extensionLogsPresent(
+            driver,
+            testBrowser,
+            `Start data collection`
+          ),
+        WAIT_FOR_PROPERTY
       );
     }
+
+    // Switch back to Rally website
+    await driver.switchTo().window(windowHandle);
+
+    // FIXME workaround https://github.com/mozilla-rally/rally-web-platform/issues/444
+    await driver.navigate().refresh();
+
+    /*
+
+// Start to leave study, but cancel.
+await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+  e.click()
+);
+
+await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
+  e.click()
+);
+
+await findAndAct(driver, By.xpath('//html'), (e) =>
+  e.click()
+);
+    // Start to leave study, and confirm.
+    await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
+      e.click()
+    );
+ 
+    await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
+      e.click()
+    );
+ 
+    await findAndAct(
+      driver,
+      By.xpath('(//button[text()="Don\'t join this study"])'),
+      (e) => e.click()
+    );
+*/
     if (loadExtension) {
+
       // Start to leave study, but cancel.
       await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
         e.click()
@@ -392,19 +403,36 @@ describe("Rally Web Platform UX flows", function () {
         By.xpath('(//button[text()="Leave Study"])'),
         (e) => e.click()
       );
-      // FIXME check for Chrome logs.
-      if (testBrowser === "firefox") {
-        await driver.wait(
-          async () =>
-            await extensionLogsPresent(
-              driver,
-              testBrowser,
-              `Pause data collection`
-            ),
-          WAIT_FOR_PROPERTY
-        );
-      }
+      await driver.wait(
+        async () =>
+          await extensionLogsPresent(
+            driver,
+            testBrowser,
+            `Pause data collection`
+          ),
+        WAIT_FOR_PROPERTY
+      );
     }
+
+    await driver.navigate().to(`${url}/account-settings`);
+
+    await driver.wait(
+      until.titleIs("Account Settings | Mozilla Rally"),
+      WAIT_FOR_PROPERTY
+    );
+
+    await findAndAct(driver, By.xpath('//button[text()="Leave Mozilla Rally"]'), (e) =>
+      e.click()
+    );
+
+    await findAndAct(driver, By.xpath('//button[text()="Leave Rally"]'), (e) =>
+      e.click()
+    );
+
+    await driver.wait(
+      until.titleIs("Thank you for being part of Rally!"),
+      WAIT_FOR_PROPERTY
+    );
   });
 
   it("fails to sign up for a new email account with invalid info", async function () {
