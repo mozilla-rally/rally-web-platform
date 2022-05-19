@@ -319,17 +319,12 @@ export default {
       return;
     }
     if (userCredential.user.emailVerified) {
-      initializeUserDocument(userCredential.user.uid);
-      listenForUserChanges(userCredential.user);
-      listenForUserStudiesChanges(userCredential.user);
-
-      // Let the Rally SDK content script know the site is intialized.
-      console.debug("initialized, dispatching rally-sdk.web-check");
-      window.dispatchEvent(new CustomEvent("rally-sdk.web-check", {}));
+      window.location.href = "/studies";
     } else {
       console.warn("Email account not verified, sending verification email");
       localStorage.setItem("signInErr", "Email account not verified");
       await sendEmailVerification(userCredential.user);
+      await this.signOutUser();
     }
   },
 

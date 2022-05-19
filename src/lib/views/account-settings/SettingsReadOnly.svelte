@@ -5,11 +5,8 @@
   import { getContext, onMount } from "svelte";
   import SigninSettings from "./SigninSettings.svelte";
   import DeleteSettings from "./DeleteSettings.svelte";
-  import type { AppStore } from "$lib/stores/types";
-  const store: AppStore = getContext("rally:store");
 
   export let displayCard;
-  const offboardURL = "https://rally.mozilla.org/account-deleted";
 
   let readOnlyArgs = {
     width: "612px",
@@ -28,15 +25,9 @@
     ...readOnlyArgs,
     title: "Delete account",
   };
-
-  async function deleteUserAccount() {
-    await store.deleteUserAccount();
-    window.location.href = offboardURL;
-  }
 </script>
 
 <div class="settings-readonly">
   <SigninSettings {displayCard} {...signinArgs} />
-
-  <DeleteSettings {deleteUserAccount} {displayCard} {...deleteArgs} />
+  <DeleteSettings {displayCard} {...deleteArgs} />
 </div>

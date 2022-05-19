@@ -31,6 +31,21 @@
    margin: 0 !important; 
   }
 
+  &--settings {
+    display: block;
+    border: 1px solid #cdcdd4; 
+  }
+
+  &--settings-update {
+   padding: 32px 32px 44px; 
+   justify-content: unset;
+  }
+
+  &--settings-delete {
+    padding: 32px 32px 34.5px;
+    justify-content: unset;
+   }
+
   &__inner {
     padding: 0;
     display: block;

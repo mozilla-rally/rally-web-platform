@@ -6,14 +6,11 @@
   import { getContext } from "svelte";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
-
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
-
   const emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
-
   let btnDisabled = true;
   let emailEl;
   let emailErrText = null;
@@ -25,57 +22,47 @@
   let passwordEl;
   let passwordErrText = null;
   let passwordVisible = false;
-
   onMount(() => {
     inputEmailClass = inputClass;
     inputPasswordClass = inputClass;
   });
-
   $: if (emptyFieldsErr) {
     inputEmailClass = errorClass;
     inputPasswordClass = errorClass;
     emailErrText = "Required";
     passwordErrText = "Required";
   }
-
   const checkEmail = async (val) => {
     if (!val.match(emailPattern)) {
       emailErrText = "Invalid format";
       emailEl.classList.add("mzp-c-field-control--error");
       return;
     }
-
     if (val.match(emailPattern)) {
       await store.changeEmail(emailEl.value, passwordEl.value);
       handleNextState();
     }
   };
-
   const checkFields = async () => {
     const isEmailAbsent = !emailEl.value;
     const isPasswordAbsent = !passwordEl.value;
-
     if (isEmailAbsent && isPasswordAbsent) {
       emptyFieldsErr = true;
       return;
     }
-
     if (isEmailAbsent) {
       inputEmailClass = errorClass;
       emailErrText = "Required";
       return;
     }
-
     if (isPasswordAbsent) {
       inputPasswordClass = errorClass;
       passwordErrText = "Required";
       return;
     }
-
     // Both are present
     checkEmail(emailEl.value);
   };
-
   const handleChange = (e) => {
     const name = e.srcElement.name;
     inputEmailClass = inputClass;
@@ -84,57 +71,47 @@
     emailErrText = null;
     passwordErrText = null;
     btnDisabled = false;
-
     if (name === "id_user_pw") {
       inputItemsVisible = true;
     }
-
     if (emailEl && passwordEl) {
       if (emailEl.value === "" && passwordEl.value === "") {
         btnDisabled = true;
       }
     }
   };
-
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
     fireBaseErr = localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
-
   const handleSelect = (type) => {
     dispatch("type", {
       text: type,
     });
   };
-
   const setMessage = () => {
     let wrongPW = "auth/wrong-password";
     let emailAlready = "auth/email-already-in-use";
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
     let isEmailAlready = fireBaseErr.indexOf(emailAlready);
-
     if (isNotPassword > -1) {
       passwordErrText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
-      return
+      return;
     }
-
     if (isEmailAlready > -1) {
       emailErrText =
         "The email you entered is already in use. Please try another email.";
       inputEmailClass = errorClass;
-      return
+      return;
     }
-
     localStorage.removeItem("changeEmailErr");
   };
-
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
   };
-
   const clearFields = () => {
     emailEl.value = "";
     passwordEl.value = "";

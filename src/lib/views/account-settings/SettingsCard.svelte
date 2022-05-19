@@ -14,15 +14,12 @@
   export let displayCard;
   export let settingsTitle;
 
-  let  checkEmailArgs = {
+  let checkEmailArgs = {
     ...cardArgs,
     title: "Check your email",
-    isSettings: true
-  }
-
-
+    isSettings: true,
+  };
 </script>
-
 
 {#if isCheckEmail}
   <CheckEmailCard {...checkEmailArgs} />

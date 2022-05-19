@@ -9,14 +9,14 @@
 
   const store: AppStore = getContext("rally:store");
   const mounted = isMounted();
-  let browser;
 
+  let browser;
   let isFocused = false;
   let ariaExpanded = false;
   let ariaHidden = true;
   let dropDownVisible = false;
-  let visibility;
 
+  
   onMount(async () => {
     if (window) {
       browser = window.location;
@@ -30,7 +30,7 @@
     await store.signOutUser();
     browser.reload();
   };
-
+  
   const toggleNavIcon = () => {
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
@@ -134,7 +134,6 @@
     max-width: 580px;
     width: 100%;
   }
-
   .header__mobile-menu {
     max-height: 450px;
     height: 100%;

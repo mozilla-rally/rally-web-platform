@@ -130,6 +130,14 @@
       }
     }
 
+    &--delete {
+      width: auto;
+      float: left;
+      .cancel {
+        margin-right: 12px;
+      }
+    }
+
     .card-button {
       width: auto;
       padding: 8px 21.82px;

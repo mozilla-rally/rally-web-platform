@@ -7,6 +7,7 @@
   import type { NotificationStore } from "$lib/components/notifications";
   import type { AppStore } from "$lib/stores/types";
   import Button from "../../../lib/components/Button.svelte";
+
   const dispatch = createEventDispatcher();
   const store: AppStore = getContext("rally:store");
   const notifications: NotificationStore = getContext("rally:notifications");
@@ -27,7 +28,6 @@
   let letter;
   let emptyFieldsErr;
   let fireBaseErr = null;
-
   let oldPassword = {
     inputPasswordClass: "",
     passwordEl: null,
@@ -35,7 +35,6 @@
     passwordErrText: null,
     showIcon: false,
   };
-
   let newPassword = {
     inputPasswordClass: "",
     passwordEl: null,
@@ -43,7 +42,6 @@
     passwordErrText: null,
     showIcon: false,
   };
-
   let confirmPassword = {
     inputPasswordClass: "",
     passwordEl: null,
@@ -62,54 +60,44 @@
     const isOldAbsent = !oldPassword.passwordEl.value;
     const isNewAbsent = !newPassword.passwordEl.value;
     const isConfirmAbsent = !confirmPassword.passwordEl.value;
-
     if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
       emptyFieldsErr = true;
       return;
     }
-
     if (isOldAbsent) {
       oldPassword.inputPasswordClass = errorClass;
       oldPassword.passwordErrText = "Required";
       return;
     }
-
     if (isNewAbsent) {
       newPassword.inputPasswordClass = errorClass;
       newPassword.passwordErrText = "Required";
       return;
     }
-
     if (isConfirmAbsent) {
       confirmPassword.inputPasswordClass = errorClass;
       confirmPassword.passwordErrText = "Required";
       return;
     }
-
     //all fields are filled
     checkRules();
   };
 
   const checkRules = () => {
     const newPasswordEl = newPassword.passwordEl;
-
     if (newPasswordEl) {
       newPasswordEl.value.length < minPasswordLength
         ? length.classList.add("rules-error")
         : null;
-
       newPasswordEl.value.match(lowerCaseLetters)
         ? letter.classList.add("clear")
         : letter.classList.add("rules-error");
-
       newPasswordEl.value.match(upperCaseLetters)
         ? capital.classList.add("clear")
         : capital.classList.add("rules-error");
-
       newPasswordEl.value.match(numbers)
         ? number.classList.add("clear")
         : number.classList.add("rules-error");
-
       if (
         newPasswordEl.value.length >= minPasswordLength &&
         !newPasswordEl.value.match(numbers) &&
@@ -127,24 +115,22 @@
   const clearFields = () => {
     oldPassword.passwordEl.value = newPassword.passwordEl.value = confirmPassword.passwordEl.value =
       "";
-    let success = localStorage.getItem("resetPW")
+    let success = localStorage.getItem("resetPW");
     resetState();
-    if(!success){
-      console.info("Something went wrong")
-      return 
+    if (!success) {
+      console.info("Something went wrong");
+      return;
     }
-
-    if(success){
-      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" })
-      localStorage.removeItem("resetPW")
+    if (success) {
+      notifications.send({ code: "SUCCESSFULLY_UPDATED_PASSWORD" });
+      localStorage.removeItem("resetPW");
     }
   };
 
   const handleCheckPW = async () => {
-    const oldPasswordEl =  oldPassword.passwordEl;
+    const oldPasswordEl = oldPassword.passwordEl;
     const newPasswordEl = newPassword.passwordEl;
     const confirmPasswordEl = confirmPassword.passwordEl;
-  
 
     if (newPasswordEl && confirmPasswordEl && oldPasswordEl) {
       if (!newPasswordEl.value === confirmPasswordEl.value) {
@@ -153,14 +139,9 @@
         confirmPassword.passwordErrText = "Passwords do not match.";
         return;
       }
-
-      if(newPasswordEl.value === confirmPasswordEl.value){
-        await store.resetUserPassword(
-          newPasswordEl.value,
-          oldPasswordEl.value
-        );
+      if (newPasswordEl.value === confirmPasswordEl.value) {
+        await store.resetUserPassword(newPasswordEl.value, oldPasswordEl.value);
       }
-
       handleNextState();
     }
   };
@@ -186,9 +167,8 @@
     ) {
       if (isOldAbsent && isNewAbsent && isConfirmAbsent) {
         btnDisabled = true;
-      } else btnDisabled = false
+      } else btnDisabled = false;
     }
-
     if (newPasswordEl) {
       newPassword.inputPasswordClass = inputClass;
       if (name === "id_user_pw--new") {
@@ -198,23 +178,19 @@
         newPassword.passwordEl.value.match(lowerCaseLetters)
           ? letter.classList.add("valid")
           : letter.classList.remove("valid");
-
         // Validate uppercase letters
         newPassword.passwordEl.value.match(upperCaseLetters)
           ? capital.classList.add("valid")
           : capital.classList.remove("valid");
-
         // Validate numbers
         newPassword.passwordEl.value.match(numbers)
           ? number.classList.add("valid")
           : number.classList.remove("valid");
-
         // Validate length
         newPassword.passwordEl.value.length >= minPasswordLength
           ? length.classList.add("valid")
           : length.classList.remove("valid");
       }
-
       switch (name) {
         case "id_user_pw--current":
           oldPassword.showIcon = true;
@@ -243,14 +219,12 @@
   const setMessage = () => {
     let wrongPW = "auth/wrong-password";
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
-
     if (isNotPassword > -1) {
       oldPassword.passwordErrText =
         "The password you entered is incorrect. Please try again.";
       oldPassword.inputPasswordClass = errorClass;
-      return
+      return;
     }
-
     localStorage.removeItem("changePWErr");
   };
 
@@ -282,10 +256,9 @@
     oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText = null;
     inputItemsVisible = false;
   };
-
+  
   $: if (emptyFieldsErr) {
     oldPassword.inputPasswordClass = newPassword.inputPasswordClass = confirmPassword.inputPasswordClass = errorClass;
-
     oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText =
       "Required";
   }
@@ -468,37 +441,29 @@
   form {
     height: auto;
   }
-
   .input-wrapper {
     margin-bottom: 30px;
   }
-
   .info-msg-active-reset {
     text-align: left;
     font-size: 12px;
     color: gray;
   }
-
   .info-rules {
     margin-bottom: 15px;
   }
-
   .input-wrapper--new {
     margin-bottom: 10px;
   }
-
   .password-requirements {
     padding: 0px 24px 14px;
   }
-
   .field-set-settings {
     margin-bottom: 0;
   }
-
   .btn-group--password {
     margin-top: 0;
   }
-
   .field-pw {
     padding-bottom: 0;
   }

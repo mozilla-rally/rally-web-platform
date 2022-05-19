@@ -96,6 +96,7 @@
       case "update-email":
         isEmail = true;
         isPW = false;
+        isDelete = false;
         isReadOnly = false;
         isCheckEmail = false;
         settingsTitle = "Change your email address";
@@ -132,6 +133,7 @@
     isReadOnly = true;
     isEmail = false;
     isPW = false;
+    isDelete = false;
     settingsTitle = "Account Settings";
     isCheckEmail = false;
     settingsDecription =

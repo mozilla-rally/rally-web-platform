@@ -94,7 +94,7 @@
     let isNotVerified = fireBaseErr.indexOf(notVerified);
 
     if (isNotFoundErr > -1) {
-      emailErrText = "Acount does not exist";
+      emailErrText = "Account does not exist";
       inputEmailClass = errorClass;
     }
 
@@ -218,4 +218,5 @@
     font-weight: 600;
     font-size: 14px;
   }
+
 </style>
