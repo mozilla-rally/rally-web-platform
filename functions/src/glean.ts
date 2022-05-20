@@ -29,9 +29,7 @@ import {
 const GLEAN_DEBUG_VIEW_TAG = "MozillaRally";
 const ENABLE_GLEAN =
   process.env.ENABLE_GLEAN || !process.env.FUNCTIONS_EMULATOR;
-const ENABLE_CLOUD_TASK = true;
-  // (process.env.ENABLE_GLEAN && process.env.GOOGLE_APPLICATION_CREDENTIALS) ||
-  // !process.env.FUNCTIONS_EMULATOR;
+const ENABLE_CLOUD_TASK = !process.env.FUNCTIONS_EMULATOR;
 const GLEAN_RALLY_APP_ID = process.env.FUNCTIONS_EMULATOR
   ? "test-app-id"
   : "rally-core";
@@ -45,8 +43,10 @@ const GLEAN_ENCRYPTION_JWK = {
   x: "m7Gi2YD8DgPg3zxora5iwf0DFL0JFIhjoD2BRLpg7kI",
   y: "zo35XIQME7Ct01uHK_LrMi5pZCuYDMhv8MUsSu7Eq08",
 };
-const STAGING_PROJECT_ID = "moz-fx-data-rall-nonprod-ac2a";
 const PRODUCTION_PROJECT_ID = "moz-fx-data-rally-w-prod-dfa4";
+
+const firebaseConfig = process.env.FIREBASE_CONFIG;
+const firebaseProjectID = firebaseConfig && JSON.parse(firebaseConfig).projectId;
 
 const GLEAN_DEFAULT_TIMEOUT = 10000;
 const gleanLock = withTimeout(new Mutex(), GLEAN_DEFAULT_TIMEOUT); // Lock on global Glean instance, metrics, and pings
@@ -54,7 +54,7 @@ const submitPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // 
 
 const cloudTasksClient = new CloudTasksClient();
 const cloudTaskParams = {
-  project: "",
+  project: firebaseProjectID,
   location: "us-central-1",
   queue: "",
 };
@@ -189,16 +189,11 @@ function initializeGlean(): void {
     Glean.setLogPings(true);
     appChannel = "DEVELOPMENT";
   } else {
-    const firebaseConfig = process.env.FIREBASE_CONFIG;
-    const projectID = firebaseConfig && JSON.parse(firebaseConfig).projectId;
-    appChannel = projectID === PRODUCTION_PROJECT_ID ? "PRODUCTION" : "STAGING";
+    appChannel = firebaseProjectID === PRODUCTION_PROJECT_ID ? "PRODUCTION" : "STAGING";
   }
 
-  if (appChannel == "PRODUCTION") {
-    cloudTaskParams.project = PRODUCTION_PROJECT_ID;
-  } else {
+  if (appChannel !== "PRODUCTION") {
     Glean.setSourceTags(["automation"]); // discard non-production pings from non-Live Views
-    cloudTaskParams.project = STAGING_PROJECT_ID;
   }
 
   // Glean.initialize is a no-op if Glean is already initialized
@@ -214,8 +209,7 @@ function initializeGlean(): void {
  * Helper function for setting user metrics
  * from demographic data (mapping)
  */
-function setUserMetrics(data: any): void {
-  // eslint-disable-line @typescript-eslint/no-explicit-any
+function setUserMetrics(data: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
   if (!data) return;
 
   if ("age" in data) {
@@ -245,8 +239,7 @@ function setUserMetrics(data: any): void {
   }
 
   if ("school" in data) {
-    const KEY_FIXUP: any = {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
+    const KEY_FIXUP: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
       high_school_graduate_or_equivalent: "high_school_grad_or_eq",
       some_college_but_no_degree_or_in_progress: "college_degree_in_progress",
     };
@@ -311,7 +304,7 @@ class CustomPingUploader extends Uploader {
           headers: headers,
           url,
           oidcToken: {
-            serviceAccountEmail: `client@${project}.iam.gserviceaccount.com`
+            serviceAccountEmail: `${project}@appspot.gserviceaccount.com`
           }
         },
       };
