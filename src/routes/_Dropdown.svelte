@@ -1,14 +1,14 @@
 <script type="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import type { AppStore } from "$lib/stores/types";
   const store: AppStore = getContext("rally:store");
 
   export let handleLogOut;
   export let clazz;
   export let toggleNavIcon;
-  export let dropDownVisible
-  
-  let isVisible = "hide"
+  export let dropDownVisible;
+  export let initiallyVisible;
+
   let userEmail;
 
   const getLatestUserEmail = async () => {
@@ -16,9 +16,17 @@
   };
 
   $: userEmail = getLatestUserEmail();
+
+  onMount(() => {
+    dropDownVisible = initiallyVisible;
+  });
 </script>
 
-<ul class={`dropdown-list dropdown-list--${clazz} dropdown-list--${dropDownVisible ? "show" :"hide"}`}>
+<ul
+  class={`dropdown-list dropdown-list--${clazz} dropdown-list--${
+    dropDownVisible ? "show" : "hide"
+  }`}
+>
   <li
     class={`dropdown-list__item dropdown-list__item--top dropdown-list__item--${clazz}-top`}
   >

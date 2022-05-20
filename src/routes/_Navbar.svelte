@@ -16,7 +16,6 @@
   let ariaHidden = true;
   let dropDownVisible = false;
 
-  
   onMount(async () => {
     if (window) {
       browser = window.location;
@@ -30,7 +29,7 @@
     await store.signOutUser();
     browser.reload();
   };
-  
+
   const toggleNavIcon = () => {
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
@@ -106,7 +105,12 @@
     </div>
 
     <!-- DESKTOP Dropdown-->
-    <Dropdown clazz="desktop" {handleLogOut} {dropDownVisible} />
+    <Dropdown
+      clazz="desktop"
+      {handleLogOut}
+      initiallyVisible={false}
+      {dropDownVisible}
+    />
   </div>
 
   <!-- Mobile menu dropdown -->
@@ -121,6 +125,7 @@
         {toggleNavIcon}
         clazz="mobile"
         {handleLogOut}
+        initiallyVisible={true}
         {dropDownVisible}
       />
     </nav>
