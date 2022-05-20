@@ -319,7 +319,7 @@ export default {
       return;
     }
     if (userCredential.user.emailVerified) {
-      window.location.href = "/studies";
+      window.location.href = "/";
     } else {
       console.warn("Email account not verified, sending verification email");
       localStorage.setItem("signInErr", "Email account not verified");
