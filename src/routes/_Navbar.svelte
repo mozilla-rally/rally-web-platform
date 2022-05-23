@@ -32,7 +32,7 @@
   };
   
   const toggleNavIcon = () => {
-    dropDownVisible = !dropDownVisible
+    toggleDropdown()
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
   };
@@ -96,7 +96,6 @@
 
   <div
     on:focus={onFocus}
-    on:mouseenter={()=> dropDownVisible = true} 
     class="header__dropdown"
     data-expands="drop-nav"
     data-expands-height
