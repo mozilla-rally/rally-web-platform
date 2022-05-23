@@ -18,7 +18,7 @@
           >
           <ul class="footer-sublist">
             <li class="footer-sublist-item">
-              <a class="footer-sublist-link" href="/terms">Privacy Notice</a>
+              <a class="footer-sublist-link" href="/terms">Data & Privacy</a>
             </li>
 
             <li class="footer-sublist-item">

@@ -6,12 +6,12 @@
   &--account-settings {
     max-width: unset;
     @media (max-width: $MD-screen) {
-      padding: 0.625rem 0.75rem;
+      padding: 0.625rem 10%;
     }
   }
 
   @media (max-width: $SM-screen) {
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem 10%;
   }
 
   @media (max-width: 320px) {

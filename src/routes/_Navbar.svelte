@@ -32,6 +32,7 @@
   };
   
   const toggleNavIcon = () => {
+    dropDownVisible = !dropDownVisible
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
   };
@@ -95,6 +96,7 @@
 
   <div
     on:focus={onFocus}
+    on:mouseenter={()=> dropDownVisible = true} 
     class="header__dropdown"
     data-expands="drop-nav"
     data-expands-height
@@ -106,7 +108,10 @@
     </div>
 
     <!-- DESKTOP Dropdown-->
-    <Dropdown clazz="desktop" {handleLogOut} {dropDownVisible} />
+    <div on:mouseenter={()=> dropDownVisible = true}  on:mouseleave={()=> dropDownVisible = false}>
+      <Dropdown clazz="desktop" {toggleNavIcon} {handleLogOut} {dropDownVisible} />
+    </div>
+  
   </div>
 
   <!-- Mobile menu dropdown -->

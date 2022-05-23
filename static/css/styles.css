@@ -13585,12 +13585,12 @@ ol {
 }
 @media (max-width: 688px) {
   .main-content--account-settings {
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem 10%;
   }
 }
 @media (max-width: 432px) {
   .main-content {
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem 10%;
   }
 }
 @media (max-width: 320px) {

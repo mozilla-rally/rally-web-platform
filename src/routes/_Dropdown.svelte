@@ -8,7 +8,6 @@
   export let toggleNavIcon;
   export let dropDownVisible
   
-  let isVisible = "hide"
   let userEmail;
 
   const getLatestUserEmail = async () => {
@@ -129,11 +128,11 @@
 
   .dropdown-list--show {
     opacity: 1;
-    visibility: visible;
+    display: block;
   }
 
   .dropdown-list--hide {
     opacity: 0;
-    visibility: hidden;
+    display: none;
   }
 </style>
