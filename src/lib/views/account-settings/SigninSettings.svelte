@@ -42,12 +42,11 @@
   });
 
   const getLatestVerified = async () => {
-   return isUserVerified = await store.isUserVerified();
-   
+    return (isUserVerified = await store.isUserVerified());
   };
 
   const getLatestUserEmail = async () => {
-    return userEmail = await store.getUserEmail();
+    return (userEmail = await store.getUserEmail());
   };
 
   const resendVerificationEmail = async () => {
@@ -119,8 +118,9 @@
             <a
               href={googleAccountLink}
               target="_blank"
-              class="content-box__link d-flex justify-content-between align-items-center"
-              >Manage account <ExternalLink /></a
+              class="content-box__link "
+              ><div>Manage account</div>
+              <ExternalLink /></a
             >
           </div>
         </div>

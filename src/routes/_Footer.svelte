@@ -91,32 +91,19 @@
               <a
                 href="__BASE_SITE__/current-studies/search-engine-usage/"
                 class="footer-sublist-link"
-                >Search Engine Usage and Reslt Quality</a
+                >Search Engine Usage and Result Quality</a
               >
             </li>
           </ul>
         </li>
         <li class="footer-list">
-          <a href="#careers" class="footer-item-link">Careers</a>
-          <ul class="footer-sublist">
-            <li class="footer-sublist-item">
-              <a href="__BASE_SITE__/careers/apply/" class="footer-sublist-link"
-                >Apply</a
-              >
-            </li>
-            <li class="footer-sublist-item">
-              <a
-                href="__BASE_SITE__/careers/fullstack-software-engineer/"
-                class="footer-sublist-link">Full-Stack Software Engineer</a
-              >
-            </li>
-          </ul>
+          <a href="__BASE_SITE__/careers/" target="_blank" class="footer-item-link">Careers</a>
         </li>
       </ul>
 
       <ul class="footer-list">
         <li class="footer-item">
-          <a href="__BASE_SITE__/past-studies/" class="footer-item-link">
+          <a href="__BASE_SITE__/past-studies/" target="_blank" class="footer-item-link">
             Past Studies</a
           >
           <ul class="footer-sublist">
@@ -124,6 +111,7 @@
               <a
                 href="__BASE_SITE__/past-studies/your-time-online-and-doomscrolling/"
                 class="footer-sublist-link"
+                target="_blank"
               >
                 Your Time Online and "Doomscrolling"</a
               >
@@ -159,93 +147,3 @@
   </div>
 </footer>
 
-<style>
-  footer {
-    background-color: #000;
-    color: #fff;
-    width: 100%;
-    /* grid-row-start: 2; */
-    grid-row-start: 3;
-  }
-
-  footer a {
-    color: #fff;
-    text-decoration: none;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
-  }
-
-  .footer-wrapper {
-    padding: 1rem 8.5rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .footer-item-link {
-    font-weight: 700;
-    font-size: 1.125rem;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-
-  .footer-sublist-link {
-    display: inline-block;
-    font-size: 0.9375rem;
-    line-height: 1.4;
-    padding: 0.1875rem 0;
-  }
-
-  .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.6);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding-top: 2rem;
-  }
-
-  .footer-bottom .footer-social {
-    order: 2;
-  }
-
-  .footer-copyright {
-    font-size: 0.75rem;
-    margin-bottom: 1.125rem;
-    width: 100%;
-    color: #fff;
-  }
-
-  .footer-social {
-    display: flex;
-    align-items: center;
-    width: 23px;
-  }
-
-  .footer-social-item {
-    width: 100%;
-  }
-
-  .footer-legal {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: -0.625rem;
-    font-size: 0.75rem;
-  }
-
-  .footer-legal-item:not(:last-child) {
-    margin-right: 1.875rem;
-  }
-
-  .footer-legal a {
-    text-decoration: underline;
-    white-space: nowrap;
-  }
-</style>
