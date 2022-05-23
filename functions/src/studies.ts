@@ -13,7 +13,7 @@ export const studies = {
     firefoxAddonId: "facebook-pixel-hunt@rally.mozilla.org",
     chromeExtensionId: "pbeklachfkbjddmglcccopmknmpfchdm",
     studyId: "facebookPixelHunt",
-    downloadLink: "https://chrome.google.com/webstore/detail/facebook-pixel-hunt/pbeklachfkbjddmglcccopmknmpfchdm",
+    downloadLink: "https://chrome.google.com/webstore/detail/facebook-pixel-hunt/pbeklachfkbjddmglcccopmknmpfchdm?utm_source=rwp&utm_medium=app&utm_campaign=mvp&utm_term=official&utm_content=default",
     endDate: "2022-07-13",
     studyEnded: false,
     studyPaused: false,
