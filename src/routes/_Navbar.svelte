@@ -15,7 +15,7 @@
   let ariaExpanded = false;
   let ariaHidden = true;
   let dropDownVisible = false;
-  let mobileVisible = false
+  let mobileVisible = false;
   let dropDownEl;
   let display = "none";
   let onDefault = false;
@@ -60,7 +60,7 @@
   };
 
   const toggleNavIcon = () => {
-    mobileVisible = !mobileVisible
+    mobileVisible = !mobileVisible;
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
   };
@@ -144,7 +144,12 @@
       on:mouseenter={() => (dropDownVisible = true)}
       on:mouseleave={() => (dropDownVisible = false)}
     >
-      <Dropdown clazz="desktop" {toggleNavIcon} {handleLogOut} mobileVisible={null} />
+      <Dropdown
+        clazz="desktop"
+        {toggleNavIcon}
+        {handleLogOut}
+        mobileVisible={false}
+      />
     </div>
   </div>
 
