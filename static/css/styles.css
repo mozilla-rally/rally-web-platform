@@ -13310,6 +13310,7 @@ ol {
 
 .section-content {
   max-width: 700px;
+  padding: 0;
 }
 
 .header {
@@ -13436,6 +13437,40 @@ ol {
 }
 .header__mobile-menu .nav-mobile .dropdown-list {
   margin-top: 15px;
+}
+.header .dropdown-wrapper--show {
+  animation: fade-in 500ms forwards;
+  display: block;
+}
+.header .dropdown-wrapper--hide {
+  animation: fade-out 500ms forwards;
+  opacity: 0;
+  pointer-events: none;
+}
+.header .dropdown-wrapper--none {
+  display: none;
+}
+.header .dropdown-wrapper[aria-label=open] {
+  animation: fade-in 500ms forwards;
+}
+.header .dropdown-wrapper[aria-label=close] {
+  animation: fade-out 500ms forwards;
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .header .dropdown-list {
   border: 1px solid #cdcdd4;
@@ -13585,17 +13620,17 @@ ol {
 }
 @media (max-width: 688px) {
   .main-content--account-settings {
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem 10%;
   }
 }
 @media (max-width: 432px) {
   .main-content {
-    padding: 0.625rem 0.75rem;
+    padding: 0.625rem 10%;
   }
 }
 @media (max-width: 320px) {
   .main-content {
-    padding: 0.625rem 0.313rem;
+    padding: 0.625rem 1%;
   }
 }
 
@@ -13629,6 +13664,103 @@ ol {
 }
 .content-container--account-settings {
   padding: 0px;
+}
+
+footer {
+  background-color: #000;
+  color: #fff !important;
+  grid-row-start: 3;
+  padding: 3.4375rem 2.5rem;
+  flex-shrink: 0;
+}
+@media (max-width: 432px) {
+  footer {
+    padding: 3.4375rem 1.5rem;
+  }
+}
+footer a {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+footer .footer-wrapper {
+  max-width: 77.25rem;
+  margin: auto;
+}
+footer .footer-content {
+  display: grid;
+  align-items: stretch;
+  row-gap: 27px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 15%;
+  grid-row-gap: 27px;
+}
+@media (max-width: 688px) {
+  footer .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer-item-link {
+  font-weight: 700;
+  font-size: 1.125rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.footer-sublist-link {
+  display: inline-block;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  padding: 0.1875rem 0;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 2rem;
+}
+
+.footer-bottom .footer-social {
+  order: 2;
+}
+
+.footer-copyright {
+  font-size: 0.75rem;
+  margin-bottom: 1.125rem;
+  width: 100%;
+  color: #fff;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  width: 23px;
+}
+
+.footer-social-item {
+  width: 100%;
+}
+
+.footer-legal {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -0.625rem;
+  font-size: 0.75rem;
+}
+
+.footer-legal-item:not(:last-child) {
+  margin-right: 1.875rem;
+}
+
+.footer-legal a {
+  text-decoration: underline;
+  white-space: nowrap;
 }
 
 .mzp-c-button.mzp-t-md {
@@ -13978,12 +14110,23 @@ ol {
   align-items: center;
   padding: 12px;
 }
+@media (max-width: 432px) {
+  .settings-readonly .card .content-box__content--google {
+    flex-direction: column;
+  }
+}
 .settings-readonly .card .content-box__description {
   color: #42435A;
 }
 .settings-readonly .card .content-box__description--google {
   display: flex;
   align-items: center;
+  flex-direction: row;
+}
+@media (max-width: 432px) {
+  .settings-readonly .card .content-box__description--google {
+    margin-bottom: 10px;
+  }
 }
 .settings-readonly .card .content-box__description--google .info {
   max-width: 276px;
@@ -14010,6 +14153,9 @@ ol {
   }
 }
 .settings-readonly .card .content-box__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   color: #000000;
   text-decoration: underline;
 }
@@ -14022,6 +14168,11 @@ ol {
   }
   .settings-readonly .card .content-box__link svg {
     width: 100%;
+  }
+}
+@media (max-width: 432px) {
+  .settings-readonly .card .content-box__link svg {
+    width: unset;
   }
 }
 .settings-readonly .card hr {

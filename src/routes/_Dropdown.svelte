@@ -6,9 +6,8 @@
   export let handleLogOut;
   export let clazz;
   export let toggleNavIcon;
-  export let dropDownVisible
-  
-  let isVisible = "hide"
+  export let mobileVisible
+
   let userEmail;
 
   const getLatestUserEmail = async () => {
@@ -16,16 +15,17 @@
   };
 
   $: userEmail = getLatestUserEmail();
+
 </script>
 
-<ul class={`dropdown-list dropdown-list--${clazz} dropdown-list--${dropDownVisible ? "show" :"hide"}`}>
+<ul class={`dropdown-list dropdown-list--${clazz} dropdown-list--${clazz}__${mobileVisible ? "show" : "hide"}`}>
   <li
     class={`dropdown-list__item dropdown-list__item--top dropdown-list__item--${clazz}-top`}
   >
     <div
       class={`list-item list-item--top list-item--${clazz}-top d-flex align-items-center`}
     >
-      <p>{userEmail}</p>
+      <p class="list-item--email">{userEmail}</p>
     </div>
   </li>
   <hr />
@@ -123,17 +123,15 @@
 </ul>
 
 <style>
-  .dropdown-list {
-    transition: opacity 0.2s, visibility 0.5s ease-out;
+
+  .list-item--email{
+    word-break: break-all;
+  }
+  .dropdown-list--mobile__show{
+    display: block;
   }
 
-  .dropdown-list--show {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .dropdown-list--hide {
-    opacity: 0;
-    visibility: hidden;
+  .dropdown-list--mobile__hide{
+    display: none;
   }
 </style>

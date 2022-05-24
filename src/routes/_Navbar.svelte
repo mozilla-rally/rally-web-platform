@@ -15,26 +15,58 @@
   let ariaExpanded = false;
   let ariaHidden = true;
   let dropDownVisible = false;
+  let mobileVisible = false;
+  let dropDownEl;
+  let display = "none";
+  let onDefault = false;
 
-  
   onMount(async () => {
     if (window) {
       browser = window.location;
     }
+
+    if (!onDefault) {
+      if (dropDownEl) {
+        display = "none";
+      }
+    }
   });
 
-  const toggleDropdown = () => (dropDownVisible = !dropDownVisible);
+  const toggleDropdown = () => {
+    dropDownVisible = !dropDownVisible;
+  };
+
   const onFocus = () => (isFocused = true);
+
+  const waitForAnimationEnd = () => {
+    if (dropDownEl) {
+      dropDownEl.addEventListener("animationend", () => {
+        display = "none";
+      });
+    }
+  };
+
+  const waitForAnimationStart = () => {
+    if (dropDownEl) {
+      dropDownEl.addEventListener("animationend", () => {
+        display = "show";
+      });
+    }
+  };
 
   const handleLogOut = async () => {
     await store.signOutUser();
     browser.reload();
   };
-  
+
   const toggleNavIcon = () => {
+    mobileVisible = !mobileVisible;
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
   };
+
+  $: dropDownVisible ? (display = "show") : (display = "hide");
+  $: !dropDownVisible ? waitForAnimationEnd() : waitForAnimationStart();
 </script>
 
 <RallyNavbar>
@@ -106,7 +138,19 @@
     </div>
 
     <!-- DESKTOP Dropdown-->
-    <Dropdown clazz="desktop" {handleLogOut} {dropDownVisible} />
+    <div
+      class={`dropdown-wrapper dropdown-wrapper--${display}`}
+      bind:this={dropDownEl}
+      on:mouseenter={() => (dropDownVisible = true)}
+      on:mouseleave={() => (dropDownVisible = false)}
+    >
+      <Dropdown
+        clazz="desktop"
+        {toggleNavIcon}
+        {handleLogOut}
+        mobileVisible={false}
+      />
+    </div>
   </div>
 
   <!-- Mobile menu dropdown -->
@@ -116,13 +160,12 @@
     aria-hidden={ariaHidden}
     slot="mobile-nav"
   >
-    <nav class="nav-mobile" aria-label="Primary navigation">
-      <Dropdown
-        {toggleNavIcon}
-        clazz="mobile"
-        {handleLogOut}
-        {dropDownVisible}
-      />
+    <nav
+      bind:this={dropDownEl}
+      class="nav-mobile"
+      aria-label="Primary navigation"
+    >
+      <Dropdown clazz="mobile" {mobileVisible} {toggleNavIcon} {handleLogOut} />
     </nav>
   </div>
 </RallyNavbar>

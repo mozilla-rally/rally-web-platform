@@ -55,7 +55,7 @@
       </ContentContainer>
     </svelte:component>
   </Layout>
-  <!-- <Footer /> -->
+  <Footer />
 {:else}
   <slot />
 {/if}

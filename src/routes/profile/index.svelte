@@ -56,7 +56,7 @@
 
 {#if $store._initialized && $isAuthenticated === true}
   <section in:fly={{ duration: 800, y: 5 }}>
-    <ProfileContent results={intermediateResults}>
+    <ProfileContent isAuth={true} results={intermediateResults}>
       <span slot="title">Manage Profile</span>
       <p slot="description">
         Here's what you've shared with us so far. You can update, add, or

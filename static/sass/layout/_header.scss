@@ -38,7 +38,6 @@
     @media (max-width: $SM-screen) {
       max-width: 146px;
     }
-  
 
     &-link {
       display: block;
@@ -127,95 +126,139 @@
     }
   }
 
+  .dropdown-wrapper {
+    &--show {
+      animation: fade-in 500ms forwards;
+      display: block;
+    }
 
-    // DESKTOP Dropdown
-    .dropdown-list {
-      border: 1px solid #cdcdd4;
-      border-radius: 4px;
-      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25),
-        0px 8px 48px rgba(34, 0, 51, 0.04), 0px 4px 8px rgba(15, 13, 26, 0.13);
-      max-width: 265px;
-      width: 100%;
-      position: absolute;
-      right: 0;
-      left: auto;
-      z-index: 999;
-      background-color: white;
-      margin-top: 5px;
+    &--hide {
+      animation: fade-out 500ms forwards;
+      opacity: 0;
+      pointer-events: none;
+    }
 
-      &--mobile{
-        border: unset;
-        border-radius: unset;
-        box-shadow: unset; 
-        position: unset;
-        width: 100%;
-        max-width: 100%; 
+    &--none {
+      display: none;
+    }
+
+    &[aria-label="open"] {
+      animation: fade-in 500ms forwards;
+    }
+
+    &[aria-label="close"] {
+      animation: fade-out 500ms forwards;
+    }
+
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
       }
 
-      // top: calc(100% + 8px);
-
-      &__item {
-        &:hover {
-          background-color: $color-light-gray-20;
-        }
-      }
-
-      &__item--top,
-      &__item--title {
-        &:hover {
-          background-color: transparent;
-        }
-      }
-
-      .list-item {
-        @extend %nav-list-item;
-        
-        padding: 12px 12px 12px 20px;
-
-        &--top {
-          padding: 20px 20px;
-
-          p {
-            color: #000;
-            padding: 0;
-            margin: 0;
-          }
-        }
-
-        &--mobile-top{
-          padding: 11px 28px;
-          justify-content: center;
-          color: #000; 
-        }
-
-        &--title {
-          padding: 12px 10px 4px 20px;
-          color: $color-marketing-gray-70;
-        }
-
-        &--bottom {
-          padding: 12px 28px;
-          font-size: 12px;
-          line-height: 18px;
-          color: $color-marketing-gray-70;
-        }
-      }
-
-      hr {
-        border: 1px solid #cdcdd4;
-        margin: 0;
-      }
-
-      .list-item--quit {
-        @extend %list-item-quit;
-      }
-
-      &:hover {
-        .dropdown__list {
-          display: block;
-        }
+      100% {
+        opacity: 0;
       }
     }
+
+    @keyframes fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  }
+
+  // DESKTOP Dropdown
+  .dropdown-list {
+    border: 1px solid #cdcdd4;
+    border-radius: 4px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25),
+      0px 8px 48px rgba(34, 0, 51, 0.04), 0px 4px 8px rgba(15, 13, 26, 0.13);
+    max-width: 265px;
+    width: 100%;
+    position: absolute;
+    right: 0;
+    left: auto;
+    z-index: 999;
+    background-color: white;
+    margin-top: 5px;
+
+    &--mobile {
+      border: unset;
+      border-radius: unset;
+      box-shadow: unset;
+      position: unset;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    // top: calc(100% + 8px);
+
+    &__item {
+      &:hover {
+        background-color: $color-light-gray-20;
+      }
+    }
+
+    &__item--top,
+    &__item--title {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    .list-item {
+      @extend %nav-list-item;
+
+      padding: 12px 12px 12px 20px;
+
+      &--top {
+        padding: 20px 20px;
+
+        p {
+          color: #000;
+          padding: 0;
+          margin: 0;
+        }
+      }
+
+      &--mobile-top {
+        padding: 11px 28px;
+        justify-content: center;
+        color: #000;
+      }
+
+      &--title {
+        padding: 12px 10px 4px 20px;
+        color: $color-marketing-gray-70;
+      }
+
+      &--bottom {
+        padding: 12px 28px;
+        font-size: 12px;
+        line-height: 18px;
+        color: $color-marketing-gray-70;
+      }
+    }
+
+    hr {
+      border: 1px solid #cdcdd4;
+      margin: 0;
+    }
+
+    .list-item--quit {
+      @extend %list-item-quit;
+    }
+
+    &:hover {
+      .dropdown__list {
+        display: block;
+      }
+    }
+  }
 
   &__nav-toggle {
     display: block;
