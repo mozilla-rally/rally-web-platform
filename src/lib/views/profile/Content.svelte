@@ -14,6 +14,7 @@
   } from "./survey-tools";
   import { formatInput, formatAnswersForResponse } from "./formatters";
 
+  export let isAuth 
   export let results = createResultObject(schema);
   export let workingResults = createResultObject(schema, results);
   $: workingResults = createResultObject(schema, workingResults);
@@ -30,7 +31,7 @@
   );
 </script>
 
-<div class="profile">
+<div class={`profile ${ isAuth ? "" : "main-content"}`}>
   <h2 class="section-header profile__header">Tell Us About Yourself</h2>
 
   <p class="profile__description">
