@@ -42,11 +42,13 @@
   });
 
   const getLatestVerified = async () => {
-    return (isUserVerified = await store.isUserVerified());
+    isUserVerified = await store.isUserVerified();
+    return isUserVerified;
   };
 
   const getLatestUserEmail = async () => {
-    return (userEmail = await store.getUserEmail());
+    userEmail = await store.getUserEmail();
+    return userEmail;
   };
 
   const resendVerificationEmail = async () => {
