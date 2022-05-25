@@ -1,33 +1,31 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  import type { Readable } from "svelte/store";
-
   import CheckCircle from "../icons/CheckCircle.svelte";
   import Exclaimation from "../icons/Exclaimation.svelte";
 
-  const isExtensionConnected: Readable<boolean> = getContext(
-    "rally:isExtensionConnected"
-  );
-
+  export let joined;
+  export let connected;
   export let downloadUrl;
 </script>
 
 <div class="status-container">
   <span style="margin-right: 5px" class="d-flex">
-    {#if $isExtensionConnected}
+    {#if joined && connected}
       <CheckCircle size="20px" color="var(--color-green-60)" />
     {:else}
       <Exclaimation size="20px" color="#FFA436" />
     {/if}
   </span>
-  {#if $isExtensionConnected}
+  {#if joined && connected}
     <span class="text-body-sm connected title">You're participating</span>
   {:else}
     <span class="text-body-sm not-connected title"
-      >You're not participating yet. <a href={downloadUrl} target="_blank"
-        >Add this study extension from the Chrome store.</a
-      ></span
-    >
+      >You're not participating yet.
+      {#if !connected}
+        <a href={downloadUrl} target="_blank"
+          >Add this study extension from the Chrome store.</a
+        >
+      {/if}
+    </span>
   {/if}
 </div>
 
