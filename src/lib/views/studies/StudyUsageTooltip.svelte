@@ -15,7 +15,7 @@
   <li>
     <h1>Join the Study</h1>
     <p>
-      Click the “Join Study” button. We'll ask you to confirm in a pop-up dialog
+      Click the <b>Join Study</b> button. We'll ask you to confirm in a pop-up dialog
       by clicking the <b>Add Study Extension</b> button. This will open up the Chrome
       Web Store.
     </p>
