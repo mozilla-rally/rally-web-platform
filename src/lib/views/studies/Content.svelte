@@ -7,7 +7,7 @@
 
   import { createEventDispatcher } from "svelte";
   import { fly } from "svelte/transition";
-  import StudyCard from "./StudyCard.svelte";
+  import StudyCardContainer from "./StudyCardContainer.svelte";
   import StudyUsageTooltip from "./StudyUsageTooltip.svelte";
 
   export let studies = [];
@@ -57,7 +57,7 @@
 
   <div class="studies">
     {#each studies as study, i (study.studyId)}
-      <StudyCard
+      <StudyCardContainer
         title={study.name}
         author={study.authors.name}
         joined={study.studyId in userStudies &&

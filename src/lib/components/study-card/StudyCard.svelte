@@ -2,8 +2,7 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { createEventDispatcher, getContext } from "svelte";
-  import type { Readable } from "svelte/store";
+  import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import AccordionButton from "../accordion/AccordionButton.svelte";
   import Button from "../Button.svelte";
@@ -13,15 +12,12 @@
   import studyCategories from "./study-categories";
   import StudyStatusBadge from "./StudyStatusBadge.svelte";
 
-  const isExtensionConnected: Readable<boolean> = getContext(
-    "rally:isExtensionConnected"
-  );
-
   let revealed = false;
 
   export let endDate;
   export let downloadUrl;
   export let joined = false;
+  export let connected = false;
   export let studyDetailsLink = undefined;
   export let imageSrc;
   export let dataCollectionDetails = [];
@@ -37,42 +33,46 @@
 <div class="study-card-container radius-sm">
   <Header {endDate}>
     <span slot="study-top-section">
-      {#if joined}
+      {#if joined || connected}
         <div
           class={`d-flex status-container ${
-            $isExtensionConnected ? "connected" : "not-connected"
+            joined && connected ? "connected" : "not-connected"
           }`}
         >
-          <StudyStatusBadge {$isExtensionConnected} {downloadUrl} />
-          <div class="dropdown">
-            <button
-              class="btn btn-link update-dropdown-link p-0 pt-0 d-flex align-items-center"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <OverflowEllipsis color="#5E5E72" size="28px" />
-            </button>
-            <ul class="dropdown-menu dropdown-menu-bottom overflow-hidden">
-              {#if !$isExtensionConnected}
+          <StudyStatusBadge {joined} {connected} {downloadUrl} />
+          {#if !connected || joined}
+            <div class="dropdown">
+              <button
+                class="btn btn-link update-dropdown-link p-0 pt-0 d-flex align-items-center"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <OverflowEllipsis color="#5E5E72" size="28px" />
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-bottom overflow-hidden">
+                {#if !connected}
+                  <li>
+                    <a
+                      class="dropdown-item text-body-sm"
+                      href={downloadUrl}
+                      target="_blank">Add study extension</a
+                    >
+                  </li>
+                {/if}
+
                 <li>
                   <a
                     class="dropdown-item text-body-sm"
-                    href={downloadUrl}
-                    target="_blank">Add study extension</a
+                    on:click={() => dispatch("leave")}
+                    href="#"
+                    >{connected ? "Leave study" : "Don't join this study"}</a
                   >
                 </li>
-              {/if}
-              <li>
-                <a
-                  class="dropdown-item text-body-sm"
-                  on:click={() => dispatch("leave")}
-                  href="#"
-                  >{$isExtensionConnected ? "Leave study" : "Don't join this study"}</a
-                >
-              </li>
-            </ul>
-          </div>
+              </ul>
+            </div>
+          {/if}
         </div>
         <hr class="header-divider mb-0" />
       {/if}

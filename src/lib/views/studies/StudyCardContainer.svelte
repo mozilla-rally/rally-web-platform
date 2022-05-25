@@ -11,13 +11,13 @@
 */
 
   import { createEventDispatcher, getContext, onMount } from "svelte";
-  import StudyCard from "../../components/study-card/StudyCard.svelte";
-  import StudyCardHeader from "../../components/study-card/Header.svelte";
-  import Button from "../../components/Button.svelte";
-  import IRBWindow from "../irb/IRBWindow.svelte";
-  import GenericConsent from "../irb/GenericConsent.svelte";
-  import irb from "../irb";
   import type { Readable } from "svelte/store";
+  import Button from "../../components/Button.svelte";
+  import StudyCardHeader from "../../components/study-card/Header.svelte";
+  import StudyCard from "../../components/study-card/StudyCard.svelte";
+  import irb from "../irb";
+  import GenericConsent from "../irb/GenericConsent.svelte";
+  import IRBWindow from "../irb/IRBWindow.svelte";
 
   const isExtensionConnected: Readable<boolean> = getContext(
     "rally:isExtensionConnected"
@@ -61,7 +61,7 @@
 
 <StudyCard
   {joined}
-  {$isExtensionConnected}
+  connected={$isExtensionConnected}
   on:join={triggerJoinEvent}
   on:leave={triggerJoinEvent}
   {endDate}
