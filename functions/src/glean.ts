@@ -44,8 +44,16 @@ const GLEAN_ENCRYPTION_JWK = {
 const PRODUCTION_PROJECT_ID = "moz-fx-data-rally-w-prod-dfa4";
 
 const GLEAN_DEFAULT_TIMEOUT = 10000;
-const gleanLock = withTimeout(new Mutex(), GLEAN_DEFAULT_TIMEOUT); // Lock on global Glean instance, metrics, and pings
-const submitPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // Allow Glean to signal once ping is sent
+const gleanLock = withTimeout(
+  new Mutex(),
+  GLEAN_DEFAULT_TIMEOUT,
+  new Error("Timed out waiting for Glean lock")
+); // Lock on global Glean instance, metrics, and pings
+const submitPingFlag = withTimeout(
+  new Semaphore(1),
+  GLEAN_DEFAULT_TIMEOUT,
+  new Error("Timed out waiting for submit ping flag")
+); // Allow Glean to signal once ping is sent
 
 /*
  * platformEnrollment
@@ -54,15 +62,18 @@ const submitPingFlag = withTimeout(new Semaphore(1), GLEAN_DEFAULT_TIMEOUT); // 
 export async function platformEnrollment(rallyID: string): Promise<void> {
   if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
-  initializeGlean();
 
-  rallyMetrics.id.set(rallyID);
+  try {
+    initializeGlean();
 
-  await submitPingFlag.acquire();
-  rallyPings.enrollment.submit();
-  await submitPingFlag.waitForUnlock();
+    rallyMetrics.id.set(rallyID);
 
-  releaseGlean();
+    await submitPingFlag.acquire();
+    rallyPings.enrollment.submit();
+    await submitPingFlag.waitForUnlock();
+  } finally {
+    releaseGlean();
+  }
 }
 
 /*
@@ -73,15 +84,18 @@ export async function platformEnrollment(rallyID: string): Promise<void> {
 export async function platformUnenrollment(rallyID: string): Promise<void> {
   if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
-  initializeGlean();
 
-  rallyMetrics.id.set(rallyID);
+  try {
+    initializeGlean();
 
-  await submitPingFlag.acquire();
-  rallyPings.unenrollment.submit();
-  await submitPingFlag.waitForUnlock();
+    rallyMetrics.id.set(rallyID);
 
-  releaseGlean();
+    await submitPingFlag.acquire();
+    rallyPings.unenrollment.submit();
+    await submitPingFlag.waitForUnlock();
+  } finally {
+    releaseGlean();
+  }
 }
 
 /*
@@ -94,16 +108,19 @@ export async function demographics(
 ): Promise<void> {
   if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
-  initializeGlean();
 
-  rallyMetrics.id.set(rallyID);
-  setUserMetrics(demographicsData);
+  try {
+    initializeGlean();
 
-  await submitPingFlag.acquire();
-  rallyPings.demographics.submit();
-  await submitPingFlag.waitForUnlock();
+    rallyMetrics.id.set(rallyID);
+    setUserMetrics(demographicsData);
 
-  releaseGlean();
+    await submitPingFlag.acquire();
+    rallyPings.demographics.submit();
+    await submitPingFlag.waitForUnlock();
+  } finally {
+    releaseGlean();
+  }
 }
 
 /*
@@ -117,17 +134,20 @@ export async function studyEnrollment(
 ): Promise<void> {
   if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
-  initializeGlean();
 
-  rallyMetrics.id.set(rallyID);
-  enrollmentMetrics.studyId.set(studyID);
-  enrollmentMetrics.schemaNamespace.set(schemaNamespace);
+  try {
+    initializeGlean();
 
-  await submitPingFlag.acquire();
-  rallyPings.studyEnrollment.submit();
-  await submitPingFlag.waitForUnlock();
+    rallyMetrics.id.set(rallyID);
+    enrollmentMetrics.studyId.set(studyID);
+    enrollmentMetrics.schemaNamespace.set(schemaNamespace);
 
-  releaseGlean();
+    await submitPingFlag.acquire();
+    rallyPings.studyEnrollment.submit();
+    await submitPingFlag.waitForUnlock();
+  } finally {
+    releaseGlean();
+  }
 }
 
 /*
@@ -141,17 +161,20 @@ export async function studyUnenrollment(
 ): Promise<void> {
   if (!ENABLE_GLEAN) return;
   const releaseGlean = await gleanLock.acquire();
-  initializeGlean();
 
-  rallyMetrics.id.set(rallyID);
-  unenrollmentMetrics.studyId.set(studyID);
-  unenrollmentMetrics.schemaNamespace.set(schemaNamespace);
+  try {
+    initializeGlean();
 
-  await submitPingFlag.acquire();
-  rallyPings.studyUnenrollment.submit();
-  await submitPingFlag.waitForUnlock();
+    rallyMetrics.id.set(rallyID);
+    unenrollmentMetrics.studyId.set(studyID);
+    unenrollmentMetrics.schemaNamespace.set(schemaNamespace);
 
-  releaseGlean();
+    await submitPingFlag.acquire();
+    rallyPings.studyUnenrollment.submit();
+    await submitPingFlag.waitForUnlock();
+  } finally {
+    releaseGlean();
+  }
 }
 
 /*
@@ -267,6 +290,7 @@ class CustomPingUploader extends Uploader {
 
     // Signal to ping function that ping has been submitted
     submitPingFlag.release();
+    if (result.status !== 200) throw new Error("Error submitting Glean ping!");
     return result;
   }
 }
