@@ -450,6 +450,7 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
+      localStorage.removeItem("deleteUserErr");
       if (password) {
         // Email account
         if (! await this.reauthenticateEmailUser(password)) return;

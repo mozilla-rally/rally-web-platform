@@ -67,7 +67,7 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("authErr");
+    fireBaseErr = localStorage.getItem("authErr") || localStorage.getItem("deleteUserErr");
     if (fireBaseErr) {
       setMessage();
     } else {
@@ -84,14 +84,15 @@
       errText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
-    }
-    if (fireBaseErr.indexOf(wrongUser) > -1) {
+    } else if (fireBaseErr.indexOf(wrongUser) > -1) {
       errText =
         "The Google account you selected is not the one associated with your Rally account. Please try again.";
-    }
-    if (fireBaseErr.indexOf(popupBlocked) > -1) {
+    } else if (fireBaseErr.indexOf(popupBlocked) > -1) {
       errText =
         "The Google authentication popup was blocked by your browser. Please enable popups and try again.";
+    } else {
+      errText = `Unfortunately, there was an unexpected error while deleting your account. Please try again later.
+      If the problem persists, please <a href="mailto:support@rally.mozilla.org">contact Support</a>.`;
     }
   };
 
@@ -216,7 +217,7 @@
       {/if}
       {#if errText}
       <p class="error-msg error-msg--password">
-        {errText}
+        {@html errText}
       </p>
     {/if}
     </div>
