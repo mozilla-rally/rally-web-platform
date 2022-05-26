@@ -167,60 +167,60 @@
         <p style="padding-top: 24px; font-size: 16px;">
           This will permanently delete your account. <br><br>
           {#if isGoogleAccount}
-          <b>Note:</b> You may be asked to authenticate with Google to complete the process.
+            <b>Note:</b> You may be asked to authenticate with Google to complete the process.
           {:else}
-          Enter your password below to confirm.
+            Enter your password below to confirm.
           {/if}
         </p>
-      {#if !isGoogleAccount}
-      <div class="label-wrapper">
-        <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-          >Password</label
-        >
-        <!-- FORGOT PASSWORD -->
-        <!-- Will include this flow post mvp? -->
-        <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
-          <button
-            on:click={() => {
-              handleTrigger("forget");
-            }}>Forgot password</button
-          ></label
-        > -->
+        {#if !isGoogleAccount}
+          <div class="label-wrapper">
+            <label class="mzp-c-field-label enter-pw" for="id_user_pw"
+              >Password</label
+            >
+            <!-- FORGOT PASSWORD -->
+            <!-- Will include this flow post mvp? -->
+            <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+              <button
+                on:click={() => {
+                  handleTrigger("forget");
+                }}>Forgot password</button
+              ></label
+            > -->
+          </div>
+          <div class="input-wrapper">
+            <!-- **** PASSWORD INPUT *** -->
+            <input
+              class={inputPasswordClass}
+              bind:this={passwordEl}
+              on:change={handleChange}
+              on:keyup={handleChange}
+              id="id_user_pw"
+              name="id_user_pw"
+              type={passwordVisible ? "text" : "password"}
+              width="100%"
+              required
+            />
+            <img
+              src={passwordVisible
+                ? "img/icon-password-show.svg"
+                : "img/icon-password-hide.svg"}
+              alt={passwordVisible ? "open eye" : "eye with slash"}
+              class={`toggle-password ${
+                inputItemsVisible ? "create-show" : "create-hide"
+              }`}
+              id="show-eye"
+              width="24px"
+              height="24px"
+              on:click={handleToggle}
+            />
+          </div>
+        {/if}
+        {#if errText}
+          <p class="error-msg error-msg--password">
+            {@html errText}
+          </p>
+        {/if}
       </div>
-      <div class="input-wrapper">
-        <!-- **** PASSWORD INPUT *** -->
-        <input
-          class={inputPasswordClass}
-          bind:this={passwordEl}
-          on:change={handleChange}
-          on:keyup={handleChange}
-          id="id_user_pw"
-          name="id_user_pw"
-          type={passwordVisible ? "text" : "password"}
-          width="100%"
-          required
-        />
-        <img
-          src={passwordVisible
-            ? "img/icon-password-show.svg"
-            : "img/icon-password-hide.svg"}
-          alt={passwordVisible ? "open eye" : "eye with slash"}
-          class={`toggle-password ${
-            inputItemsVisible ? "create-show" : "create-hide"
-          }`}
-          id="show-eye"
-          width="24px"
-          height="24px"
-          on:click={handleToggle}
-        />
-      </div>
-      {/if}
-      {#if errText}
-      <p class="error-msg error-msg--password">
-        {@html errText}
-      </p>
-    {/if}
-    </div>
     </div>
     <div class="modal-call-flow" slot="cta">
       <Button
