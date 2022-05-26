@@ -43,7 +43,7 @@
   };
   export const createArgs = {
     ...cardArgs,
-    customClass: "card__body--create",
+    customClass: "create",
     height: card.cardHeight,
     title: "Create account",
     cta1: "Continue",
