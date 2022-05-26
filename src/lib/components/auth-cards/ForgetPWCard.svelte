@@ -14,12 +14,12 @@
   export let height;
   export let store;
   export let storyBookTest;
-  export let headerClass
+  export let headerClass;
+  export let customClass;
 
   const emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
   const inputClass = "mzp-c-field-control";
-  let customClass = "";
   let emailEl;
   let inputEmailClass;
   let fireBaseErr = null;
