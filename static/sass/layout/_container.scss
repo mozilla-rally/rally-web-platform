@@ -4,7 +4,8 @@
   padding: 2.875rem 10%;
 
   &--account-settings {
-    max-width: unset;
+    max-width: unset;    
+    padding: 2.875rem 0%;
     @media (max-width: $MD-screen) {
       padding: 0.625rem 10%;
     }
@@ -48,5 +49,6 @@
 
   &--account-settings {
     padding: 0px;
+    justify-content: unset;
   }
 }

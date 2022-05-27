@@ -22,7 +22,7 @@
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  
+
   function addStyleVariables({ width, fontSize }) {
     const values = [
       toVariable("--width", width),
@@ -155,8 +155,9 @@
     font-size: var(--fontSize);
   }
 
-  .sidenav-list__item:hover {
-    background-color: var(--color-light-gray-20);
+  .sidenav a:hover {
+    text-decoration: none;
+    color: var(--color-marketing-gray-99);
   }
 
   .highlight {

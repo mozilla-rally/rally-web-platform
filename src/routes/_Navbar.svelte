@@ -177,8 +177,15 @@
     max-width: 580px;
     width: 100%;
   }
+  .top-nav-left a:hover {
+    text-decoration: underline;
+  }
   .header__mobile-menu {
     max-height: 450px;
     height: 100%;
+  }
+  .dropdown__user-icon:hover {
+    background-color: #ededf0;
+    border-radius: 50%;
   }
 </style>
