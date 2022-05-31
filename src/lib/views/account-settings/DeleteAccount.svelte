@@ -25,18 +25,17 @@
   const mounted = isMounted();
 
   let leaveModal = false;
-  let isGoogleAccount;
+  let isGoogleOnlyAccount;
   let Dialog;
 
   onMount(async () => {
     inputPasswordClass = inputClass;
     const userProvider = await store.getUserProvider();
-    isGoogleAccount =
+    isGoogleOnlyAccount =
       userProvider &&
       userProvider.length &&
-      userProvider[0].providerId &&
-      userProvider[0].providerId === "google.com";
-    btnDisabled = !isGoogleAccount;
+      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
+    btnDisabled = !isGoogleOnlyAccount;
     Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
   });
 
@@ -97,7 +96,7 @@
   };
 
   async function deleteUserAccount() {
-    const password = !isGoogleAccount ? passwordEl.value : null;
+    const password = !isGoogleOnlyAccount ? passwordEl.value : null;
     await store.deleteUserAccount(password);
     handleNextState();
   }
@@ -166,13 +165,13 @@
       <div style="width: 368px;">
         <p style="padding-top: 24px; font-size: 16px;">
           This will permanently delete your account. <br><br>
-          {#if isGoogleAccount}
+          {#if isGoogleOnlyAccount}
             <b>Note:</b> You may be asked to authenticate with Google to complete the process.
           {:else}
             Enter your password below to confirm.
           {/if}
         </p>
-        {#if !isGoogleAccount}
+        {#if !isGoogleOnlyAccount}
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Password</label

@@ -315,7 +315,9 @@ export default {
     let userCredential;
     try {
       let signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.includes("google.com")) throw new Error("account-exists-with-google");
+      if (signInMethods.includes("google.com") && !signInMethods.includes("password")) {
+        throw new Error("google-only-account");
+      }
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
@@ -361,8 +363,6 @@ export default {
 
   async sendUserPasswordResetEmail(email) {
     try {
-      let signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.includes("google.com")) throw new Error("account-exists-with-google");
       await sendPasswordResetEmail(auth, email);
       console.info("Sending password reset email");
     } catch (err) {
@@ -458,10 +458,14 @@ export default {
       localStorage.removeItem("deleteUserErr");
       if (password) {
         // Email account
-        if (! await this.reauthenticateEmailUser(password)) return;
+        if (! await this.reauthenticateEmailUser(password)) {
+          return;
+        }
       } else {
         // Google account
-        if (! await this.reauthenticateGoogleUser()) return;
+        if (! await this.reauthenticateGoogleUser()) {
+          return;
+        }
       }
       await deleteUser(user);
       console.info("user deleted!");
@@ -495,6 +499,8 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
+      console.log(user.providerId);
+      console.log(user.providerData);
       return user.providerData;
     } catch (err) {
       console.error("there was an error", err);

@@ -11,7 +11,7 @@
   export let fontSize;
   export let clazz;
   export let listArr;
-  export let isGoogleAccount;
+  export let isGoogleOnlyAccount;
 
   let ariaExpanded = false;
   let ariaHidden = true;
@@ -133,7 +133,7 @@
               on:click={() => {
                 handleSelect(subItem.type);
               }}
-              style={isGoogleAccount && subItem.type !== "delete" ? hide : show}
+              style={isGoogleOnlyAccount && subItem.type !== "delete" ? hide : show}
             >
               <div class="sublist-menu__text">
                 {subItem.title}

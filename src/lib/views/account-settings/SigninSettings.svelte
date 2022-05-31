@@ -24,7 +24,7 @@
   let userProvider;
   let getEmailStatus;
 
-  let isGoogleAccount;
+  let isGoogleOnlyAccount;
   let showBtn = "display: block;";
   let hideBtn = "display: none;";
   let googleAccountLink = "https://www.google.com/account";
@@ -34,11 +34,10 @@
     userProvider = await store.getUserProvider();
     timeSeconds = $store.user.createdOn.seconds;
     createdOn = formatDate();
-    isGoogleAccount =
+    isGoogleOnlyAccount =
       userProvider &&
       userProvider.length &&
-      userProvider[0].providerId &&
-      userProvider[0].providerId === "google.com";
+      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
   });
 
   const getLatestVerified = async () => {
@@ -93,7 +92,7 @@
           >
         </div>
         <button
-          style={isGoogleAccount === true ? hideBtn : showBtn}
+          style={isGoogleOnlyAccount ? hideBtn : showBtn}
           on:click={() => {
             displayCard("update-email");
           }}
@@ -101,7 +100,7 @@
         >
       </div>
       <hr />
-      {#if isGoogleAccount === true}
+      {#if isGoogleOnlyAccount}
         <div class="content-box">
           <div class="content-box__title">Connected with Google</div>
           <p class="content-box__description content-box__description--google">

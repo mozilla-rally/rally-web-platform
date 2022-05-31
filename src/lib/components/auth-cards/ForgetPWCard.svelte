@@ -81,18 +81,10 @@
 
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
-    let accountWithGoogle = "account-exists-with-google";
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
-    let isAccountWithGoogle = fireBaseErr.indexOf(accountWithGoogle);
 
     if (isNotFoundErr > -1) {
       requestErrText = "Account does not exist.";
-      inputEmailClass = errorClass;
-    }
-
-    if (isAccountWithGoogle > -1) {
-      requestErrText = `This email is associated with a Google account. Please try signing in with Google.<br><br>
-      If you forgot the password to your Google account, you can manage your account <a href="https://www.google.com/account">here</a>.`
       inputEmailClass = errorClass;
     }
 

@@ -88,12 +88,12 @@
   const setMessage = () => {
     let userNotFound = "auth/user-not-found";
     let wrongPW = "auth/wrong-password";
-    let accountWithGoogle = "account-exists-with-google";
+    let googleOnlyAccount = "google-only-account";
     let notVerified = "Email account not verified";
     let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
     let isNotVerified = fireBaseErr.indexOf(notVerified);
-    let isAccountWithGoogle = fireBaseErr.indexOf(accountWithGoogle)
+    let isGoogleOnlyAccount = fireBaseErr.indexOf(googleOnlyAccount)
 
     if (isNotFoundErr > -1) {
       emailErrText = "Account does not exist";
@@ -105,7 +105,7 @@
       inputPasswordClass = errorClass;
     }
 
-    if (isAccountWithGoogle > -1) {
+    if (isGoogleOnlyAccount > -1) {
       emailErrText = "Please sign in using your Google account instead"
       inputEmailClass = errorClass;
     }
