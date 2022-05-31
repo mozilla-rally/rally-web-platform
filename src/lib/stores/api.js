@@ -387,6 +387,7 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
+      if (user.email === email) throw new Error("email-is-current-email");
       if (this.reauthenticateUser(password)) {
         await updateEmail(user, email);
         console.info("email changed!");
