@@ -7,6 +7,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
   updatePassword,
   updateEmail,
   signOut,
@@ -313,6 +314,8 @@ export default {
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
+      let signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.includes("google.com")) throw new Error("account-exists-with-google");
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
@@ -358,6 +361,8 @@ export default {
 
   async sendUserPasswordResetEmail(email) {
     try {
+      let signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.includes("google.com")) throw new Error("account-exists-with-google");
       await sendPasswordResetEmail(auth, email);
       console.info("Sending password reset email");
     } catch (err) {
