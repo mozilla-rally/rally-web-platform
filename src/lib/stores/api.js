@@ -324,14 +324,15 @@ export default {
       localStorage.setItem("signInErr", err);
       return;
     }
-    if (userCredential.user.emailVerified) {
-      window.location.href = "/";
-    } else {
-      console.warn("Email account not verified, sending verification email");
-      localStorage.setItem("signInErr", "Email account not verified");
+
+    if (!userCredential.user.emailVerified) {      
+      localStorage.setItem("signInErr", "Email account not verified yet. Please confirm your inbox and activate your account.");
       await sendEmailVerification(userCredential.user);
       await this.signOutUser();
+      return;
     }
+
+    window.location.href = "/";
   },
 
   async signupWithEmailAndPassword(email, password) {

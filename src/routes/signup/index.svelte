@@ -110,6 +110,7 @@
         checkEmailPWCard = true;
         break;
       case "check-create":
+        welcomeCard = false;
         createAcctCard = false;
         forgetPWCard = false;
         checkEmailCard = true;
@@ -117,10 +118,6 @@
       default:
         break;
     }
-  };
-
-  const sendUserInfo = (info) => {
-    userEmail = info;
   };
 </script>
 

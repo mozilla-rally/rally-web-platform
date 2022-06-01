@@ -40,25 +40,25 @@ export function createAppStore(api = firestoreAPI): AppStore {
       return api.sendUserPasswordResetEmail(email);
     },
     async resetUserPassword(newPassword, oldPassword) {
-      return api.resetUserPassword(newPassword, oldPassword)
+      return api.resetUserPassword(newPassword, oldPassword);
     },
     async changeEmail(email, password) {
-      return api.changeEmail(email, password)
+      return api.changeEmail(email, password);
     },
     async isUserVerified() {
-      return api.isUserVerified()
+      return api.isUserVerified();
     },
     async resendUserVerificationEmail() {
-      return api.resendUserVerificationEmail()
+      return api.resendUserVerificationEmail();
     },
     async getUserEmail() {
-      return api.getUserEmail()
+      return api.getUserEmail();
     },
-    async getUserProvider(){
-      return api.getUserProvider()
+    async getUserProvider() {
+      return api.getUserProvider();
     },
-    async deleteUserAccount(password){
-      return api.deleteUserAccount(password)
+    async deleteUserAccount(password) {
+      return api.deleteUserAccount(password);
     },
     async updateOnboardedStatus(onboardingOrNot) {
       return api.updateOnboardedStatus(onboardingOrNot);
@@ -127,7 +127,7 @@ function isExtensionConnectedStore(): Readable<boolean> {
   const { subscribe, set } = writable(undefined);
   set(false);
   firestoreAPI.onExtensionConnected((studyId) => {
-    set(true)
+    set(true);
   });
   return { subscribe };
 }

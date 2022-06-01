@@ -16,8 +16,8 @@
   export let width;
   export let height;
   export let store;
-  export let storyBookTest
-  export let headerClass
+  export let storyBookTest;
+  export let headerClass;
 
   let customClass = "launch";
   let notVerified = false;
@@ -37,7 +37,9 @@
 
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: startState = welcomeCard ? "join" : "welcome";
-  $: if(!welcomeCard){notVerified = false}
+  $: if (!welcomeCard) {
+    notVerified = false;
+  }
 
   $: if (welcomeCard) {
     setTimeout(() => {
@@ -70,8 +72,11 @@
 
   const checkNotVerified = (event) => {
     notVerified = event.detail.value;
-  };
 
+    if (notVerified) {
+      handleTrigger("check-create");
+    }
+  };
 </script>
 
 <Card {width} {customClass} {height} {headerClass}>
@@ -123,7 +128,12 @@
         <hr />
       </div>
 
-      <Signin {store} {storyBookTest} {handleTrigger} on:value={checkNotVerified} />
+      <Signin
+        {store}
+        {storyBookTest}
+        {handleTrigger}
+        on:value={checkNotVerified}
+      />
     {/if}
 
     <!-- SIGN UP WITH EMAIL -->

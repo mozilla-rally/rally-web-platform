@@ -14313,6 +14313,10 @@ footer .footer-content {
   color: #000 !important;
   margin: 0;
 }
+.card .card-content .not-verified a {
+  color: #000 !important;
+  text-decoration: "underline";
+}
 .card .card-content .card-body-info {
   max-width: 368px;
   text-align: left;
