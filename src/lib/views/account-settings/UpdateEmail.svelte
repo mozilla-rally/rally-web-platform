@@ -91,7 +91,7 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("authErr");
+    fireBaseErr = localStorage.getItem("authErr") || localStorage.getItem("changeEmailErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
@@ -104,20 +104,28 @@
   const setMessage = () => {
     let wrongPW = "auth/wrong-password";
     let emailAlready = "auth/email-already-in-use";
+    let emailIsCurrent = "email-is-current-email";
     let isNotPassword = fireBaseErr.indexOf(wrongPW);
     let isEmailAlready = fireBaseErr.indexOf(emailAlready);
+    let isEmailCurrent = fireBaseErr.indexOf(emailIsCurrent);
+
     if (isNotPassword > -1) {
       passwordErrText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
-      return;
     }
     if (isEmailAlready > -1) {
       emailErrText =
         "The email you entered is already in use. Please try another email.";
       inputEmailClass = errorClass;
-      return;
     }
+    if (isEmailCurrent > -1) {
+      emailErrText =
+        "This is already the email address for this account."
+        inputEmailClass = errorClass;
+    }
+
+    localStorage.removeItem("authErr");
     localStorage.removeItem("changeEmailErr");
   };
 
