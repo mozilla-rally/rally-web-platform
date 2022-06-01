@@ -13858,7 +13858,7 @@ footer .footer-content {
     padding: 0;
   }
 }
-.card--signin, .card--launch {
+.card--signin, .card--launch, .card--create {
   margin: auto;
 }
 .card--settings {
