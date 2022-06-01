@@ -123,7 +123,7 @@
             <!-- ERROR MESSAGE -->
             {#if requestErrText}
               <p class="error-msg error-msg--resetpw">
-                {requestErrText}
+                {@html requestErrText}
               </p>
             {/if}
           </div>

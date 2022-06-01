@@ -7,10 +7,12 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
   updatePassword,
   updateEmail,
   signOut,
   signInWithRedirect,
+  reauthenticateWithPopup,
   deleteUser,
 } from "firebase/auth";
 import {
@@ -312,6 +314,10 @@ export default {
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
+      let signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.includes("google.com") && !signInMethods.includes("password")) {
+        throw new Error("google-only-account");
+      }
       userCredential = await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error("there was an error", err);
@@ -370,7 +376,7 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
-      if (this.reauthenticateUser(oldPassword)) {
+      if (this.reauthenticateEmailUser(oldPassword)) {
         await updatePassword(user, newPassword);
         localStorage.removeItem("authErr");
         console.info("reset password");
@@ -388,7 +394,7 @@ export default {
     if (!user) return;
     try {
       if (user.email === email) throw new Error("email-is-current-email");
-      if (this.reauthenticateUser(password)) {
+      if (this.reauthenticateEmailUser(password)) {
         await updateEmail(user, email);
         console.info("email changed!");
         if (!user.emailVerified) {
@@ -405,12 +411,27 @@ export default {
     }
   },
 
-  async reauthenticateUser(password) {
+  async reauthenticateEmailUser(password) {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
+      localStorage.removeItem("authErr");
       const userCredential = EmailAuthProvider.credential(user.email, password);
       await reauthenticateWithCredential(user, userCredential);
+      return true;
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("authErr", err);
+    }
+  },
+
+  async reauthenticateGoogleUser() {
+    const user = auth && auth.currentUser;
+    if (!user) return;
+    try {
+      localStorage.removeItem("authErr");
+      const provider = new GoogleAuthProvider();
+      await reauthenticateWithPopup(user, provider);
       return true;
     } catch (err) {
       console.error("there was an error", err);
@@ -431,9 +452,28 @@ export default {
     }
   },
 
-  async deleteUserAccount() {
-    const user = auth.currentUser;
-    await deleteUser(user);
+  async deleteUserAccount(password) {
+    const user = auth && auth.currentUser;
+    if (!user) return;
+    try {
+      localStorage.removeItem("deleteUserErr");
+      if (password) {
+        // Email account
+        if (! await this.reauthenticateEmailUser(password)) {
+          return;
+        }
+      } else {
+        // Google account
+        if (! await this.reauthenticateGoogleUser()) {
+          return;
+        }
+      }
+      await deleteUser(user);
+      console.info("user deleted!");
+    } catch (err) {
+      console.error("there was an error", err);
+      localStorage.setItem("deleteUserErr", err);
+    }
   },
 
   async isUserVerified() {
@@ -460,6 +500,8 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
+      console.log(user.providerId);
+      console.log(user.providerData);
       return user.providerData;
     } catch (err) {
       console.error("there was an error", err);

@@ -58,7 +58,7 @@
   let settingsDecription =
     "Manage your info, privacy, and security to make Rally work better for you.";
   let userProvider;
-  let isGoogleAccount;
+  let isGoogleOnlyAccount;
   let isUserVerified;
   let getEmailStatus;
 
@@ -77,11 +77,10 @@
 
   onMount(async () => {
     userProvider = await store.getUserProvider();
-    if (userProvider) {
-      userProvider[0].providerId === "google.com"
-        ? (isGoogleAccount = true)
-        : (isGoogleAccount = false);
-    }
+    isGoogleOnlyAccount =
+      userProvider &&
+      userProvider.length &&
+      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
   });
 
   const displayCard = (event) => {
@@ -181,7 +180,7 @@
     <div class="row">
       <div class="sider-nav col-12 col-md-4">
         <SideNav
-          {isGoogleAccount}
+          {isGoogleOnlyAccount}
           {...siderArgs}
           listArr={siderListArr}
           on:type={displayCard}
