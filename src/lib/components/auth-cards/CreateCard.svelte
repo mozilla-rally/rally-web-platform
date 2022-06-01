@@ -105,6 +105,10 @@
   };
 
   const handleChange = (e) => {
+    if (e && e.key && e.key === "Enter") {
+      checkFields();
+      return;
+    }
     const name = e.srcElement.name;
     inputEmailClass = inputClass;
     inputPasswordClass = inputClass;

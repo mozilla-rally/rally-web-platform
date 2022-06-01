@@ -67,6 +67,11 @@
   };
 
   const handleChange = (e) => {
+    if (e && e.key && e.key === "Enter") {
+      e.preventDefault();
+      checkFields();
+      return;
+    }
     const name = e.srcElement.name;
     inputEmailClass = inputClass;
     inputPasswordClass = inputClass;
@@ -122,7 +127,7 @@
 </script>
 
 <div class="form-wrapper">
-  <form method="post">
+  <form method="post" on:keydown={(e) => (e.key === "Enter" && e.preventDefault())}>
     <fieldset class="mzp-c-field-set field-set">
       <div class="mzp-c-field field field--email">
         <div class="label-wrapper">
