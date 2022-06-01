@@ -123,7 +123,9 @@
 </ul>
 
 <style>
-
+  .list-item--quit{
+    width: 100%;
+  }
   .list-item--email{
     word-break: break-all;
   }

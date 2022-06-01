@@ -5,19 +5,19 @@
 
 <ol class={`container ${clazz || ""}`}>
   <li>
-    <h1>Choose a study to join</h1>
+    <h1>Read the study card</h1>
     <p>
-      Join a study that you connect with. Each study is a unique browser
-      extension.
+      The card discloses the data we collect from you, who has access to the
+      data, and how it will be used. 
     </p>
   </li>
 
   <li>
-    <h1>Read consent notice</h1>
+    <h1>Join the Study</h1>
     <p>
-      After reading the notice that pops up, click on the <b
-        >Add study extension button</b
-      >. This will open up the Chrome Web Store.
+      Click the “Join Study” button. We'll ask you to confirm in a pop-up dialog
+      by clicking the <b>Add Study Extension</b> button. This will open up the Chrome
+      Web Store.
     </p>
   </li>
 
@@ -25,7 +25,7 @@
     <h1>Add study extension</h1>
     <p>
       In the Chrome Web Store, click on the <b>Add to Chrome</b> button. This will
-      add the study's extension to your browser. You are now participating in it!
+      add the study's extension to your browser. You are now participating!
     </p>
   </li>
 </ol>

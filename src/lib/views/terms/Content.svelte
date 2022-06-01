@@ -127,7 +127,7 @@
     <img
       class="icon-block-left"
       width="97"
-      src="/img/your-interaction-data.png"
+      src="/img/your-contact-data.png"
       alt="Your Contact Data."
     />
 
@@ -153,6 +153,15 @@
         location, which is determined by your <b>IP address</b>.
       </div>
     </div>
+      <div class="icon-block-right">
+        <h4>Study-Specific Data</h4>
+        <div class="content-text-info">
+          Studies may collect additional data, depending on the purpose of the study.
+          Each study description will disclose the particular data collected for that
+          study. This data may include the websites you visit, your search engine results,
+          and data cookies, pixels and other information set by particular websites.
+        </div>
+      </div>
   </div>
 
   <h3>How We Use Your Information</h3>

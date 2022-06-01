@@ -206,7 +206,7 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("authErr");
+    fireBaseErr = localStorage.getItem("authErr") || localStorage.getItem("changePWErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
@@ -223,8 +223,8 @@
       oldPassword.passwordErrText =
         "The password you entered is incorrect. Please try again.";
       oldPassword.inputPasswordClass = errorClass;
-      return;
     }
+    localStorage.removeItem("authErr");
     localStorage.removeItem("changePWErr");
   };
 
