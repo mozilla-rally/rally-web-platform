@@ -102,31 +102,21 @@
   };
 
   const setMessage = () => {
-    let wrongPW = "auth/wrong-password";
-    let emailAlready = "auth/email-already-in-use";
-    let emailIsCurrent = "email-is-current-email";
-    let isNotPassword = fireBaseErr.indexOf(wrongPW);
-    let isEmailAlready = fireBaseErr.indexOf(emailAlready);
-    let isEmailCurrent = fireBaseErr.indexOf(emailIsCurrent);
-
-    if (isNotPassword > -1) {
+    if (fireBaseErr.includes(store.ERROR.WRONG_PASSWORD)) {
       passwordErrText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
-    }
-    if (isEmailAlready > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.EMAIL_ALREADY_IN_USE)) {
       emailErrText =
         "The email you entered is already in use. Please try another email.";
       inputEmailClass = errorClass;
-    }
-    if (isEmailCurrent > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.EMAIL_IS_CURRENT_EMAIL)) {
       emailErrText =
         "This is already the email address for this account."
         inputEmailClass = errorClass;
+    } else {
+      throw new Error(fireBaseErr);
     }
-
-    localStorage.removeItem("authErr");
-    localStorage.removeItem("changeEmailErr");
   };
 
   const handleToggle = () => {

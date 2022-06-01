@@ -21,9 +21,22 @@ export function createAppStore(api = firestoreAPI): AppStore {
     set(nextState);
   });
 
+  enum ERROR {
+    EMAIL_ALREADY_IN_USE = "auth/email-already-in-use",
+    INVALID_EMAIL = "auth/invalid-email",
+    USER_NOT_FOUND = "auth/user-not-found",
+    WRONG_PASSWORD = "auth/wrong-password",
+    USER_MISMATCH = "auth/user-mismatch",
+    POPUP_BLOCKED = "auth/popup-blocked",
+    EMAIL_NOT_VERIFIED = "email-not-verified",
+    GOOGLE_ONLY_ACCOUNT = "google-only-account",
+    EMAIL_IS_CURRENT_EMAIL = "email-is-current-email"
+  }
+
   return {
     subscribe,
     set,
+    ERROR,
     async loginWithGoogle() {
       return api.loginWithGoogle();
     },

@@ -76,22 +76,20 @@
   };
 
   const setMessage = () => {
-    const wrongPW = "auth/wrong-password";
-    const wrongUser = "auth/user-mismatch";
-    const popupBlocked = "auth/popup-blocked";
-    if (fireBaseErr.indexOf(wrongPW) > -1) {
+    if (fireBaseErr.includes(store.ERROR.WRONG_PASSWORD)) {
       errText =
         "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
-    } else if (fireBaseErr.indexOf(wrongUser) > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.USER_MISMATCH)) {
       errText =
         "The Google account you selected is not the one associated with your Rally account. Please try again.";
-    } else if (fireBaseErr.indexOf(popupBlocked) > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.POPUP_BLOCKED)) {
       errText =
         "The Google authentication popup was blocked by your browser. Please enable popups and try again.";
     } else {
       errText = `Unfortunately, there was an unexpected error while deleting your account. Please try again later.
       If the problem persists, please <a href="mailto:support@rally.mozilla.org">contact Support</a>.`;
+      throw new Error(fireBaseErr);
     }
   };
 

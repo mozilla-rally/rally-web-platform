@@ -176,24 +176,15 @@
   };
 
   const setMessage = () => {
-    let emailAlreadyExist = "auth/email-already-in-use";
-    let invalidEmail = "auth/invalid-email";
-    let isExistingEmail;
-    let isInvalidEmail;
-
-    isExistingEmail = fireBaseErr.indexOf(emailAlreadyExist);
-    if (isExistingEmail > -1) {
+    if (fireBaseErr.includes(store.ERROR.EMAIL_ALREADY_IN_USE)) {
       inputEmailClass = errorClass;
       emailErrText = "Account already exists. Please Sign in.";
-    }
-
-    isInvalidEmail = fireBaseErr.indexOf(invalidEmail);
-    if (isInvalidEmail > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.INVALID_EMAIL)) {
       inputEmailClass = errorClass;
       emailErrText = "Invalid format";
+    } else {
+      throw new Error(fireBaseErr);
     }
-
-    localStorage.removeItem("createErr");
   };
 </script>
 

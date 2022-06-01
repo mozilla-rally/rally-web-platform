@@ -80,15 +80,12 @@
   };
 
   const setMessage = () => {
-    let userNotFound = "auth/user-not-found";
-    let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
-
-    if (isNotFoundErr > -1) {
+    if (fireBaseErr.includes(store.ERROR.USER_NOT_FOUND)) {
       requestErrText = "Account does not exist.";
       inputEmailClass = errorClass;
+    } else {
+      throw new Error(fireBaseErr);
     }
-
-    localStorage.removeItem("resetPasswordErr");
   };
 </script>
 

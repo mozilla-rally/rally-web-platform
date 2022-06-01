@@ -217,15 +217,13 @@
   };
 
   const setMessage = () => {
-    let wrongPW = "auth/wrong-password";
-    let isNotPassword = fireBaseErr.indexOf(wrongPW);
-    if (isNotPassword > -1) {
+    if (fireBaseErr.includes(store.ERROR.WRONG_PASSWORD)) {
       oldPassword.passwordErrText =
         "The password you entered is incorrect. Please try again.";
       oldPassword.inputPasswordClass = errorClass;
+    } else {
+      throw new Error(fireBaseErr);
     }
-    localStorage.removeItem("authErr");
-    localStorage.removeItem("changePWErr");
   };
 
   const handleSelect = (type) => {

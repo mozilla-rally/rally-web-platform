@@ -91,35 +91,20 @@
   };
 
   const setMessage = () => {
-    let userNotFound = "auth/user-not-found";
-    let wrongPW = "auth/wrong-password";
-    let googleOnlyAccount = "google-only-account";
-    let notVerified = "Email account not verified";
-    let isNotFoundErr = fireBaseErr.indexOf(userNotFound);
-    let isNotPassword = fireBaseErr.indexOf(wrongPW);
-    let isNotVerified = fireBaseErr.indexOf(notVerified);
-    let isGoogleOnlyAccount = fireBaseErr.indexOf(googleOnlyAccount)
-
-    if (isNotFoundErr > -1) {
+    if (fireBaseErr.includes(store.ERROR.USER_NOT_FOUND)) {
       emailErrText = "Account does not exist";
       inputEmailClass = errorClass;
-    }
-
-    if (isNotPassword > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.WRONG_PASSWORD)) {
       passwordErrText = "Incorrect password";
       inputPasswordClass = errorClass;
-    }
-
-    if (isGoogleOnlyAccount > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.GOOGLE_ONLY_ACCOUNT)) {
       emailErrText = "Please sign in using your Google account instead"
       inputEmailClass = errorClass;
-    }
-
-    if (isNotVerified > -1) {
+    } else if (fireBaseErr.includes(store.ERROR.EMAIL_NOT_VERIFIED)) {
       handleNotVerified();
+    } else {
+      throw new Error(fireBaseErr);
     }
-
-    localStorage.removeItem("signInErr");
   };
 
   const handleNextState = () => {

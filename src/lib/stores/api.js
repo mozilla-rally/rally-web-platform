@@ -296,7 +296,7 @@ export default {
     try {
       userCredential = await signInWithRedirect(auth, provider);
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error logging in with Google:", err);
     }
     // create a new user.
     if (userCredential) {
@@ -314,36 +314,38 @@ export default {
   async loginWithEmailAndPassword(email, password) {
     let userCredential;
     try {
+      localStorage.removeItem("signInErr");
       let signInMethods = await fetchSignInMethodsForEmail(auth, email);
       if (signInMethods.includes("google.com") && !signInMethods.includes("password")) {
         throw new Error("google-only-account");
       }
       userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if (userCredential.user.emailVerified) {
+        window.location.href = "/";
+      } else {
+        console.warn("Email account not verified, sending verification email");
+        localStorage.setItem("signInErr", "email-not-verified");
+        await sendEmailVerification(userCredential.user);
+        await this.signOutUser();
+      }
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error signing in user:", err);
       localStorage.setItem("signInErr", err);
       return;
-    }
-    if (userCredential.user.emailVerified) {
-      window.location.href = "/";
-    } else {
-      console.warn("Email account not verified, sending verification email");
-      localStorage.setItem("signInErr", "Email account not verified");
-      await sendEmailVerification(userCredential.user);
-      await this.signOutUser();
     }
   },
 
   async signupWithEmailAndPassword(email, password) {
     let userCredential;
     try {
+      localStorage.removeItem("createErr");
       userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error signing up with email:", err);
       localStorage.setItem("createErr", err);
       return;
     }
@@ -356,17 +358,18 @@ export default {
       signOut(auth);
       console.info("Signing out");
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error signing out user:", err);
       return;
     }
   },
 
   async sendUserPasswordResetEmail(email) {
     try {
+      localStorage.removeItem("resetPasswordErr");
       await sendPasswordResetEmail(auth, email);
       console.info("Sending password reset email");
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error sending password reset email:", err);
       localStorage.setItem("resetPasswordErr", err);
       return;
     }
@@ -374,8 +377,11 @@ export default {
 
   async resetUserPassword(newPassword, oldPassword) {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error resetting password: user not logged in");
+    };
     try {
+      localStorage.removeItem("changePWErr");
       if (this.reauthenticateEmailUser(oldPassword)) {
         await updatePassword(user, newPassword);
         localStorage.removeItem("authErr");
@@ -383,7 +389,7 @@ export default {
         localStorage.setItem("resetPW", "success");
       }
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error resetting user password:", err);
       localStorage.setItem("changePWErr", err);
       return;
     }
@@ -391,8 +397,11 @@ export default {
 
   async changeEmail(email, password) {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error changing email: user not logged in");
+    };
     try {
+      localStorage.removeItem("changeEmailErr");
       if (user.email === email) throw new Error("email-is-current-email");
       if (this.reauthenticateEmailUser(password)) {
         await updateEmail(user, email);
@@ -405,7 +414,7 @@ export default {
         }
       }
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error changing email:", err);
       localStorage.setItem("changeEmailErr", err);
       return;
     }
@@ -413,40 +422,47 @@ export default {
 
   async reauthenticateEmailUser(password) {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error reauthenticating email user: user not logged in");
+    };
     try {
       localStorage.removeItem("authErr");
       const userCredential = EmailAuthProvider.credential(user.email, password);
       await reauthenticateWithCredential(user, userCredential);
       return true;
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error reauthenticating email user:", err);
       localStorage.setItem("authErr", err);
     }
   },
 
   async reauthenticateGoogleUser() {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error reauthenticating Google user: user not logged in");
+    };
     try {
       localStorage.removeItem("authErr");
       const provider = new GoogleAuthProvider();
       await reauthenticateWithPopup(user, provider);
       return true;
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error reauthenticating Google user:", err);
       localStorage.setItem("authErr", err);
     }
   },
 
   async resendUserVerificationEmail() {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error sending user verification email: user not logged in");
+    };
     try {
+      localStorage.removeItem("changeEmailErr");
       await sendEmailVerification(user);
       console.info("email verification resent!");
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error sending user verification email:", err);
       localStorage.setItem("changeEmailErr", err);
       return;
     }
@@ -454,7 +470,9 @@ export default {
 
   async deleteUserAccount(password) {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error deleting user: user not logged in");
+    };
     try {
       localStorage.removeItem("deleteUserErr");
       if (password) {
@@ -471,40 +489,44 @@ export default {
       await deleteUser(user);
       console.info("user deleted!");
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error deleting user account:", err);
       localStorage.setItem("deleteUserErr", err);
     }
   },
 
   async isUserVerified() {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error checking user verification: user not logged in");
+    };
     try {
       return user.emailVerified;
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error checking user verification:", err);
     }
   },
 
   async getUserEmail() {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error getting user email: user not logged in");
+    };
     try {
       return user.email;
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error getting user email:", err);
     }
   },
 
   async getUserProvider() {
     const user = auth && auth.currentUser;
-    if (!user) return;
+    if (!user) {
+      throw new Error("Error getting user provider: user not logged in");
+    };
     try {
-      console.log(user.providerId);
-      console.log(user.providerData);
       return user.providerData;
     } catch (err) {
-      console.error("there was an error", err);
+      console.error("Error getting user provider:", err);
     }
   },
 

@@ -1,5 +1,17 @@
 import type { Writable } from "svelte/store";
 
+interface FirebaseError {
+  EMAIL_ALREADY_IN_USE: string,
+  INVALID_EMAIL: string,
+  USER_NOT_FOUND: string,
+  WRONG_PASSWORD: string,
+  USER_MISMATCH: string,
+  POPUP_BLOCKED: string,
+  EMAIL_NOT_VERIFIED: string,
+  GOOGLE_ONLY_ACCOUNT: string,
+  EMAIL_IS_CURRENT_EMAIL: string
+}
+
 export interface AppStore extends Omit<Writable<State>, "update"> {
   loginWithGoogle: Function;
   signupWithEmailAndPassword: Function;
@@ -17,6 +29,7 @@ export interface AppStore extends Omit<Writable<State>, "update"> {
   updateStudyEnrollment: Function;
   updatePlatformEnrollment: Function;
   updateDemographicSurvey: Function;
+  ERROR: FirebaseError;
 }
 
 export interface State {
