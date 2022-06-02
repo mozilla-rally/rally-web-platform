@@ -35,10 +35,15 @@
   .list-item {
     &--active {
       background-color: $color-marketing-gray-20;
+      font-weight: 600 !important;
     }
 
     &--inactive {
       background-color: transparent;
+
+      &:hover {
+        background-color: $color-light-gray-100;
+      }
     }
   }
 
@@ -76,7 +81,7 @@
     z-index: 900;
     border: transparent;
     visibility: visible;
-    width: 256px;
+    width: 265px;
 
     &[aria-hidden="true"] {
       transition: max-height 0.4s cubic-bezier(0.215, 0.61, 0.355, 1),
@@ -95,11 +100,17 @@
 
     &__item {
       font-weight: normal;
-      margin-left: 16px; 
+      padding-left: 38px; 
+    }
+
+    &__item {
+      &.list-item--inactive:hover {
+        background-color: $color-light-gray-100;
+      }
     }
 
     &__text{
-      margin: 0px 22px; 
+      margin: 0px 20px; 
     }
   }
 }

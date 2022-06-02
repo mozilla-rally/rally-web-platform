@@ -223,6 +223,10 @@
 {/if}
 
 <style>
+  :global(.noise-background) {
+    display: block !important;
+  }
+
   .title-wrapper {
     display: flex;
   }

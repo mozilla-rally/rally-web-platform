@@ -13617,6 +13617,7 @@ ol {
 }
 .main-content--account-settings {
   max-width: unset;
+  padding: 2.875rem 0%;
 }
 @media (max-width: 688px) {
   .main-content--account-settings {
@@ -13664,6 +13665,7 @@ ol {
 }
 .content-container--account-settings {
   padding: 0px;
+  justify-content: unset;
 }
 
 footer {
@@ -13998,9 +14000,13 @@ footer .footer-content {
 }
 .sidenav .list-item--active {
   background-color: #ededf0;
+  font-weight: 600 !important;
 }
 .sidenav .list-item--inactive {
   background-color: transparent;
+}
+.sidenav .list-item--inactive:hover {
+  background-color: #DEDEE3;
 }
 .sidenav .list-text {
   margin: 0px 16px;
@@ -14031,7 +14037,7 @@ footer .footer-content {
   z-index: 900;
   border: transparent;
   visibility: visible;
-  width: 256px;
+  width: 265px;
 }
 .sidenav .sublist-menu[aria-hidden=true] {
   transition: max-height 0.4s cubic-bezier(0.215, 0.61, 0.355, 1), visibility 0s linear 0.4s;
@@ -14048,10 +14054,13 @@ footer .footer-content {
 }
 .sidenav .sublist-menu__item {
   font-weight: normal;
-  margin-left: 16px;
+  padding-left: 38px;
+}
+.sidenav .sublist-menu__item.list-item--inactive:hover {
+  background-color: #DEDEE3;
 }
 .sidenav .sublist-menu__text {
-  margin: 0px 22px;
+  margin: 0px 20px;
 }
 
 .account-settings-container {
