@@ -79,6 +79,7 @@
     const wrongPW = "auth/wrong-password";
     const wrongUser = "auth/user-mismatch";
     const popupBlocked = "auth/popup-blocked";
+    const popupClosedByUser = "auth/popup-closed-by-user";
     if (fireBaseErr.indexOf(wrongPW) > -1) {
       errText =
         "The password you entered is incorrect. Please try again.";
@@ -89,6 +90,9 @@
     } else if (fireBaseErr.indexOf(popupBlocked) > -1) {
       errText =
         "The Google authentication popup was blocked by your browser. Please enable popups and try again.";
+    } else if (fireBaseErr.indexOf(popupClosedByUser) > -1) {
+      errText =
+        "You must complete the authentication process in order to delete your account. Please try again.";
     } else {
       errText = `Unfortunately, there was an unexpected error while deleting your account. Please try again later.
       If the problem persists, please <a href="mailto:support@rally.mozilla.org">contact Support</a>.`;
