@@ -13860,7 +13860,7 @@ footer .footer-content {
     padding: 0;
   }
 }
-.card--signin, .card--launch, .card--create {
+.card--signin, .card--launch, .card--create, .card--info-card {
   margin: auto;
 }
 .card--settings {
