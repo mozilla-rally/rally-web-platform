@@ -116,6 +116,7 @@
                 bind:this={passwordEl}
                 on:change={handleChange}
                 on:keyup={handleChange}
+                autocomplete="new-password"
                 id="id_user_pw"
                 name="id_user_pw"
                 type="password"

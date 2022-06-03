@@ -114,6 +114,7 @@
               bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}
+              autocomplete="username"
               id="id_user_email"
               name="id_user_email"
               type="email"
