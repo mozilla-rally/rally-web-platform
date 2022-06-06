@@ -45,8 +45,16 @@
     }
 
     if (val.match(emailPattern)) {
-      await store.changeEmail(emailEl.value, passwordEl.value);
+      changeEmail();
       handleNextState();
+    }
+  };
+
+  const changeEmail = async () => {
+    try {
+      await store.changeEmail(emailEl.value, passwordEl.value);
+    } catch (err) {
+      console.log("There is an error: ", err);
     }
   };
 
@@ -91,7 +99,8 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
+    fireBaseErr =
+      localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
@@ -120,9 +129,8 @@
       inputEmailClass = errorClass;
     }
     if (isEmailCurrent > -1) {
-      emailErrText =
-        "This is already the email address for this account."
-        inputEmailClass = errorClass;
+      emailErrText = "This is already the email address for this account.";
+      inputEmailClass = errorClass;
     }
 
     localStorage.removeItem("authErr");
@@ -132,7 +140,7 @@
   const handleToggle = () => {
     passwordVisible = !passwordVisible;
   };
-  
+
   const clearFields = () => {
     emailEl.value = "";
     passwordEl.value = "";
@@ -176,15 +184,6 @@
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Password</label
             >
-            <!-- FORGOT PASSWORD -->
-            <!-- Will include this flow post mvp? -->
-            <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
-              <button
-                on:click={() => {
-                  handleTrigger("forget");
-                }}>Forgot password</button
-              ></label
-            > -->
           </div>
 
           <div class="input-wrapper">
@@ -223,31 +222,38 @@
       </fieldset>
     </form>
 
-    <div class="btn-group btn-group--email">
-      <Button
-        disabled={btnDisabled}
-        size="xl"
-        customClass="card-button create"
-        customControl={true}
-        textColor="#0060df"
-        background="transparent"
-        borderColor="#0060df"
-        on:click={() => {
-          handleSelect("read-only");
-        }}
-      >
-        <div class="button-text">Cancel</div></Button
+    <div class="card-bottom">
+      <!-- FORGOT PASSWORD -->
+      <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+        <button
+          on:click={() => {
+            handleSelect("forget-pw");
+          }}>Forgot password?</button
+        ></label
       >
 
-      <Button
-        disabled={btnDisabled}
-        size="xl"
-        customClass="card-button create"
-        product
-        on:click={checkFields}
-      >
-        <div class="button-text">Update email</div></Button
-      >
+      <div class="btn-group btn-group--email">
+        <Button
+          size="xl"
+          customClass="card-button cancel"
+          secondary
+          on:click={() => {
+            handleSelect("read-only");
+          }}
+        >
+          <div class="button-text">Cancel</div></Button
+        >
+
+        <Button
+          disabled={btnDisabled}
+          size="xl"
+          customClass="card-button create"
+          product
+          on:click={checkFields}
+        >
+          <div class="button-text">Update email</div></Button
+        >
+      </div>
     </div>
   </div>
 </div>

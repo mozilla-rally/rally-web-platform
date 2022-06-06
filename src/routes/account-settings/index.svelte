@@ -49,13 +49,18 @@
     fontSize: "14px",
   };
 
-  let isEmail = false;
-  let isPW = false;
-  let isDelete = false;
-  let isReadOnly = true;
-  let isCheckEmail = false;
+  let screenOptions = {
+    isEmail: false,
+    isPW: false,
+    isDelete: false,
+    isReadOnly: false,
+    isCheckEmail: false,
+    isCheckEmailPW: false,
+    isForgetPW: false,
+  };
+
   let settingsTitle = "Account settings";
-  let settingsDecription =
+  let settingsDescription =
     "Manage your info, privacy, and security to make Rally work better for you.";
   let userProvider;
   let isGoogleOnlyAccount;
@@ -76,11 +81,15 @@
   };
 
   onMount(async () => {
+    screenOptions = {
+      ...screenOptions,
+      isReadOnly: true,
+    };
     userProvider = await store.getUserProvider();
     isGoogleOnlyAccount =
       userProvider &&
       userProvider.length &&
-      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
+      !userProvider.some((p) => p.providerId === "password"); // no password provider means Google-only
   });
 
   const displayCard = (event) => {
@@ -94,53 +103,80 @@
 
     switch (value) {
       case "update-email":
-        isEmail = true;
-        isPW = false;
-        isDelete = false;
-        isReadOnly = false;
-        isCheckEmail = false;
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isEmail: true,
+        };
         settingsTitle = "Change your email address";
         break;
       case "update-pw":
-        isPW = true;
-        isEmail = false;
-        isDelete = false;
-        isCheckEmail = false;
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isPW: true,
+        };
         settingsTitle = "Change your password";
-        isReadOnly = false;
         break;
       case "delete":
-        isDelete = true;
-        isPW = false;
-        isEmail = false;
-        isReadOnly = false;
-        isCheckEmail = false;
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isDelete: true,
+        };
         settingsTitle = "Delete your Rally account";
-        settingsDecription =
+        settingsDescription =
           "Thank you for helping make the Internet a little better";
         break;
       case "read-only":
+        resetOptions();
         showReadOnly();
         break;
       case "check-email":
-        isCheckEmail = true;
-        isPW = true;
-        isEmail = false;
-        isReadOnly = false;
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isCheckEmail: true,
+        };
+        break;
+      case "check-email-pw":
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isCheckEmailPW: true,
+        };
+        break;
+      case "forget-pw":
+        resetOptions();
+        screenOptions = {
+          ...screenOptions,
+          isForgetPW: true,
+        };
         break;
       default:
         break;
     }
   };
 
+  const resetOptions = () => {
+    screenOptions = {
+      isEmail: false,
+      isPW: false,
+      isDelete: false,
+      isReadOnly: false,
+      isCheckEmail: false,
+      isCheckEmailPW: false,
+      isForgetPW: false,
+    };
+  };
+
   const showReadOnly = () => {
-    isReadOnly = true;
-    isEmail = false;
-    isPW = false;
-    isDelete = false;
-    settingsTitle = "Account Settings";
-    isCheckEmail = false;
-    settingsDecription =
+    screenOptions = {
+      ...screenOptions,
+      isReadOnly: true,
+    };
+    settingsTitle = "Account settings";
+    settingsDescription =
       "Manage your info, privacy, and security to make Rally work better for you.";
   };
 
@@ -156,7 +192,7 @@
     }
   }
 
-  $: if (isReadOnly) {
+  $: if (screenOptions.isReadOnly) {
     cardArgs = isReadOnlyArgs;
   }
 
@@ -188,31 +224,28 @@
       </div>
 
       <div class="account-settings col-12 col-lg-7">
-        {#if isReadOnly}
+        {#if screenOptions.isReadOnly}
           <div class="title-wrapper">
             <h2 class="section-header">{settingsTitle}</h2>
           </div>
 
           <p class="description">
-            {settingsDecription}
+            {settingsDescription}
           </p>
         {/if}
 
         <div class="account-settings-main">
-          {#if isReadOnly}
+          {#if screenOptions.isReadOnly}
             <SettingsReadOnly {displayCard} on:type={displayCard} />
           {/if}
 
-          {#if !isReadOnly}
+          {#if !screenOptions.isReadOnly}
             <SettingsCard
-              {isCheckEmail}
-              {isEmail}
-              {isPW}
-              {isDelete}
+              {...screenOptions}
               {cardArgs}
               {displayCard}
               {settingsTitle}
-              {settingsDecription}
+              {settingsDescription}
               on:type={displayCard}
             />
           {/if}

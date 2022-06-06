@@ -2,31 +2,66 @@
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+  import { createEventDispatcher } from "svelte";
   import Card from "$lib/components/Card.svelte";
   import UpdatePassword from "./UpdatePassword.svelte";
   import UpdateEmail from "./UpdateEmail.svelte";
   import CheckEmailCard from "$lib/components/auth-cards/CheckEmailCard.svelte";
+  import ForgetPwCard from "$lib/components/auth-cards/ForgetPWCard.svelte";
   import DeleteAccount from "./DeleteAccount.svelte";
 
-  export let isEmail;
-  export let isPW;
-  export let isDelete;
-  export let isCheckEmail;
+  const dispatch = createEventDispatcher();
+
   export let cardArgs;
   export let displayCard;
   export let settingsTitle;
   export let settingsDescription;
+  export let isEmail;
+  export let isPW;
+  export let isDelete;
+  export let isCheckEmail;
+  export let isCheckEmailPW;
+  export let isForgetPW;
 
   let checkEmailArgs = {
     ...cardArgs,
     title: "Check your email",
     isSettings: true,
   };
+
+  let checkEmailPWArgs = {
+    ...checkEmailArgs,
+    checkPW: true,
+  };
+
+  let forgetPWArgs = {
+    ...cardArgs,
+    title: "Forgot your password?",
+    isSettings: true,
+    cta1: "Reset password",
+    storyBookTest: false,
+  };
+
+  const handleSelect = (type) => {
+    dispatch("type", {
+      text: type,
+    });
+  };
 </script>
 
-{#if isCheckEmail}
+{#if isCheckEmail && !isCheckEmailPW && !isForgetPW}
   <CheckEmailCard {...checkEmailArgs} />
-{:else}
+{/if}
+
+{#if isCheckEmailPW && !isCheckEmail && !isForgetPW}
+  <CheckEmailCard {...checkEmailPWArgs} />
+{/if}
+
+{#if isForgetPW && !isCheckEmail && !isCheckEmailPW}
+  <ForgetPwCard {...forgetPWArgs} {handleSelect} />
+{/if}
+
+{#if !isForgetPW && !isCheckEmail && !isCheckEmailPW}
   <Card {...cardArgs}>
     <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
       <div class="title-text">{settingsTitle}</div>

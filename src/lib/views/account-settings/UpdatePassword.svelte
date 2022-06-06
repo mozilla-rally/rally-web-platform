@@ -206,7 +206,8 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("authErr") || localStorage.getItem("changePWErr");
+    fireBaseErr =
+      localStorage.getItem("authErr") || localStorage.getItem("changePWErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
@@ -256,7 +257,7 @@
     oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText = null;
     inputItemsVisible = false;
   };
-  
+
   $: if (emptyFieldsErr) {
     oldPassword.inputPasswordClass = newPassword.inputPasswordClass = confirmPassword.inputPasswordClass = errorClass;
     oldPassword.passwordErrText = newPassword.passwordErrText = confirmPassword.passwordErrText =
@@ -408,31 +409,38 @@
       </fieldset>
     </form>
 
-    <div class="btn-group btn-group--password">
-      <Button
-        disabled={btnDisabled}
-        size="xl"
-        customClass="card-button create cancel"
-        customControl={true}
-        textColor="#0060df"
-        background="transparent"
-        borderColor="#0060df"
-        on:click={() => {
-          handleSelect("read-only");
-        }}
-      >
-        <div class="button-text">Cancel</div></Button
+    <div class="card-bottom">
+      <!-- FORGOT PASSWORD -->
+      <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
+        <button
+          on:click={() => {
+            handleSelect("forget-pw");
+          }}>Forgot password?</button
+        ></label
       >
 
-      <Button
-        disabled={btnDisabled}
-        size="xl"
-        product
-        customClass="card-button create"
-        on:click={checkFields}
-      >
-        <div class="button-text">Update password</div></Button
-      >
+      <div class="btn-group btn-group--password">
+        <Button
+          size="xl"
+          customClass="card-button create cancel"
+          secondary
+          on:click={() => {
+            handleSelect("read-only");
+          }}
+        >
+          <div class="button-text">Cancel</div></Button
+        >
+
+        <Button
+          disabled={btnDisabled}
+          size="xl"
+          product
+          customClass="card-button create"
+          on:click={checkFields}
+        >
+          <div class="button-text">Update password</div></Button
+        >
+      </div>
     </div>
   </div>
 </div>

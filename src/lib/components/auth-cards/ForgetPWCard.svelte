@@ -1,21 +1,24 @@
-<script>
+<script lang="ts">
   /* This Source Code Form is subject to the terms of the Mozilla Public
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher, getContext } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
   import Button from "../../../lib/components/Button.svelte";
+  import type { AppStore } from "$lib/stores/types";
 
   const dispatch = createEventDispatcher();
+  const store: AppStore = getContext("rally:store");
 
   export let title;
   export let cta1;
   export let width;
   export let height;
-  export let store;
+  export let isSettings;
   export let storyBookTest;
   export let headerClass;
   export let customClass;
+  export let handleSelect;
 
   const emailPattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   const errorClass = "mzp-c-field-control mzp-c-field-control--error";
@@ -64,13 +67,23 @@
 
   const handleForgetPassword = async () => {
     emailEl.value = emailEl.value.trim();
-    await store.sendUserPasswordResetEmail(emailEl.value);
+    if(emailEl.value) await store.sendUserPasswordResetEmail(emailEl.value);
     handleNextState();
   };
 
   const handleNextState = () => {
     fireBaseErr = localStorage.getItem("resetPasswordErr");
-    fireBaseErr ? setMessage() : handleTrigger("check-pw");
+    if (fireBaseErr) {
+      setMessage();
+      return
+    }
+
+    if (isSettings) {
+      handleSelect("check-email-pw");
+      return;
+    }
+
+    handleTrigger("check-pw");
   };
 
   const handleTrigger = (type) => {
@@ -138,13 +151,16 @@
         <div class="card-button__text">{cta1}</div></Button
       >
 
-      <p class="body-text-action">
-        Back to <button
-          on:click={() => {
-            handleTrigger("welcome");
-          }}><a href="/signup">sign in</a></button
-        >
-      </p>
+      {#if !isSettings}
+        <p class="body-text-action">
+          Back to <button
+            class="rwp-link"
+            on:click={() => {
+              handleTrigger("welcome");
+            }}><a href="/signup">sign in</a></button
+          >
+        </p>
+      {/if}
     </div>
   </div>
 </Card>

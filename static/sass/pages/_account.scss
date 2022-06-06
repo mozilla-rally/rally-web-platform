@@ -46,7 +46,29 @@
         margin-bottom: 12px;
       }
 
-      &__content {
+      &__warning{
+        @extend %content-body-MD;
+        display: flex;
+        align-items: center; 
+        background: $color-marketing-gray-20;
+        padding: 16px; 
+        border-radius: 2px;
+        margin-bottom: 12px; 
+      
+        img{
+          padding-right: 12px; 
+        }
+
+        .warning-action{
+          margin-left: 2px; 
+        }
+      }
+
+      &__text {
+        @extend %content-body-MD;
+      }
+
+      &__info {
         display: flex;
         justify-content: space-between;
         align-items: start;
@@ -58,7 +80,11 @@
 
           @media (max-width: $SM-screen) {
             flex-direction: column;
-           }
+          }
+        }
+
+        .content-user-email {
+          color: $color-helper-gray;
         }
       }
 
@@ -72,17 +98,42 @@
           flex-direction: row;
           @media (max-width: $SM-screen) {
             margin-bottom: 10px;
-           }
-         
+          }
 
-          .info {
+          .google-text {
             @extend %content-body-XS;
-            max-width: 276px;
+            max-width: 265px;
             color: $color-marketing-gray-70;
             margin-left: 8px;
-            @media (max-width: $MD-screen) {
-              max-width: unset;
-             }
+            @media (max-width: $MD-screen2) {
+              word-break: break-word;
+            }
+          }
+        }
+      }
+
+      &__link {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        color: #000000;
+        text-decoration: underline;
+
+        img {
+          margin-left: 6px;
+        }
+
+        @media (max-width: $MD-screen) {
+          justify-content: end;
+          width: 100%;
+          font-size: 14px;
+        }
+
+        @media (max-width: $SM-screen) {
+          justify-content: start;
+
+          img {
+            width: unset;
           }
         }
       }
@@ -92,38 +143,7 @@
       }
 
       .edit-btn {
-        border: none;
-        background-color: transparent;
-        text-decoration: underline;
         cursor: pointer;
-        @media (max-width: $MD-screen) {
-         font-size: 14px; 
-        }
-      }
-
-      &__link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: #000000;
-        text-decoration: underline;
-     
-        svg {
-          margin-left: 6px;
-        }
-
-        @media (max-width: $MD-screen) {
-          font-size: 14px; 
-          svg{
-            width: 100%;
-          }
-         }
-
-         @media (max-width: $SM-screen) { 
-          svg{
-            width: unset;
-          }
-         }
       }
     }
 
@@ -135,12 +155,30 @@
 }
 
 .settings-wrapper {
+  .card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .forgot-pw {
+    button {
+      border-color: transparent;
+      background: transparent;
+      cursor: pointer;
+      color: $color-blue-50;
+      font-weight: 600;
+      font-size: 14px;
+    }
+  }
+
   .btn-group {
     display: flex;
     justify-content: space-between;
     width: 272px;
     float: right;
-    margin-top: 24px;
+
     &--password {
       width: auto;
       .cancel {

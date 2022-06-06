@@ -315,7 +315,10 @@ export default {
     let userCredential;
     try {
       let signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.includes("google.com") && !signInMethods.includes("password")) {
+      if (
+        signInMethods.includes("google.com") &&
+        !signInMethods.includes("password")
+      ) {
         throw new Error("google-only-account");
       }
       userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -404,6 +407,7 @@ export default {
           console.info("email verified!");
         }
       }
+
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("changeEmailErr", err);
@@ -459,12 +463,12 @@ export default {
       localStorage.removeItem("deleteUserErr");
       if (password) {
         // Email account
-        if (! await this.reauthenticateEmailUser(password)) {
+        if (!(await this.reauthenticateEmailUser(password))) {
           return;
         }
       } else {
         // Google account
-        if (! await this.reauthenticateGoogleUser()) {
+        if (!(await this.reauthenticateGoogleUser())) {
           return;
         }
       }

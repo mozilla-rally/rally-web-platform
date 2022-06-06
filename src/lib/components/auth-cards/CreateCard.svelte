@@ -309,7 +309,7 @@
   <!-- SIGN IN -->
   <p slot="cta" class="body-text-action">
     {bodyText}
-    <button
+    <button class="rwp-link"
       on:click={() => {
         handleTrigger("welcome");
       }}>{linkText}</button
