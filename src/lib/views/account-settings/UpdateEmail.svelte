@@ -50,8 +50,13 @@
     }
   };
 
-  const changeEmail = async () => {
-    await store.changeEmail(emailEl.value, passwordEl.value);
+  async function changeEmail() {
+    try {
+      await store.changeEmail(emailEl.value, passwordEl.value);
+    } catch (err) {
+      console.error("Error while changing the email", err)
+    }
+    
   };
 
   const checkFields = async () => {

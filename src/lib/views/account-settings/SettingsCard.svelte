@@ -29,10 +29,12 @@
     isSettings: true,
   };
 
-  let checkEmailPWArgs = {
+  let checkPWArgs = {
     ...checkEmailArgs,
     checkPW: true,
   };
+
+  let checkArgs 
 
   let forgetPWArgs = {
     ...cardArgs,
@@ -47,21 +49,15 @@
       text: type,
     });
   };
+
+$: isCheckEmail ? checkArgs = checkEmailArgs : checkArgs = checkPWArgs
 </script>
 
-{#if isCheckEmail && !isCheckEmailPW && !isForgetPW}
-  <CheckEmailCard {...checkEmailArgs} />
-{/if}
-
-{#if isCheckEmailPW && !isCheckEmail && !isForgetPW}
-  <CheckEmailCard {...checkEmailPWArgs} />
-{/if}
-
-{#if isForgetPW && !isCheckEmail && !isCheckEmailPW}
+{#if isForgetPW}
   <ForgetPwCard {...forgetPWArgs} {handleSelect} />
-{/if}
-
-{#if !isForgetPW && !isCheckEmail && !isCheckEmailPW}
+{:else if isCheckEmailPW || isCheckEmail}
+  <CheckEmailCard {...checkArgs} />
+{:else}
   <Card {...cardArgs}>
     <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
       <div class="title-text">{settingsTitle}</div>

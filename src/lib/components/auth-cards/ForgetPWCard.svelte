@@ -67,15 +67,17 @@
 
   const handleForgetPassword = async () => {
     emailEl.value = emailEl.value.trim();
-    if(emailEl.value) await store.sendUserPasswordResetEmail(emailEl.value);
-    handleNextState();
+    if (emailEl.value) {
+      await store.sendUserPasswordResetEmail(emailEl.value);
+      handleNextState();
+    }
   };
 
   const handleNextState = () => {
     fireBaseErr = localStorage.getItem("resetPasswordErr");
     if (fireBaseErr) {
       setMessage();
-      return
+      return;
     }
 
     if (isSettings) {
