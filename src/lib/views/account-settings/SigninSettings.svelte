@@ -81,7 +81,7 @@
   <div class="card-content card-content--settings" slot="card-content">
     <div class="content-box">
       <div class="content-box__title">Email</div>
-      <!-- {#if showWarning} -->
+      {#if showWarning}
       <div class="content-box__warning">
         <img src="img/icon-info-warning.svg" alt="warning icon" />
         <div>
@@ -92,7 +92,7 @@
           </button>
         </div>
       </div>
-      <!-- {/if} -->
+      {/if}
       <div class="content-box__info">
         <div class="content-user-email">
           {userEmail}
