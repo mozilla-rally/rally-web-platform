@@ -33,6 +33,7 @@
       await titleEl;
       textWidth = titleEl.clientWidth;
     }
+    userEmail = await store.getUserEmail();
   });
 
   const handleTrigger = (type) => {
@@ -40,11 +41,7 @@
       text: type,
     });
   };
-  const getLatestUserEmail = async () => {
-    return userEmail = await store.getUserEmail();
-  };
 
-  $: userEmail = getLatestUserEmail();
   $: cssVarStyles = `--titleWidth:${textWidth}px`;
   $: resetPWText = `Instructions to reset your password have been sent to ${userEmail}`;
   $: isSettings === true

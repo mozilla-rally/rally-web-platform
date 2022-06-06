@@ -282,6 +282,7 @@
               bind:this={oldPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
+              autocomplete="current-password"
               id="id_user_pw"
               name="id_user_pw--current"
               type={oldPassword.passwordVisible ? "text" : "password"}
@@ -321,6 +322,7 @@
               bind:this={newPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
+              autocomplete="new-password"
               id="id_user_pw id_user_pw--new"
               name="id_user_pw--new"
               type={newPassword.passwordVisible ? "text" : "password"}
@@ -377,6 +379,7 @@
               bind:this={confirmPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
+              autocomplete="new-password"
               id="id_user_pw"
               name="id_user_pw--confirm"
               type={confirmPassword.passwordVisible ? "text" : "password"}

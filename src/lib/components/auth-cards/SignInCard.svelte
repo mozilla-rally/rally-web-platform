@@ -134,7 +134,9 @@
 </script>
 
 <div class="form-wrapper">
-  <form method="post" on:keydown={(e) => (e.key === "Enter" && e.preventDefault())}>
+  <form method="post"
+    on:keydown={(e) => (e.key === "Enter" && e.preventDefault())}
+    on:submit={(e) => e.preventDefault()}>
     <fieldset class="mzp-c-field-set field-set">
       <div class="mzp-c-field field field--email">
         <div class="label-wrapper">
@@ -147,6 +149,7 @@
           bind:this={emailEl}
           on:change={handleChange}
           on:keyup={handleChange}
+          autocomplete="username"
           id="id_user_email"
           name="id_user_email"
           type="email"
@@ -167,10 +170,12 @@
           >
           <!-- FORGOT PASSWORD -->
           <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
-            <button
+            <a
+              tabindex="-1"
+              href="#forgot-password"
               on:click={() => {
                 handleTrigger("forget");
-              }}>Forgot password</button
+              }}>Forgot password</a
             ></label
           >
         </div>
@@ -182,6 +187,7 @@
             bind:this={passwordEl}
             on:change={handleChange}
             on:keyup={handleChange}
+            autocomplete="current-password"
             id="id_user_pw"
             name="id_user_pw"
             type={passwordVisible ? "text" : "password"}
@@ -209,26 +215,29 @@
         {/if}
       </div>
     </fieldset>
-  </form>
-
-  <Button
-    on:click={checkFields}
+    <Button
+    on:click={(e) => {
+      e.preventDefault();
+      checkFields();
+    }}
     size="xl"
     customClass="card-button card-button--signin"
     btnID="signin-btn"
   >
     <div class="card-button__text">Sign in</div></Button
   >
+  </form>
 </div>
 
 <style>
-  .forgot-pw button {
+  .forgot-pw a {
     border-color: transparent;
     background: transparent;
     cursor: pointer;
     color: var(--color-blue-50);
     font-weight: 600;
     font-size: 14px;
+    text-decoration: none;
   }
 
 </style>
