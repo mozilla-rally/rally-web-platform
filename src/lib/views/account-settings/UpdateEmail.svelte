@@ -51,11 +51,7 @@
   };
 
   const changeEmail = async () => {
-    try {
-      await store.changeEmail(emailEl.value, passwordEl.value);
-    } catch (err) {
-      console.log("There is an error: ", err);
-    }
+    await store.changeEmail(emailEl.value, passwordEl.value);
   };
 
   const checkFields = async () => {
@@ -98,9 +94,8 @@
   };
 
   const handleNextState = () => {
-    /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr =
-      localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
+    /* Check for firebase errors and display if needed. */
+    fireBaseErr = localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
