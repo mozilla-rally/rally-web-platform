@@ -16,7 +16,7 @@
   const store: AppStore = getContext("rally:store");
 
   let isLoading = false;
-  let loadingText = localStorage.getItem('isLoading')
+  let loadingText = localStorage.getItem("isLoading");
 
   onMount(() => {
     localStorage.removeItem("isLoading");
@@ -69,7 +69,7 @@
     cardArgs = resetPWArgs;
   }
 
-  $: if(loadingText === 'loading') isLoading = true 
+  $: if (loadingText === "loading") isLoading = true;
 
   const resetState = () => {
     isLoading = false;
@@ -148,7 +148,7 @@
             cy="33"
             r="30"
           />
-        </svg>  
+        </svg>
       </div>
     {/if}
 
@@ -164,17 +164,25 @@
       {/if}
 
       {#if createAcctCard && !welcomeCard && !joinCard}
-        <CreateCard {...cardArgs} {store} on:type={triggerCard} storyBookTest={false} />
+        <CreateCard
+          {...cardArgs}
+          {store}
+          on:type={triggerCard}
+          storyBookTest={false}
+        />
       {/if}
 
       {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard isSettings={false} {...cardArgs} on:type={triggerCard} />
+        <CheckEmailCard
+          isSettings={false}
+          {...cardArgs}
+          on:type={triggerCard}
+        />
       {/if}
 
       {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
         <ForgetPwCard
           {...cardArgs}
-          {store}
           on:type={triggerCard}
           storyBookTest={false}
         />
@@ -188,7 +196,7 @@
 
   <div class="how-it-works signin__howitworks">
     <a
-      class="sign external-link"
+      class="external-link rwp-link"
       target="_blank"
       rel="noopener noreferrer"
       href="__BASE_SITE__/how-rally-works/"

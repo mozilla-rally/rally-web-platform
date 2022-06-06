@@ -27,7 +27,6 @@
   let textWidth;
   let userEmail;
   let checkEmailText;
-  let resetPWText;
 
   onMount(async () => {
     if (titleEl) {
@@ -68,7 +67,7 @@
         customClass="card-button card-button--reset"
         btnID="back-signin-btn"
       >
-        <div class="card-button__text">Back to sign in</div></Button
+        <div class="card-button__text rwp-link">Back to sign in</div></Button
       >
     {/if}
   </div>

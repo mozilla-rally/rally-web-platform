@@ -99,10 +99,7 @@
     <!-- GOOGLE BUTTON -->
     <Button
       size="lg"
-      customControl={true}
-      textColor="#000000"
-      background="transparent !important"
-      borderColor="#CDCDD4"
+      secondary
       customClass="card-button"
       on:click={handleGoogleLogin}
     >
@@ -130,10 +127,7 @@
     {#if !welcomeCard}
       <Button
         size="lg"
-        customControl={true}
-        textColor="#000000"
-        background="transparent"
-        borderColor="#cdcdd4"
+        secondary
         customClass="card-button card-button--create"
         btnID="create"
         on:click={() => handleTrigger("create")}
@@ -151,7 +145,7 @@
       </Button>
 
       <p class="body-text-privacy">
-        By joining, you agree to our <a
+        By joining, you agree to our <a class="rwp-link"
           href="__BASE_SITE__/how-rally-works/data-and-privacy/"
           >privacy notice.</a
         >
@@ -161,7 +155,7 @@
 
   <p slot="cta" class="body-text-action">
     {bodyText}
-    <button
+    <button class="rwp-link"
       on:click={() => {
         handleTrigger(startState);
       }}>{linkText}</button

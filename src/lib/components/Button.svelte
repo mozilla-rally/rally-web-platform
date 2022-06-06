@@ -35,7 +35,7 @@
   $: sizeClass = size ? `mzp-t-${size}` : undefined;
   $: productClass = product ? `mzp-t-product` : undefined;
   $: neutralClass = neutral ? `mzp-t-neutral` : undefined;
-  $: secondaryClass = secondary ? `mzp-t-secondary` : undefined;
+  $: secondaryClass = secondary ? `rwp-secondary` : undefined;
   $: darkClass = dark ? `mzp-t-dark` : undefined;
   $: leaveClass = leave ? `mzp-t-leave` : undefined;
   $: iconClass = icon ? "mzp-t-icon" : undefined;

@@ -18,6 +18,8 @@
   export let headerClass;
   export let displayCard;
 
+  const googleAccountLink = "https://www.google.com/account";
+
   let userEmail;
   let timeSeconds = null;
   let createdOn;
@@ -25,9 +27,9 @@
   let getEmailStatus;
 
   let isGoogleOnlyAccount;
+  let isUserVerified;
   let showBtn = "display: block;";
   let hideBtn = "display: none;";
-  let googleAccountLink = "https://www.google.com/account";
   let showWarning = false;
 
   onMount(async () => {
@@ -37,7 +39,7 @@
     isGoogleOnlyAccount =
       userProvider &&
       userProvider.length &&
-      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
+      !userProvider.some((p) => p.providerId === "password"); // no password provider means Google-only
   });
 
   const getLatestVerified = async () => {
@@ -79,40 +81,44 @@
   <div class="card-content card-content--settings" slot="card-content">
     <div class="content-box">
       <div class="content-box__title">Email</div>
-      <div class="content-box__content">
-        <div class="content-description user-email">
-          {userEmail}
-          <span class="not-verified-warning"
-            >{showWarning ? "(not verified)" : ""}
-          </span>
-          <span
+      {#if showWarning}
+      <div class="content-box__warning">
+        <img src="img/icon-info-warning.svg" alt="warning icon" />
+        <div>
+          Email not verified. <button
             on:click={resendVerificationEmail}
-            class="not-verified-warning--action"
-            >{showWarning ? "Resend verification email" : ""}</span
-          >
+            class="warning-action rwp-link"
+            >Resend verification email
+          </button>
+        </div>
+      </div>
+      {/if}
+      <div class="content-box__info">
+        <div class="content-user-email">
+          {userEmail}
         </div>
         <button
           style={isGoogleOnlyAccount ? hideBtn : showBtn}
           on:click={() => {
             displayCard("update-email");
           }}
-          class="edit-btn">Edit</button
+          class="edit-btn rwp-link">Edit</button
         >
       </div>
       <hr />
       {#if isGoogleOnlyAccount}
         <div class="content-box">
           <div class="content-box__title">Connected with Google</div>
-          <p class="content-box__description content-box__description--google">
+          <p class="content-box__text content-box__text--google">
             You can change your Security or Privacy settings through your Google
             Account
           </p>
-          <div class="content-box__content content-box__content--google">
+          <div class="content-box__info content-box__info--google">
             <div
               class="content-box__description content-box__description--google"
             >
               <img src="img/icon-logo-google.svg" alt="Google logo" />
-              <div class="info">
+              <div class="google-text">
                 Connected to {userEmail} on {createdOn}
               </div>
             </div>
@@ -121,14 +127,17 @@
               target="_blank"
               class="content-box__link "
               ><div>Manage account</div>
-              <ExternalLink /></a
+              <img
+                src="img/icon-external-link_16x16.svg"
+                alt="external link icon"
+              /></a
             >
           </div>
         </div>
       {:else}
         <div class="content-box">
           <div class="content-box__title">Password</div>
-          <div class="content-box__content">
+          <div class="content-box__info">
             <div class="content-box__description password-dots">
               •••••••••••••••••
             </div>
@@ -136,7 +145,7 @@
               on:click={() => {
                 displayCard("update-pw");
               }}
-              class="edit-btn">Edit</button
+              class="edit-btn rwp-link">Edit</button
             >
           </div>
         </div>

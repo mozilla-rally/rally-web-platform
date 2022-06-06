@@ -20,7 +20,7 @@
     </h2>
     <div class="card-content card-content--settings" slot="card-content">
       <div class="content-box">
-        <div class="content-box__content">
+        <div class="content-box__info">
           <div class="content-box__description">
             This account will no longer be available, and all your saved data
             will be permanently deleted.
@@ -29,7 +29,7 @@
             on:click={() => {
               displayCard("delete");
             }}
-            class="edit-btn">Delete</button
+            class="edit-btn rwp-link">Delete</button
           >
         </div>
       </div>

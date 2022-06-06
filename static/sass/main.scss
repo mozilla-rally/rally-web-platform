@@ -19,7 +19,6 @@
 @import "layout/container";
 @import "layout/footer";
 
-@import "components/button";
 @import "components/card";
 @import "components/call-flow";
 @import "components/sidenav";
@@ -28,6 +27,8 @@
 @import "pages/profile";
 @import "pages/signin";
 @import "pages/terms";
+
+@import "components/button";
 
 @import "storybook/cards";
 
