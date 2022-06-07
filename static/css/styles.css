@@ -13696,7 +13696,7 @@ footer .footer-wrapper {
 footer .footer-content {
   display: grid;
   align-items: stretch;
-  grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-column-gap: 15%;
   grid-row-gap: 55px;
   margin-bottom: 72px;
