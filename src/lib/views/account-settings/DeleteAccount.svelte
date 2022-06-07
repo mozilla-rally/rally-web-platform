@@ -125,10 +125,7 @@
       <Button
         size="xl"
         customClass="card-button create cancel"
-        customControl={true}
-        textColor="#5E5E72"
-        background="transparent"
-        borderColor="#CDCDD4"
+        secondary
         on:click={() => {
           handleSelect("read-only");
         }}

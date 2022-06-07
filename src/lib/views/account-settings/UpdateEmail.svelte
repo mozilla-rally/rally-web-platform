@@ -54,10 +54,9 @@
     try {
       await store.changeEmail(emailEl.value, passwordEl.value);
     } catch (err) {
-      console.error("Error while changing the email", err)
+      console.error("Error while changing the email", err);
     }
-    
-  };
+  }
 
   const checkFields = async () => {
     const isEmailAbsent = !emailEl.value;
@@ -100,7 +99,8 @@
 
   const handleNextState = () => {
     /* Check for firebase errors and display if needed. */
-    fireBaseErr = localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
+    fireBaseErr =
+      localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
