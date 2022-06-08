@@ -322,18 +322,16 @@ export default {
         throw new Error("google-only-account");
       }
       userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if (userCredential.user.emailVerified) {
+        window.location.href = "/";
+      } else {
+        console.warn("Email account not verified");
+        localStorage.setItem("signInErr", "Email account not verified");
+      }
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("signInErr", err);
       return;
-    }
-    if (userCredential.user.emailVerified) {
-      window.location.href = "/";
-    } else {
-      console.warn("Email account not verified, sending verification email");
-      localStorage.setItem("signInErr", "Email account not verified");
-      await sendEmailVerification(userCredential.user);
-      await this.signOutUser();
     }
   },
 
@@ -451,7 +449,7 @@ export default {
       console.info("email verification resent!");
     } catch (err) {
       console.error("there was an error", err);
-      localStorage.setItem("changeEmailErr", err);
+      localStorage.setItem("authErr", err);
       return;
     }
   },

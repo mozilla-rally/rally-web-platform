@@ -21,8 +21,6 @@
 
   let customClass = "launch";
   let notVerified = false;
-  const notVerifiedText =
-    "Email account is not verified. Please check your inbox and activate your account.";
   let startState;
   let titleEl;
   let textWidth;
@@ -91,7 +89,11 @@
           class="card-button__img"
         />
         <p class="not-verified__text">
-          {notVerifiedText}
+          Email account is not verified. Please check your inbox and activate your account.
+          <br><br>
+          Can't find the email? <a href="#resend" on:click={() => {
+            store.resendUserVerificationEmail();
+          }}>Resend verification email</a>
         </p>
       </div>
     {/if}
