@@ -105,7 +105,7 @@
             target="_blank">About Rally</a
           >
           <ul class="footer-sublist">
-            <li class="contact-us">
+            <li class="subscribe">
               <a
                 href="__BASE_SITE__/newsletter/index.html"
                 target="_blank"
@@ -134,6 +134,15 @@
             href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
             target="_blank">Support</a
           >
+          <ul class="footer-sublist">
+            <li class="contact-us">
+              <a
+                href="mailto:contact@rally.mozilla.org"
+                class="footer-sublist-link rwp-nav-link"
+                >Contact us</a
+              >
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
