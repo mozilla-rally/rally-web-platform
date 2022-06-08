@@ -134,15 +134,6 @@
             href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
             target="_blank">Support</a
           >
-          <ul class="footer-sublist">
-            <li class="contact-us">
-              <a
-                href=""
-                target="_blank"
-                class="footer-sublist-link rwp-nav-link">Contact Us</a
-              >
-            </li>
-          </ul>
         </li>
       </ul>
     </div>

@@ -278,7 +278,7 @@
 
           <div class="input-wrapper input-wrapper--curent">
             <input
-              class={oldPassword.inputPasswordClass}
+              class={`rally-input ${oldPassword.inputPasswordClass}`}
               bind:this={oldPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
@@ -318,7 +318,7 @@
           </div>
           <div class="input-wrapper input-wrapper--new">
             <input
-              class={newPassword.inputPasswordClass}
+              class={`rally-input ${newPassword.inputPasswordClass}`}
               bind:this={newPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
@@ -375,7 +375,7 @@
           </div>
           <div class="input-wrapper">
             <input
-              class={confirmPassword.inputPasswordClass}
+              class={`rally-input ${confirmPassword.inputPasswordClass}`}
               bind:this={confirmPassword.passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}

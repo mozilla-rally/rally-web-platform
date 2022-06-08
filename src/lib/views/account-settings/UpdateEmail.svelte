@@ -161,7 +161,7 @@
           </div>
           <!-- **** EMAIL INPUT *** -->
           <input
-            class={inputEmailClass}
+            class={`rally-input ${inputEmailClass}`}
             bind:this={emailEl}
             on:change={handleChange}
             on:keyup={handleChange}
@@ -189,7 +189,7 @@
           <div class="input-wrapper">
             <!-- **** PASSWORD INPUT *** -->
             <input
-              class={inputPasswordClass}
+              class={`rally-input ${inputPasswordClass}`}
               bind:this={passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}
