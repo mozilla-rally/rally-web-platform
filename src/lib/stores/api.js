@@ -345,13 +345,13 @@ export default {
         email,
         password
       );
+      console.info("Sending verification email");
+      await sendEmailVerification(userCredential.user);
     } catch (err) {
       console.error("there was an error", err);
       localStorage.setItem("createErr", err);
       return;
     }
-    console.info("Sending verification email");
-    await sendEmailVerification(userCredential.user);
   },
 
   async signOutUser() {
