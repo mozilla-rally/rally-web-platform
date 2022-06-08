@@ -83,7 +83,6 @@
           >
           <Button
             size="lg"
-            product
             disabled={!validated}
             secondary
             on:click={() => {
