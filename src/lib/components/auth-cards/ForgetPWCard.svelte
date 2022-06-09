@@ -125,7 +125,7 @@
               <label class="mzp-c-field-label" for="id_user_email">Email</label>
             </div>
             <input
-              class={inputEmailClass}
+              class={`rally-input ${inputEmailClass}`}
               bind:this={emailEl}
               on:change={handleChange}
               on:keyup={handleChange}

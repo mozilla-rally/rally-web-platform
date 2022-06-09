@@ -54,10 +54,9 @@
     try {
       await store.changeEmail(emailEl.value, passwordEl.value);
     } catch (err) {
-      console.error("Error while changing the email", err)
+      console.error("Error while changing the email", err);
     }
-    
-  };
+  }
 
   const checkFields = async () => {
     const isEmailAbsent = !emailEl.value;
@@ -100,7 +99,8 @@
 
   const handleNextState = () => {
     /* Check for firebase errors and display if needed. */
-    fireBaseErr = localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
+    fireBaseErr =
+      localStorage.getItem("changeEmailErr") || localStorage.getItem("authErr");
     fireBaseErr ? setMessage() : clearFields();
   };
 
@@ -161,7 +161,7 @@
           </div>
           <!-- **** EMAIL INPUT *** -->
           <input
-            class={inputEmailClass}
+            class={`rally-input ${inputEmailClass}`}
             bind:this={emailEl}
             on:change={handleChange}
             on:keyup={handleChange}
@@ -189,7 +189,7 @@
           <div class="input-wrapper">
             <!-- **** PASSWORD INPUT *** -->
             <input
-              class={inputPasswordClass}
+              class={`rally-input ${inputPasswordClass}`}
               bind:this={passwordEl}
               on:change={handleChange}
               on:keyup={handleChange}

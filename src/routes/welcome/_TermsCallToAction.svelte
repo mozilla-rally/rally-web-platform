@@ -46,7 +46,6 @@
   </Button>
   <Button
     size="xl"
-    product
     secondary
     btnID="decline"
     on:click={() => {
