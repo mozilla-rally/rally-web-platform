@@ -502,8 +502,6 @@ export default {
     const user = auth && auth.currentUser;
     if (!user) return;
     try {
-      console.log(user.providerId);
-      console.log(user.providerData);
       return user.providerData;
     } catch (err) {
       console.error("there was an error", err);

@@ -79,6 +79,7 @@
     const wrongPW = "auth/wrong-password";
     const wrongUser = "auth/user-mismatch";
     const popupBlocked = "auth/popup-blocked";
+    const popupClosedByUser = "auth/popup-closed-by-user";
     if (fireBaseErr.indexOf(wrongPW) > -1) {
       errText =
         "The password you entered is incorrect. Please try again.";
@@ -89,6 +90,9 @@
     } else if (fireBaseErr.indexOf(popupBlocked) > -1) {
       errText =
         "The Google authentication popup was blocked by your browser. Please enable popups and try again.";
+    } else if (fireBaseErr.indexOf(popupClosedByUser) > -1) {
+      errText =
+        "You must complete the authentication process in order to delete your account. Please try again.";
     } else {
       errText = `Unfortunately, there was an unexpected error while deleting your account. Please try again later.
       If the problem persists, please <a href="mailto:support@rally.mozilla.org">contact Support</a>.`;
@@ -123,8 +127,8 @@
 
     <div class="btn-group btn-group--delete">
       <Button
-        size="xl"
-        customClass="card-button create cancel"
+        size="lg"
+        customClass="create cancel"
         customControl={true}
         textColor="#5E5E72"
         background="transparent"
@@ -137,10 +141,10 @@
       >
 
       <Button
-        size="xl"
+        size="lg"
         product
         leave
-        customClass="card-button create"
+        customClass="create"
         on:click={() => {
           leaveModal = true;
         }}
@@ -160,21 +164,23 @@
     <div
       class="split-content-modal"
       slot="body"
-      style="margin-bottom: 24px; box-sizing: content-box;"
+      style="margin-bottom: 20px; box-sizing: content-box;"
     >
-      <div style="width: 368px;">
+      <div style="width: 373px;">
         <p style="padding-top: 24px; font-size: 16px;">
-          This will permanently delete your account. <br><br>
           {#if isGoogleOnlyAccount}
-            <b>Note:</b> You may be asked to authenticate with Google to complete the process.
+            <p class="mzp-c-field-label" style="padding-bottom: 20px;"
+              >This will permanently delete your account</p
+            >
+            If your proceed, you may be asked to authenticate with Google to complete the process.
           {:else}
-            Enter your password below to confirm.
+            This will permanently delete your account.<br>
           {/if}
         </p>
         {#if !isGoogleOnlyAccount}
           <div class="label-wrapper">
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
-              >Password</label
+              >Please enter your password to confirm</label
             >
             <!-- FORGOT PASSWORD -->
             <!-- Will include this flow post mvp? -->
@@ -224,8 +230,8 @@
     </div>
     <div class="modal-call-flow" slot="cta">
       <Button
-        size="xl"
-        customClass="card-button create cancel"
+        size="lg"
+        customClass="create cancel"
         customControl={true}
         textColor="#5E5E72"
         background="transparent"
@@ -239,10 +245,10 @@
       </Button>
       <Button
         disabled={btnDisabled}
-        size="xl"
+        size="lg"
         product
         leave
-        customClass="card-button create"
+        customClass="create"
         on:click={async () => {
           await deleteUserAccount();
         }}
@@ -271,6 +277,14 @@
     flex: 50%;
   }
 
+  .enter-pw {
+    padding-bottom: 12px;
+  }
+
+  input {
+    padding: 10px;
+  }
+
   h4 {
     margin-top: 0;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -296,6 +310,7 @@
     grid-column: 1/-1;
     grid-row: 1/2;
     z-index: 1;
+    margin-bottom: 20px;
   }
 
   .input-wrapper {
@@ -308,7 +323,7 @@
     grid-row: 1/2;
     justify-self: end;
     z-index: 2;
-    margin: 9px;
+    margin: 11px;
     cursor: pointer;
   }
 
