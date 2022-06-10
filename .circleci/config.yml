@@ -25,9 +25,6 @@ jobs:
           node-version: "16.13"
       - node/install-packages
       - run:
-          name: Run lint
-          command: npm run lint:functions # TODO - fix the other linters https://github.com/mozilla-rally/rally-web-platform/issues/112
-      - run:
           name: Run build
           command: npm run build
       # Save this workspace, will be archived if tests pass before deploy.
@@ -44,13 +41,8 @@ jobs:
       - run:
           name: Run integration tests
           command: npm run test:integration
-      - run:
-          name: Run cloud function tests
-          command: npm run test:functions
       - store_artifacts:
           path: ./screenshots
-      - store_artifacts:
-          path: ./functions/coverage
 
   # This archives our deployable assets, before deploy happens.
   archive-site:
@@ -63,7 +55,7 @@ jobs:
       - run:
           name: Archive Firebase before deploy
           command: |
-            zip -r rally-web-platform.zip ./ -i build/\* functions/lib/\* firebase.json firestore.rules
+            zip -r rally-web-platform.zip ./ -i build/\* firebase.json firestore.rules
       - store_artifacts:
           path: ./rally-web-platform.zip
 
@@ -93,7 +85,7 @@ jobs:
           command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase use --add << parameters.project_name >> && cp config/firebase.config.<< parameters.project_config >>.json build/firebase.config.json
       - run:
           name: Firebase Deploy.
-          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --project << parameters.project_name >>
+          command: GOOGLE_APPLICATION_CREDENTIALS="$HOME"/gcloud.json ./node_modules/.bin/firebase deploy --only hosting --project << parameters.project_name >>
 
 workflows:
   # Below is the definition of your workflow.
