@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import ContentContainer from "../../lib/layouts/main/ContentContainer.svelte";
   import Footer from "../../lib/layouts/main/Footer.svelte";
@@ -95,7 +95,7 @@
   } else if (isLeaveRally) {
     cardArgs = leaveRallyArgs;
   }
-</script>
+</script> -->
 
 <!-- until new designs for account is up, will comment this out as a placeholder   -->
 <!-- 

@@ -4,6 +4,10 @@
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import Card from "../../../lib/components/Card.svelte";
+
+  const googleAccountLink = "https://www.google.com/account";
+  let showBtn = "display: block;";
+  let hideBtn = "display: none;";
 </script>
 
 <Meta
@@ -14,8 +18,11 @@
     width: { control: "text" },
     height: { control: "text" },
     fontSize: { control: "text" },
-    customClass: {control: "text"},
-    headerClass: {control: "text"},
+    customClass: { control: "text" },
+    headerClass: { control: "text" },
+    isGoogle: { control: "boolean" },
+    isWarning: { control: "boolean" },
+    userEmail: {control: "text"}
   }}
 />
 
@@ -29,19 +36,65 @@
       <div class="card-content card-content--settings" slot="card-content">
         <div class="content-box">
           <div class="content-box__title">Email</div>
-          <div class="content-box__content">
-            <div class="content-description user-email">name@mozilla.com</div>
-            <button class="edit-btn">Edit</button>
+          {#if args.isWarning}
+            <div class="content-box__warning">
+              <img src="img/icon-info-warning.svg" alt="warning icon" />
+              <div>
+                Email not verified. <button class="warning-action rwp-link"
+                  >Resend verification email
+                </button>
+              </div>
+            </div>
+          {/if}
+
+          <div class="content-box__info">
+            <div class="content-user-email">{args.userEmail}</div>
+            <button
+              style={args.isGoogle ? hideBtn : showBtn}
+              class="edit-btn rwp-link">Edit</button
+            >
           </div>
         </div>
         <hr />
-        <div class="content-box">
-          <div class="content-box__title">Password</div>
-          <div class="content-box__content">
-            <div class="content-description password-dots">•••••••••••••••••</div>
-            <button class="edit-btn">Edit</button>
+        {#if args.isGoogle}
+          <div class="content-box">
+            <div class="content-box__title">Connected with Google</div>
+            <p class="content-box__text content-box__text--google">
+              You can change your Security or Privacy settings through your
+              Google Account
+            </p>
+            <div class="content-box__info content-box__info--google">
+              <div
+                class="content-box__description content-box__description--google"
+              >
+                <img src="img/icon-logo-google.svg" alt="Google logo" />
+                <div class="google-text">
+                  Connected to {args.userEmail} on June 16, 20XX
+                </div>
+              </div>
+              <a
+                href={googleAccountLink}
+                target="_blank"
+                class="content-box__link "
+                ><div>Manage account</div>
+                <img
+                  src="img/icon-external-link_16x16.svg"
+                  alt="external link icon"
+                /></a
+              >
+            </div>
           </div>
-        </div>
+        {:else}
+          <div class="content-box">
+            <div class="content-box__title">Password</div>
+            <div class="content-box__info">
+              <div class="content-box__description password-dots">
+                •••••••••••••••••
+              </div>
+              <button class="edit-btn rwp-link">Edit</button>
+            </div>
+          </div>
+        {/if}
       </div>
     </Card>
   </div>
@@ -57,6 +110,9 @@
     title: "Sign in",
     customClass: "settings",
     headerClass: "settings",
+    isGoogle: false,
+    isWarning: false,
+    userEmail: "test@test.com"
   }}
 />
 

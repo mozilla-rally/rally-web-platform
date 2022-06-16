@@ -11,30 +11,33 @@
   component={Card}
   argTypes={{
     title: { control: "text" },
-    body: { control: "text" },
-    cta1: { control: "text" },
-    cta2: { control: "text" },
     width: { control: "text" },
     height: { control: "text" },
-    fontSize: { control: "text" },
+    customClass: { control: "text" },
+    headerClass: { control: "text" },
   }}
 />
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
   <div class="sb-container settings-readonly">
-    <Card {...args}>
+    <Card
+      width={args.width}
+      height={args.height}
+      customClass={args.customClass}
+      headerClass={args.headerClass}
+    >
       <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
         <div class="title-text title-text--settings">{args.title}</div>
       </h2>
       <div class="card-content card-content--settings" slot="card-content">
         <div class="content-box">
-         
-          <div class="content-box__content">
-            <div class="content-description">
-                This account will no longer be available, and all your saved data will be permanently deleted.
+          <div class="content-box__info">
+            <div class="content-box__description">
+              This account will no longer be available, and all your saved data
+              will be permanently deleted.
             </div>
-            <button class="edit-btn">Delete</button>
+            <button class="edit-btn rwp-link">Delete</button>
           </div>
         </div>
       </div>
@@ -47,11 +50,10 @@
   name="Settings Delete"
   args={{
     width: "612px",
-    fontSize: "24px",
     height: "auto",
-    title: "Delete account",
     customClass: "settings",
     headerClass: "settings",
+    title: "Delete account",
   }}
 />
 

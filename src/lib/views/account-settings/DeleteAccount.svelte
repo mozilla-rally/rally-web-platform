@@ -34,7 +34,7 @@
     isGoogleOnlyAccount =
       userProvider &&
       userProvider.length &&
-      !userProvider.some(p => p.providerId === "password"); // no password provider means Google-only
+      !userProvider.some((p) => p.providerId === "password"); // no password provider means Google-only
     btnDisabled = !isGoogleOnlyAccount;
     Dialog = (await import("../../../lib/components/Dialog.svelte")).default;
   });
@@ -66,7 +66,8 @@
 
   const handleNextState = () => {
     /* if the input fields are not empty, check for firebase errors. */
-    fireBaseErr = localStorage.getItem("authErr") || localStorage.getItem("deleteUserErr");
+    fireBaseErr =
+      localStorage.getItem("authErr") || localStorage.getItem("deleteUserErr");
     if (fireBaseErr) {
       setMessage();
     } else {
@@ -80,8 +81,7 @@
     const wrongUser = "auth/user-mismatch";
     const popupBlocked = "auth/popup-blocked";
     if (fireBaseErr.indexOf(wrongPW) > -1) {
-      errText =
-        "The password you entered is incorrect. Please try again.";
+      errText = "The password you entered is incorrect. Please try again.";
       inputPasswordClass = errorClass;
     } else if (fireBaseErr.indexOf(wrongUser) > -1) {
       errText =
@@ -109,15 +109,23 @@
         <h4>Deleting your Rally account means:</h4>
         <ul>
           <li><b>Rally will stop collecting all data.</b></li>
-          <li><b>You will stop contributing browsing data to studies</b> you may have joined.</li>
+          <li>
+            <b>You will stop contributing browsing data to studies</b> you may have
+            joined.
+          </li>
           <li><b>Rally will delete all your profile information.</b></li>
-          <li><b>Rally will delete all your data from open studies</b>
-            you had joined. Researchers may still have access to 
-            browsing data you contributed to <b>completed studies.</b></li>
+          <li>
+            <b>Rally will delete all your data from open studies</b>
+            you had joined. Researchers may still have access to browsing data you
+            contributed to <b>completed studies.</b>
+          </li>
         </ul>
       </div>
       <div class="settings-delete-image">
-        <img src="img/before-you-go.png" alt="person walking through exit door">
+        <img
+          src="img/before-you-go.png"
+          alt="person walking through exit door"
+        />
       </div>
     </div>
 
@@ -149,10 +157,7 @@
 </div>
 
 {#if leaveModal && $mounted && Dialog}
-  <Dialog
-    width="413px"
-    showCloseButton={false}
-  >
+  <Dialog width="413px" showCloseButton={false}>
     <div slot="title">Are you sure?</div>
     <div
       class="split-content-modal"
@@ -161,9 +166,10 @@
     >
       <div style="width: 368px;">
         <p style="padding-top: 24px; font-size: 16px;">
-          This will permanently delete your account. <br><br>
+          This will permanently delete your account. <br /><br />
           {#if isGoogleOnlyAccount}
-            <b>Note:</b> You may be asked to authenticate with Google to complete the process.
+            <b>Note:</b> You may be asked to authenticate with Google to complete
+            the process.
           {:else}
             Enter your password below to confirm.
           {/if}
@@ -173,15 +179,6 @@
             <label class="mzp-c-field-label enter-pw" for="id_user_pw"
               >Password</label
             >
-            <!-- FORGOT PASSWORD -->
-            <!-- Will include this flow post mvp? -->
-            <!-- <label class="mzp-c-field-label forgot-pw" for="id_user_pw">
-              <button
-                on:click={() => {
-                  handleTrigger("forget");
-                }}>Forgot password</button
-              ></label
-            > -->
           </div>
           <div class="input-wrapper">
             <!-- **** PASSWORD INPUT *** -->
@@ -222,11 +219,7 @@
     <div class="modal-call-flow" slot="cta">
       <Button
         size="xl"
-        customClass="card-button create cancel"
-        customControl={true}
-        textColor="#5E5E72"
-        background="transparent"
-        borderColor="#CDCDD4"
+        secondary
         on:click={() => {
           leaveModal = false;
           handleSelect("read-only");
@@ -252,7 +245,7 @@
 
 <style>
   .btn-group--delete {
-    margin-top: 0; 
+    margin-top: 0;
   }
 
   .delete-card-info {
@@ -322,5 +315,4 @@
     height: auto;
     transition: opacity 1s linear, height 1s linear;
   }
-
 </style>
