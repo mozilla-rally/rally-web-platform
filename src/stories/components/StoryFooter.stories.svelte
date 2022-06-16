@@ -1,6 +1,6 @@
 <script>
     import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
-    import Footer from "../../lib/layouts/main/Footer.svelte"
+    import Footer from "../../routes/_Footer.svelte"
     import "./css/RallyFooter.css"
   </script>
   
