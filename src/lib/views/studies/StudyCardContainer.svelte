@@ -52,9 +52,14 @@
   }
 
   let Dialog;
+  let analytics;
+  let logEvent;
   let mounted = false;
   onMount(async () => {
     Dialog = (await import("$lib/components/Dialog.svelte")).default;
+    analytics = (await import("firebase/analytics")).getAnalytics();
+    logEvent = (await import("firebase/analytics")).logEvent;
+
     mounted = true;
   });
 </script>
@@ -199,6 +204,9 @@
         neutral
         secondary
         on:click={() => {
+          logEvent(analytics, "select_content", {
+            content_type: `canceled_${joined ? "leave" : "join"}_study`,
+          });
           joinModal = false;
         }}
       >
@@ -211,6 +219,9 @@
         leave={joined}
         custom={joined ? "outline" : ""}
         on:click={() => {
+          logEvent(analytics, "select_content", {
+            content_type: `${joined ? "leave" : "join"}_study`,
+          });
           // send join event to parent.
           dispatch(!joined ? "join" : "leave");
           joinModal = false;
