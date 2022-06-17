@@ -46,21 +46,21 @@
         margin-bottom: 12px;
       }
 
-      &__warning{
+      &__warning {
         @extend %content-body-MD;
         display: flex;
-        align-items: center; 
+        align-items: center;
         background: $color-marketing-gray-20;
-        padding: 16px; 
+        padding: 16px;
         border-radius: 2px;
-        margin-bottom: 12px; 
-      
-        img{
-          padding-right: 12px; 
+        margin-bottom: 12px;
+
+        img {
+          padding-right: 12px;
         }
 
-        .warning-action{
-          margin-left: 2px; 
+        .warning-action {
+          margin-left: 2px;
         }
       }
 
@@ -155,11 +155,19 @@
 }
 
 .settings-wrapper {
+  .delete-card-info {
+    @media (max-width: $SM-screen) {
+      flex-direction: column;
+    }
+  }
   .card-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 24px;
+    @media (max-width: $MD-screen) {
+      flex-direction: column;
+    }
   }
 
   .forgot-pw {
@@ -179,11 +187,19 @@
     width: 272px;
     float: right;
 
+    
+   
+
+    .cancel {
+      margin-right: 12px;
+
+      @media (max-width: $SM-screen) {
+        margin: 16px 0px;
+      }
+    }
+
     &--password {
       width: auto;
-      .cancel {
-        margin-right: 8px;
-      }
     }
 
     &--delete {
@@ -195,8 +211,16 @@
     }
 
     .card-button {
-      width: auto;
       padding: 8px 21.82px;
+
+      @media (max-width: $SM-screen) {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: $SM-screen) {
+      flex-direction: column;
+      width: 100%;
     }
   }
 }

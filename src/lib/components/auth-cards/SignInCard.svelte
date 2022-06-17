@@ -230,6 +230,10 @@
 </div>
 
 <style>
+  .card-button{
+    width: 100%; 
+  }
+  
   .forgot-pw a {
     border-color: transparent;
     background: transparent;

@@ -1234,6 +1234,11 @@ main hr {
 main .section-header {
   margin-bottom: 12px;
 }
+@media (max-width: 432px) {
+  main .section-header {
+    font-size: 32px;
+  }
+}
 
 h1,
 h2,
@@ -13625,12 +13630,12 @@ ol {
 }
 @media (max-width: 688px) {
   .main-content--account-settings {
-    padding: 0.625rem 10%;
+    padding: 0.625rem 3%;
   }
 }
 @media (max-width: 432px) {
   .main-content {
-    padding: 0.625rem 10%;
+    padding: 0.625rem 24px;
   }
 }
 @media (max-width: 320px) {
@@ -13669,7 +13674,6 @@ ol {
 }
 .content-container--account-settings {
   padding: 0px;
-  justify-content: unset;
 }
 
 footer {
@@ -13808,13 +13812,24 @@ footer .footer-content {
   justify-content: unset;
   margin: 0 !important;
 }
+@media (max-width: 432px) {
+  .card--settings-update {
+    padding: 32px 0px 44px;
+  }
+}
+@media (min-width: 688px) {
+  .card--settings-update {
+    width: 100%;
+  }
+}
+@media (max-width: 432px) {
+  .card--settings-update .title-text {
+    font-size: 32px;
+  }
+}
 .card--settings {
   display: block;
   border: 1px solid #cdcdd4;
-}
-.card--settings-update {
-  padding: 32px 32px 44px;
-  justify-content: unset;
 }
 .card--settings-delete {
   padding: 32px 32px 34.5px;
@@ -13847,6 +13862,11 @@ footer .footer-content {
   z-index: 1;
   text-align: center;
   display: inline-block;
+}
+@media (max-width: 432px) {
+  .card .card-header .title-text {
+    text-align: left;
+  }
 }
 .card .card-header--signin {
   padding-bottom: 48px;
@@ -14135,11 +14155,21 @@ footer .footer-content {
   border: 1px solid #cdcdd4;
 }
 
+@media (max-width: 432px) {
+  .settings-wrapper .delete-card-info {
+    flex-direction: column;
+  }
+}
 .settings-wrapper .card-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 24px;
+}
+@media (max-width: 688px) {
+  .settings-wrapper .card-bottom {
+    flex-direction: column;
+  }
 }
 .settings-wrapper .forgot-pw button {
   border-color: transparent;
@@ -14155,11 +14185,16 @@ footer .footer-content {
   width: 272px;
   float: right;
 }
+.settings-wrapper .btn-group .cancel {
+  margin-right: 12px;
+}
+@media (max-width: 432px) {
+  .settings-wrapper .btn-group .cancel {
+    margin: 16px 0px;
+  }
+}
 .settings-wrapper .btn-group--password {
   width: auto;
-}
-.settings-wrapper .btn-group--password .cancel {
-  margin-right: 8px;
 }
 .settings-wrapper .btn-group--delete {
   width: auto;
@@ -14169,8 +14204,18 @@ footer .footer-content {
   margin-right: 12px;
 }
 .settings-wrapper .btn-group .card-button {
-  width: auto;
   padding: 8px 21.82px;
+}
+@media (max-width: 432px) {
+  .settings-wrapper .btn-group .card-button {
+    width: 100%;
+  }
+}
+@media (max-width: 432px) {
+  .settings-wrapper .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
 }
 
 .signin__logo {
@@ -14224,6 +14269,11 @@ footer .footer-content {
   display: flex;
   align-items: center;
   color: #5e5e72 !important;
+}
+@media (max-width: 432px) {
+  .signin__howitworks .external-link {
+    justify-content: center;
+  }
 }
 .signin__howitworks svg {
   padding-left: 8px;
@@ -14296,8 +14346,8 @@ footer .footer-content {
   color: #000000;
 }
 .card .card-button {
-  width: 100%;
   display: flex;
+  width: 100%;
 }
 .card .card-button__text {
   width: 300px;
