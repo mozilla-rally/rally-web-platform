@@ -54,7 +54,6 @@
   .card {
     max-width: var(--width);
     height: var(--height);
-    background-color: #fff;
   }
 
   header {

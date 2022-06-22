@@ -13782,6 +13782,7 @@ footer .footer-content {
 
 .card {
   border: 1px solid #cdcdd4;
+  background-color: #fff;
   margin-bottom: 4rem;
   display: grid;
   justify-content: center;
@@ -13795,6 +13796,7 @@ footer .footer-content {
 @media (max-width: 432px) {
   .card {
     border: none;
+    background-color: transparent;
     height: auto !important;
     padding: 0;
   }
@@ -14099,6 +14101,16 @@ footer .footer-content {
 .settings-readonly .card .content-box__description {
   color: #42435A;
 }
+@media (max-width: 688px) {
+  .settings-readonly .card .content-box__description {
+    max-width: 340px;
+  }
+}
+@media (max-width: 432px) {
+  .settings-readonly .card .content-box__description {
+    max-width: 203px;
+  }
+}
 .settings-readonly .card .content-box__description--google {
   display: flex;
   align-items: center;
@@ -14182,22 +14194,23 @@ footer .footer-content {
 .settings-wrapper .btn-group {
   display: flex;
   justify-content: space-between;
-  width: 272px;
   float: right;
+}
+@media (max-width: 688px) {
+  .settings-wrapper .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
 }
 .settings-wrapper .btn-group .cancel {
   margin-right: 12px;
 }
-@media (max-width: 432px) {
+@media (max-width: 688px) {
   .settings-wrapper .btn-group .cancel {
     margin: 16px 0px;
   }
 }
-.settings-wrapper .btn-group--password {
-  width: auto;
-}
 .settings-wrapper .btn-group--delete {
-  width: auto;
   float: left;
 }
 .settings-wrapper .btn-group--delete .cancel {
@@ -14205,16 +14218,12 @@ footer .footer-content {
 }
 .settings-wrapper .btn-group .card-button {
   padding: 8px 21.82px;
+  width: auto;
 }
-@media (max-width: 432px) {
+@media (max-width: 688px) {
   .settings-wrapper .btn-group .card-button {
     width: 100%;
-  }
-}
-@media (max-width: 432px) {
-  .settings-wrapper .btn-group {
-    flex-direction: column;
-    width: 100%;
+    display: block;
   }
 }
 

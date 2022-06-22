@@ -1,5 +1,6 @@
 .card {
   border: 1px solid #cdcdd4;
+  background-color: #fff;
   margin-bottom: 4rem;
   display: grid;
   justify-content: center;
@@ -11,6 +12,7 @@
 
   @media (max-width: $SM-screen) {
     border: none;
+    background-color: transparent;
     height: auto !important;
     padding: 0;
   }

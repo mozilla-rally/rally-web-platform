@@ -92,6 +92,14 @@
         @extend %content-body-MD;
         color: $color-helper-gray;
 
+        @media (max-width: $MD-screen) {
+          max-width: 340px;
+        }
+
+        @media (max-width: $SM-screen) {
+          max-width: 203px;
+        }
+
         &--google {
           display: flex;
           align-items: center;
@@ -184,26 +192,19 @@
   .btn-group {
     display: flex;
     justify-content: space-between;
-    width: 272px;
     float: right;
-
-    
-   
-
+    @media (max-width: $MD-screen) {
+      flex-direction: column;
+      width: 100%;
+    }
     .cancel {
       margin-right: 12px;
-
-      @media (max-width: $SM-screen) {
+      @media (max-width: $MD-screen) {
         margin: 16px 0px;
       }
     }
 
-    &--password {
-      width: auto;
-    }
-
     &--delete {
-      width: auto;
       float: left;
       .cancel {
         margin-right: 12px;
@@ -212,15 +213,12 @@
 
     .card-button {
       padding: 8px 21.82px;
+      width: auto;
 
-      @media (max-width: $SM-screen) {
+      @media (max-width: $MD-screen) {
         width: 100%;
+        display: block;
       }
-    }
-
-    @media (max-width: $SM-screen) {
-      flex-direction: column;
-      width: 100%;
     }
   }
 }
