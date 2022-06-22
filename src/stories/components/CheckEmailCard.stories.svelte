@@ -110,6 +110,10 @@
     width: calc(var(--titleWidth) + 15px);
   }
 
+  .title-text{
+    font-size: 38px !important;
+  }
+
   .contact-text{
     margin: 0; 
   }

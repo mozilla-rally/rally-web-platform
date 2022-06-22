@@ -22,14 +22,19 @@
     headerClass: { control: "text" },
     isGoogle: { control: "boolean" },
     isWarning: { control: "boolean" },
-    userEmail: {control: "text"}
+    userEmail: { control: "text" },
   }}
 />
 
 <!-- 👇 We create a “template” of how args map to rendering -->
 <Template let:args>
   <div class="sb-container settings-readonly">
-    <Card {...args}>
+    <Card
+      width={args.width}
+      height={args.height}
+      customClass={args.customClass}
+      headerClass={args.headerClass}
+    >
       <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
         <div class="title-text title-text--settings">{args.title}</div>
       </h2>
@@ -112,12 +117,13 @@
     headerClass: "settings",
     isGoogle: false,
     isWarning: false,
-    userEmail: "test@test.com"
+    userEmail: "test@test.com",
   }}
 />
 
 <style>
   .sb-container {
     padding: 2rem 1rem;
+    display: block;
   }
 </style>

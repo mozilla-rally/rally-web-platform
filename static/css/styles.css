@@ -13234,6 +13234,11 @@ ol {
   align-items: center;
 }
 
+.sb-container {
+  display: flex;
+  justify-content: center;
+}
+
 .launch-button-text {
   font-weight: 700;
   font-size: 1rem;
@@ -14257,7 +14262,7 @@ footer .footer-content {
   padding-bottom: 32px;
 }
 .card .card-header--info-card .title-text {
-  font-size: 48px !important;
+  font-size: 48px;
 }
 .card .card-content .not-verified {
   display: flex;
