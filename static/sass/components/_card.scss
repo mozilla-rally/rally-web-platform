@@ -1,5 +1,6 @@
 .card {
   border: 1px solid #cdcdd4;
+  background-color: #fff;
   margin-bottom: 4rem;
   display: grid;
   justify-content: center;
@@ -11,40 +12,51 @@
 
   @media (max-width: $SM-screen) {
     border: none;
+    background-color: transparent;
     height: auto !important;
     padding: 0;
   }
 
-  &--signin, &--launch, &--create, &--info-card {
+  &--signin,
+  &--launch,
+  &--create,
+  &--info-card {
     margin: auto;
   }
 
   &--settings {
     display: block;
-    border: 1px solid #cdcdd4; 
+    border: 1px solid #cdcdd4;
     margin-bottom: 16px;
   }
 
   &--settings-update {
-   padding: 32px 32px 44px; 
-   justify-content: unset;
-   margin: 0 !important; 
+    padding: 32px 32px 44px;
+    justify-content: unset;
+    margin: 0 !important;
+    @media (max-width: $SM-screen) {
+      padding: 32px 0px 44px;
+    }
+    @media (min-width: $MD-screen) {
+     width: 100%;
+    }
+
+    .title-text{
+      @media (max-width: $SM-screen) {
+       font-size: 32px; 
+      }
+    }
   }
 
   &--settings {
     display: block;
-    border: 1px solid #cdcdd4; 
-  }
-
-  &--settings-update {
-   padding: 32px 32px 44px; 
-   justify-content: unset;
+    border: 1px solid #cdcdd4;
   }
 
   &--settings-delete {
     padding: 32px 32px 34.5px;
     justify-content: unset;
-   }
+  }
 
   &__inner {
     padding: 0;
@@ -56,8 +68,8 @@
   }
 
   .card-header {
-    &--settings-update{
-      padding-bottom: 32px;  
+    &--settings-update {
+      padding-bottom: 32px;
     }
 
     .title-wrapper {
@@ -66,7 +78,7 @@
 
       &--settings {
         justify-content: start;
-      } 
+      }
 
       &--launch {
         display: flex;
@@ -78,6 +90,9 @@
       z-index: 1;
       text-align: center;
       display: inline-block;
+      @media (max-width: $SM-screen) {
+        text-align: left;
+      }
     }
 
     &--signin {

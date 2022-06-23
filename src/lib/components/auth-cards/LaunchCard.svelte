@@ -170,4 +170,5 @@
     width: calc(var(--titleWidth) + 15px);
     transition: width 0.2s ease-in;
   }
+
 </style>

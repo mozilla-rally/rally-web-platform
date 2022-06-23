@@ -114,6 +114,7 @@
   .sb-container {
     padding: 2rem 1rem;
   }
+
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
     transition: width 0.2s ease-in;

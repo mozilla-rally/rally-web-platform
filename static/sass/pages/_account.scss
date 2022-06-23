@@ -46,21 +46,21 @@
         margin-bottom: 12px;
       }
 
-      &__warning{
+      &__warning {
         @extend %content-body-MD;
         display: flex;
-        align-items: center; 
+        align-items: center;
         background: $color-marketing-gray-20;
-        padding: 16px; 
+        padding: 16px;
         border-radius: 2px;
-        margin-bottom: 12px; 
-      
-        img{
-          padding-right: 12px; 
+        margin-bottom: 12px;
+
+        img {
+          padding-right: 12px;
         }
 
-        .warning-action{
-          margin-left: 2px; 
+        .warning-action {
+          margin-left: 2px;
         }
       }
 
@@ -91,6 +91,14 @@
       &__description {
         @extend %content-body-MD;
         color: $color-helper-gray;
+
+        @media (max-width: $MD-screen) {
+          max-width: 340px;
+        }
+
+        @media (max-width: $SM-screen) {
+          max-width: 203px;
+        }
 
         &--google {
           display: flex;
@@ -155,11 +163,20 @@
 }
 
 .settings-wrapper {
+  .delete-card-info {
+    @media (max-width: $SM-screen) {
+      flex-direction: column;
+    }
+  }
   .card-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 24px;
+    @media (max-width: $MD-screen) {
+      flex-direction: column;
+      flex-flow: column-reverse; 
+    }
   }
 
   .forgot-pw {
@@ -167,27 +184,32 @@
       border-color: transparent;
       background: transparent;
       cursor: pointer;
-      color: $color-blue-50;
+      color: $color-marketing-gray-70;
       font-weight: 600;
       font-size: 14px;
+      @media (max-width: $MD-screen) {
+        margin-top: 16px;
+      }
     }
   }
 
   .btn-group {
     display: flex;
     justify-content: space-between;
-    width: 272px;
     float: right;
-
-    &--password {
-      width: auto;
-      .cancel {
-        margin-right: 8px;
+    @media (max-width: $MD-screen) {
+      flex-direction: column;
+      flex-flow: column-reverse;
+      width: 100%;
+    }
+    .cancel {
+      margin-right: 12px;
+      @media (max-width: $MD-screen) {
+        margin-top: 16px;
       }
     }
 
     &--delete {
-      width: auto;
       float: left;
       .cancel {
         margin-right: 12px;
@@ -195,8 +217,13 @@
     }
 
     .card-button {
-      width: auto;
       padding: 8px 21.82px;
+      width: auto;
+
+      @media (max-width: $MD-screen) {
+        width: 100%;
+        display: block;
+      }
     }
   }
 }
