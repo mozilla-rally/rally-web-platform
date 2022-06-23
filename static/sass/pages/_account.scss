@@ -175,6 +175,7 @@
     margin-top: 24px;
     @media (max-width: $MD-screen) {
       flex-direction: column;
+      flex-flow: column-reverse; 
     }
   }
 
@@ -183,9 +184,12 @@
       border-color: transparent;
       background: transparent;
       cursor: pointer;
-      color: $color-blue-50;
+      color: $color-marketing-gray-70;
       font-weight: 600;
       font-size: 14px;
+      @media (max-width: $MD-screen) {
+        margin-top: 16px;
+      }
     }
   }
 
@@ -195,12 +199,13 @@
     float: right;
     @media (max-width: $MD-screen) {
       flex-direction: column;
+      flex-flow: column-reverse;
       width: 100%;
     }
     .cancel {
       margin-right: 12px;
       @media (max-width: $MD-screen) {
-        margin: 16px 0px;
+        margin-top: 16px;
       }
     }
 

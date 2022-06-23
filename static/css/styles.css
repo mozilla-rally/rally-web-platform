@@ -14181,15 +14181,21 @@ footer .footer-content {
 @media (max-width: 688px) {
   .settings-wrapper .card-bottom {
     flex-direction: column;
+    flex-flow: column-reverse;
   }
 }
 .settings-wrapper .forgot-pw button {
   border-color: transparent;
   background: transparent;
   cursor: pointer;
-  color: #0060df;
+  color: #5e5e72;
   font-weight: 600;
   font-size: 14px;
+}
+@media (max-width: 688px) {
+  .settings-wrapper .forgot-pw button {
+    margin-top: 16px;
+  }
 }
 .settings-wrapper .btn-group {
   display: flex;
@@ -14199,6 +14205,7 @@ footer .footer-content {
 @media (max-width: 688px) {
   .settings-wrapper .btn-group {
     flex-direction: column;
+    flex-flow: column-reverse;
     width: 100%;
   }
 }
@@ -14207,7 +14214,7 @@ footer .footer-content {
 }
 @media (max-width: 688px) {
   .settings-wrapper .btn-group .cancel {
-    margin: 16px 0px;
+    margin-top: 16px;
   }
 }
 .settings-wrapper .btn-group--delete {
