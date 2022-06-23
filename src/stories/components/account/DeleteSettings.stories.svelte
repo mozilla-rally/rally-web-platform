@@ -15,6 +15,7 @@
     height: { control: "text" },
     customClass: { control: "text" },
     headerClass: { control: "text" },
+    fontSize: {control: "text"}
   }}
 />
 
@@ -26,6 +27,7 @@
       height={args.height}
       customClass={args.customClass}
       headerClass={args.headerClass}
+      fontSize={args.fontSize}
     >
       <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
         <div class="title-text title-text--settings">{args.title}</div>
@@ -51,6 +53,7 @@
   args={{
     width: "612px",
     height: "auto",
+    fontSize: "38px",
     customClass: "settings",
     headerClass: "settings",
     title: "Delete account",

@@ -50,6 +50,7 @@
     height: { control: "text" },
     customClass: { control: "text" },
     headerClass: { control: "text" },
+    fontSize: {control: "text"}
   }}
 />
 
@@ -60,6 +61,7 @@
       height={args.height}
       customClass={args.customClass}
       headerClass={args.headerClass}
+      fontSize={args.fontSize}
     >
       <h2 class="title-wrapper title-wrapper--settings" slot="card-title">
         <div class="title-text">{args.title}</div>
@@ -172,6 +174,7 @@
   args={{
     width: "612px",
     height: "auto",
+    fontSize: "38px",
     customClass: "settings-update",
     headerClass: "settings-update",
     title: "Change your email address",
@@ -182,6 +185,11 @@
   .sb-container {
     padding: 2rem 1rem;
   }
+
+  .title-text{
+    font-size: 38px; 
+  }
+
 
   input {
     width: 100%;

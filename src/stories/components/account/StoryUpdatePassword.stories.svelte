@@ -129,6 +129,7 @@
     height: { control: "text" },
     customClass: { control: "text" },
     headerClass: { control: "text" },
+    fontSize: {control: "text"}
   }}
 />
 
@@ -338,6 +339,7 @@
   args={{
     width: "612px",
     height: "auto",
+    fontSize: "38px",
     customClass: "settings-update",
     headerClass: "settings-update",
     title: "Change your password",
@@ -347,6 +349,10 @@
 <style>
   .sb-container {
     padding: 2rem 1rem;
+  }
+
+  .title-text{
+    font-size: 38px; 
   }
 
   form {

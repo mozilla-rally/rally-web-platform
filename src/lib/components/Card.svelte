@@ -7,14 +7,18 @@
   export let height;
   export let headerClass="";
   export let customClass="";
+  export let fontSize; 
+
+  let classSet
 
   function toVariable(key, value) {
     return value ? `${key}: ${value};` : undefined;
   }
-  function addStyleVariables({ width, height }) {
+  function addStyleVariables({ width, height, fontSize }) {
     const values = [
       toVariable("--width", width),
       toVariable("--height", height),
+      toVariable("--fontSize", fontSize),
     ].filter((d) => d !== undefined);
     if (values.length === 0) return undefined;
     return values.join("; ");
@@ -23,6 +27,7 @@
   $:styles = addStyleVariables({
     width,
     height,
+    fontSize
   });
   $: classSet = [customClass].filter((t) => t).join(" ");
 
@@ -59,5 +64,6 @@
 
   header {
     max-width: var(--width);
+    font-size: var(--fontSize);
   }
 </style>

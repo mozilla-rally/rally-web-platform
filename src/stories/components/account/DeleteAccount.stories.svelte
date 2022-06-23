@@ -219,6 +219,11 @@
     padding: 2rem 1rem;
   }
 
+  .title-text{
+    font-size: 38px; 
+  }
+
+
   h4 {
     font-size: 1rem;
   }
