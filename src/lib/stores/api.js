@@ -30,6 +30,8 @@ import initializeFirebase from "./initialize-firebase";
 let auth;
 let db;
 let functionsHost;
+let analytics;
+let logEvent;
 
 async function initializeFirestoreAPIs() {
   const request = await fetch("/firebase.config.json");
@@ -80,8 +82,27 @@ async function getStudies() {
 }
 
 const _stateChangeCallbacks = [];
-const _authChangeCallbacks = [];
-const _connectedChangeCallbacks = [];
+const _connectedChangeCallbacks = [async (/** @type {string} */ studyId, /** @type {{ [utmCode: string]: string; }} */ attribution) => {
+  analytics = (await import("firebase/analytics")).getAnalytics();
+  logEvent = (await import("firebase/analytics")).logEvent;
+
+  // TODO figure out how to send attribution in a way FA will use it automatically.
+  const eventParams = { studyId };
+  ["source", "medium", "campaign", "term", "content"].forEach(code => {
+    if (code in attribution) {
+      eventParams[code] = attribution[code];
+    }
+  })
+  logEvent(analytics, "activate_extension", eventParams);
+}];
+
+const _authChangeCallbacks = [async (/** @type {import("firebase/auth").User} */ user) => {
+  analytics = (await import("firebase/analytics")).getAnalytics();
+  logEvent = (await import("firebase/analytics")).logEvent;
+
+  const loggedIn = Boolean(user && user.uid);
+  logEvent(analytics, `sign_${loggedIn ? "in" : "out"}`);
+}];
 
 function _updateLocalState(callback) {
   __STATE__ = produce(__STATE__, callback);
@@ -141,6 +162,7 @@ export default {
           case "rally-sdk.complete-signup": {
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
+
             if (!studyId) {
               throw new Error(
                 "handling rally-sdk.complete-signup from content script: No study ID provided."
@@ -202,6 +224,8 @@ export default {
             console.debug("Received rally-sdk.web-check-response.");
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
+            const attribution = detail && detail.attribution;
+
             if (!studyId) {
               throw new Error(
                 "handling rally-sdk.web-check-response from content script: No study ID provided."
@@ -217,7 +241,7 @@ export default {
                   `Received rally-sdk.web-check-response for non-existent study: ${studyId}`
                 );
               }
-              callback(studyId);
+              callback(studyId, attribution);
             });
             break;
           }
@@ -292,6 +316,7 @@ export default {
     // Allow user to select which Google account to use.
     provider.setCustomParameters({ prompt: "select_account" });
 
+    /** @type {import("firebase/auth").UserCredential} */
     let userCredential;
     try {
       userCredential = await signInWithRedirect(auth, provider);

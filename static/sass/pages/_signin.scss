@@ -54,6 +54,9 @@
       display: flex;
       align-items: center;
       color: $color-marketing-gray-70 !important;
+      @media (max-width: $SM-screen) {
+        justify-content: center;
+      }
     }
 
     svg {
@@ -135,8 +138,8 @@
   }
 
   .card-button {
-    width: 100%;
     display: flex;
+    width: 100%;
 
     &__text {
       width: 300px;
