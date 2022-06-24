@@ -333,4 +333,8 @@
     margin-top: -19px;
     padding-bottom: 10px;
   }
+
+  .body-text-privacy{
+    font-size: 14px; 
+  }
 </style>
