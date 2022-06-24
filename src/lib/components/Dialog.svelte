@@ -159,6 +159,7 @@
     justify-content: center;
     align-items: start;
     z-index: 903;
+    overflow: auto; 
   }
 
   h2 {
