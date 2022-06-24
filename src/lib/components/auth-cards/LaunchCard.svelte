@@ -147,7 +147,7 @@
       </Button>
 
       <p class="body-text-privacy">
-        By joining, you agree to our <a class="rwp-link"
+        By joining, you agree to our <a class="rwp-link link-privacy"
           href="__BASE_SITE__/how-rally-works/data-and-privacy/"
           >privacy notice.</a
         >
@@ -169,6 +169,10 @@
   .title-highlight {
     width: calc(var(--titleWidth) + 15px);
     transition: width 0.2s ease-in;
+  }
+
+  .link-privacy{
+    font-size: 14px; 
   }
 
 </style>
