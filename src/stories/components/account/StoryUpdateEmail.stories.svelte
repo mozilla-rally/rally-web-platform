@@ -55,7 +55,7 @@
 />
 
 <Template let:args>
-  <div class="sb-container settings-readonly">
+  <div class="sb-container account-settings-main">
     <Card
       width={args.width}
       height={args.height}
@@ -172,7 +172,7 @@
 <Story
   name="Settings Update Email"
   args={{
-    width: "612px",
+    width: "486px",
     height: "auto",
     fontSize: "38px",
     customClass: "settings-update",
