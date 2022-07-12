@@ -30,8 +30,11 @@
       by
       <slot name="study-author">author</slot>
       {#if endDate}
-        | Ends:
-        {niceDate(endDate)}
+        {#if !!Date.parse(endDate)}
+        | Ends: {niceDate(endDate)}
+        {:else}
+        | {endDate}
+        {/if}
       {/if}
     </div>
   </div>
