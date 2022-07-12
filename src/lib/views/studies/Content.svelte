@@ -26,7 +26,8 @@
   function parseDateIfNeeded(date) {
     if (
       date === undefined ||
-      (typeof date === "object" && typeof date.getMonth === "function")
+      (typeof date === "object" && typeof date.getMonth === "function") ||
+      !Date.parse(date)
     )
       return date;
     try {
