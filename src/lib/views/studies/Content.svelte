@@ -41,6 +41,8 @@
       return undefined;
     }
   }
+
+  $: currentStudies = studies.filter(s => !s.studyEnded && !s.studyPaused);
 </script>
 
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
@@ -57,7 +59,7 @@
   </Accordion>
 
   <div class="studies">
-    {#each studies as study, i (study.studyId)}
+    {#each currentStudies as study, i (study.studyId)}
       <StudyCardContainer
         title={study.name}
         author={study.authors.name}
