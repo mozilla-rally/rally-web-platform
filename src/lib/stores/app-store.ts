@@ -40,25 +40,25 @@ export function createAppStore(api = firestoreAPI): AppStore {
       return api.sendUserPasswordResetEmail(email);
     },
     async resetUserPassword(newPassword, oldPassword) {
-      return api.resetUserPassword(newPassword, oldPassword)
+      return api.resetUserPassword(newPassword, oldPassword);
     },
     async changeEmail(email, password) {
-      return api.changeEmail(email, password)
+      return api.changeEmail(email, password);
     },
     async isUserVerified() {
-      return api.isUserVerified()
+      return api.isUserVerified();
     },
     async resendUserVerificationEmail() {
-      return api.resendUserVerificationEmail()
+      return api.resendUserVerificationEmail();
     },
     async getUserEmail() {
-      return api.getUserEmail()
+      return api.getUserEmail();
     },
-    async getUserProvider(){
-      return api.getUserProvider()
+    async getUserProvider() {
+      return api.getUserProvider();
     },
-    async deleteUserAccount(password){
-      return api.deleteUserAccount(password)
+    async deleteUserAccount(password) {
+      return api.deleteUserAccount(password);
     },
     async updateOnboardedStatus(onboardingOrNot) {
       return api.updateOnboardedStatus(onboardingOrNot);
@@ -123,17 +123,23 @@ export const isAuthenticated = browser
  * is present or not.
  * @returns WritableStore<boolean>["subscribe"]
  */
-function isExtensionConnectedStore(): Readable<boolean> {
-  const { subscribe, set } = writable(undefined);
-  set(false);
+function installedStudyIdsStore(): Readable<string[]> {
+  const { subscribe, set } = writable([]);
+
+  set([]);
+
+  const studyIds = [];
+
   firestoreAPI.onExtensionConnected((studyId) => {
-    set(true)
+    studyIds.push(studyId);
+    set(studyIds);
   });
+
   return { subscribe };
 }
 
-export const isExtensionConnected = browser
-  ? isExtensionConnectedStore()
-  : writable(undefined);
+export const installedStudyIds = browser
+  ? installedStudyIdsStore()
+  : writable([]);
 
 export const store = browser ? createAppStore() : writable(undefined);
