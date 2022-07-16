@@ -11,8 +11,8 @@
   const isAuthenticated: Readable<boolean> = getContext(
     "rally:isAuthenticated"
   );
-  const isExtensionConnected: Readable<boolean> = getContext(
-    "rally:isExtensionConnected"
+  const installedStudyIds: Readable<string[]> = getContext(
+    "rally:installedStudyIds"
   );
 
   const notifications: NotificationStore = getContext("rally:notifications");
@@ -24,7 +24,7 @@
       throw new Error(`Study with id: ${studyId} not found.`);
     }
 
-    if (!$isExtensionConnected) {
+    if (!$installedStudyIds.includes(studyId)) {
       window.open(study.downloadLink, "_blank");
     }
 

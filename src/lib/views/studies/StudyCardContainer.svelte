@@ -3,7 +3,7 @@
    * License, v. 2.0. If a copy of the MPL was not distributed with this
    * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  /* 
+  /*
     NOTE: this is a full pattern integration of the study card. It uses the StudyCard, StudyCardHeader,
     and dialog components. This is the component to use _in practice_.
 
@@ -19,8 +19,8 @@
   import GenericConsent from "../irb/GenericConsent.svelte";
   import IRBWindow from "../irb/IRBWindow.svelte";
 
-  const isExtensionConnected: Readable<boolean> = getContext(
-    "rally:isExtensionConnected"
+  const installedStudyIds: Readable<string[]> = getContext(
+    "rally:installedStudyIds"
   );
 
   export let joined = false;
@@ -44,7 +44,7 @@
     // send CTA click event to parent.
     dispatch("cta-clicked");
 
-    if ($isExtensionConnected || !joined) {
+    if ($installedStudyIds.includes(studyId) || !joined) {
       joinModal = true;
     } else {
       leaveModal = true;
@@ -66,7 +66,7 @@
 
 <StudyCard
   {joined}
-  connected={$isExtensionConnected}
+  connected={$installedStudyIds.includes(studyId)}
   on:join={triggerJoinEvent}
   on:leave={triggerJoinEvent}
   {endDate}
