@@ -61,8 +61,8 @@ export interface StudyMetadata {
   studyEnded: boolean;
   studyPaused: boolean;
   downloadLink: {
-    chrome: string;
-    firefox: string;
+    chrome?: string;
+    firefox?: string;
   };
   schemaNamespace?: string;
   studyDetailsLink: string;

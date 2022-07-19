@@ -42,7 +42,13 @@
     }
   }
 
-  $: currentStudies = studies.filter((s) => !s.studyEnded && !s.studyPaused);
+  $: currentStudies = studies.filter((s) => {
+    const UA = window.navigator.userAgent;
+    const browserCompat =
+      (UA.includes("Firefox") && s.downloadLink.firefox) ||
+      (UA.includes("Chrome") && s.downloadLink.chrome);
+    return !s.studyEnded && !s.studyPaused && browserCompat;
+  });
 </script>
 
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
