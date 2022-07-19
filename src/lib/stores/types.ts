@@ -60,7 +60,10 @@ export interface StudyMetadata {
   version: string;
   studyEnded: boolean;
   studyPaused: boolean;
-  downloadLink: string;
+  downloadLink: {
+    chrome: string;
+    firefox: string;
+  };
   schemaNamespace?: string;
   studyDetailsLink: string;
   minimumCoreVersion?: string;

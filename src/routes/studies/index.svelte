@@ -25,7 +25,10 @@
     }
 
     if (!$installedStudyIds.includes(studyId)) {
-      window.open(study.downloadLink, "_blank");
+      let downloadLink = window.navigator.userAgent.includes("Firefox")
+        ? study.downloadLink.firefox
+        : study.downloadLink.chrome;
+      window.open(downloadLink, "_blank");
     }
 
     store.updateStudyEnrollment(studyId, true);

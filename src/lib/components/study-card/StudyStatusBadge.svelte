@@ -21,9 +21,13 @@
     <span class="text-body-sm not-connected title"
       >You're not participating yet.
       {#if !connected}
-        <a href={downloadUrl} target="_blank"
-          >Add this study extension from the Chrome store.</a
-        >
+        <a href={downloadUrl} target="_blank">
+          {#if window.navigator.userAgent.includes("Firefox")}
+            Add this study extension from the Firefox store.
+          {:else}
+            Add this study extension from the Chrome store.
+          {/if}
+        </a>
       {/if}
     </span>
   {/if}
