@@ -55,10 +55,13 @@
   let analytics;
   let logEvent;
   let mounted = false;
+  let UA;
   onMount(async () => {
     Dialog = (await import("$lib/components/Dialog.svelte")).default;
     analytics = (await import("firebase/analytics")).getAnalytics();
     logEvent = (await import("firebase/analytics")).logEvent;
+
+    UA = window.navigator.userAgent;
 
     mounted = true;
   });
@@ -97,7 +100,8 @@
 
     <div slot="body" class="dialog-body">
       You previously started to join this study, but didn’t finish the process
-      by installing the study extension from the Chrome Web Store.
+      by installing the study extension from the {#if UA.includes("Firefox")}Firefox
+        Add-ons Store{:else}Chrome Web Store{/if}.
     </div>
 
     <div class="modal-call-flow" slot="cta">

@@ -1,6 +1,7 @@
 <script>
   let clazz;
   export { clazz as class };
+  let UA = window.navigator.userAgent;
 </script>
 
 <ol class={`container ${clazz || ""}`}>
@@ -8,24 +9,29 @@
     <h1>Read the study card</h1>
     <p>
       The card discloses the data we collect from you, who has access to the
-      data, and how it will be used. 
+      data, and how it will be used.
     </p>
   </li>
 
   <li>
     <h1>Join the Study</h1>
     <p>
-      Click the <b>Join Study</b> button. We'll ask you to confirm in a pop-up dialog
-      by clicking the <b>Add Study Extension</b> button. This will open up the Chrome
-      Web Store.
+      Click the <b>Join Study</b> button. We'll ask you to confirm in a pop-up
+      dialog by clicking the <b>Add Study Extension</b> button. This will open
+      up the {#if UA.includes("Firefox")}Firefox Add-ons Store{:else}Chrome Web
+        Store{/if}.
     </p>
   </li>
 
   <li>
     <h1>Add study extension</h1>
     <p>
-      In the Chrome Web Store, click on the <b>Add to Chrome</b> button. This will
-      add the study's extension to your browser. You are now participating!
+      In the {#if UA.includes("Firefox")}Firefox Add-ons Store{:else}Chrome Web
+        Store{/if}, click on the
+      <b
+        >{#if UA.includes("Firefox")}Add To Firefox{:else}Add to Chrome{/if}</b
+      > button. This will add the study's extension to your browser. You are now
+      participating!
     </p>
   </li>
 </ol>
