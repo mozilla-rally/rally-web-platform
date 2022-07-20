@@ -33,7 +33,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.17.12",
     "@mozilla-protocol/core": "^16.0.0",
-    "@mozilla/rally-functions": "^0.9.20",
+    "@mozilla/rally-functions": "^0.9.31",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^4.0.0",
