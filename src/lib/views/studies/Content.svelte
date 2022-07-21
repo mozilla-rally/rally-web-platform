@@ -42,7 +42,13 @@
     }
   }
 
-  $: currentStudies = studies.filter(s => !s.studyEnded && !s.studyPaused);
+  $: currentStudies = studies.filter((s) => {
+    const UA = window.navigator.userAgent;
+    const browserCompat =
+      (UA.includes("Firefox") && s.downloadLink.firefox) ||
+      (UA.includes("Chrome") && s.downloadLink.chrome);
+    return !s.studyEnded && !s.studyPaused && browserCompat;
+  });
 </script>
 
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
@@ -72,7 +78,9 @@
         dataCollectionDetails={study.dataCollectionDetails}
         studyDetailsLink={study.studyDetailsLink}
         tags={study.tags}
-        downloadUrl={study.downloadLink}
+        downloadUrl={window.navigator.userAgent.includes("Firefox")
+          ? study.downloadLink.firefox
+          : study.downloadLink.chrome}
         on:cta-clicked
         on:join={() => {
           joinStudy(study.studyId);
