@@ -76,7 +76,7 @@
     "sinon-chrome": "^3.0.1",
     "source-map-support": "^0.5.21",
     "svelte": "^3.48.0",
-    "svelte-check": "^2.0.0",
+    "svelte-check": "^2.8.0",
     "svelte-loader": "^3.1.2",
     "svelte-preprocess": "^4.10.3",
     "tidy-jsdoc": "^1.4.1",
