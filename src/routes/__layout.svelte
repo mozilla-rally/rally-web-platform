@@ -13,6 +13,7 @@
   import notifications from "../lib/components/notifications";
   import StudyBackgroundElement from "$lib/layouts/StudyBackgroundElement.svelte";
   import EmptySlot from "./_EmptySlot.svelte";
+import { initializeApp } from "firebase/app";
 
   // Here is where we set all the stores needed
   setContext("rally:store", store);
@@ -23,10 +24,23 @@
 
   let leaveModal = false;
   let Dialog;
-  let clazz = ""
+  let clazz = "";
+  let analytics;
+  let logEvent;
 
   onMount(async () => {
     Dialog = (await import("../lib/components/Dialog.svelte")).default;
+
+    const initializeApp = (await import("firebase/app")).initializeApp;
+    analytics = (await import("firebase/analytics")).getAnalytics();
+    logEvent = (await import("firebase/analytics")).logEvent;
+
+    const request = await fetch("/firebase.config.json");
+    const firebaseConfig = await request.json();
+
+    initializeApp(firebaseConfig);
+
+    logEvent(analytics, "screen_view");
   });
 
   const mounted = isMounted();
