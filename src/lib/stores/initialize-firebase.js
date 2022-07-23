@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
@@ -11,7 +11,8 @@ let db;
 export default function initializeFirebase(config, callback) {
   if (!initialized) {
     initialized = true;
-    app = initializeApp(config);
+    getApps().length === 0 ? app = initializeApp(config) : getApp();
+
     auth = getAuth(app);
     db = getFirestore(app);
 
