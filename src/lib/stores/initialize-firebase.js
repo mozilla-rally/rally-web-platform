@@ -11,7 +11,7 @@ let db;
 export default function initializeFirebase(config, callback) {
   if (!initialized) {
     initialized = true;
-    getApps().length === 0 ? app = initializeApp(config) : getApp();
+    app = getApps().length === 0 ? initializeApp(config) : getApp();
 
     auth = getAuth(app);
     db = getFirestore(app);
