@@ -41,7 +41,7 @@
   <h2 class="section-header profile__header">Tell Us About Yourself</h2>
 
   <p class="profile__description">
-    Each question is completely optional, and can be updated at any time by
+    The survey is optional, and can be updated at any time by
     clicking Manage Profile. The answers you give will help us understand the
     composition and representivity of the Rally community. Additionally,
     collaborators will combine your answers with the data collected in the
