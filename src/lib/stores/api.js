@@ -83,9 +83,6 @@ async function getStudies() {
 
 const _stateChangeCallbacks = [];
 const _connectedChangeCallbacks = [async (/** @type {string} */ studyId, /** @type {{ [utmCode: string]: string; }} */ attribution) => {
-  analytics = (await import("firebase/analytics")).getAnalytics();
-  logEvent = (await import("firebase/analytics")).logEvent;
-
   // TODO figure out how to send attribution in a way FA will use it automatically.
   const eventParams = { studyId };
   ["source", "medium", "campaign", "term", "content"].forEach(code => {
@@ -97,9 +94,6 @@ const _connectedChangeCallbacks = [async (/** @type {string} */ studyId, /** @ty
 }];
 
 const _authChangeCallbacks = [async (/** @type {import("firebase/auth").User} */ user) => {
-  analytics = (await import("firebase/analytics")).getAnalytics();
-  logEvent = (await import("firebase/analytics")).logEvent;
-
   const loggedIn = Boolean(user && user.uid);
   logEvent(analytics, `sign_${loggedIn ? "in" : "out"}`);
 }];
@@ -154,6 +148,9 @@ export default {
       return;
     } else {
       await initializeFirestoreAPIs();
+
+      analytics = (await import("firebase/analytics")).getAnalytics();
+      logEvent = (await import("firebase/analytics")).logEvent;
 
       const handleContentScriptEvents = async (
         /** @type {CustomEvent} */ e
