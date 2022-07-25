@@ -35,7 +35,7 @@
 </svelte:head>
 
 {#if $store._initialized && !$store?.user?.onboarded}
-  <ProfileContent bind:formattedResults />
+  <ProfileContent showSkipAtTop bind:formattedResults on:skip={onAction(false)}/>
 
   <ProfileCallToAction on:save={onAction(true)} on:skip={onAction(false)} />
 {/if}

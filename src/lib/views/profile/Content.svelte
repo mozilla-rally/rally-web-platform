@@ -6,6 +6,7 @@
   import { fly } from "svelte/transition";
   // FIXME: move everything in profile/ into the place it belongs?
   import ClearAnswerButton from "./ClearAnswerButton.svelte";
+  import Button from "$lib/components/Button.svelte";
   import { schema, inputFormatters } from "./survey-schema";
   import {
     questionIsAnswered,
@@ -13,10 +14,15 @@
     createResultObject,
   } from "./survey-tools";
   import { formatInput, formatAnswersForResponse } from "./formatters";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let isAuth 
   export let results = createResultObject(schema);
   export let workingResults = createResultObject(schema, results);
+  export let showSkipAtTop = false;
+
   $: workingResults = createResultObject(schema, workingResults);
   // create the outputted formatted workingResults.
   export let formattedResults = formatAnswersForResponse(
@@ -35,12 +41,18 @@
   <h2 class="section-header profile__header">Tell Us About Yourself</h2>
 
   <p class="profile__description">
-    Each question is completely optional, and can be updated at any time by
+    The survey is optional, and can be updated at any time by
     clicking Manage Profile. The answers you give will help us understand the
     composition and representivity of the Rally community. Additionally,
     collaborators will combine your answers with the data collected in the
     studies you join to enrich their findings and answer research questions.
   </p>
+
+  {#if showSkipAtTop}
+    <Button btnID= "skip"  size="xl" product customControl textColor="#0060DF" borderColor="#0060DF" background="#FFF" on:click={() => dispatch("skip")}>
+      Skip for Now
+    </Button>
+  {/if}
 
   <hr />
 
