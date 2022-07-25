@@ -221,18 +221,21 @@
       class="icon-block-left"
       width="117"
       src="/img/our-research-collaborators.png"
-      alt="Our Research Collaborators."
+      alt="Our Research Partners and Customers."
     />
     <div class="icon-block-right">
-      <h4>Our Research Collaborators</h4>
+      <h4>Our Research Partners and Customers</h4>
 
       <div class="content-text-info">
         Rally collaborates with trusted third parties to build and release
-        studies. For any studies you join, we may ask you to share the data
-        collected under <b>this Privacy Notice</b> with third party
-        researcher(s) administering the study. Our research collaborators are
-        under contracts with Mozilla to ensure that
-        <b>your data is protected</b> and handled only in ways we've approved.
+        studies. When you join a study, we may ask you to share the data we’ve collected under
+        <b>this Privacy Notice</b> with the third party researcher(s) administering the study
+        and/or other Mozilla research customers who we may share your data with.  Our research
+        partners and customers are under contracts with Mozilla to ensure that
+        <b>your data is protected</b> and handled only in the ways we've approved.
+        <br/><br/>
+        Research customers may compensate Mozilla for secure access to data collected
+        in ongoing studies. We will always disclose when this is the case.
       </div>
     </div>
 
