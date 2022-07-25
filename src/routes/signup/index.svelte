@@ -122,92 +122,143 @@
   const sendUserInfo = (info) => {
     userEmail = info;
   };
+
+  let isCreateAccountShown = !isLoading && joinCard;
+
+  $: {
+    isCreateAccountShown = !isLoading && joinCard;
+  }
 </script>
 
-<section class="signin md-container-signin">
-  <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
-    <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
-  </h2>
+<div class={isCreateAccountShown ? "sign-in-background" : ""}>
+  <section class="signin md-container-signin">
+    <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
+      <a class="external-link rwp-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        href="__BASE_SITE__/how-rally-works/">
+        <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
+      </a>
+    </h2>
 
-  <div class="cards-wrapper signin__cards">
-    {#if isLoading}
-      <div class="spinner-wrapper">
-        <svg
-          class="spinner"
-          width="100px"
-          height="100px"
-          viewBox="0 0 66 66"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            class="path"
-            fill="none"
-            stroke-width="6"
-            stroke-linecap="round"
-            cx="33"
-            cy="33"
-            r="30"
+    <div class="cards-wrapper signin__cards">
+      {#if isLoading}
+        <div class="spinner-wrapper">
+          <svg
+            class="spinner"
+            width="100px"
+            height="100px"
+            viewBox="0 0 66 66"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              class="path"
+              fill="none"
+              stroke-width="6"
+              stroke-linecap="round"
+              cx="33"
+              cy="33"
+              r="30"
+            />
+          </svg>
+        </div>
+      {/if}
+
+      {#if !isLoading}
+        {#if welcomeCard || joinCard}
+          <div class="launch-card-container">
+            {#if isCreateAccountShown}
+              <div class="launch-card-text">
+                <h5>Use your data to build a better internet</h5>
+                <ul>
+                  <li>
+                    Monitor big tech platforms
+                  </li>
+                  <li>
+                    Improve user privacy and control
+                  </li>
+                  <li>
+                    Leave at any time. We'll delete your data
+                  </li>
+                </ul>
+              </div>
+            {/if}
+
+            <LaunchCard
+              {...cardArgs}
+              {store}
+              on:type={triggerCard}
+              storyBookTest={false}
+              {welcomeCard}
+            />
+          </div>
+        {/if}
+
+        {#if createAcctCard && !welcomeCard && !joinCard}
+          <CreateCard
+            {...cardArgs}
+            {store}
+            on:type={triggerCard}
+            storyBookTest={false}
           />
-        </svg>
-      </div>
-    {/if}
+        {/if}
 
-    {#if !isLoading}
-      {#if welcomeCard || joinCard}
-        <LaunchCard
-          {...cardArgs}
-          {store}
-          on:type={triggerCard}
-          storyBookTest={false}
-          {welcomeCard}
-        />
+        {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
+          <CheckEmailCard
+            isSettings={false}
+            {...cardArgs}
+            on:type={triggerCard}
+          />
+        {/if}
+
+        {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
+          <ForgetPwCard
+            {...cardArgs}
+            on:type={triggerCard}
+            storyBookTest={false}
+          />
+        {/if}
+
+        {#if resetPWCard && !checkEmailPWCard}
+          <ResetPwCard {...cardArgs} on:type={triggerCard} />
+        {/if}
       {/if}
-
-      {#if createAcctCard && !welcomeCard && !joinCard}
-        <CreateCard
-          {...cardArgs}
-          {store}
-          on:type={triggerCard}
-          storyBookTest={false}
-        />
-      {/if}
-
-      {#if (checkEmailCard || checkEmailPWCard) && !welcomeCard && !joinCard}
-        <CheckEmailCard
-          isSettings={false}
-          {...cardArgs}
-          on:type={triggerCard}
-        />
-      {/if}
-
-      {#if forgetPWCard && !welcomeCard && !joinCard && !createAcctCard && !checkEmailCard}
-        <ForgetPwCard
-          {...cardArgs}
-          on:type={triggerCard}
-          storyBookTest={false}
-        />
-      {/if}
-
-      {#if resetPWCard && !checkEmailPWCard}
-        <ResetPwCard {...cardArgs} on:type={triggerCard} />
-      {/if}
-    {/if}
-  </div>
-
-  <div class="how-it-works signin__howitworks">
-    <a
-      class="external-link rwp-link"
-      target="_blank"
-      rel="noopener noreferrer"
-      href="__BASE_SITE__/how-rally-works/"
-      >Wait – how does it work again?
-      <ExternalLink /></a
-    >
-  </div>
-</section>
-
+    </div>
+  </section>
+</div>
 <style>
   .spinner-wrapper {
     text-align: center;
+  }
+
+  .sign-in-background {
+    width: 100%;
+    height: 100vh;
+    background: no-repeat;
+    background-image: url('/img/network-background.png');
+    background-position: right top;
+  }
+
+  .launch-card-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .launch-card-container .launch-card-text {
+    margin-right: 60px;
+    margin-top: 50px;
+  }
+
+  .launch-card-container .launch-card-text h5 {
+    margin-bottom: 24px;
+  }
+
+  .launch-card-container .launch-card-text ul li {
+    background: no-repeat;
+    background-image: url('/img/checkmark-static.png');
+    line-height: 35px;
+    padding-left: 40px;
+    white-space: nowrap;
+    vertical-align: middle;
   }
 </style>
