@@ -44,12 +44,12 @@
   } = state.card;
 
   $: if ($store._initialized) {
-    if (!$store?.user?.uid) {
-      goto("/signup");
-    } else if (!$store?.user?.enrolled) {
-      goto("/welcome/terms");
-    } else {
-      goto("/studies");
+    if ($store?.user?.uid) {
+      if (!$store?.user?.enrolled) {
+        goto("/welcome/terms");
+      } else {
+        goto("/studies");
+      }
     }
   }
 
@@ -133,10 +133,12 @@
 <div class={isCreateAccountShown ? "sign-in-background" : ""}>
   <section class="signin md-container-signin">
     <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
-      <a class="external-link rwp-link"
+      <a
+        class="external-link rwp-link"
         target="_blank"
         rel="noopener noreferrer"
-        href="__BASE_SITE__/how-rally-works/">
+        href="__BASE_SITE__/how-rally-works/"
+      >
         <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
       </a>
     </h2>
@@ -171,15 +173,9 @@
               <div class="launch-card-text">
                 <h5>Use your data to build a better internet</h5>
                 <ul>
-                  <li>
-                    Monitor big tech platforms
-                  </li>
-                  <li>
-                    Improve user privacy and control
-                  </li>
-                  <li>
-                    Leave at any time. We'll delete your data
-                  </li>
+                  <li>Monitor big tech platforms</li>
+                  <li>Improve user privacy and control</li>
+                  <li>Leave at any time. We'll delete your data</li>
                 </ul>
               </div>
             {/if}
@@ -226,6 +222,7 @@
     </div>
   </section>
 </div>
+
 <style>
   .spinner-wrapper {
     text-align: center;
@@ -235,7 +232,7 @@
     width: 100%;
     height: 100vh;
     background: no-repeat;
-    background-image: url('/img/network-background.png');
+    background-image: url("/img/network-background.png");
     background-position: right top;
   }
 
@@ -255,7 +252,7 @@
 
   .launch-card-container .launch-card-text ul li {
     background: no-repeat;
-    background-image: url('/img/checkmark-static.png');
+    background-image: url("/img/checkmark-static.png");
     line-height: 35px;
     padding-left: 40px;
     white-space: nowrap;
