@@ -15,17 +15,19 @@
     isAuthenticated.subscribe((state) => {
       if (state === false) {
         localStorage.removeItem("isLoading");
-        goto(`/signup?${$page.query.toString()}`);
+        goto(`/signup${queryString}`);
       }
     });
   });
 
+  $: queryString = $page.query.toString() && `?${$page.query.toString()}`;
+
   $: if ($isAuthenticated !== undefined && $store._initialized) {
     if ($store?.user?.uid) {
       if (!$store?.user?.enrolled) {
-        goto(`/welcome/terms?${$page.query.toString()}`);
+        goto(`/welcome/terms${queryString}`);
       } else {
-        goto(`/studies?${$page.query.toString()}`);
+        goto(`/studies${queryString}`);
       }
     }
   }
