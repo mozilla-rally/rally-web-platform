@@ -152,8 +152,6 @@ export default {
       analytics = (await import("firebase/analytics")).getAnalytics();
       logEvent = (await import("firebase/analytics")).logEvent;
 
-      logEvent(analytics, "page_view");
-
       const handleContentScriptEvents = async (
         /** @type {CustomEvent} */ e
       ) => {
