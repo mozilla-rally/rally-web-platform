@@ -209,11 +209,13 @@ export default {
             );
 
             const eventParams = { studyId };
-            ["source", "medium", "campaign", "term", "content"].forEach(code => {
-              if (code in attribution) {
-                eventParams[code] = attribution[code];
-              }
-            });
+            if (attribution) {
+              ["source", "medium", "campaign", "term", "content"].forEach(code => {
+                if (code in attribution) {
+                  eventParams[code] = attribution[code];
+                }
+              });
+            }
 
             logEvent(analytics, "activate_extension", eventParams);
 
