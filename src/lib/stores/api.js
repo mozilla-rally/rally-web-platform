@@ -82,16 +82,7 @@ async function getStudies() {
 }
 
 const _stateChangeCallbacks = [];
-const _connectedChangeCallbacks = [async (/** @type {string} */ studyId, /** @type {{ [utmCode: string]: string; }} */ attribution) => {
-  // TODO figure out how to send attribution in a way FA will use it automatically.
-  const eventParams = { studyId };
-  ["source", "medium", "campaign", "term", "content"].forEach(code => {
-    if (code in attribution) {
-      eventParams[code] = attribution[code];
-    }
-  })
-  logEvent(analytics, "activate_extension", eventParams);
-}];
+const _connectedChangeCallbacks = [];
 
 const _authChangeCallbacks = [async (/** @type {import("firebase/auth").User} */ user) => {
   const loggedIn = Boolean(user && user.uid);
@@ -159,6 +150,7 @@ export default {
           case "rally-sdk.complete-signup": {
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
+            const attribution = detail && detail.attribution;
 
             if (!studyId) {
               throw new Error(
@@ -215,13 +207,24 @@ export default {
                 detail: { studyId, rallyToken },
               })
             );
+
+            const eventParams = { studyId };
+            if (attribution) {
+              ["source", "medium", "campaign", "term", "content"].forEach(code => {
+                if (code in attribution) {
+                  eventParams[code] = attribution[code];
+                }
+              });
+            }
+
+            logEvent(analytics, "activate_extension", eventParams);
+
             break;
           }
           case "rally-sdk.web-check-response": {
             console.debug("Received rally-sdk.web-check-response.");
             const detail = JSON.parse(e.detail);
             const studyId = detail && detail.studyId;
-            const attribution = detail && detail.attribution;
 
             if (!studyId) {
               throw new Error(
@@ -238,7 +241,7 @@ export default {
                   `Received rally-sdk.web-check-response for non-existent study: ${studyId}`
                 );
               }
-              callback(studyId, attribution);
+              callback(studyId);
             });
             break;
           }
