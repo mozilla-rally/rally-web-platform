@@ -52,11 +52,10 @@
 </script>
 
 <div class="current-studies" in:fly={{ duration: 800, y: 5 }}>
-  <h2 class="section-header">Current Studies</h2>
+  <h2 class="section-header">Join the Attention Stream!</h2>
 
   <p class="section-sub-header">
-    Browse available studies and find the choice (or choices) that feel right to
-    you.
+    Once you join and install the extension, you'll see a message below that you are participating in Rally.
   </p>
 
   <Accordion revealed={true}>
