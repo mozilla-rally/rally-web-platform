@@ -119,10 +119,6 @@
     }
   };
 
-  const sendUserInfo = (info) => {
-    userEmail = info;
-  };
-
   let isCreateAccountShown = !isLoading && joinCard;
 
   $: {
