@@ -5,7 +5,6 @@
 
   import { getContext, onMount } from "svelte";
   import Card from "../../../lib/components/Card.svelte";
-  import ExternalLink from "$lib/components/icons/ExternalLink.svelte";
   import moment from "moment";
   import type { AppStore } from "$lib/stores/types";
 

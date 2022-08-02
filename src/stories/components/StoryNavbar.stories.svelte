@@ -1,53 +1,108 @@
 <script>
   import { Meta, Template, Story } from "@storybook/addon-svelte-csf";
   import RallyNavbar from "../../lib/layouts/main/Navbar.svelte";
+  import Dropdown from "./StoryDropdown.svelte";
   import { fly } from "svelte/transition";
+  import { onMount } from "svelte";
   import isMounted from "../../lib/is-mounted";
   import ExternalLink from "../../lib/components/icons/ExternalLink.svelte";
   const mounted = isMounted();
 
   let browser;
-  let userEmail;
-  let dropdownList;
   let isFocused = false;
   let ariaExpanded = false;
   let ariaHidden = true;
-  let isOpaque = false;
-  let navOpacity = 0;
+  let dropDownVisible = false;
+  let mobileVisible = false;
+  let dropDownEl;
+  let display = "none";
+  let onDefault = false;
 
-  const showDropdown = () => (dropdownList.style.display = "block");
-  const hideDropdown = () => (dropdownList.style.display = "none");
+  onMount(async () => {
+    if (window) {
+      browser = window.location;
+    }
+
+    if (!onDefault) {
+      if (dropDownEl) {
+        display = "none";
+      }
+    }
+  });
+
   const onFocus = () => (isFocused = true);
 
-  const checkOpacity = () => {
-    isOpaque ? (navOpacity = 1) : (navOpacity = 0);
+  const waitForAnimationEnd = () => {
+    if (dropDownEl) {
+      dropDownEl.addEventListener("animationend", () => {
+        display = "none";
+      });
+    }
+  };
+
+  const waitForAnimationStart = () => {
+    if (dropDownEl) {
+      dropDownEl.addEventListener("animationend", () => {
+        display = "show";
+      });
+    }
+  };
+
+  const toggleDropdown = () => {
+    dropDownVisible = !dropDownVisible;
   };
 
   const toggleNavIcon = () => {
+    mobileVisible = !mobileVisible;
     ariaExpanded = !ariaExpanded;
     ariaHidden = !ariaHidden;
-    isOpaque = !isOpaque;
-    checkOpacity();
   };
-
-  $: cssVarStyles = `--nav-opacity:${navOpacity}`;
+  $: dropDownVisible ? (display = "show") : (display = "hide");
+  $: !dropDownVisible ? waitForAnimationEnd() : waitForAnimationStart();
 </script>
 
 <Meta title="Components/Layout/RallyNavbar" component={RallyNavbar} />
 
 <Template>
   <RallyNavbar>
-    <div class="header__logo" slot="logo-nav">
-      <!-- rally logo -->
-      <a class="header__logo-link" href="/" alt="">
-        {#if $mounted}
-          <img
-            in:fly={{ duration: 800, x: -15 }}
-            src="img/moz-rally-logo.svg"
-            alt="Mozilla Rally Logo"
-          />
-        {/if}
-      </a>
+    <div class="top-nav-left" slot="top-nav-left">
+      <div class="header__logo">
+        <!-- rally logo -->
+        <a class="header__logo-link" href="/" alt="">
+          {#if $mounted}
+            <img
+              in:fly={{ duration: 800, x: -15 }}
+              src="img/moz-rally-logo.svg"
+              alt="Mozilla Rally Logo"
+            />
+          {/if}
+        </a>
+      </div>
+
+      <div class="header__primary-nav">
+        <ul class="primary-nav d-flex align-items-center">
+          <li
+            class="primary-nav__item"
+            in:fly={{ duration: 800, delay: 200, x: -15 }}
+          >
+            <a
+              href="/studies"
+              class="nav-link nav-link--studies"
+              sveltekit:prefetch>Current Studies</a
+            >
+          </li>
+          <li
+            class="primary-nav__item"
+            in:fly={{ duration: 800, delay: 200, x: -15 }}
+          >
+            <a
+              href="https://support.mozilla.org/en-US/kb/about-mozilla-rally"
+              class="nav-link nav-link--support d-flex justify-content-between align-items-center"
+              target="_blank">Support <ExternalLink /></a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Mobile nav toggle-->
@@ -65,110 +120,70 @@
       <span class="is-active-show" aria-label="Close navigation menu." />
     </button>
 
-    <!-- Dropdown -->
     <div
       on:focus={onFocus}
-      on:mouseover={showDropdown}
       class="header__dropdown"
+      data-expands="drop-nav"
+      data-expands-height
+      aria-expanded={ariaExpanded}
       slot="user-icon"
     >
-      <div class="dropdown__user-icon">
-        <img src="img/user-solid.svg" alt="user icon" />
+      <div on:click={toggleDropdown} class="dropdown__user-icon">
+        <img
+          class="user-icon__img"
+          src="img/icon-profile.svg"
+          alt="user icon"
+        />
       </div>
 
-      <ul
-        on:mouseleave={hideDropdown}
-        bind:this={dropdownList}
-        class="dropdown-list"
+      <!-- DESKTOP Dropdown-->
+      <div
+        class={`dropdown-wrapper dropdown-wrapper--${display}`}
+        bind:this={dropDownEl}
+        on:mouseenter={() => (dropDownVisible = true)}
+        on:mouseleave={() => (dropDownVisible = false)}
       >
-        <li class="dropdown-list__item">
-          <div class="list-item--info">
-            <p>Signed in as</p>
-            <p class="text-bold">test@test.com</p>
-          </div>
-        </li>
-        <hr />
-        <li class="dropdown-list__item">
-          <a class="list-item list-item--profile" href="/">
-            <img src="img/user-138.svg" alt="settings icon" />
-            <div class="list-item__text">Manage Profile</div>
-          </a>
-        </li>
-        <li class="dropdown-list__item">
-          <a class="list-item list-item--studies" href="/">
-            <img src="img/reader-mode.svg" alt="settings icon" />
-            <div class="list-item__text">Studies</div></a
-          >
-        </li>
-        <li class="dropdown-list__item">
-          <a class="list-item list-item--settings" href="/">
-            <img src="img/settings.svg" alt="settings icon" />
-            <div class="list-item__text">Account Settings</div></a
-          >
-        </li>
-        <li class="dropdown-list__item">
-          <button
-            class="list-item list-item--quit"
-          >
-            <img src="img/quit.svg" alt="quit icon" />
-            <div class="list-item__text">Sign Out</div></button
-          >
-        </li>
-      </ul>
+        <Dropdown clazz="desktop" {toggleNavIcon} mobileVisible={false} />
+      </div>
     </div>
 
     <!-- Mobile menu dropdown -->
     <div
-      id="mobile-menu"
+      id="mobile-nav"
       class="header__mobile-menu"
       aria-hidden={ariaHidden}
-      style={cssVarStyles}
       slot="mobile-nav"
     >
-      <nav class="nav-mobile" aria-label="Primary navigation">
-        <ul class="dropdown-list">
-          <li class="dropdown-list__item info">
-            <div class="dropdown-list__content dropdown-list--info">
-              <div>Signed in as <span class="text-bold">test@test.com</span></div>
-            </div>
-          </li>
-          <li class="dropdown-list__item">
-            <a
-              class="dropdown-list__content dropdown-list--profile"
-              href="/"
-            >
-              <img src="img/user-138.svg" alt="settings icon" />
-              <div class="list-item__text">Manage Profile</div>
-            </a>
-          </li>
-          <li class="dropdown-list__item">
-            <a
-              class="dropdown-list__content dropdown-list--studies"
-              href="/"
-            >
-              <img src="img/reader-mode.svg" alt="settings icon" />
-              <div class="list-item__text">Studies</div></a
-            >
-          </li>
-          <li class="dropdown-list__item">
-            <a
-              class="dropdown-list__content dropdown-list--settings"
-              href="/"
-            >
-              <img src="img/settings.svg" alt="settings icon" />
-              <div class="list-item__text">Account Settings</div></a
-            >
-          </li>
-          <li class="dropdown-list__item">
-            <button class="dropdown-list__content dropdown-list--quit">
-              <img src="img/quit.svg" alt="quit icon" />
-              <div class="list-item__text">Sign Out</div></button
-            >
-          </li>
-        </ul>
+      <nav
+        bind:this={dropDownEl}
+        class="nav-mobile"
+        aria-label="Primary navigation"
+      >
+        <Dropdown clazz="mobile" {mobileVisible} {toggleNavIcon} />
       </nav>
     </div>
   </RallyNavbar>
 </Template>
 
 <Story name="RallyNavbar" />
+
+<style>
+  .top-nav-left {
+    display: flex;
+    justify-content: space-between;
+    max-width: 580px;
+    width: 100%;
+  }
+  .top-nav-left a:hover {
+    text-decoration: underline;
+  }
+  .header__mobile-menu {
+    max-height: 450px;
+    height: 100%;
+  }
+  .dropdown__user-icon:hover {
+    background-color: #ededf0;
+    border-radius: 50%;
+  }
+</style>
+

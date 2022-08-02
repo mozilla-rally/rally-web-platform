@@ -291,7 +291,7 @@
       </div>
       <!-- SIGN IN -->
       <p slot="cta" class="body-text-action">
-        {args.bodyText} <button on:click={() => handleTrigger("welcome")}>{args.linkText}</button>
+        {args.bodyText} <button class="rwp-link" on:click={() => handleTrigger("welcome")}>{args.linkText}</button>
       </p>
     </Card>
   </div>
