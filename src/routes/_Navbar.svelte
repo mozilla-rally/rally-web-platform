@@ -10,6 +10,8 @@
   const store: AppStore = getContext("rally:store");
   const mounted = isMounted();
 
+  export let isAuthenticated;
+
   let browser;
   let isFocused = false;
   let ariaExpanded = false;
@@ -69,7 +71,7 @@
   $: !dropDownVisible ? waitForAnimationEnd() : waitForAnimationStart();
 </script>
 
-<RallyNavbar>
+<RallyNavbar {isAuthenticated}>
   <div class="top-nav-left" slot="top-nav-left">
     <div class="header__logo">
       <!-- rally logo -->
@@ -84,7 +86,7 @@
       </a>
     </div>
 
-    <div class="header__primary-nav">
+    <div class={`header__primary-nav isAuthis${isAuthenticated}`}>
       <ul class="primary-nav d-flex align-items-center">
         <li
           class="primary-nav__item"
@@ -113,7 +115,7 @@
   <!-- Mobile nav toggle-->
   <button
     on:click={toggleNavIcon}
-    class="header__nav-toggle"
+    class={`header__nav-toggle isAuthis${isAuthenticated}`}
     type="button"
     data-expands="mobile-nav"
     data-expands-height
@@ -127,7 +129,7 @@
 
   <div
     on:focus={onFocus}
-    class="header__dropdown"
+    class={`header__dropdown isAuthis${isAuthenticated}`}
     data-expands="drop-nav"
     data-expands-height
     aria-expanded={ariaExpanded}
