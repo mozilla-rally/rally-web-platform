@@ -13618,6 +13618,17 @@ ol {
   width: 32px;
   height: 32px;
 }
+.header .isAuthisfalse {
+  display: none !important;
+}
+
+.isBorderisfalse {
+  border: none;
+  position: absolute;
+  width: 100%;
+  background-color: transparent;
+  box-shadow: none;
+}
 
 .main-content {
   max-width: 688px;
@@ -13655,11 +13666,16 @@ ol {
 .md-container-signin {
   max-width: 688px;
   margin: auto;
-  padding: 3.8rem 2.4rem;
+  padding: 12.8rem 2.4rem;
 }
 @media (max-width: 432px) {
   .md-container-signin {
-    padding: 2rem 0;
+    padding: 12.8rem 0;
+  }
+}
+@media (max-width: 360px) {
+  .md-container-signin {
+    padding: 6.8rem 0;
   }
 }
 

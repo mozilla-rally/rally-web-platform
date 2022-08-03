@@ -31,10 +31,14 @@
 .md-container-signin {
   max-width: 688px;
   margin: auto;
-  padding: 3.8rem 2.4rem;
+  padding: 12.8rem 2.4rem;
 
   @media (max-width: $SM-screen) {
-    padding: 2rem 0;
+    padding: 12.8rem 0;
+  }
+
+  @media (max-width: $XS-screen) {
+    padding: 6.8rem 0;
   }
 }
 

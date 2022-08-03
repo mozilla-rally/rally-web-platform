@@ -43,7 +43,7 @@
 </svelte:head>
 
 {#if $isAuthenticated && $store?.user?.enrolled}
-  <Navbar />
+  <Navbar isAuthenticated = {true} />
   <Layout>
     <svelte:component
       this={$page.path === "/studies" ? StudyBackgroundElement : EmptySlot}
