@@ -264,9 +264,14 @@
     }
   }
 
-  @media screen and (max-width: 360px) {
+  @media screen and (max-width: 432px) {
     .launch-card-container .launch-card-text {
-      width: 296px;
+      display: none;
+    }
+    .sign-in-background {
+      width: 100%;
+      height: 100vh;
+      background-image: none;
     }
   }
 </style>

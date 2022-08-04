@@ -13625,9 +13625,12 @@ ol {
 .isBorderisfalse {
   border: none;
   position: absolute;
-  width: 100%;
+  width: 50%;
   background-color: transparent;
   box-shadow: none;
+}
+.isBorderisfalse .header__container {
+  max-width: 21rem;
 }
 
 .main-content {
