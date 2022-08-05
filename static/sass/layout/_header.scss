@@ -350,18 +350,14 @@
   }
 
   .isAuthisfalse {
-    display: none !important;
+    visibility: hidden !important; 
   }
 }
 
 .isBorderisfalse {
   border: none;
   position: absolute;
-  width: 50%; 
+  width: 100%; 
   background-color: transparent;
   box-shadow: none;
-
-  .header__container {
-    max-width: 21rem;
-  }
 }
