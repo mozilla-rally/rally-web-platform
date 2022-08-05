@@ -106,6 +106,7 @@
       transition:fly={{ duration: 200, y: 5 }}
       data-micromodal-close
       class="overlay"
+      id="overlay-id"
       style={styles}
       on:click={dismissParent}
     >

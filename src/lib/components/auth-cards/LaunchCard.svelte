@@ -103,6 +103,7 @@
       size="lg"
       secondary
       customClass="card-button"
+      btnID="google-btn"
       on:click={handleGoogleLogin}
     >
       <img

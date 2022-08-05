@@ -103,7 +103,8 @@ describe("Rally Web Platform UX flows", function () {
       until.titleIs("Sign Up | Mozilla Rally"),
       WAIT_FOR_PROPERTY
     );
-    await findAndAct(driver, By.css("button"), (e) => e.click());
+   
+    await findAndAct(driver, By.id("google-btn"), (e) => e.click());
     await findAndAct(driver, By.id("add-account-button"), (e) => e.click());
     await findAndAct(driver, By.id("autogen-button"), (e) => e.click());
     await findAndAct(driver, By.id("sign-in"), (e) => e.click());
@@ -180,35 +181,8 @@ describe("Rally Web Platform UX flows", function () {
           WAIT_FOR_PROPERTY
         );
       }
-    } else {
-      // Start to leave study, but cancel.
-      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//html'), (e) =>
-        e.click()
-      );
-
-      // Start to leave study, and confirm.
-      await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
-        e.click()
-      );
-
-      await findAndAct(driver, By.xpath('//a[text()="Don\'t join this study"]'), (e) =>
-        e.click()
-      );
-
-      await findAndAct(
-        driver,
-        By.xpath('(//button[text()="Don\'t join this study"])'),
-        (e) => e.click()
-      );
-    }
+    } 
+    
     if (loadExtension) {
       // Start to leave study, but cancel.
       await findAndAct(driver, By.className("update-dropdown-link"), (e) =>
