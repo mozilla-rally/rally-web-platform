@@ -128,17 +128,6 @@
 
 <div class={isCreateAccountShown ? "sign-in-background" : ""}>
   <section class="signin md-container-signin">
-    <h2 class="mzp-c-call-out-title mzp-has-zap-1 signin__logo">
-      <a
-        class="external-link rwp-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="__BASE_SITE__/how-rally-works/"
-      >
-        <img src="img/logo-wide.svg" alt="Mozilla Rally Logo" />
-      </a>
-    </h2>
-
     <div class="cards-wrapper signin__cards">
       {#if isLoading}
         <div class="spinner-wrapper">
@@ -244,6 +233,7 @@
 
   .launch-card-container .launch-card-text h5 {
     margin-bottom: 24px;
+    font-family: Inter;
   }
 
   .launch-card-container .launch-card-text ul li {
@@ -253,5 +243,35 @@
     padding-left: 40px;
     white-space: nowrap;
     vertical-align: middle;
+    font-size: 1.125rem;
+    color: #20123a;
+    padding-bottom: 20px;
+  }
+
+  @media screen and (max-width: 982px) {
+    .launch-card-container {
+      flex-direction: column;
+    }
+
+    .launch-card-container .launch-card-text {
+      margin: auto;
+    }
+
+    .launch-card-container .launch-card-text ul li {
+      font-size: 1rem;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+  }
+
+  @media screen and (max-width: 432px) {
+    .launch-card-container .launch-card-text {
+      display: none;
+    }
+    .sign-in-background {
+      width: 100%;
+      height: 100vh;
+      background-image: none;
+    }
   }
 </style>

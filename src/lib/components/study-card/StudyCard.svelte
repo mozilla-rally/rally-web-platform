@@ -47,6 +47,7 @@
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                id="update-dropdown-link-btn"
               >
                 <OverflowEllipsis color="#5E5E72" size="28px" />
               </button>

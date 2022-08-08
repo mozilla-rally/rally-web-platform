@@ -348,4 +348,16 @@
       height: 32px;
     }
   }
+
+  .isAuthisfalse {
+    visibility: hidden !important; 
+  }
+}
+
+.isBorderisfalse {
+  border: none;
+  position: absolute;
+  width: 100%; 
+  background-color: transparent;
+  box-shadow: none;
 }
