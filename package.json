@@ -11,7 +11,7 @@
     "dev:web": "npm run pre-build && npm run config:web:demo && svelte-kit dev",
     "build": "npm run pre-build && svelte-kit build && npm run compile:sass",
     "build:web:emulator": "npm run pre-build && npm run config:web:demo && svelte-kit build -- --config-emulator-mode",
-    "watch:web": "npm run compile:sass:watch & svelte-kit -p 9000 dev -- --config-emulator-mode",
+    "watch:web": "npm run compile:sass:watch & svelte-kit dev -- --config-emulator-mode",
     "load:data": "curl -s http://localhost:5001/demo-rally/us-central1/loadFirestore",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
