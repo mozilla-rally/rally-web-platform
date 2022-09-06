@@ -59,11 +59,10 @@
 <style>
   .cta-wrapper{
     position: fixed;
-    bottom: 15px;
+    bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #f0f0f4; 
-    padding-top: 5px;
-    padding-bottom: 5px; 
+    background-color: #f0f0f4;  
+    padding: 5px 0; 
   }
 </style>
