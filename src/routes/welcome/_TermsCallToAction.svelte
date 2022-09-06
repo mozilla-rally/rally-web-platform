@@ -55,3 +55,15 @@
     Decline
   </Button>
 </div>
+
+<style>
+  .cta-wrapper{
+    position: fixed;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    background-color: #f0f0f4; 
+    padding-top: 5px;
+    padding-bottom: 5px; 
+  }
+</style>

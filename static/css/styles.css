@@ -13239,6 +13239,10 @@ ol {
   align-items: center;
 }
 
+.firebase-emulator-warning {
+  display: none !important;
+}
+
 .launch-button-text {
   font-weight: 700;
   font-size: 1rem;
