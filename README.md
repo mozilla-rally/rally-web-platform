@@ -1,4 +1,7 @@
-# Rally Web Platform
+# This repository has been archived and is no longer active.
+# The Rally Web Platform is now maintained at https://github.com/mozilla-rally/rally
+
+### Rally Web Platform
 
 This repository contains the code needed to build the Rally Web Platform.
 
